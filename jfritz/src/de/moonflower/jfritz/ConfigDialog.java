@@ -9,6 +9,7 @@ package de.moonflower.jfritz;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -346,7 +347,6 @@ public class ConfigDialog extends JDialog {
 		sippane.setLayout(new BorderLayout());
 		sippane.add(sipButtonPane, BorderLayout.NORTH);
 		sippane.add(new JScrollPane(siptable), BorderLayout.CENTER);
-
 		// Create OK/Cancel Panel
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.anchor = GridBagConstraints.CENTER;
@@ -359,18 +359,22 @@ public class ConfigDialog extends JDialog {
 		cancelButton.setMnemonic(KeyEvent.VK_ESCAPE);
 		okcancelpanel.add(cancelButton);
 		gridbag.setConstraints(okcancelpanel, c);
-		tpane.addTab("FRITZ!Box", boxpane);
+		
+		tpane.addTab("FRITZ!Box", boxpane); // TODO I18N
 		tpane.addTab("Telefon", phonepane);
 		tpane.addTab("SIP-Nummern", sippane);
 		tpane.addTab("Weiteres", otherpane);
 
+		
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(tpane, BorderLayout.CENTER);
 		getContentPane().add(okcancelpanel, BorderLayout.SOUTH);
 
 		addKeyListener(keyListener);
-
-		pack();
+		
+		setSize(new Dimension(400,350));
+		setResizable(false);
+		// pack();
 	}
 
 	public boolean showDialog() {

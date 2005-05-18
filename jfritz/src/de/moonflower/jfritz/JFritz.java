@@ -98,7 +98,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 
 	public final static String PROGRAM_NAME = "JFritz!";
 
-	public final static String PROGRAM_VERSION = "0.2.5";
+	public final static String PROGRAM_VERSION = "0.2.6";
 
 	public final static String CVS_TAG = "$Id$";
 
@@ -443,7 +443,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 		item = new JMenuItem(messages.getString("quickdials"), 'l');
 		item.setActionCommand("quickdial");
 		item.addActionListener(this);
-		item.setEnabled(true);
+		item.setEnabled(false);
 		fritzMenu.add(item);
 		fritzMenu.add(new JSeparator());
 		item = new JMenuItem(messages.getString("prog_exit"), 'x');
@@ -699,7 +699,10 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 		JOptionPane.showMessageDialog(this, PROGRAM_NAME + " v"
 				+ PROGRAM_VERSION + "\n"
 				+ JFritzUtils.getVersionFromCVSTag(CVS_TAG) + "\n\n"
-				+ "(c) 2005 by " + PROGRAM_AUTHOR);
+				+ "(c) 2005 by " + PROGRAM_AUTHOR+"\n\n"
+				+ "This tool is developed and released under\n"
+				+ "the terms of the GNU General Public License\n\n"
+				+ "Long live Free Software!");
 	}
 
 	/**
