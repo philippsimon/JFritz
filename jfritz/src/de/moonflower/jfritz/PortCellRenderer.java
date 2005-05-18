@@ -13,13 +13,14 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * This renderer shows a callport in the specified way.
+ * This renderer shows a route in the specified way.
  * 
  * @author Arno Willig
  *  
  */
 
 public class PortCellRenderer extends DefaultTableCellRenderer {
+
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 
@@ -32,22 +33,22 @@ public class PortCellRenderer extends DefaultTableCellRenderer {
 
 			if (port.equals("4"))
 				portStr = "ISDN";
-			else if (port.equals("0")) 
+			else if (port.equals("0"))
 				portStr = "FON 1";
-			else if (port.equals("1")) 
+			else if (port.equals("1"))
 				portStr = "FON 2";
-			else if (port.equals("2")) 
+			else if (port.equals("2"))
 				portStr = "FON 3";
 			else if (port.equals(""))
 				portStr = "";
 			else
 				portStr = "Port " + port;
 
-			if (!port.equals("")) setToolTipText("Port " + port);
-			
+			if (!port.equals(""))
+				setToolTipText("Port " + port);
+
 			label.setText(portStr);
 			label.setHorizontalAlignment(JLabel.CENTER);
-			//label.setIcon(curType.getImageIcon());
 		}
 		return label;
 	}
