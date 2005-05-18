@@ -346,6 +346,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 		tbutton.setActionCommand("filter_callin");
 		tbutton.addActionListener(this);
 		tbutton.setToolTipText(messages.getString("filter_callin"));
+		tbutton.setEnabled( false );
 		toolbar.add(tbutton);
 
 		tbutton = new JToggleButton(
@@ -368,7 +369,9 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 		tbutton.setActionCommand("filter_callinfailed");
 		tbutton.addActionListener(this);
 		tbutton.setToolTipText(messages.getString("filter_callinfailed"));
+		tbutton.setEnabled( false );
 		toolbar.add(tbutton);
+
 		tbutton = new JToggleButton(
 				new ImageIcon(
 						Toolkit
@@ -389,6 +392,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 		tbutton.setActionCommand("filter_callout");
 		tbutton.addActionListener(this);
 		tbutton.setToolTipText(messages.getString("filter_callout"));
+		tbutton.setEnabled( false );
 		toolbar.add(tbutton);
 
 		getContentPane().add(toolbar, BorderLayout.NORTH);

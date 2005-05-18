@@ -32,9 +32,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 /**
- * JDialog for JFritz configuration. TODO: I18N
+ * JDialog for JFritz configuration.
  * 
  * @author Arno Willig
+ * 
+ * TODO: A lot of I18N..
  */
 public class ConfigDialog extends JDialog {
 
@@ -105,6 +107,8 @@ public class ConfigDialog extends JDialog {
 		if (firmware != null) {
 			properties.setProperty("box.firmware", firmware
 					.getFirmwareVersion());
+		} else {
+			properties.remove("box.firmware");
 		}
 	}
 
@@ -170,10 +174,12 @@ public class ConfigDialog extends JDialog {
 						System.err.println("Password wrong!");
 						boxtypeLabel.setForeground(Color.RED);
 						boxtypeLabel.setText("Passwort ungültig!");
+						firmware = null;
 					} catch (IOException e1) {
 						System.err.println("Address wrong!");
 						boxtypeLabel.setForeground(Color.RED);
 						boxtypeLabel.setText("Box-Adresse ungültig!");
+						firmware = null;
 					}
 
 				}
