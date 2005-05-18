@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ * 
  * Password dialog box
  */
 

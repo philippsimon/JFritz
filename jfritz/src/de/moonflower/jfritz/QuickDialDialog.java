@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ * 
  * Created on 14.05.2005
  *
  */
@@ -34,8 +36,6 @@ public class QuickDialDialog extends JDialog {
 
 	/**
 	 * @param owner
-	 * @param title
-	 * @param modal
 	 * @throws java.awt.HeadlessException
 	 */
 	public QuickDialDialog(JFritz owner) throws HeadlessException {
@@ -54,10 +54,12 @@ public class QuickDialDialog extends JDialog {
 	 */
 	private void getQuickDialData() {
 		try {
-			quickDialData = FritzBox.retrieveQuickDialsFromFritzBox(properties
-					.getProperty("box.address"), properties
-					.getProperty("box.password"), FritzBox
-					.detectBoxType(properties.getProperty("box.address")));
+			quickDialData = JFritzUtils.retrieveQuickDialsFromFritzBox(
+					properties.getProperty("box.address"), properties
+							.getProperty("box.password"), JFritzUtils
+							.detectBoxType(properties
+									.getProperty("box.address"), properties
+									.getProperty("box.password")));
 		} catch (WrongPasswordException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
