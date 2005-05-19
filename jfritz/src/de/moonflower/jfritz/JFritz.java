@@ -47,8 +47,13 @@
  * 
  * CHANGELOG:
  * 
- * JFritz! 0.2.7: 
+ * JFritz! 0.2.9: 
+ * 
+ * JFritz! 0.2.8: 
  * - Bugfix: Firmware detection had nasty bug
+ * - Bugfix: Firmware detection detects modded firmware properly
+ * - Bugfix: RegExps adapted for modded firmware
+ * - Support for SIP-Provider for fritzbox fon wlan
  * - Notify users whenn calls have been retrieved
  * - CSV Export
  * 
@@ -141,7 +146,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 
 	public final static String PROGRAM_NAME = "JFritz!";
 
-	public final static String PROGRAM_VERSION = "0.2.7";
+	public final static String PROGRAM_VERSION = "0.2.9";
 
 	public final static String CVS_TAG = "$Id$";
 
