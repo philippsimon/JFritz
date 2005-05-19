@@ -168,7 +168,7 @@ public class JFritzUtils {
 	 * @return Vector of SipProvider
 	 * @throws WrongPasswordException
 	 * @throws IOException
-	 * @author robotniko
+	 * author robotniko
 	 */
 	public static Vector retrieveSipProvider(String box_address,
 			String password, byte boxtype) throws WrongPasswordException,
@@ -188,7 +188,7 @@ public class JFritzUtils {
 	 * @param data
 	 *            html data
 	 * @return list of SipProvider objects
-	 * @author robotniko, akw
+	 * author robotniko, akw
 	 */
 	public static Vector parseSipProvider(String data) {
 		Vector list = new Vector();
@@ -212,7 +212,6 @@ public class JFritzUtils {
 	 * @return html data
 	 * @throws WrongPasswordException
 	 * @throws IOException
-	 * @author akw
 	 */
 	public static String fetchDataFromURL(String urlstr, String postdata)
 			throws WrongPasswordException, IOException {
@@ -325,7 +324,6 @@ public class JFritzUtils {
 	 * Parses html data from the fritz!box's web interface.
 	 * 
 	 * @param data
-	 * @author akw
 	 */
 	public static Vector parseCallerData(String data, int boxtype,
 			String countryPrefix, String countryCode, String areaPrefix,
