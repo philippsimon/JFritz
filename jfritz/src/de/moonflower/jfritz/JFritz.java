@@ -48,6 +48,7 @@
  * CHANGELOG:
  * 
  * JFritz! 0.2.7: 
+ * - Bugfix: Firmware detection had nasty bug
  * - Notify users whenn calls have been retrieved
  * - CSV Export
  * 
