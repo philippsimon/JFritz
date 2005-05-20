@@ -233,7 +233,7 @@ public class ConfigDialog extends JDialog {
 					try {
 						Vector data = JFritzUtils.retrieveSipProvider(address
 								.getText(), new String(pass.getPassword()),
-								firmware.getBoxType());
+								firmware);
 						sipmodel.setData(data);
 						sipmodel.fireTableDataChanged();
 					} catch (WrongPasswordException e1) {

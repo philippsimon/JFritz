@@ -4,6 +4,7 @@
  * JFritz!
  * http://jfritz.sourceforge.net
  * 
+ *
  * (c) Arno Willig <akw@thinkwiki.org>
  * 
  * Created on 08.04.2005
