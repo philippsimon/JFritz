@@ -161,8 +161,9 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 
 	public final static String CALLS_CSV_FILE = "calls.csv";
 
-	public final static boolean IS_RELEASE = Integer.parseInt(PROGRAM_VERSION
-			.substring(PROGRAM_VERSION.lastIndexOf(".") + 1)) % 2 == 1;
+	public final static boolean DEVEL_VERSION = Integer
+			.parseInt(PROGRAM_VERSION.substring(PROGRAM_VERSION
+					.lastIndexOf(".") + 1)) % 2 == 1;
 
 	public ResourceBundle messages;
 
@@ -188,21 +189,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 
 	Locale currentLocale;
 
-	public static void main(String[] args) {
-		Debug.on();
-		for (int n = 0; n < args.length; n++) {
-			String opt = args[n];
-			if (opt.equals("-v") || opt.equals("--verbose")
-					| opt.equals("--debug")) {
-				Debug.on();
-			}
-		}
-		new JFritz();
-	}
-
 	public JFritz() {
-		System.out.println(PROGRAM_NAME + " v" + PROGRAM_VERSION
-				+ " (c) 2005 by " + PROGRAM_AUTHOR);
 		loadProperties();
 		saveProperties();
 
@@ -325,7 +312,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 												.getResource(
 														"/de/moonflower/jfritz/resources/images/phonebook.png"))));
 		button.setToolTipText(messages.getString("phonebook"));
-		button.setEnabled(IS_RELEASE);
+		button.setEnabled(DEVEL_VERSION);
 		toolbar.add(button);
 
 		button = new JButton();
@@ -340,7 +327,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 												.getResource(
 														"/de/moonflower/jfritz/resources/images/quickdial.png"))));
 		button.setToolTipText(messages.getString("quickdial"));
-		button.setEnabled(IS_RELEASE);
+		button.setEnabled(DEVEL_VERSION);
 		toolbar.add(button);
 
 		toolbar.addSeparator();
@@ -393,7 +380,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 				getClass().getResource(
 						"/de/moonflower/jfritz/resources/images/help.png"))));
 		button.setToolTipText(messages.getString("help_menu"));
-		button.setEnabled(IS_RELEASE);
+		button.setEnabled(DEVEL_VERSION);
 		toolbar.add(button);
 
 		toolbar.addSeparator();
@@ -428,7 +415,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 		tbutton.setActionCommand("filter_callin");
 		tbutton.addActionListener(this);
 		tbutton.setToolTipText(messages.getString("filter_callin"));
-		tbutton.setEnabled(IS_RELEASE);
+		tbutton.setEnabled(DEVEL_VERSION);
 		toolbar.add(tbutton);
 
 		tbutton = new JToggleButton(
@@ -451,7 +438,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 		tbutton.setActionCommand("filter_callinfailed");
 		tbutton.addActionListener(this);
 		tbutton.setToolTipText(messages.getString("filter_callinfailed"));
-		tbutton.setEnabled(IS_RELEASE);
+		tbutton.setEnabled(DEVEL_VERSION);
 		toolbar.add(tbutton);
 
 		tbutton = new JToggleButton(
@@ -474,7 +461,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 		tbutton.setActionCommand("filter_callout");
 		tbutton.addActionListener(this);
 		tbutton.setToolTipText(messages.getString("filter_callout"));
-		tbutton.setEnabled(IS_RELEASE);
+		tbutton.setEnabled(DEVEL_VERSION);
 		toolbar.add(tbutton);
 
 		getContentPane().add(toolbar, BorderLayout.NORTH);
@@ -524,13 +511,13 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 		item = new JMenuItem(messages.getString("export_excel"), 'c');
 		item.setActionCommand("export_excel");
 		item.addActionListener(this);
-		item.setEnabled(IS_RELEASE);
+		item.setEnabled(DEVEL_VERSION);
 		exportMenu.add(item);
 
 		item = new JMenuItem(messages.getString("export_openoffice"), 'c');
 		item.setActionCommand("export_openoffice");
 		item.addActionListener(this);
-		item.setEnabled(IS_RELEASE);
+		item.setEnabled(DEVEL_VERSION);
 		exportMenu.add(item);
 		fritzMenu.add(exportMenu);
 
@@ -538,12 +525,12 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 		item = new JMenuItem(messages.getString("phonebook"), 'b');
 		item.setActionCommand("phonebook");
 		item.addActionListener(this);
-		item.setEnabled(IS_RELEASE);
+		item.setEnabled(DEVEL_VERSION);
 		fritzMenu.add(item);
 		item = new JMenuItem(messages.getString("quickdials"));
 		item.setActionCommand("quickdial");
 		item.addActionListener(this);
-		item.setEnabled(IS_RELEASE);
+		item.setEnabled(DEVEL_VERSION);
 		fritzMenu.add(item);
 		fritzMenu.add(new JSeparator());
 		item = new JMenuItem(messages.getString("prog_exit"), 'x');
@@ -554,7 +541,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 		item = new JMenuItem(messages.getString("help_content"), 'h');
 		item.setActionCommand("help");
 		item.addActionListener(this);
-		item.setEnabled(IS_RELEASE);
+		item.setEnabled(DEVEL_VERSION);
 		helpMenu.add(item);
 		item = new JMenuItem(messages.getString("jfritz_website"), 'w');
 		item.setActionCommand("website");
@@ -1059,5 +1046,33 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 			Debug.err("Unimplemented action: " + e.getActionCommand());
 		}
 	}
+
+	/**
+	 * Main method for starting JFritz!
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		System.out.println(PROGRAM_NAME + " v" + PROGRAM_VERSION
+				+ " (c) 2005 by " + PROGRAM_AUTHOR);
+
+		if (DEVEL_VERSION)
+			Debug.on();
+
+		for (int n = 0; n < args.length; n++) {
+			String opt = args[n];
+			if (opt.equals("-h") || opt.equals("--help")) {
+				System.out.println("Arguments:");
+				System.out.println(" -h or --help		This short description");
+				System.out.println(" -v or --verbose	Turn on debug information");
+				System.exit(0);
+			} else if (opt.equals("-v") || opt.equals("--verbose")
+					|| opt.equals("--debug")) {
+				Debug.on();
+			}
+		}
+		new JFritz();
+	}
+
 
 }
