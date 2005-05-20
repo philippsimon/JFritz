@@ -2,7 +2,7 @@
  * $Id$
  * 
  * JFritz!
- * jfritz.sourceforge.net
+ * http://jfritz.sourceforge.net
  * 
  * (c) Arno Willig <akw@thinkwiki.org>
  * 
@@ -355,6 +355,17 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 		toolbar.add(button);
 
 		button = new JButton();
+		button.setActionCommand("export_vcard");
+		button.addActionListener(this);
+		button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+				getClass().getResource(
+						"/de/moonflower/jfritz/resources/images/vcard.png"))));
+		button.setToolTipText(messages.getString("export_vcard"));
+		button.setEnabled(IS_RELEASE);
+		toolbar.add(button);
+
+		/*
+		button = new JButton();
 		button.setActionCommand("export_excel");
 		button.addActionListener(this);
 		button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
@@ -374,18 +385,12 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 		button.setEnabled(true);
 		toolbar.add(button);
 
-		button
-				.setIcon(new ImageIcon(
-						Toolkit
-								.getDefaultToolkit()
-								.getImage(
-										getClass()
-												.getResource(
-														"/de/moonflower/jfritz/resources/images/openoffice.png"))));
+		button.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource(
+				"/de/moonflower/jfritz/resources/images/openoffice.png"))));
 		button.setToolTipText(messages.getString("export_openoffice"));
 		button.setEnabled(IS_RELEASE);
 		toolbar.add(button);
-
+*/
 		button = new JButton();
 		button.setActionCommand("help");
 		button.addActionListener(this);
