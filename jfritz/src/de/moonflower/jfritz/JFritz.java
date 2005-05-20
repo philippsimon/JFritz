@@ -189,6 +189,14 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 	Locale currentLocale;
 
 	public static void main(String[] args) {
+		Debug.on();
+		for (int n = 0; n < args.length; n++) {
+			String opt = args[n];
+			if (opt.equals("-v") || opt.equals("--verbose")
+					| opt.equals("--debug")) {
+				Debug.on();
+			}
+		}
 		new JFritz();
 	}
 
@@ -206,7 +214,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 					"de.moonflower.jfritz.resources.jfritz", currentLocale);
 
 		} catch (MissingResourceException e) {
-			System.err.println("Can't find i18n resource!");
+			Debug.err("Can't find i18n resource!");
 			JOptionPane.showMessageDialog(this, PROGRAM_NAME + " v"
 					+ PROGRAM_VERSION
 					+ "\n\nCannot start if there is an '!' in path!");
@@ -214,7 +222,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 		}
 		new ReverseLookup();
 
-		createCallerList();
+		callerlist = new CallerList(properties, participants);
 		javax.swing.SwingUtilities.invokeLater(this);
 	}
 
@@ -253,14 +261,6 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-	}
-
-	/**
-	 * creates the CallerList
-	 */
-	private void createCallerList() {
-		// System.out.println("Locale is " + messages.getLocale().toString());
-		callerlist = new CallerList(properties, participants);
 	}
 
 	/**
@@ -601,10 +601,10 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 			timer = new Timer();
 			timer.schedule(new FetchListTask(this), 5000, Integer
 					.parseInt(properties.getProperty("fetch.timer")) * 60000);
-			System.out.println("Timer enabled");
+			Debug.msg("Timer enabled");
 		} else {
 			timer.cancel();
-			System.out.println("Timer disabled");
+			Debug.msg("Timer disabled");
 		}
 	}
 
@@ -709,12 +709,14 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 			};
 			worker.start();
 		} else {
-			//			System.err.println("Multiple clicking is disabled..");
+			Debug.err("Multiple clicking is disabled..");
 		}
 	}
 
 	/**
 	 * Show the quick dial dialog
+	 * 
+	 * TODO: A lot..
 	 */
 	private void showQuickDialDialog() {
 		QuickDialDialog p = new QuickDialDialog(this);
@@ -842,7 +844,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 				SwingUtilities.updateComponentTreeUI(this);
 				properties.setProperty("lookandfeel", info.getClassName());
 			} catch (Exception e) {
-				System.err.println("Unable to set UI " + e.getMessage());
+				Debug.err("Unable to set UI " + e.getMessage());
 			}
 		}
 	}
@@ -869,7 +871,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 			properties.loadFromXML(fis);
 			fis.close();
 		} catch (FileNotFoundException e) {
-			System.err.println("File " + PROPERTIES_FILE
+			Debug.err("File " + PROPERTIES_FILE
 					+ " not found, using default values");
 		} catch (InvalidPropertiesFormatException e) {
 		} catch (IOException e) {
@@ -880,7 +882,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 			participants.loadFromXML(fis);
 			fis.close();
 		} catch (FileNotFoundException e) {
-			System.err.println("File " + PARTICIPANTS_FILE
+			Debug.err("File " + PARTICIPANTS_FILE
 					+ " not found, using default values");
 		} catch (InvalidPropertiesFormatException e) {
 		} catch (IOException e) {
@@ -963,21 +965,20 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 	 * Action Listener for menu and toolbar
 	 */
 	public void actionPerformed(ActionEvent e) {
-		// System.out.println("Action " + e.getActionCommand());
+		Debug.msg("Action " + e.getActionCommand());
 		if (e.getActionCommand() == "exit") {
 			showExitDialog();
 		} else if (e.getActionCommand() == "about") {
 			showAboutDialog();
 		} else if (e.getActionCommand() == "help") {
-			System.err.println("No help available yet");
+			Debug.err("No help available yet");
 		} else if (e.getActionCommand() == "website") {
 			final String url = "http://jfritz.sourceforge.net/";
 			try {
 				Runtime.getRuntime().exec(
 						"rundll32 url.dll,FileProtocolHandler " + url);
 			} catch (IOException e1) {
-				System.err
-						.println("Website opening works only on win32 platforms.");
+				Debug.err("Website opening works only on win32 platforms.");
 			}
 		} else if (e.getActionCommand() == "export_csv") {
 
@@ -1031,7 +1032,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 					vcard.saveToFile(file);
 				}
 			} else {
-				System.err.println("No valid row selected");
+				Debug.err("No valid row selected");
 			}
 		} else if (e.getActionCommand() == "config") {
 			showConfigDialog();
@@ -1055,7 +1056,7 @@ public class JFritz extends JFrame implements Runnable, ActionListener,
 			callerlist.setFilterCallOut(!((JToggleButton) e.getSource())
 					.isSelected());
 		} else {
-			System.err.println("Unimplemented action: " + e.getActionCommand());
+			Debug.err("Unimplemented action: " + e.getActionCommand());
 		}
 	}
 

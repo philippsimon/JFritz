@@ -76,7 +76,7 @@ public class CallerList extends AbstractTableModel {
 		this.filterCallIn = filter_callin;
 		this.filterCallInFailed = filter_callinfailed;
 		this.filterCallOut = filter_callout;
-		System.err.println("Setting filter to: " + filterCallIn + ", "
+		Debug.msg("Setting filter to: " + filterCallIn + ", "
 				+ filterCallInFailed + ", " + filterCallOut);
 	}
 
@@ -109,7 +109,7 @@ public class CallerList extends AbstractTableModel {
 	 *  
 	 */
 	public void saveToXMLFile() {
-		System.out.println("Saving to file " + JFritz.CALLS_FILE);
+		Debug.msg("Saving to file " + JFritz.CALLS_FILE);
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream(JFritz.CALLS_FILE);
@@ -144,7 +144,7 @@ public class CallerList extends AbstractTableModel {
 			pw.println("</calls>");
 			pw.close();
 		} catch (FileNotFoundException e) {
-			System.err.println("Could not write " + JFritz.CALLS_FILE + "!");
+			Debug.err("Could not write " + JFritz.CALLS_FILE + "!");
 		}
 	}
 
@@ -154,7 +154,7 @@ public class CallerList extends AbstractTableModel {
 	 * @param filename
 	 */
 	public void saveToCSVFile(String filename) {
-		System.out.println("Saving to csv file " + filename);
+		Debug.msg("Saving to csv file " + filename);
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream(filename);
@@ -167,7 +167,7 @@ public class CallerList extends AbstractTableModel {
 			}
 			pw.close();
 		} catch (FileNotFoundException e) {
-			System.err.println("Could not write " + filename + "!");
+			Debug.err("Could not write " + filename + "!");
 		}
 
 	}
@@ -190,11 +190,11 @@ public class CallerList extends AbstractTableModel {
 			factory.newSAXParser().parse(new File(JFritz.CALLS_FILE),
 					new CallFileXMLHandler(this));
 		} catch (ParserConfigurationException e) {
-			System.err.println("Error with ParserConfiguration!");
+			Debug.err("Error with ParserConfiguration!");
 		} catch (SAXException e) {
-			System.err.println("Error on parsing " + JFritz.CALLS_FILE + "!");
+			Debug.err("Error on parsing " + JFritz.CALLS_FILE + "!");
 		} catch (IOException e) {
-			System.err.println("Could not read " + JFritz.CALLS_FILE + "!");
+			Debug.err("Could not read " + JFritz.CALLS_FILE + "!");
 		}
 	}
 
@@ -209,18 +209,7 @@ public class CallerList extends AbstractTableModel {
 				.getProperty("country.code"), properties
 				.getProperty("area.prefix"), properties
 				.getProperty("area.code"));
-		String participant = participants.getProperty(areanumber, "");
-		if (!number.equals("")) {
-			if (participant.equals("")) {
-				// TODO participant = ReverseLookup.lookup( number );
-				//				System.out.println("Reverse-Lookup for " + number+":
-				// "+participant);
-				if (!participant.equals("")) {
-					participants.setProperty(areanumber, participant);
-				}
-			}
-		}
-		return participant;
+		return participants.getProperty(areanumber, "");
 	}
 
 	/**
@@ -305,7 +294,7 @@ public class CallerList extends AbstractTableModel {
 		if (properties.getProperty("option.notifyOnCalls", "false").equals(
 				"true")
 				&& (newEntries > 0)) {
-			System.out.println(newEntries + " new calls retrieved!");
+			Debug.msg(newEntries + " new calls retrieved!");
 			// TODO: I18N
 			if (newEntries == 1) {
 				JOptionPane.showMessageDialog(null,
@@ -487,7 +476,7 @@ public class CallerList extends AbstractTableModel {
 	 * TODO: To be implemented..
 	 */
 	public void updateFilter() {
-		System.err.println("CallTypeFilter: " + filterCallIn + "|"
+		Debug.err("CallTypeFilter: " + filterCallIn + "|"
 				+ filterCallInFailed + "|" + filterCallOut);
 
 	}
