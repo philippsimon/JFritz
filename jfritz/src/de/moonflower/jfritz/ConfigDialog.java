@@ -21,7 +21,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.Properties;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -88,12 +87,12 @@ public class ConfigDialog extends JDialog {
 	 * 
 	 * @param properties
 	 */
-	public void setValues(Properties properties) {
-		notifyOnCallsButton.setSelected(Boolean.parseBoolean(properties
+	public void setValues(JFritzProperties properties) {
+		notifyOnCallsButton.setSelected(Boolean.getBoolean(properties
 				.getProperty("option.notifyOnCalls")));
-		fetchAfterStartButton.setSelected(Boolean.parseBoolean(properties
+		fetchAfterStartButton.setSelected(Boolean.getBoolean(properties
 				.getProperty("option.fetchAfterStart")));
-		deleteAfterFetchButton.setSelected(Boolean.parseBoolean(properties
+		deleteAfterFetchButton.setSelected(Boolean.getBoolean(properties
 				.getProperty("option.deleteAfterFetch")));
 		pass.setText(properties.getProperty("box.password"));
 		address.setText(properties.getProperty("box.address"));
@@ -124,7 +123,7 @@ public class ConfigDialog extends JDialog {
 	 * 
 	 * @param properties
 	 */
-	public void storeValues(Properties properties) {
+	public void storeValues(JFritzProperties properties) {
 		// Remove leading "0" from areaCode
 		if (areaCode.getText().startsWith(areaPrefix.getText()))
 			areaCode.setText(areaCode.getText().substring(
@@ -282,8 +281,6 @@ public class ConfigDialog extends JDialog {
 		boxtypeLabel = new JLabel();
 		gridbag.setConstraints(boxtypeLabel, c);
 		boxpane.add(boxtypeLabel);
-
-
 
 		c.gridy = 1;
 		label = new JLabel("Ortsvorwahl: ");
