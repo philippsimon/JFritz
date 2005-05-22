@@ -303,4 +303,5 @@ public class JFritz {
 	public final ResourceBundle getMessages() {
 		return messages;
 	}
+	
 }
