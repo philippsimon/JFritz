@@ -110,6 +110,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		createTable();
 		createStatusbar();
 
+		jfritz.getCallerlist().updateFilter();
+		callertable.tableChanged(callertableevent);
 	}
 
 	public void setDefaultLookAndFeel() {
@@ -270,6 +272,9 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		toolbar.add(button);
 
 		toolbar.addSeparator();
+
+		// FILTER BUTTONS
+
 		JToggleButton tbutton = new JToggleButton(
 				new ImageIcon(
 						Toolkit
@@ -290,7 +295,9 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		tbutton.setActionCommand("filter_callin");
 		tbutton.addActionListener(this);
 		tbutton.setToolTipText(jfritz.getMessages().getString("filter_callin"));
-		tbutton.setEnabled(JFritz.DEVEL_VERSION);
+		tbutton.setSelected(!Boolean.parseBoolean(properties.getProperty(
+				"filter.callin", "false")));
+
 		toolbar.add(tbutton);
 
 		tbutton = new JToggleButton(
@@ -314,7 +321,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		tbutton.addActionListener(this);
 		tbutton.setToolTipText(jfritz.getMessages().getString(
 				"filter_callinfailed"));
-		tbutton.setEnabled(JFritz.DEVEL_VERSION);
+		tbutton.setSelected(!Boolean.parseBoolean(properties.getProperty(
+				"filter.callinfailed", "false")));
 		toolbar.add(tbutton);
 
 		tbutton = new JToggleButton(
@@ -339,7 +347,9 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		tbutton
 				.setToolTipText(jfritz.getMessages()
 						.getString("filter_callout"));
-		tbutton.setEnabled(JFritz.DEVEL_VERSION);
+		tbutton.setSelected(!Boolean.parseBoolean(properties.getProperty(
+				"filter.callout", "false")));
+
 		toolbar.add(tbutton);
 
 		getContentPane().add(toolbar, BorderLayout.NORTH);
@@ -848,16 +858,19 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		} else if (e.getActionCommand() == "reverselookup") {
 			reverseLookup();
 		} else if (e.getActionCommand() == "filter_callin") {
-			jfritz.getCallerlist().setFilterCallIn(
-					!((JToggleButton) e.getSource()).isSelected());
+			properties.setProperty("filter.callin", Boolean
+					.toString(!((JToggleButton) e.getSource()).isSelected()));
+			jfritz.getCallerlist().updateFilter();
 			callertable.tableChanged(callertableevent);
 		} else if (e.getActionCommand() == "filter_callinfailed") {
-			jfritz.getCallerlist().setFilterCallInFailed(
-					!((JToggleButton) e.getSource()).isSelected());
+			properties.setProperty("filter.callinfailed", Boolean
+					.toString(!((JToggleButton) e.getSource()).isSelected()));
+			jfritz.getCallerlist().updateFilter();
 			callertable.tableChanged(callertableevent);
 		} else if (e.getActionCommand() == "filter_callout") {
-			jfritz.getCallerlist().setFilterCallOut(
-					!((JToggleButton) e.getSource()).isSelected());
+			properties.setProperty("filter.callout", Boolean
+					.toString(!((JToggleButton) e.getSource()).isSelected()));
+			jfritz.getCallerlist().updateFilter();
 			callertable.tableChanged(callertableevent);
 		} else {
 			Debug.err("Unimplemented action: " + e.getActionCommand());
