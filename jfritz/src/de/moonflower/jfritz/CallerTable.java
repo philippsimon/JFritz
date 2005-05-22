@@ -18,8 +18,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-
-
 /**
  * Creates table of callers
  * 
@@ -28,21 +26,23 @@ import javax.swing.table.TableModel;
 public class CallerTable extends JTable {
 
 	private ResourceBundle messages;
+
 	private JFritzProperties properties, participants;
 
-	
 	/**
 	 * Constructs CallerTable
-	 * @param callerlist 
+	 * 
+	 * @param callerlist
 	 */
-	public CallerTable(TableModel callerlist, ResourceBundle messages, JFritzProperties properties) {
+	public CallerTable(TableModel callerlist, ResourceBundle messages,
+			JFritzProperties properties) {
 		super(callerlist);
 		setMessages(messages);
 		setProperties(properties);
 		setTableProperties();
 		createColumns(messages);
 	}
-	
+
 	/**
 	 * sets some properties of the CallerTable
 	 */
@@ -53,7 +53,7 @@ public class CallerTable extends JTable {
 		// setDefaultRenderer(Port.class, new PortCellRenderer());
 		// setDefaultRenderer(Duration.class, new DurationCellRenderer());
 		// setDefaultRenderer(Number.class, new NumberCellRenderer());
-		
+
 		setRowHeight(24);
 		setAutoCreateColumnsFromModel(false);
 		setColumnSelectionAllowed(false);
@@ -65,13 +65,14 @@ public class CallerTable extends JTable {
 		getTableHeader().setReorderingAllowed(false);
 		getTableHeader().setResizingAllowed(true);
 		getTableHeader().addMouseListener(new ColumnHeaderListener());
-		
+
 		SelectionListener listener = new SelectionListener(this);
-		getSelectionModel().addListSelectionListener(listener);		
+		getSelectionModel().addListSelectionListener(listener);
 	}
 
 	/**
 	 * Creates the columns of the CallerTable
+	 * 
 	 * @param messages
 	 */
 	private void createColumns(ResourceBundle messages) {
@@ -80,59 +81,58 @@ public class CallerTable extends JTable {
 		TableColumn col = getColumnModel().getColumn(0);
 		col.setHeaderValue(messages.getString("type"));
 		headerTips.setToolTip(col, messages.getString("type_desc"));
-		col.setPreferredWidth(32);
 		col.setMinWidth(32);
 		col.setMaxWidth(32);
+		col.setPreferredWidth(Integer.parseInt(properties.getProperty(
+				"column0.width", "32")));
 
 		col = getColumnModel().getColumn(1);
 		col.setHeaderValue(messages.getString("date"));
 		headerTips.setToolTip(col, messages.getString("date_desc"));
-		col.setPreferredWidth(120);
-		col.setMinWidth(120);
-		col.setMaxWidth(120);
+		col.setPreferredWidth(Integer.parseInt(properties.getProperty(
+				"column1.width", "120")));
 
 		col = getColumnModel().getColumn(2);
 		col.setHeaderValue(messages.getString("number"));
-		col.setCellRenderer(new NumberCellRenderer(properties,messages));
+		col.setCellRenderer(new NumberCellRenderer(properties, messages));
 		headerTips.setToolTip(col, messages.getString("number_desc"));
+		col.setPreferredWidth(Integer.parseInt(properties.getProperty(
+				"column2.width", "128")));
 
 		col = getColumnModel().getColumn(3);
 		col.setHeaderValue(messages.getString("participant"));
 		headerTips.setToolTip(col, messages.getString("participant_desc"));
 		col.setCellEditor(new ParticipantCellEditor());
+		col.setPreferredWidth(Integer.parseInt(properties.getProperty(
+				"column3.width", "120")));
 
 		col = getColumnModel().getColumn(4);
 		col.setHeaderValue(messages.getString("port"));
 		headerTips.setToolTip(col, messages.getString("port_desc"));
 		col.setCellRenderer(new PortCellRenderer());
-		col.setPreferredWidth(60);
-		col.setMinWidth(60);
-		col.setMaxWidth(60);
+		col.setPreferredWidth(Integer.parseInt(properties.getProperty(
+				"column4.width", "60")));
 
 		col = getColumnModel().getColumn(5);
 		col.setHeaderValue(messages.getString("route"));
 		headerTips.setToolTip(col, messages.getString("route_desc"));
 		col.setCellRenderer(new RouteCellRenderer());
-		col.setPreferredWidth(100);
-		col.setMinWidth(100);
-		col.setMaxWidth(100);
+		col.setPreferredWidth(Integer.parseInt(properties.getProperty(
+				"column5.width", "100")));
 
 		col = getColumnModel().getColumn(6);
 		col.setHeaderValue(messages.getString("duration"));
 		headerTips.setToolTip(col, messages.getString("duration_desc"));
 		col.setCellRenderer(new DurationCellRenderer());
-		col.setPreferredWidth(60);
-		col.setMinWidth(60);
-		col.setMaxWidth(60);
-
+		col.setPreferredWidth(Integer.parseInt(properties.getProperty(
+				"column6.width", "60")));
 
 		getTableHeader().addMouseMotionListener(headerTips);
 	}
 
-	public Component prepareRenderer(TableCellRenderer renderer,
-			int rowIndex, int vColIndex) {
-		Component c = super.prepareRenderer(renderer, rowIndex,
-				vColIndex);
+	public Component prepareRenderer(TableCellRenderer renderer, int rowIndex,
+			int vColIndex) {
+		Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
 		if (rowIndex % 2 == 0 && !isCellSelected(rowIndex, vColIndex)) {
 			c.setBackground(new Color(255, 255, 200));
 		} else if (!isCellSelected(rowIndex, vColIndex)) {
@@ -145,14 +145,16 @@ public class CallerTable extends JTable {
 	}
 
 	/**
-	 * @param messages The messages to set.
+	 * @param messages
+	 *            The messages to set.
 	 */
 	public void setMessages(ResourceBundle messages) {
 		this.messages = messages;
 	}
-	
+
 	/**
-	 * @param properties The messages to set.
+	 * @param properties
+	 *            The messages to set.
 	 */
 	public void setProperties(JFritzProperties properties) {
 		this.properties = properties;
@@ -175,6 +177,5 @@ public class CallerTable extends JTable {
 		}
 		return null;
 	}
-
 
 }

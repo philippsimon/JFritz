@@ -119,6 +119,7 @@ public class FritzBoxFirmware {
 		this.modFirmwareVersion = mod;
 	}
 
+
 	/**
 	 * Static method for firmware detection
 	 * 

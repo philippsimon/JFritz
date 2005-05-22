@@ -68,11 +68,12 @@ public class CallerList extends AbstractTableModel {
 	boolean filterCallOut = false;
 
 	public Vector getCallVector() {
-		return callerdata;
+		return unfilteredcallerdata;
 	}
 
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		return (!((Call) callerdata.get(rowIndex)).getNumber().equals("") && (columnIndex == 3));
+		return (!((Call) unfilteredcallerdata.get(rowIndex)).getNumber()
+				.equals("") && (columnIndex == 3));
 	}
 
 	public Class getColumnClass(int columnIndex) {
@@ -107,6 +108,7 @@ public class CallerList extends AbstractTableModel {
 	 */
 	public CallerList() {
 		callerdata = new Vector();
+		unfilteredcallerdata = new Vector();
 	}
 
 	/**
@@ -141,7 +143,7 @@ public class CallerList extends AbstractTableModel {
 			pw.println("<calls>");
 			pw.println("<comment>Calls for " + JFritz.PROGRAM_NAME + " v"
 					+ JFritz.PROGRAM_VERSION + "</comment>");
-			Enumeration en = callerdata.elements();
+			Enumeration en = unfilteredcallerdata.elements();
 			while (en.hasMoreElements()) {
 				Call call = (Call) en.nextElement();
 				CallType type = call.getCalltype();
@@ -248,6 +250,7 @@ public class CallerList extends AbstractTableModel {
 							JFritz.CALLS_FILE)));
 			// parser.parse(new File(JFritz.CALLS_FILE),new
 			// CallFileXMLHandler(this));
+			updateFilter();
 
 		} catch (ParserConfigurationException e) {
 			Debug.err("Error with ParserConfiguration!");
@@ -328,7 +331,7 @@ public class CallerList extends AbstractTableModel {
 		}
 
 		if (newEntry) { // Add new entry to table model
-			callerdata.add(call);
+			unfilteredcallerdata.add(call);
 		}
 		return newEntry;
 	}
@@ -547,7 +550,26 @@ public class CallerList extends AbstractTableModel {
 	public void updateFilter() {
 		Debug.err("CallTypeFilter: " + filterCallIn + "|" + filterCallInFailed
 				+ "|" + filterCallOut);
-
+		if ((!filterCallIn) && (!filterCallInFailed) && (!filterCallOut))
+			callerdata = unfilteredcallerdata;
+		else {
+			Enumeration en = unfilteredcallerdata.elements();
+			Vector filteredcallerdata;
+			filteredcallerdata = new Vector();
+			while (en.hasMoreElements()) {
+				Call call = (Call) en.nextElement();
+				if ((!filterCallIn)
+						&& (call.getCalltype().toInt() == CallType.CALLIN))
+					filteredcallerdata.add(call);
+				if ((!filterCallInFailed)
+						&& (call.getCalltype().toInt() == CallType.CALLIN_FAILED))
+					filteredcallerdata.add(call);
+				if ((!filterCallOut)
+						&& (call.getCalltype().toInt() == CallType.CALLOUT))
+					filteredcallerdata.add(call);
+			}
+			callerdata = filteredcallerdata;
+		}
 	}
 
 	/**
