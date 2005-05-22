@@ -160,6 +160,7 @@ public class JFritz {
 		callerlist = new CallerList(properties, participants);
 
 		jframe = new JFritzWindow(this);
+		callerlist.setJFritzWindow(jframe);
 		javax.swing.SwingUtilities.invokeLater(jframe);
 	}
 

@@ -25,6 +25,7 @@ public class FetchListTask extends TimerTask {
 		super();
 		this.jfritz = jfritz;
 	}
+	
 	/**
 	 * run fetchListTask
 	 * @see java.lang.Runnable#run()

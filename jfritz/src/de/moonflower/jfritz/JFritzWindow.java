@@ -84,8 +84,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	public void run() {
 		jfritz.getCallerlist().loadFromXMLFile();
 		jfritz.getCallerlist().sortAllRowsBy(1, false);
-		setStatus(jfritz.getCallerlist().getRowCount() + " "
-				+ jfritz.getMessages().getString("entries"));
+		setStatus("");
 	}
 
 	private void createGUI() {
@@ -456,10 +455,10 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 
 				public void finished() {
 					setBusy(false);
-					int rows = jfritz.getCallerlist().getRowCount();
-					setStatus(rows + " "
-							+ jfritz.getMessages().getString("entries"));
+					setStatus("");
 					jfritz.getCallerlist().sortAllRowsBy(1, false);
+					jfritz.getCallerlist().updateFilter();
+					callertable.tableChanged(callertableevent);
 					isretrieving = false;
 				}
 			};
@@ -513,8 +512,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 					setBusy(false);
 					isretrieving = false;
 					int rows = jfritz.getCallerlist().getRowCount();
-					setStatus(rows + " "
-							+ jfritz.getMessages().getString("entries"));
+					setStatus("");
 				}
 			};
 			worker.start();
@@ -666,8 +664,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	 */
 	public void setStatus(String status) {
 		if (status.equals(""))
-			progressbar.setString(JFritz.PROGRAM_NAME + " v"
-					+ JFritz.PROGRAM_VERSION);
+			progressbar.setString(jfritz.getCallerlist().getRowCount() + " "
+					+ jfritz.getMessages().getString("entries"));
 		else
 			progressbar.setString(status);
 	}
