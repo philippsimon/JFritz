@@ -83,7 +83,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 
 	public void run() {
 		jfritz.getCallerlist().loadFromXMLFile(JFritz.CALLS_FILE);
-		jfritz.getCallerlist().sortAllRowsBy(1, false);
 		setStatus();
 	}
 
@@ -109,7 +108,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		createTable();
 		createStatusbar();
 
-		jfritz.getCallerlist().updateFilter();
 		callertable.tableChanged(callertableevent);
 	}
 
@@ -462,8 +460,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 				public void finished() {
 					setBusy(false);
 					setStatus();
-					jfritz.getCallerlist().sortAllRowsBy(1, false);
-					jfritz.getCallerlist().updateFilter();
 					callertable.tableChanged(callertableevent);
 					isretrieving = false;
 				}
@@ -491,8 +487,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 									.getFilteredCallVector();
 							Call call = (Call) data.get(i);
 							String number = call.getNumber();
-							String participant = jfritz.getCallerlist()
-									.getParticipantFromNumber(call.getNumber());
+							String participant = call.getParticipant();
 							if (!number.equals("") && (participant.equals(""))) {
 								setStatus(jfritz.getMessages().getString(
 										"reverse_lookup_for")

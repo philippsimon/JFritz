@@ -39,7 +39,6 @@
  * ColumnWidth speichern.
  * 
  * JTable: 
- * - Filtern von CallTypes
  * - Suchfeld für Name/Nummernsuche
  * 
  * Statistik: Top-Caller (Name/Nummer, Wie oft, Wie lange)
@@ -47,7 +46,12 @@
  * JAR: Signing, Deploying, Website jfritz.moonflower.de oder Sourceforge
  * 
  * CHANGELOG:
- *  
+ * JFritz! 0.3.3
+ * - Sorting of columns by clicking on column headers
+ * - VOIP numbers starting with 49 are now rewritten correctly 
+ * 
+ * TODO: Disable Participant editing when resorting rows!
+ * 
  * JFritz! 0.3.2:
  * - Saves and restores window position/size
  * - Saves and restores width of table columns
@@ -126,7 +130,7 @@ public class JFritz {
 
 	public final static String PROGRAM_NAME = "JFritz!";
 
-	public final static String PROGRAM_VERSION = "0.3.2";
+	public final static String PROGRAM_VERSION = "0.3.3";
 
 	public final static String CVS_TAG = "$Id$";
 
@@ -159,10 +163,8 @@ public class JFritz {
 		loadProperties();
 		new ReverseLookup();
 		loadMessages(new Locale("de", "DE"));
-		callerlist = new CallerList(properties, participants);
-
+		callerlist = new CallerList(this);
 		jframe = new JFritzWindow(this);
-		callerlist.setJFritzWindow(jframe);
 		javax.swing.SwingUtilities.invokeLater(jframe);
 	}
 
@@ -221,21 +223,19 @@ public class JFritz {
 		}
 	}
 
-	
-	
 	/**
 	 * Saves properties to xml files
 	 */
 	public void saveProperties() {
 
-		properties.setProperty("position.left", Integer
-				.toString(jframe.getLocation().x));
-		properties.setProperty("position.top", Integer
-				.toString(jframe.getLocation().y));
-		properties.setProperty("position.width", Integer
-				.toString(jframe.getSize().width));
-		properties.setProperty("position.height", Integer
-				.toString(jframe.getSize().height));
+		properties.setProperty("position.left", Integer.toString(jframe
+				.getLocation().x));
+		properties.setProperty("position.top", Integer.toString(jframe
+				.getLocation().y));
+		properties.setProperty("position.width", Integer.toString(jframe
+				.getSize().width));
+		properties.setProperty("position.height", Integer.toString(jframe
+				.getSize().height));
 
 		Enumeration en = jframe.callertable.getColumnModel().getColumns();
 		int i = 0;
@@ -294,17 +294,39 @@ public class JFritz {
 
 		new JFritz();
 	}
+
 	/**
 	 * @return Returns the callerlist.
 	 */
 	public final CallerList getCallerlist() {
 		return callerlist;
 	}
+
 	/**
 	 * @return Returns the messages.
 	 */
 	public final ResourceBundle getMessages() {
 		return messages;
 	}
-	
+
+	/**
+	 * @return Returns the participants.
+	 */
+	public final JFritzProperties getParticipants() {
+		return participants;
+	}
+
+	/**
+	 * @return Returns the properties.
+	 */
+	public final JFritzProperties getProperties() {
+		return properties;
+	}
+
+	/**
+	 * @return Returns the jframe.
+	 */
+	public final JFritzWindow getJframe() {
+		return jframe;
+	}
 }
