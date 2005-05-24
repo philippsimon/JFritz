@@ -40,7 +40,14 @@ public class ColumnHeaderListener extends MouseAdapter {
 		if (vColIndex == -1) {
 			return;
 		}
-
+		
+		// Disable editing
+		try {			
+			list.getJfritz().getJframe().callertable.getCellEditor().cancelCellEditing();
+		} catch (NullPointerException e) {
+			
+		}
+		list.getJfritz().getJframe().callertable.editCellAt(-1,-1,null);
 		list.sortAllFilteredRowsBy(mColIndex);
 		list.fireTableDataChanged();
 

@@ -47,10 +47,12 @@
  * 
  * CHANGELOG:
  * JFritz! 0.3.3
+ * - New search filter feature
  * - Sorting of columns by clicking on column headers
  * - VOIP numbers starting with 49 are now rewritten correctly 
+ * - Bugfix: Config-Dialog now saves all values correctly
+ * - Bugfix: No empty SIP provider after detection
  * 
- * TODO: Disable Participant editing when resorting rows!
  * 
  * JFritz! 0.3.2:
  * - Saves and restores window position/size
@@ -154,7 +156,7 @@ public class JFritz {
 
 	JFritzProperties defaultProperties, properties, participants;
 
-	CallerList callerlist;
+	private CallerList callerlist;
 
 	/**
 	 *  
