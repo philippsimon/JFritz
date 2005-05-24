@@ -32,14 +32,13 @@
  * TODO:
  * Optionen-Dialog: box.clear_after_fetch=true/false
  * Optionen-Dialog: Bei Programmstart automatisch abrufen
+ * 
  * SIP-Provider: SIP-Provider Handling
  * QuickDial: Kurzwahlverwaltung
  * Phonebook: Telefonbuch für Participants
  * 
- * ColumnWidth speichern.
- * 
- * JTable: 
- * - Suchfeld für Name/Nummernsuche
+ * CallerList: Einzelne Einträge löschen
+ * CallerList: Einträge löschen älter als Datum
  * 
  * Statistik: Top-Caller (Name/Nummer, Wie oft, Wie lange)
  * 
@@ -52,6 +51,7 @@
  * - VOIP numbers starting with 49 are now rewritten correctly 
  * - Bugfix: Config-Dialog now saves all values correctly
  * - Bugfix: No empty SIP provider after detection
+ * - Bugfix: Save-Dialog on export functions
  * 
  * 
  * JFritz! 0.3.2:
@@ -132,7 +132,7 @@ public class JFritz {
 
 	public final static String PROGRAM_NAME = "JFritz!";
 
-	public final static String PROGRAM_VERSION = "0.3.3";
+	public final static String PROGRAM_VERSION = "0.3.4";
 
 	public final static String CVS_TAG = "$Id$";
 
