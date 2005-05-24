@@ -43,6 +43,8 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.filechooser.FileFilter;
 
+import de.moonflower.jfritz.upnp.UPNPUtils;
+
 /**
  * This is main window class of JFritz, which creates the GUI.
  * 
@@ -825,6 +827,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			showPhoneBook();
 		} else if (e.getActionCommand() == "quickdial") {
 			showQuickDialDialog();
+		} else if (e.getActionCommand() == "stats") {
+			UPNPUtils.SOAPTest();
 		} else if (e.getActionCommand() == "fetchList") {
 			fetchList();
 		} else if (e.getActionCommand() == "fetchTask") {
