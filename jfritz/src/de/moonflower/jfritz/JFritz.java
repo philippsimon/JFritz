@@ -176,6 +176,8 @@ public class JFritz {
 		new ReverseLookup();
 		loadMessages(new Locale("de", "DE"));
 		callerlist = new CallerList(this);
+		callerlist.loadFromXMLFile(CALLS_FILE);
+
 		jframe = new JFritzWindow(this);
 
 		ssdpthread = new SSDPdiscoverThread(this, SSDP_TIMEOUT);

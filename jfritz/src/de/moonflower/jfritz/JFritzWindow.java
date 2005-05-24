@@ -41,7 +41,6 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import javax.swing.event.TableModelEvent;
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -57,8 +56,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	JFritzProperties properties, participants;
 
 	CallerTable callertable;
-
-	TableModelEvent callertableevent;
 
 	Timer timer;
 
@@ -88,11 +85,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		setVisible(true);
 	}
 
-	public void run() {
-		jfritz.getCallerlist().loadFromXMLFile(JFritz.CALLS_FILE);
-		setStatus();
-	}
-
 	private void createGUI() {
 		setTitle(JFritz.PROGRAM_NAME);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -115,7 +107,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		createTable();
 		createStatusbar();
 
-		callertable.tableChanged(callertableevent);
+		jfritz.getCallerlist().fireTableStructureChanged();
 	}
 
 	public void setDefaultLookAndFeel() {
@@ -137,7 +129,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		progressbar = new JProgressBar();
 		progressbar.setValue(0);
 		progressbar.setStringPainted(true);
-		setStatus();
 		getContentPane().add(progressbar, BorderLayout.SOUTH);
 	}
 
@@ -311,7 +302,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 					filter = search.getText();
 					properties.setProperty("filter.search", filter);
 					jfritz.getCallerlist().updateFilter();
-					callertable.tableChanged(callertableevent);
+					jfritz.getCallerlist().fireTableStructureChanged();
 				}
 			}
 
@@ -340,8 +331,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	public void createTable() {
 		callertable = new CallerTable(jfritz.getCallerlist(), jfritz
 				.getMessages(), properties);
-		callertableevent = new TableModelEvent(jfritz.getCallerlist());
-
 		getContentPane().add(new JScrollPane(callertable), BorderLayout.CENTER);
 	}
 
@@ -512,7 +501,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 				public void finished() {
 					setBusy(false);
 					setStatus();
-					callertable.tableChanged(callertableevent);
+					jfritz.getCallerlist().fireTableStructureChanged();
 					isretrieving = false;
 				}
 			};
@@ -846,27 +835,27 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			properties.setProperty("filter.callin", Boolean
 					.toString(!((JToggleButton) e.getSource()).isSelected()));
 			jfritz.getCallerlist().updateFilter();
-			callertable.tableChanged(callertableevent);
+			jfritz.getCallerlist().fireTableStructureChanged();
 		} else if (e.getActionCommand() == "filter_callinfailed") {
 			properties.setProperty("filter.callinfailed", Boolean
 					.toString(!((JToggleButton) e.getSource()).isSelected()));
 			jfritz.getCallerlist().updateFilter();
-			callertable.tableChanged(callertableevent);
+			jfritz.getCallerlist().fireTableStructureChanged();
 		} else if (e.getActionCommand() == "filter_callout") {
 			properties.setProperty("filter.callout", Boolean
 					.toString(!((JToggleButton) e.getSource()).isSelected()));
 			jfritz.getCallerlist().updateFilter();
-			callertable.tableChanged(callertableevent);
+			jfritz.getCallerlist().fireTableStructureChanged();
 		} else if (e.getActionCommand() == "filter_number") {
 			properties.setProperty("filter.number", Boolean
 					.toString(!((JToggleButton) e.getSource()).isSelected()));
 			jfritz.getCallerlist().updateFilter();
-			callertable.tableChanged(callertableevent);
+			jfritz.getCallerlist().fireTableStructureChanged();
 		} else if (e.getActionCommand() == "clearSearchFilter") {
 			searchFilter.setText("");
 			properties.setProperty("filter.search", "");
 			jfritz.getCallerlist().updateFilter();
-			callertable.tableChanged(callertableevent);
+			jfritz.getCallerlist().fireTableStructureChanged();
 		} else {
 			Debug.err("Unimplemented action: " + e.getActionCommand());
 		}
@@ -907,6 +896,12 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	 */
 	public final JFritz getJFritz() {
 		return jfritz;
+	}
+
+	/**
+	 * @see java.lang.Runnable#run()
+	 */
+	public void run() {
 	}
 
 }
