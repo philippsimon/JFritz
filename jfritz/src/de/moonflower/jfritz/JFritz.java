@@ -148,6 +148,8 @@ public class JFritz {
 
 	public final static String CALLS_FILE = "jfritz.calls.xml";
 
+	public final static String PHONEBOOK_FILE = "jfritz.phonebook.xml";
+
 	public final static String CALLS_CSV_FILE = "calls.csv";
 
 	public final static int SSDP_TIMEOUT = 3000;
@@ -163,6 +165,8 @@ public class JFritz {
 	JFritzProperties defaultProperties, properties, participants;
 
 	private CallerList callerlist;
+	
+	private PhoneBook phonebook;
 
 	private Vector devices;
 
@@ -178,6 +182,9 @@ public class JFritz {
 		callerlist = new CallerList(this);
 		callerlist.loadFromXMLFile(CALLS_FILE);
 
+		phonebook = new PhoneBook(this);
+		phonebook.loadFromXMLFile(PHONEBOOK_FILE);
+		
 		jframe = new JFritzWindow(this);
 
 		ssdpthread = new SSDPdiscoverThread(this, SSDP_TIMEOUT);
@@ -318,6 +325,13 @@ public class JFritz {
 	 */
 	public final CallerList getCallerlist() {
 		return callerlist;
+	}
+
+	/**
+	 * @return Returns the phonebook.
+	 */
+	public final PhoneBook getPhonebook() {
+		return phonebook;
 	}
 
 	/**
