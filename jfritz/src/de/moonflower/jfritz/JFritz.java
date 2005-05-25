@@ -160,19 +160,21 @@ public class JFritz {
 			.parseInt(PROGRAM_VERSION.substring(PROGRAM_VERSION
 					.lastIndexOf(".") + 1)) % 2 == 1;
 
-	JFritzWindow jframe;
+	private JFritzWindow jframe;
 
-	ResourceBundle messages;
+	private ResourceBundle messages;
 
-	JFritzProperties defaultProperties, properties, participants;
-
-	private CallerList callerlist;
-
-	private PhoneBook phonebook;
+	private JFritzProperties defaultProperties, properties, participants;
 
 	private Vector devices;
 
 	private SSDPdiscoverThread ssdpthread;
+
+	// Table models
+	private CallerList callerlist;
+
+	private PhoneBook phonebook;
+
 
 	/**
 	 *  
