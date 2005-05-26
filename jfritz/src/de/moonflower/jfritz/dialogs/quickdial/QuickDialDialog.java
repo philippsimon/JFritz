@@ -66,7 +66,8 @@ public class QuickDialDialog extends JDialog {
 			this.messages = jframe.getMessages();
 		}
 		dataModel = new QuickDialTableModel(jframe.getJFritz());
-		dataModel.getQuickDialDataFromFritzBox();
+		// dataModel.getQuickDialDataFromFritzBox();
+		dataModel.loadFromXMLFile(JFritz.QUICKDIALS_FILE);
 		drawDialog();
 	}
 
@@ -76,12 +77,12 @@ public class QuickDialDialog extends JDialog {
 	private void drawDialog() {
 		super.dialogInit();
 
-		setTitle(messages.getString("quickdial"));
+		setTitle(messages.getString("quickdials"));
 		setModal(true);
 		setLayout(new BorderLayout());
 		getContentPane().setLayout(new BorderLayout());
 		JPanel bottomPane = new JPanel();
-		
+
 		JToolBar toolbar = new JToolBar();
 
 		KeyListener keyListener = (new KeyAdapter() {
@@ -106,14 +107,24 @@ public class QuickDialDialog extends JDialog {
 				Object source = e.getSource();
 				pressed_OK = (source == okButton);
 				setVisible((source != okButton) && (source != cancelButton));
-				if (e.getSource() == delButton) {
+				AbstractTableModel model = (AbstractTableModel) table
+				.getModel();
+
+				if (e.getActionCommand() == "deleteSIP") {
 					int row = table.getSelectedRow();
 					if (row >= 0) {
-						// FIXME quickDialData.remove(row);
-						AbstractTableModel model = (AbstractTableModel) table
-								.getModel();
+						dataModel.remove(row);
 						model.fireTableRowsDeleted(row, row);
 					}
+				} else if (e.getActionCommand() == "addSIP") {
+					dataModel.addEntry(new QuickDial("99","?","?","?"));
+					model.fireTableDataChanged();
+				} else if (e.getActionCommand() == "fetchSIP") {
+					// FIXME: Preserve description data!
+					dataModel.getQuickDialDataFromFritzBox();
+					model.fireTableDataChanged();
+				} else if (e.getActionCommand() == "storeSIP") {
+					Debug.err("Not yet implemented");
 				}
 			}
 		};
@@ -121,18 +132,20 @@ public class QuickDialDialog extends JDialog {
 		okButton = new JButton("Okay");
 		okButton.setEnabled(JFritz.DEVEL_VERSION);
 		okButton.addActionListener(actionListener);
-		okButton.addKeyListener(keyListener);		
-		
+		okButton.addKeyListener(keyListener);
+
 		cancelButton = new JButton("Abbruch");
 		cancelButton.addActionListener(actionListener);
 		cancelButton.addKeyListener(keyListener);
 
 		newButton = new JButton("Neue Kurzwahl");
+		newButton.setActionCommand("addSIP");
 		newButton.addActionListener(actionListener);
 		newButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 				getClass().getResource(
 						"/de/moonflower/jfritz/resources/images/modify.png"))));
 		delButton = new JButton("Kurzwahl löschen");
+		delButton.setActionCommand("deleteSIP");
 		delButton.addActionListener(actionListener);
 		delButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 				getClass().getResource(
@@ -142,21 +155,20 @@ public class QuickDialDialog extends JDialog {
 		b1.setActionCommand("fetchSIP");
 		b1.addActionListener(actionListener);
 
-		b1.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				getClass().getResource(
-						"/de/moonflower/jfritz/resources/images/import.png"))));
-		
+		// b1.setIcon(new
+		// ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/de/moonflower/jfritz/resources/images/import.png"))));
+
 		JButton b2 = new JButton("Auf die Box speichern");
+		b2.setActionCommand("storeSIP");
+		b2.addActionListener(actionListener);
 		b2.setEnabled(false);
-		b2.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				getClass().getResource(
-						"/de/moonflower/jfritz/resources/images/export.png"))));
+		// b2.setIcon(new
+		// ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/de/moonflower/jfritz/resources/images/export.png"))));
 
 		toolbar.add(newButton);
 		toolbar.add(delButton);
 		toolbar.add(b1);
 		toolbar.add(b2);
-
 
 		bottomPane.add(okButton);
 		bottomPane.add(cancelButton);
@@ -190,12 +202,12 @@ public class QuickDialDialog extends JDialog {
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		if (table.getRowCount() != 0)
 			table.setRowSelectionInterval(0, 0);
-		
+
 		table.getColumnModel().getColumn(0).setCellEditor(
 				new TextFieldCellEditor());
 		table.getColumnModel().getColumn(1).setCellEditor(
 				new TextFieldCellEditor());
-		// TODO		new NumberFieldCellEditor());
+		// TODO new NumberFieldCellEditor());
 		table.getColumnModel().getColumn(2).setCellEditor(
 				new TextFieldCellEditor());
 		table.getColumnModel().getColumn(3).setCellEditor(
@@ -209,7 +221,7 @@ public class QuickDialDialog extends JDialog {
 		panel.add(bottomPane, BorderLayout.SOUTH);
 		getContentPane().add(panel);
 
-		setSize(new Dimension(400, 350));
+		setSize(new Dimension(600, 350));
 		// setResizable(false);
 		// pack();
 	}
@@ -222,6 +234,7 @@ public class QuickDialDialog extends JDialog {
 		setVisible(true);
 		return okPressed();
 	}
+
 	/**
 	 * @return Returns the dataModel.
 	 */
