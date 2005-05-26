@@ -126,7 +126,7 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableColumn;
 
-import de.moonflower.jfritz.dialogs.phonebook.PhoneBook;
+import de.moonflower.jfritz.dialogs.phonebook.PhoneBookTableModel;
 import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.ReverseLookup;
@@ -154,6 +154,8 @@ public class JFritz {
 
 	public final static String CALLS_FILE = "jfritz.calls.xml";
 
+	public final static String QUICKDIALS_FILE = "jfritz.quickdials.xml";
+
 	public final static String PHONEBOOK_FILE = "jfritz.phonebook.xml";
 
 	public final static String CALLS_CSV_FILE = "calls.csv";
@@ -179,7 +181,7 @@ public class JFritz {
 	// Table models
 	private CallerList callerlist;
 
-	private PhoneBook phonebook;
+	private PhoneBookTableModel phonebook;
 
 
 	/**
@@ -192,7 +194,7 @@ public class JFritz {
 		callerlist = new CallerList(this);
 		callerlist.loadFromXMLFile(CALLS_FILE);
 
-		phonebook = new PhoneBook(this);
+		phonebook = new PhoneBookTableModel(this);
 		phonebook.loadFromXMLFile(PHONEBOOK_FILE);
 
 		jframe = new JFritzWindow(this);
@@ -340,7 +342,7 @@ public class JFritz {
 	/**
 	 * @return Returns the phonebook.
 	 */
-	public final PhoneBook getPhonebook() {
+	public final PhoneBookTableModel getPhonebook() {
 		return phonebook;
 	}
 

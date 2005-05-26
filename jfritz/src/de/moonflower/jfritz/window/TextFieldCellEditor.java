@@ -4,7 +4,7 @@
  * Created on 14.04.2005
  *
  */
-package de.moonflower.jfritz.window.cellrenderer;
+package de.moonflower.jfritz.window;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -19,7 +19,7 @@ import javax.swing.table.TableCellEditor;
  * 
  * @author Arno Willig
  */
-public class ParticipantCellEditor extends AbstractCellEditor implements
+public class TextFieldCellEditor extends AbstractCellEditor implements
 		TableCellEditor {
 
 	JComponent component = new JTextField();

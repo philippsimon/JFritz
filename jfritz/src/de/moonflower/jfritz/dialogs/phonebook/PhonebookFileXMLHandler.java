@@ -27,7 +27,7 @@ public class PhonebookFileXMLHandler extends DefaultHandler {
 	
 	String chars;
 	
-	PhoneBook phonebook;
+	PhoneBookTableModel phonebook;
 
 	Person person;
 
@@ -35,7 +35,7 @@ public class PhonebookFileXMLHandler extends DefaultHandler {
 
 	int duration;
 
-	public PhonebookFileXMLHandler(PhoneBook phonebook) {
+	public PhonebookFileXMLHandler(PhoneBookTableModel phonebook) {
 		super();
 		this.phonebook = phonebook;
 	}
