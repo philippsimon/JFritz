@@ -23,7 +23,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class PhonebookFileXMLHandler extends DefaultHandler {
 
 	String firstName, middleName, lastName, homeNumber, mobileNumber, businessNumber, otherNumber,
-			email, street, postCode, city, category;
+			standardNumber, email, street, postCode, city, category;
 	
 	String chars;
 	
@@ -78,6 +78,8 @@ public class PhonebookFileXMLHandler extends DefaultHandler {
 			businessNumber = chars;
 		} else if (qName.equals("othernumber")) {
 			otherNumber = chars;
+		} else if (qName.equals("standardnumber")) {
+			standardNumber = chars;
 		} else if (qName.equals("street")) {
 			street = chars;
 		} else if (qName.equals("postcode")) {
@@ -93,7 +95,7 @@ public class PhonebookFileXMLHandler extends DefaultHandler {
 			Person newPerson = new Person(firstName,middleName,lastName,
 					street,postCode, city,
 					homeNumber, mobileNumber,
-					businessNumber, otherNumber,
+					businessNumber, otherNumber, standardNumber,
 					email, category);
 			if (phonebook != null) { // Add an entry to the callerlist
 				phonebook.addEntry(newPerson);

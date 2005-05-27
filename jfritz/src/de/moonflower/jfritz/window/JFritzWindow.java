@@ -58,6 +58,7 @@ import de.moonflower.jfritz.utils.ReverseLookup;
 import de.moonflower.jfritz.utils.SwingWorker;
 import de.moonflower.jfritz.vcard.VCard;
 import de.moonflower.jfritz.vcard.VCardList;
+import de.moonflower.jfritz.dialogs.phonebook.Person;
 
 /**
  * This is main window class of JFritz, which creates the GUI.
@@ -303,6 +304,17 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		tb.setSelected(!JFritzUtils.parseBoolean(properties.getProperty(
 				"filter.number", "false")));
 		fBar.add(tb);
+
+		tb = new JToggleButton(getImage("calendar_grey.png"), true);
+		tb.setSelectedIcon(getImage("calendar.png"));
+		tb.setActionCommand("filter_date");
+		tb.addActionListener(this);
+		tb.setToolTipText(jfritz.getMessages().getString("filter_date"));
+		tb.setSelected(!JFritzUtils.parseBoolean(properties.getProperty(
+				"filter.date", "false")));
+		fBar.add(tb);
+
+		// TODO FROM-TO Date filter
 
 		fBar.addSeparator();
 
@@ -560,7 +572,31 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 										+ " " + number + " ...");
 								Debug.msg("Reverse lookup for " + number);
 								if (participant.equals("")) {
-									participant = ReverseLookup.lookup(number);
+                                    Person newPerson;
+                                    participant = ReverseLookup.lookup(number);
+                                    if (participant.equals("?")) {
+										newPerson = new Person("?","","?","","","",call.getNumber(),"","","",call.getNumber(),"","");
+									}
+									else if (participant.equals("? (Mobil)")) {
+										newPerson = new Person("?","","?","","","","",call.getNumber(),"","",call.getNumber(),"","");
+									}
+									else if (participant.equals("? (Freecall)")) {
+										newPerson = new Person("?","","?","","","",call.getNumber(),"","","",call.getNumber(),"","");
+									}
+									else {
+										if (participant.indexOf(",")>-1) {
+											// Found Firstname and Lastname, separated by ,
+											String list[] = participant.split(",");
+											System.out.println(list[0]+" "+list[1]);
+											newPerson = new Person(list[1],"",list[0],"","","",call.getNumber(),"","","",call.getNumber(),"","");											
+										}
+										else {
+											// Found only one name
+											// Probably a company
+											newPerson = new Person("","",participant,"","","","","",call.getNumber(),"",call.getNumber(),"","");
+										}
+									}
+									jfritz.getPhonebook().addEntry(newPerson);
 								}
 								if (!participant.equals("")) {
 									participants.setProperty(number,
@@ -573,6 +609,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 
 						isdone = true;
 					}
+					jfritz.getPhonebook().saveToXMLFile(JFritz.PHONEBOOK_FILE);
 					return null;
 				}
 
