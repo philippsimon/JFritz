@@ -12,6 +12,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import de.moonflower.jfritz.dialogs.stats.StatsDialog;
+
 /**
  * XML Handler for reading the call file
  * 
@@ -19,6 +21,8 @@ import org.xml.sax.helpers.DefaultHandler;
  *  
  */
 public class AddonInfosXMLHandler extends DefaultHandler {
+
+	StatsDialog statsdialog;
 
 	String chars;
 
@@ -30,8 +34,9 @@ public class AddonInfosXMLHandler extends DefaultHandler {
 
 	String DNSServer1, DNSServer2;
 
-	public AddonInfosXMLHandler() {
+	public AddonInfosXMLHandler(StatsDialog statsdialog) {
 		super();
+		this.statsdialog = statsdialog;
 	}
 
 	public void startDocument() throws SAXException {
@@ -80,6 +85,8 @@ public class AddonInfosXMLHandler extends DefaultHandler {
 			System.out.println("TotalBytesReceived: " + TotalBytesReceived);
 			System.out.println("DNSServer 1: " + DNSServer1);
 			System.out.println("DNSServer 2: " + DNSServer2);
+			statsdialog.setAddonInfos(ByteSendRate, ByteReceiveRate,
+					TotalBytesSent, TotalBytesReceived, DNSServer1, DNSServer2);
 		}
 	}
 
