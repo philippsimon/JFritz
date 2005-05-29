@@ -11,6 +11,7 @@ import java.util.Date;
 
 import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.utils.JFritzUtils;
+import de.moonflower.jfritz.utils.ReverseLookup;
 
 /**
  * @author Arno Willig row.add(symbol); row.add(datum); row.add(number);
@@ -108,5 +109,10 @@ public class Call {
 
 	public String toString() {
 		return toCSV();
+	}
+
+	public boolean isMobileCall() {
+		String provider = ReverseLookup.getMobileProvider(number);
+		return (!provider.equals(""));
 	}
 }
