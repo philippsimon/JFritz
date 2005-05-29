@@ -191,7 +191,7 @@ public class JFritz {
 			.parseInt(PROGRAM_VERSION.substring(PROGRAM_VERSION
 					.lastIndexOf(".") + 1)) % 2 == 1;
 
-	public final static boolean SYSTRAY_SUPPORT = false;
+	public final static boolean SYSTRAY_SUPPORT = true;
 
 	private SystemTray systray;
 
@@ -224,7 +224,7 @@ public class JFritz {
 
 		phonebook = new PhoneBookTableModel(this);
 		phonebook.loadFromXMLFile(PHONEBOOK_FILE);
-
+		
 		jframe = new JFritzWindow(this);
 
 		if (SYSTRAY_SUPPORT) {
