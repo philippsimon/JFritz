@@ -46,9 +46,9 @@ import javax.swing.table.TableCellRenderer;
 import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.dialogs.sip.SipProvider;
 import de.moonflower.jfritz.dialogs.sip.SipProviderTableModel;
+import de.moonflower.jfritz.exceptions.InvalidFirmwareException;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
 import de.moonflower.jfritz.firmware.FritzBoxFirmware;
-import de.moonflower.jfritz.firmware.InvalidFirmwareException;
 import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.JFritzUtils;
@@ -78,7 +78,8 @@ public class ConfigDialog extends JDialog {
 	private JButton okButton, cancelButton, boxtypeButton;
 
 	private JCheckBox deleteAfterFetchButton, fetchAfterStartButton,
-			notifyOnCallsButton,confirmOnExitButton,startMinimizedButton,timerAfterStartButton;
+			notifyOnCallsButton, confirmOnExitButton, startMinimizedButton,
+			timerAfterStartButton;
 
 	private JLabel boxtypeLabel, macLabel, timerLabel;
 
@@ -121,10 +122,12 @@ public class ConfigDialog extends JDialog {
 		deleteAfterFetchButton.setSelected(JFritzUtils.parseBoolean(getJfritz()
 				.getProperties().getProperty("option.deleteAfterFetch")));
 		confirmOnExitButton.setSelected(JFritzUtils.parseBoolean(getJfritz()
-				.getProperties().getProperty("option.confirmOnExit","true")));
-		startMinimizedButton.setSelected(JFritzUtils.parseBoolean(getJfritz()
-				.getProperties().getProperty("option.startMinimized","false")));
-		
+				.getProperties().getProperty("option.confirmOnExit", "true")));
+		startMinimizedButton
+				.setSelected(JFritzUtils.parseBoolean(getJfritz()
+						.getProperties().getProperty("option.startMinimized",
+								"false")));
+
 		pass.setText(getJfritz().getProperties().getProperty("box.password"));
 		address.setText(getJfritz().getProperties().getProperty("box.address"));
 		areaCode.setText(getJfritz().getProperties().getProperty("area.code"));
@@ -184,7 +187,7 @@ public class ConfigDialog extends JDialog {
 				.toString(confirmOnExitButton.isSelected()));
 		properties.setProperty("option.startMinimized", Boolean
 				.toString(startMinimizedButton.isSelected()));
-		
+
 		properties.setProperty("box.password", new String(pass.getPassword()));
 		properties.setProperty("box.address", address.getText());
 		properties.setProperty("area.code", areaCode.getText());
@@ -236,12 +239,14 @@ public class ConfigDialog extends JDialog {
 		timerSlider.setMinorTickSpacing(10);
 		timerSlider.setMajorTickSpacing(30);
 		timerSlider.setPaintLabels(true);
-		timerSlider.addChangeListener( new ChangeListener() {
+		timerSlider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				if (timerSlider.getValue()<3) timerSlider.setValue(3);
-				timerLabel.setText("Timer: "+timerSlider.getValue()+" min.");
+				if (timerSlider.getValue() < 3)
+					timerSlider.setValue(3);
+				timerLabel
+						.setText("Timer: " + timerSlider.getValue() + " min.");
 			}
-			
+
 		});
 
 		KeyListener keyListener = (new KeyAdapter() {
@@ -299,10 +304,13 @@ public class ConfigDialog extends JDialog {
 								firmware);
 						sipmodel.setData(data);
 						sipmodel.fireTableDataChanged();
+						jfritz.getCallerlist().fireTableDataChanged();
 					} catch (WrongPasswordException e1) {
-						Debug.err("Password wrong");
+						jfritz.errorMsg("Passwort ungültig!");
 					} catch (IOException e1) {
-						Debug.err("Box address wrong");
+						jfritz.errorMsg("FRITZ!Box-Adresse ungültig!");
+					} catch (InvalidFirmwareException e1) {
+						jfritz.errorMsg("Firmware-Erkennung gescheitert!");
 					}
 				}
 			}
@@ -413,18 +421,20 @@ public class ConfigDialog extends JDialog {
 		fetchAfterStartButton = new JCheckBox("Nach Programmstart Liste holen");
 		otherpane.add(fetchAfterStartButton);
 
-		timerAfterStartButton = new JCheckBox("Nach Programmstart Timer aktivieren");
+		timerAfterStartButton = new JCheckBox(
+				"Nach Programmstart Timer aktivieren");
 		otherpane.add(timerAfterStartButton);
 
 		deleteAfterFetchButton = new JCheckBox("Nach Laden auf Box löschen");
 		otherpane.add(deleteAfterFetchButton);
 		// TODO Make this work :)
-//		deleteAfterFetchButton.setEnabled(false);
+		//		deleteAfterFetchButton.setEnabled(false);
 
 		startMinimizedButton = new JCheckBox("Programm minimiert starten");
 		otherpane.add(startMinimizedButton);
-		
-		notifyOnCallsButton = new JCheckBox("Bei neuen Anrufen Fenster in den Vordergrund");
+
+		notifyOnCallsButton = new JCheckBox(
+				"Bei neuen Anrufen Fenster in den Vordergrund");
 		otherpane.add(notifyOnCallsButton);
 
 		confirmOnExitButton = new JCheckBox("Bei Beenden nachfragen");
