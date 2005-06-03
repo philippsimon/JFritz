@@ -147,7 +147,7 @@ import javax.swing.table.TableColumn;
 import org.jdesktop.jdic.tray.SystemTray;
 import org.jdesktop.jdic.tray.TrayIcon;
 
-import de.moonflower.jfritz.dialogs.phonebook.PhoneBookTableModel;
+import de.moonflower.jfritz.dialogs.phonebook.PhoneBook;
 import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.ReverseLookup;
@@ -159,7 +159,7 @@ import de.moonflower.jfritz.window.JFritzWindow;
  * @author Arno Willig
  *  
  */
-public class JFritz {
+public final class JFritz {
 
 	public final static String PROGRAM_NAME = "JFritz!";
 
@@ -175,7 +175,7 @@ public class JFritz {
 
 	public final static String PROPERTIES_FILE = "jfritz.properties.xml";
 
-	public final static String PARTICIPANTS_FILE = "jfritz.participants.xml";
+	// public final static String PARTICIPANTS_FILE = "jfritz.participants.xml";
 
 	public final static String CALLS_FILE = "jfritz.calls.xml";
 
@@ -203,7 +203,7 @@ public class JFritz {
 
 	private ResourceBundle messages;
 
-	private JFritzProperties defaultProperties, properties, participants;
+	private JFritzProperties defaultProperties, properties; //, participants;
 
 	private Vector devices;
 
@@ -211,7 +211,7 @@ public class JFritz {
 
 	private CallerList callerlist;
 
-	private PhoneBookTableModel phonebook;
+	private PhoneBook phonebook;
 
 	/**
 	 * Constructs JFritz object
@@ -223,7 +223,7 @@ public class JFritz {
 		callerlist = new CallerList(this);
 		callerlist.loadFromXMLFile(CALLS_FILE);
 
-		phonebook = new PhoneBookTableModel(this);
+		phonebook = new PhoneBook(this);
 		phonebook.loadFromXMLFile(PHONEBOOK_FILE);
 
 		jframe = new JFritzWindow(this);
@@ -363,7 +363,7 @@ public class JFritz {
 	 * Loads properties from xml files
 	 */
 	public void loadProperties() {
-		participants = new JFritzProperties();
+		// participants = new JFritzProperties();
 		defaultProperties = new JFritzProperties();
 		properties = new JFritzProperties(defaultProperties);
 
@@ -385,7 +385,7 @@ public class JFritz {
 					+ " not found, using default values");
 		} catch (Exception e) {
 		}
-
+/*
 		try {
 			FileInputStream fis = new FileInputStream(JFritz.PARTICIPANTS_FILE);
 			participants.loadFromXML(fis);
@@ -395,6 +395,7 @@ public class JFritz {
 					+ " not found, using default values");
 		} catch (Exception e) {
 		}
+*/
 	}
 
 	/**
@@ -428,15 +429,8 @@ public class JFritz {
 		} catch (FileNotFoundException e) {
 		} catch (IOException e) {
 		}
-		try {
-			FileOutputStream fos = new FileOutputStream(
-					JFritz.PARTICIPANTS_FILE);
-			participants.storeToXML(fos, "Participants for "
-					+ JFritz.PROGRAM_NAME + " v" + JFritz.PROGRAM_VERSION);
-			fos.close();
-		} catch (FileNotFoundException e) {
-		} catch (IOException e) {
-		}
+		
+		phonebook.saveToXMLFile(PHONEBOOK_FILE);
 	}
 
 	/**
@@ -477,7 +471,7 @@ public class JFritz {
 	/**
 	 * @return Returns the phonebook.
 	 */
-	public final PhoneBookTableModel getPhonebook() {
+	public final PhoneBook getPhonebook() {
 		return phonebook;
 	}
 
@@ -486,13 +480,6 @@ public class JFritz {
 	 */
 	public final ResourceBundle getMessages() {
 		return messages;
-	}
-
-	/**
-	 * @return Returns the participants.
-	 */
-	public final JFritzProperties getParticipants() {
-		return participants;
 	}
 
 	/**

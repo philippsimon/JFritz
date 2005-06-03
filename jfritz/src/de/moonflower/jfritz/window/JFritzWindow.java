@@ -1,4 +1,4 @@
- /**
+/**
  * $Id$
  */
 
@@ -50,20 +50,20 @@ import javax.swing.filechooser.FileFilter;
 import org.jdesktop.jdic.desktop.Desktop;
 
 import de.moonflower.jfritz.JFritz;
-import de.moonflower.jfritz.dialogs.AddressPasswordDialog;
-import de.moonflower.jfritz.dialogs.ConfigDialog;
-import de.moonflower.jfritz.dialogs.phonebook.Person;
+import de.moonflower.jfritz.dialogs.config.ConfigDialog;
 import de.moonflower.jfritz.dialogs.phonebook.PhoneBookDialog;
 import de.moonflower.jfritz.dialogs.quickdial.QuickDialDialog;
+import de.moonflower.jfritz.dialogs.simple.AddressPasswordDialog;
 import de.moonflower.jfritz.dialogs.stats.StatsDialog;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
+import de.moonflower.jfritz.struct.Call;
+import de.moonflower.jfritz.struct.Person;
+import de.moonflower.jfritz.struct.VCardList;
 import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.JFritzUtils;
 import de.moonflower.jfritz.utils.ReverseLookup;
 import de.moonflower.jfritz.utils.SwingWorker;
-import de.moonflower.jfritz.vcard.VCard;
-import de.moonflower.jfritz.vcard.VCardList;
 
 /**
  * This is main window class of JFritz, which creates the GUI.
@@ -104,7 +104,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	 */
 	public JFritzWindow(JFritz jfritz) {
 		this.jfritz = jfritz;
-		setProperties(jfritz.getProperties(), jfritz.getParticipants());
+		this.properties = jfritz.getProperties();
 		createGUI();
 		if (!properties.getProperty("option.startMinimized", "false").equals(
 				"true")) {
@@ -384,8 +384,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	 *  
 	 */
 	public void createTable() {
-		callertable = new CallerTable(jfritz.getCallerlist(), jfritz
-				.getMessages(), properties);
+		callertable = new CallerTable(jfritz);
 		getContentPane().add(new JScrollPane(callertable), BorderLayout.CENTER);
 	}
 
@@ -598,25 +597,21 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 							Vector data = jfritz.getCallerlist()
 									.getFilteredCallVector();
 							Call call = (Call) data.get(i);
-							String number = call.getNumber();
-							String participant = call.getParticipant();
-							if (!number.equals("") && (participant.equals(""))) {
+							String number = call.getPhoneNumber().getNumber();
+							// String participant = call.getParticipant();
+							if (!number.equals("")
+									&& (call.getPerson() == null)) {
 								setStatus(jfritz.getMessages().getString(
 										"reverse_lookup_for")
 										+ " " + number + " ...");
 								Debug.msg("Reverse lookup for " + number);
-								if (participant.equals("")) {
-									Person newPerson = ReverseLookup.lookup(number);
+
+								Person newPerson = ReverseLookup.lookup(number);
+								if (newPerson != null) {
 									jfritz.getPhonebook().addEntry(newPerson);
-									participants.setProperty(number,newPerson.getFullname());
-									jfritz.getCallerlist().setParticipant(newPerson.getFullname(), i);
 								}
-								if (!participant.equals("")) {
-									participants.setProperty(number,
-											participant);
-									jfritz.getCallerlist().setParticipant(
-											participant, i);
-								}
+								jfritz.getCallerlist().setPerson(newPerson, i);
+
 							}
 						}
 
@@ -1024,14 +1019,15 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			String number = (String) callertable.getModel().getValueAt(rows[i],
 					2);
 			if (!name.startsWith("?") && !number.equals("")) {
-				list.addVCard(new VCard(name, number));
+				list.addVCard(new Person("", "", name, "", "", "", "", "", "",
+						"", number, "", ""));
 			}
 		}
 		if (list.getCount() > 0) {
 			if (list.getCount() == 1) {
-				fc
-						.setSelectedFile(new File(list.getVCard(0).getFon()
-								+ ".vcf"));
+				fc.setSelectedFile(new File(list.getPerson(0)
+						.getStandardTelephoneNumber()
+						+ ".vcf"));
 			} else if (list.getCount() > 1) {
 				fc.setSelectedFile(new File("jfritz.vcf"));
 			}
@@ -1059,16 +1055,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	 */
 	public final JFritzProperties getProperties() {
 		return properties;
-	}
-
-	/**
-	 * @param properties
-	 *            The properties to set.
-	 */
-	public final void setProperties(JFritzProperties properties,
-			JFritzProperties participants) {
-		this.properties = properties;
-		this.participants = participants;
 	}
 
 	public ImageIcon getImage(String filename) {

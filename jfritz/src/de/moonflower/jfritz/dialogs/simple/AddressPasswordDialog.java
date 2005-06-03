@@ -4,7 +4,7 @@
  * Password dialog box
  */
 
-package de.moonflower.jfritz.dialogs;
+package de.moonflower.jfritz.dialogs.simple;
 
 import java.awt.Frame;
 import java.awt.GridBagConstraints;

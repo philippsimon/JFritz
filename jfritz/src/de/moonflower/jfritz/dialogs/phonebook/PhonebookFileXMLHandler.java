@@ -13,6 +13,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import de.moonflower.jfritz.struct.Person;
+
 
 /**
  * XML Handler for reading the call file
@@ -27,7 +29,7 @@ public class PhonebookFileXMLHandler extends DefaultHandler {
 	
 	String chars;
 	
-	PhoneBookTableModel phonebook;
+	PhoneBook phonebook;
 
 	Person person;
 
@@ -35,7 +37,7 @@ public class PhonebookFileXMLHandler extends DefaultHandler {
 
 	int duration;
 
-	public PhonebookFileXMLHandler(PhoneBookTableModel phonebook) {
+	public PhonebookFileXMLHandler(PhoneBook phonebook) {
 		super();
 		this.phonebook = phonebook;
 	}
