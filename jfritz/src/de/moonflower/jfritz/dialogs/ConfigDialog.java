@@ -305,6 +305,7 @@ public class ConfigDialog extends JDialog {
 						sipmodel.setData(data);
 						sipmodel.fireTableDataChanged();
 						jfritz.getCallerlist().fireTableDataChanged();
+						
 					} catch (WrongPasswordException e1) {
 						jfritz.errorMsg("Passwort ungültig!");
 					} catch (IOException e1) {

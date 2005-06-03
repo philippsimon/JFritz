@@ -35,11 +35,16 @@
  * 
  * CallerList: Einzelne Einträge löschen
  * CallerList: Einträge löschen älter als Datum
+ * CallerList: Alle Einträge löschen
  * CallerList: ev. Popup-Menu?
  * Statistik: Top-Caller (Name/Nummer, Wie oft, Wie lange)
  * 
  * 
  * CHANGELOG:
+ * 
+ * JFritz! 0.3.7
+ * - Systray minimizes JFrame
+ * - Mobile filter inverted
  * 
  * JFritz! 0.3.6
  * - New mobile phone filter feature
@@ -133,6 +138,7 @@ import java.util.ResourceBundle;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -157,7 +163,7 @@ public class JFritz {
 
 	public final static String PROGRAM_NAME = "JFritz!";
 
-	public final static String PROGRAM_VERSION = "0.3.6";
+	public final static String PROGRAM_VERSION = "0.3.7";
 
 	public final static String PROGRAM_URL = "http://jfritz.sourceforge.net/";
 
@@ -222,9 +228,7 @@ public class JFritz {
 
 		jframe = new JFritzWindow(this);
 
-		checkForSystraySupport();
-
-		if (SYSTRAY_SUPPORT) {
+		if (checkForSystraySupport()) {
 			try {
 				systray = SystemTray.getDefaultSystemTray();
 				createTrayMenu();
@@ -242,12 +246,13 @@ public class JFritz {
 	/**
 	 * Checks for systray availability
 	 */
-	private void checkForSystraySupport() {
+	private boolean checkForSystraySupport() {
 		String os = System.getProperty("os.name");
 		if (os.equals("Linux") || os.equals("Solaris")
 				|| os.startsWith("Windows")) {
 			SYSTRAY_SUPPORT = true;
 		}
+		return SYSTRAY_SUPPORT;
 	}
 
 	/**
@@ -323,7 +328,14 @@ public class JFritz {
 				.setCaption(JFritz.PROGRAM_NAME + " v" + JFritz.PROGRAM_VERSION);
 		trayIcon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				jframe.setVisible(!jframe.isVisible());
+
+				if (jframe.isVisible()) {
+					jframe.setState(JFrame.ICONIFIED);
+					jframe.setVisible(false);
+				} else {
+					jframe.setState(JFrame.NORMAL);
+					jframe.setVisible(true);
+				}
 			}
 		});
 		systray.addTrayIcon(trayIcon);
