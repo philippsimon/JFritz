@@ -318,6 +318,7 @@ public class PhoneBookDialog extends JDialog {
 		changePerson.setStreet(textFieldStreet.getText());
 		changePerson.setPostalCode(textFieldPostalCode.getText());
 		changePerson.setCity(textFieldCity.getText());
+		/*
 		changePerson.setHomeTelNumber(textFieldHomeNumber.getText());
 		changePerson.setMobileTelNumber(textFieldMobileNumber.getText());
 		changePerson.setBusinessTelNumber(textFieldBusinessNumber.getText());
@@ -336,6 +337,7 @@ public class PhoneBookDialog extends JDialog {
 			changePerson.setStandardTelephoneNumber(textFieldOtherNumber
 					.getText());
 		}
+		*/
 		oldPersonList = (Vector) jfritz.getPhonebook().getPersons().clone();
 		model.fireTableRowsUpdated(row, row);
 
@@ -357,8 +359,7 @@ public class PhoneBookDialog extends JDialog {
 	    }
 	
 	void newButton_actionPerformed(ActionEvent e) {
-		Person newEntry = new Person("New", "", "Entry", "", "", "", "123", "",
-				"", "", "123", "", "");
+		Person newEntry = new Person();
 		jfritz.getPhonebook().getPersons().add(newEntry);
 		model.fireTableRowsInserted(model.getRowCount(), model.getRowCount());
 
