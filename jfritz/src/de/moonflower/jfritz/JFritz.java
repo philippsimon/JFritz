@@ -45,6 +45,15 @@
  * JFritz! 0.3.7
  * - Systray minimizes JFrame
  * - Mobile filter inverted
+ * - Removed participant support in favour of person
+ * - Rewrote xml handler for phonebook
+ * - Added PhoneNumber class
+ * - Restructured packages
+ * 
+ * TODO:
+ * - Enable person editing in callertable (popup dialog?)
+ * - Merging of person entries
+ * - Implement reverselookup for Switzerland (www.telsearch.ch)
  * 
  * JFritz! 0.3.6
  * - New mobile phone filter feature
