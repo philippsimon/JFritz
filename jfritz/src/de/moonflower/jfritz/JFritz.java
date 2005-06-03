@@ -175,8 +175,6 @@ public final class JFritz {
 
 	public final static String PROPERTIES_FILE = "jfritz.properties.xml";
 
-	// public final static String PARTICIPANTS_FILE = "jfritz.participants.xml";
-
 	public final static String CALLS_FILE = "jfritz.calls.xml";
 
 	public final static String QUICKDIALS_FILE = "jfritz.quickdials.xml";
@@ -220,11 +218,13 @@ public final class JFritz {
 		new ReverseLookup(); // Initialize ReverseLookup
 		loadProperties();
 		loadMessages(new Locale("de", "DE"));
+		
+		phonebook = new PhoneBook(this);
+		phonebook.loadFromXMLFile(PHONEBOOK_FILE);
+
 		callerlist = new CallerList(this);
 		callerlist.loadFromXMLFile(CALLS_FILE);
 
-		phonebook = new PhoneBook(this);
-		phonebook.loadFromXMLFile(PHONEBOOK_FILE);
 
 		jframe = new JFritzWindow(this);
 

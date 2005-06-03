@@ -6,7 +6,6 @@
  */
 package de.moonflower.jfritz.dialogs.phonebook;
 
-
 import java.util.Date;
 
 import org.xml.sax.Attributes;
@@ -14,7 +13,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import de.moonflower.jfritz.struct.Person;
-
 
 /**
  * XML Handler for reading the call file
@@ -24,11 +22,12 @@ import de.moonflower.jfritz.struct.Person;
  */
 public class PhonebookFileXMLHandler extends DefaultHandler {
 
-	String firstName, middleName, lastName, homeNumber, mobileNumber, businessNumber, otherNumber,
-			standardNumber, email, street, postCode, city, category;
-	
+	String firstName, middleName, lastName, type, standard, homeNumber,
+			mobileNumber, businessNumber, otherNumber, standardNumber, email,
+			street, postCode, city, category;
+
 	String chars;
-	
+
 	PhoneBook phonebook;
 
 	Person person;
@@ -60,28 +59,43 @@ public class PhonebookFileXMLHandler extends DefaultHandler {
 			firstName = "";
 			middleName = "";
 			lastName = "";
+			homeNumber = "";
+			mobileNumber = "";
+			businessNumber = "";
+			otherNumber = "";
+			standardNumber = "";
+			street = "";
+			postCode = "";
+			city = "";
+			email = "";
+			category = "";
+			type = "home";
+			standard = "home";
+		} else if (eName.equals("phonenumbers")) {
+			standard = attrs.getValue("standard");
+		} else if (eName.equals("number")) {
+			type = attrs.getValue("type");
 		}
 	}
 
 	public void endElement(String namespaceURI, String sName, String qName)
 			throws SAXException {
-
 		if (qName.equals("firstname")) {
 			firstName = chars;
 		} else if (qName.equals("middlename")) {
 			middleName = chars;
 		} else if (qName.equals("lastname")) {
 			lastName = chars;
-		} else if (qName.equals("homenumber")) {
-			homeNumber = chars;
-		} else if (qName.equals("mobilenumber")) {
-			mobileNumber = chars;
-		} else if (qName.equals("businessnumber")) {
-			businessNumber = chars;
-		} else if (qName.equals("othernumber")) {
-			otherNumber = chars;
-		} else if (qName.equals("standardnumber")) {
-			standardNumber = chars;
+		} else if (qName.equals("number")) {
+			if (type.equals("home")) {
+				homeNumber = chars;
+			} else if (type.equals("mobile")) {
+				mobileNumber = chars;
+			} else if (type.equals("business")) {
+				businessNumber = chars;
+			} else if (type.equals("other")) {
+				otherNumber = chars;
+			}
 		} else if (qName.equals("street")) {
 			street = chars;
 		} else if (qName.equals("postcode")) {
@@ -90,18 +104,24 @@ public class PhonebookFileXMLHandler extends DefaultHandler {
 			city = chars;
 		} else if (qName.equals("email")) {
 			email = chars;
-		} else if (qName.equals("cytegory")) {
+		} else if (qName.equals("category")) {
 			category = chars;
 		} else if (qName.equals("entry")) {
-			
-			Person newPerson = new Person(firstName,middleName,lastName,
-					street,postCode, city,
-					homeNumber, mobileNumber,
-					businessNumber, otherNumber, standardNumber,
-					email, category);
-			if (phonebook != null) { // Add an entry to the callerlist
-				phonebook.addEntry(newPerson);
-			}
+
+			if (standard.equals("mobile"))
+				standardNumber = mobileNumber;
+			else if (standard.equals("business"))
+				standardNumber = businessNumber;
+			else if (standard.equals("other"))
+				standardNumber = otherNumber;
+			else
+				standardNumber = homeNumber;
+
+			Person newPerson = new Person(firstName, middleName, lastName,
+					street, postCode, city, homeNumber, mobileNumber,
+					businessNumber, otherNumber, standardNumber, email,
+					category);
+			phonebook.addEntry(newPerson);
 
 		}
 	}
