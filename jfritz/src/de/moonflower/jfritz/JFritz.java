@@ -29,9 +29,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  *
- * TODO:
- * QuickDial: Kurzwahlverwaltung
- * Phonebook: Telefonbuch für Participants
+ * GLOBAL TODO:
  * 
  * CallerList: Einzelne Einträge löschen
  * CallerList: Einträge löschen älter als Datum
@@ -49,9 +47,9 @@
  * - Rewrote xml handler for phonebook
  * - Added PhoneNumber class
  * - Restructured packages
+ * - Added commandline option --fetch
  * 
  * TODO:
- * - Enable person editing in callertable (popup dialog?)
  * - Merging of person entries
  * - Implement reverselookup for Switzerland (www.telsearch.ch)
  * 
@@ -156,12 +154,13 @@ import javax.swing.table.TableColumn;
 import org.jdesktop.jdic.tray.SystemTray;
 import org.jdesktop.jdic.tray.TrayIcon;
 
+import de.moonflower.jfritz.callerlist.CallerList;
 import de.moonflower.jfritz.dialogs.phonebook.PhoneBook;
+import de.moonflower.jfritz.exceptions.WrongPasswordException;
 import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.ReverseLookup;
 import de.moonflower.jfritz.utils.upnp.SSDPdiscoverThread;
-import de.moonflower.jfritz.callerlist.CallerList;
 
 /**
  * @author Arno Willig
@@ -222,17 +221,30 @@ public final class JFritz {
 	/**
 	 * Constructs JFritz object
 	 */
-	public JFritz() {
+	public JFritz(boolean onlyFetchCalls) {
 		new ReverseLookup(); // Initialize ReverseLookup
 		loadProperties();
 		loadMessages(new Locale("de", "DE"));
-		
+
 		phonebook = new PhoneBook(this);
 		phonebook.loadFromXMLFile(PHONEBOOK_FILE);
 
 		callerlist = new CallerList(this);
 		callerlist.loadFromXMLFile(CALLS_FILE);
 
+		if (onlyFetchCalls) {
+			infoMsg("Anrufliste wird von Fritz!Box geholt..");
+			try {
+				callerlist.getNewCalls();
+			} catch (WrongPasswordException e) {
+				Debug.err(e.toString());
+			} catch (IOException e) {
+				Debug.err(e.toString());
+			} finally {
+				infoMsg("JFritz! beendet sich nun.");
+				System.exit(0);
+			}
+		}
 
 		jframe = new JFritzWindow(this);
 
@@ -242,6 +254,7 @@ public final class JFritz {
 				createTrayMenu();
 			} catch (Exception e) {
 				Debug.err(e.toString());
+				SYSTRAY_SUPPORT=false;
 			}
 		}
 
@@ -272,9 +285,8 @@ public final class JFritz {
 	public static void main(String[] args) {
 		System.out.println(PROGRAM_NAME + " v" + PROGRAM_VERSION
 				+ " (c) 2005 by " + PROGRAM_AUTHOR);
-
-		if (DEVEL_VERSION)
-			Debug.on();
+		if (DEVEL_VERSION) Debug.on();
+		boolean onlyFetchCalls = false;
 
 		for (int n = 0; n < args.length; n++) {
 			String opt = args[n];
@@ -284,16 +296,21 @@ public final class JFritz {
 				System.out
 						.println(" -v or --verbose Turn on debug information");
 				System.out.println(" -s or --systray Turn on systray support");
+				System.out.println(" -f or --fetch   Fetch new calls and exit");
 				System.exit(0);
 			} else if (opt.equals("-v") || opt.equals("--verbose")
 					|| opt.equals("--debug")) {
 				Debug.on();
-			} else if (opt.equals("-s") || opt.equals("--systray")) {
+			}
+			if (opt.equals("-s") || opt.equals("--systray")) {
 				JFritz.SYSTRAY_SUPPORT = true;
+			}
+			if (opt.equals("-f") || opt.equals("--fetch")) {
+				onlyFetchCalls = true;
 			}
 		}
 
-		new JFritz();
+		new JFritz(onlyFetchCalls);
 	}
 
 	/**
@@ -393,17 +410,14 @@ public final class JFritz {
 					+ " not found, using default values");
 		} catch (Exception e) {
 		}
-/*
-		try {
-			FileInputStream fis = new FileInputStream(JFritz.PARTICIPANTS_FILE);
-			participants.loadFromXML(fis);
-			fis.close();
-		} catch (FileNotFoundException e) {
-			Debug.err("File " + JFritz.PARTICIPANTS_FILE
-					+ " not found, using default values");
-		} catch (Exception e) {
-		}
-*/
+		/*
+		 * try { FileInputStream fis = new
+		 * FileInputStream(JFritz.PARTICIPANTS_FILE);
+		 * participants.loadFromXML(fis); fis.close(); } catch
+		 * (FileNotFoundException e) { Debug.err("File " +
+		 * JFritz.PARTICIPANTS_FILE + " not found, using default values"); }
+		 * catch (Exception e) { }
+		 */
 	}
 
 	/**
@@ -437,7 +451,7 @@ public final class JFritz {
 		} catch (FileNotFoundException e) {
 		} catch (IOException e) {
 		}
-		
+
 		phonebook.saveToXMLFile(PHONEBOOK_FILE);
 	}
 
@@ -447,7 +461,7 @@ public final class JFritz {
 	 * @param msg
 	 */
 	public void infoMsg(String msg) {
-		Debug.msg(msg);
+		System.out.println(msg);
 		if (SYSTRAY_SUPPORT) {
 			getTrayIcon().displayMessage(JFritz.PROGRAM_NAME, msg,
 					TrayIcon.INFO_MESSAGE_TYPE);
