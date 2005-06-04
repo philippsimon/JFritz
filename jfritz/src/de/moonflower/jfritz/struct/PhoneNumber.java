@@ -22,8 +22,31 @@ public class PhoneNumber implements Comparable {
 
 	private String type = "";
 
+	/**
+	 * Constructs a PhoneNumber with a special type
+	 * 
+	 * @param fullNumber
+	 * @param
+	 */
 	public PhoneNumber(String fullNumber, String type) {
 		this.type = type;
+		setNumber(fullNumber);
+	}
+
+	/**
+	 * Constructs a PhoneNumber withput a type
+	 * 
+	 * @param fullNumber
+	 */
+	public PhoneNumber(String fullNumber) {
+		this(fullNumber, "");
+	}
+
+	/**
+	 * 
+	 * @param fullNumber
+	 */
+	public void setNumber(String fullNumber) {
 		if (fullNumber.startsWith("010")) { // cut 01013 and others
 			callbycall = fullNumber.substring(0, 5);
 			number = fullNumber.substring(5);
@@ -32,15 +55,6 @@ public class PhoneNumber implements Comparable {
 		if (number.startsWith(intPrefix)) {
 			// TODO
 		}
-	}
-
-	/**
-	 * Constructs a PhoneNumber
-	 * 
-	 * @param fullNumber
-	 */
-	public PhoneNumber(String fullNumber) {
-		this(fullNumber, "");
 	}
 
 	public String toString() {
@@ -151,11 +165,10 @@ public class PhoneNumber implements Comparable {
 	 */
 	public int compareTo(Object arg0) {
 		if (arg0.getClass().equals(this.getClass())) {
-			
+
 		}
 		return 0;
 	}
-	
 
 	/**
 	 * @return Returns the type.
@@ -163,11 +176,26 @@ public class PhoneNumber implements Comparable {
 	public final String getType() {
 		return type;
 	}
-	
+
 	/**
-	 * @param type The type to set.
+	 * @param type
+	 *            The type to set.
 	 */
 	public final void setType(String type) {
 		this.type = type;
+	}
+
+	/**
+	 * Auto-Set type
+	 */
+	public final void setType() {
+		if (isMobile())
+			type = "mobile";
+		else if (isFreeCall())
+			type = "business";
+		else if (isSIPNumber())
+			type = "sip";
+		else
+			type = "home";
 	}
 }

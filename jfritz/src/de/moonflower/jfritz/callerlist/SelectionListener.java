@@ -4,7 +4,7 @@
  * Created on 07.05.2005
  *
  */
-package de.moonflower.jfritz.window;
+package de.moonflower.jfritz.callerlist;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;

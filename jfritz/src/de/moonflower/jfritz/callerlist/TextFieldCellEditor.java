@@ -4,7 +4,7 @@
  * Created on 14.04.2005
  *
  */
-package de.moonflower.jfritz.window;
+package de.moonflower.jfritz.callerlist;
 
 import java.awt.Color;
 import java.awt.Component;

@@ -32,11 +32,10 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
 import de.moonflower.jfritz.JFritz;
+import de.moonflower.jfritz.JFritzWindow;
 import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.JFritzProperties;
-import de.moonflower.jfritz.window.JFritzWindow;
-import de.moonflower.jfritz.window.TextFieldCellEditor;
-
+import de.moonflower.jfritz.callerlist.TextFieldCellEditor;
 
 /**
  * @author Arno Willig
@@ -109,7 +108,7 @@ public class QuickDialDialog extends JDialog {
 				pressed_OK = (source == okButton);
 				setVisible((source != okButton) && (source != cancelButton));
 				AbstractTableModel model = (AbstractTableModel) table
-				.getModel();
+						.getModel();
 
 				if (e.getActionCommand() == "deleteSIP") {
 					int row = table.getSelectedRow();
@@ -118,7 +117,7 @@ public class QuickDialDialog extends JDialog {
 						model.fireTableRowsDeleted(row, row);
 					}
 				} else if (e.getActionCommand() == "addSIP") {
-					dataModel.addEntry(new QuickDial("99","?","?","?"));
+					dataModel.addEntry(new QuickDial("99", "?", "?", "?"));
 					model.fireTableDataChanged();
 				} else if (e.getActionCommand() == "fetchSIP") {
 					// FIXME: Preserve description data!
@@ -167,7 +166,6 @@ public class QuickDialDialog extends JDialog {
 		// b2.setIcon(new
 		// ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/de/moonflower/jfritz/resources/images/export.png"))));
 
-		
 		toolbar.add(newButton);
 		toolbar.add(delButton);
 		toolbar.add(b1);
@@ -222,7 +220,7 @@ public class QuickDialDialog extends JDialog {
 		panel.add(toolbar, BorderLayout.NORTH);
 		panel.add(new JScrollPane(table), BorderLayout.CENTER);
 		panel.add(bottomPane, BorderLayout.SOUTH);
-		
+
 		getContentPane().add(panel);
 
 		setSize(new Dimension(600, 350));

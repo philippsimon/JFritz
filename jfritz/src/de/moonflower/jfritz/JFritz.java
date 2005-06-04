@@ -161,8 +161,7 @@ import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.ReverseLookup;
 import de.moonflower.jfritz.utils.upnp.SSDPdiscoverThread;
-import de.moonflower.jfritz.window.CallerList;
-import de.moonflower.jfritz.window.JFritzWindow;
+import de.moonflower.jfritz.callerlist.CallerList;
 
 /**
  * @author Arno Willig

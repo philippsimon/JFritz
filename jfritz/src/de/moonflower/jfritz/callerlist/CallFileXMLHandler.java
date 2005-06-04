@@ -4,7 +4,7 @@
  * Created on 05.05.2005
  *
  */
-package de.moonflower.jfritz.window;
+package de.moonflower.jfritz.callerlist;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
