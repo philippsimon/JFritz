@@ -36,7 +36,7 @@
  * CallerList: Alle Einträge löschen
  * CallerList: ev. Popup-Menu?
  * Statistik: Top-Caller (Name/Nummer, Wie oft, Wie lange)
- * YAC-Messages: Config-Options: enabled/disabled + listening TCP-Port
+ * YAC-Messages: Config-Options: enabled/disabled
  * 
  * 
  * CHANGELOG:
@@ -45,14 +45,18 @@
  * - Systray minimizes JFrame
  * - Mobile filter inverted
  * - Removed participant support in favour of person
+ * - Phon
+ * - Added commandline option --fetch
  * - Rewrote xml handler for phonebook
  * - Added PhoneNumber class
  * - Restructured packages
- * - Added commandline option --fetch
  * 
  * TODO:
+ * - Sort Phonebook (new entries must be sorted, too)
+ * - Implement Phonebook ToolBar (add/delete
  * - Merging of person entries
  * - Implement reverselookup for Switzerland (www.telsearch.ch)
+ * - CMD Option --export-csv
  * 
  * JFritz! 0.3.6
  * - New mobile phone filter feature
