@@ -228,7 +228,7 @@ public class PhoneBook extends AbstractTableModel {
 		case 2:
 			return person.getStreet();
 		case 3:
-			return person.getPostalCode() + " " + person.getCity();
+			return (person.getPostalCode() + " " + person.getCity()).trim();
 		case 4:
 			return jfritz.getCallerlist().findLastCall(person);
 		default:
@@ -292,7 +292,6 @@ public class PhoneBook extends AbstractTableModel {
 		return null;
 	}
 
-	
 	/**
 	 * @param columnIndex
 	 * @return class of column
