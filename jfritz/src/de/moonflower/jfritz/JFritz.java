@@ -439,7 +439,7 @@ public final class JFritz {
 		properties.setProperty("position.height", Integer.toString(jframe
 				.getSize().height));
 
-		Enumeration en = jframe.getCallertable().getColumnModel().getColumns();
+		Enumeration en = jframe.getCallerTable().getColumnModel().getColumns();
 		int i = 0;
 		while (en.hasMoreElements()) {
 			int width = ((TableColumn) en.nextElement()).getWidth();
