@@ -183,4 +183,10 @@ public class CallerTable extends JTable {
 		return null;
 	}
 
+	/**
+	 * @return Returns the jfritz.
+	 */
+	public final JFritz getJfritz() {
+		return jfritz;
+	}
 }
