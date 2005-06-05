@@ -267,7 +267,6 @@ public final class JFritz {
 
 		YAClistener yacListener = new YAClistener(this);
 		yacListener.run();
-
 	}
 
 	/**
