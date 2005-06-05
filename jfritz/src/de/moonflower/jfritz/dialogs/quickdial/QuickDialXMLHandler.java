@@ -16,7 +16,6 @@ import de.moonflower.jfritz.utils.Debug;
  * XML Handler for reading the call file
  * 
  * @author Arno Willig
- *  
  */
 public class QuickDialXMLHandler extends DefaultHandler {
 
@@ -24,9 +23,9 @@ public class QuickDialXMLHandler extends DefaultHandler {
 
 	QuickDial quickdial;
 
-	QuickDialTableModel dataModel;
+	QuickDials dataModel;
 
-	public QuickDialXMLHandler(QuickDialTableModel dataModel) {
+	public QuickDialXMLHandler(QuickDials dataModel) {
 		super();
 		this.dataModel = dataModel;
 	}

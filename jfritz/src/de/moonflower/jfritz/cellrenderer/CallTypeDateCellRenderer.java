@@ -4,43 +4,51 @@
  * Created on 10.04.2005
  *
  */
-package de.moonflower.jfritz.window.cellrenderer;
+package de.moonflower.jfritz.cellrenderer;
 
 import java.awt.Component;
 import java.awt.Toolkit;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import de.moonflower.jfritz.struct.Call;
 import de.moonflower.jfritz.struct.CallType;
 
-
 /**
- * This is the renderer for the call type cell of the table, which shows a small icon.
+ * This is the renderer for the call type cell of the table, which shows a small
+ * icon.
  * 
- * @author Arno Willig 
+ * @author Arno Willig
  */
-public class CallTypeCellRenderer extends DefaultTableCellRenderer {
+public class CallTypeDateCellRenderer extends DefaultTableCellRenderer {
 
 	final ImageIcon imageCallInFailed, imageCallIn, imageCallOut;
-	
+
 	/**
 	 * renders call type field in CallerTable
 	 */
-	public CallTypeCellRenderer() {
+	public CallTypeDateCellRenderer() {
 		super();
 		imageCallIn = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 				getClass().getResource(
 						"/de/moonflower/jfritz/resources/images/callin.png")));
-		imageCallInFailed = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				getClass().getResource(
-						"/de/moonflower/jfritz/resources/images/callinfailed.png")));
+		imageCallInFailed = new ImageIcon(
+				Toolkit
+						.getDefaultToolkit()
+						.getImage(
+								getClass()
+										.getResource(
+												"/de/moonflower/jfritz/resources/images/callinfailed.png")));
 		imageCallOut = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 				getClass().getResource(
 						"/de/moonflower/jfritz/resources/images/callout.png")));
 	}
+
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 
@@ -48,19 +56,22 @@ public class CallTypeCellRenderer extends DefaultTableCellRenderer {
 				value, isSelected, hasFocus, row, column);
 
 		if (value != null) {
-			CallType curType = (CallType) value;
+			CallType curType = ((Call) value).getCalltype();
+			Date curDate = ((Call) value).getCalldate();
 			setToolTipText(curType.toDescription());
-			
-			label.setText("");
-			if (curType.toInt()==CallType.CALLIN) {
+			SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+
+			label.setText(df.format(curDate));
+			if (curType.toInt() == CallType.CALLIN) {
 				label.setIcon(imageCallIn);
-			}
-			if (curType.toInt()==CallType.CALLIN_FAILED) {
+			} else if (curType.toInt() == CallType.CALLIN_FAILED) {
 				label.setIcon(imageCallInFailed);
-			}
-			if (curType.toInt()==CallType.CALLOUT) {
+			} else if (curType.toInt() == CallType.CALLOUT) {
 				label.setIcon(imageCallOut);
 			}
+		} else {
+			label.setIcon(null);
+			label.setText(null);
 		}
 		return label;
 	}

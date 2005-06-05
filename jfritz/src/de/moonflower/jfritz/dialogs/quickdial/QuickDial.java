@@ -6,9 +6,9 @@
  */
 package de.moonflower.jfritz.dialogs.quickdial;
 
+
 /**
  * @author Arno Willig
- *  
  */
 public class QuickDial {
 
