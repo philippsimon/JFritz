@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import de.moonflower.jfritz.callerlist.CallType;
+import de.moonflower.jfritz.struct.CallType;
 
 
 /**

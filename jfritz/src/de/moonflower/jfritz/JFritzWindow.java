@@ -88,7 +88,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 
 	JButton fetchButton, lookupButton, configButton, vcardButton;
 
-	JToggleButton dateButton;
+	JToggleButton dateButton, listButton;
 
 	JTextField searchFilter;
 
@@ -283,6 +283,26 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 
 		mBar.addSeparator();
 
+		dateButton = new JToggleButton();
+		dateButton.setToolTipText(jfritz.getMessages().getString("fetchtask"));
+		dateButton.setActionCommand("switchList");
+		dateButton.addActionListener(this);
+		dateButton.setIcon(getImage("phonebook.png"));
+		dateButton.setSelectedIcon(getImage("callerlist.png"));
+		dateButton.setOpaque(true);
+		dateButton.setFocusable(false);
+		mBar.add(dateButton);
+
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		// FILTER TOOLBAR
 
 		JToggleButton tb = new JToggleButton(getImage("callin_grey.png"), true);
