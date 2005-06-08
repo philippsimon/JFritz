@@ -54,6 +54,7 @@ import de.moonflower.jfritz.struct.Person;
 import de.moonflower.jfritz.struct.PhoneNumber;
 import de.moonflower.jfritz.struct.VCardList;
 import de.moonflower.jfritz.utils.Debug;
+import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.JFritzUtils;
 import de.moonflower.jfritz.utils.ReverseLookup;
@@ -281,8 +282,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 				"export_menu"));
 		JMenu viewMenu = new JMenu(jfritz.getMessages().getString("view_menu"));
 
-		
-		
 		JMenuItem item = new JMenuItem(jfritz.getMessages().getString(
 				"fetchlist"), 'a');
 		item.setActionCommand("fetchList");
@@ -371,8 +370,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		item.addActionListener(this);
 		optionsMenu.add(item);
 
-		
-
 		item = new JMenuItem(jfritz.getMessages().getString("callerlist"), null);
 		item.setActionCommand("callerlist");
 		item.addActionListener(this);
@@ -441,11 +438,11 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 							setBusy(false);
 							setStatus(jfritz.getMessages().getString(
 									"password_wrong"));
-							String password = showPasswordDialog(properties
-									.getProperty("box.password"));
+							String password = showPasswordDialog(Encryption.decrypt(properties
+									.getProperty("box.password")));
 							if (!password.equals("")) {
-								properties
-										.setProperty("box.password", password);
+								properties.setProperty("box.password", Encryption
+										.encrypt(password));
 							} else { // Cancel
 								isdone = true;
 							}
@@ -500,12 +497,12 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 							if (number != null && (call.getPerson() == null)) {
 								setStatus(jfritz.getMessages().getString(
 										"reverse_lookup_for")
-										+ " " + number.getNumber() + " ...");
+										+ " " + number.getFullNumber() + " ...");
 								Debug.msg("Reverse lookup for "
-										+ number.getNumber());
+										+ number.getFullNumber());
 
 								Person newPerson = ReverseLookup.lookup(number
-										.getNumber());
+										.getAreaNumber());
 								if (newPerson != null) {
 									jfritz.getPhonebook().addEntry(newPerson);
 									// jfritz.getCallerlist().setPerson(newPerson,i);
@@ -866,7 +863,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	public final PhoneBookPanel getPhoneBookPanel() {
 		return phoneBookPanel;
 	}
-	
+
 	public void activatePhoneBook() {
 		tabber.setSelectedComponent(phoneBookPanel);
 	}
