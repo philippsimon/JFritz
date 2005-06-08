@@ -55,10 +55,10 @@ import de.moonflower.jfritz.struct.PhoneNumber;
 import de.moonflower.jfritz.struct.VCardList;
 import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.Encryption;
-import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.JFritzUtils;
 import de.moonflower.jfritz.utils.ReverseLookup;
 import de.moonflower.jfritz.utils.SwingWorker;
+import de.moonflower.jfritz.utils.YAClistener;
 
 /**
  * This is main window class of JFritz, which creates the GUI.
@@ -68,23 +68,21 @@ import de.moonflower.jfritz.utils.SwingWorker;
 public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		ItemListener {
 
-	JFritz jfritz;
+	private JFritz jfritz;
 
-	JFritzProperties properties, participants;
+	private Timer timer;
 
-	Timer timer;
+	private JMenuBar menu;
 
-	JMenuBar menu;
-
-	JToolBar mBar;
+	private JToolBar mBar;
 
 	private JButton fetchButton, lookupButton, configButton, vcardButton;
 
-	JToggleButton taskButton;
+	private JToggleButton taskButton, monitorButton;
 
-	JProgressBar progressbar;
+	private JProgressBar progressbar;
 
-	boolean isretrieving = false;
+	private boolean isretrieving = false;
 
 	private JTabbedPane tabber;
 
@@ -94,6 +92,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 
 	private QuickDialPanel quickDialPanel;
 
+	private YAClistener yacListener;
+
 	/**
 	 * Constructs JFritzWindow
 	 * 
@@ -101,21 +101,20 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	 */
 	public JFritzWindow(JFritz jfritz) {
 		this.jfritz = jfritz;
-		this.properties = jfritz.getProperties();
 		createGUI();
-		if (!properties.getProperty("option.startMinimized", "false").equals(
+		if (!JFritz.getProperty("option.startMinimized", "false").equals(
 				"true")) {
 			setVisible(true);
 		}
-		if (properties.getProperty("option.timerAfterStart", "false").equals(
+		if (JFritz.getProperty("option.timerAfterStart", "false").equals(
 				"true")) {
 			taskButton.doClick();
 		}
-		if (properties.getProperty("option.fetchAfterStart", "false").equals(
+		if (JFritz.getProperty("option.fetchAfterStart", "false").equals(
 				"true")) {
 			fetchButton.doClick();
 		}
-
+		yacListener = new YAClistener();
 	}
 
 	private void createGUI() {
@@ -124,11 +123,11 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		setDefaultLookAndFeel();
 
 		// Setting size and position
-		int x = Integer.parseInt(properties.getProperty("position.left", "10"));
-		int y = Integer.parseInt(properties.getProperty("position.top", "10"));
-		int w = Integer.parseInt(properties
+		int x = Integer.parseInt(JFritz.getProperty("position.left", "10"));
+		int y = Integer.parseInt(JFritz.getProperty("position.top", "10"));
+		int w = Integer.parseInt(JFritz
 				.getProperty("position.width", "640"));
-		int h = Integer.parseInt(properties.getProperty("position.height",
+		int h = Integer.parseInt(JFritz.getProperty("position.height",
 				"400"));
 		setLocation(x, y);
 		setSize(w, h);
@@ -138,12 +137,9 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		quickDialPanel = new QuickDialPanel(jfritz);
 
 		tabber = new JTabbedPane(JTabbedPane.BOTTOM);
-		tabber.addTab(jfritz.getMessages().getString("callerlist"),
-				callerListPanel);
-		tabber.addTab(jfritz.getMessages().getString("phonebook"),
-				phoneBookPanel);
-		tabber.addTab(jfritz.getMessages().getString("quickdials"),
-				quickDialPanel);
+		tabber.addTab(JFritz.getMessage("callerlist"), callerListPanel);
+		tabber.addTab(JFritz.getMessage("phonebook"), phoneBookPanel);
+		tabber.addTab(JFritz.getMessage("quickdials"), quickDialPanel);
 
 		// Adding gui components
 		setJMenuBar(createMenu());
@@ -161,7 +157,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	public void setDefaultLookAndFeel() {
 		setDefaultLookAndFeelDecorated(true);
 		try {
-			UIManager.setLookAndFeel(properties.getProperty("lookandfeel",
+			UIManager.setLookAndFeel(JFritz.getProperty("lookandfeel",
 					UIManager.getCrossPlatformLookAndFeelClassName()));
 
 		} catch (Exception ex) {
@@ -187,22 +183,29 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		mBar.setFloatable(true);
 
 		fetchButton = new JButton();
-		fetchButton.setToolTipText(jfritz.getMessages().getString("fetchlist"));
+		fetchButton.setToolTipText(JFritz.getMessage("fetchlist"));
 		fetchButton.setActionCommand("fetchList");
 		fetchButton.addActionListener(this);
 		fetchButton.setIcon(getImage("fetch.png"));
 		fetchButton.setFocusPainted(false);
 		mBar.add(fetchButton);
 		taskButton = new JToggleButton();
-		taskButton.setToolTipText(jfritz.getMessages().getString("fetchtask"));
+		taskButton.setToolTipText(JFritz.getMessage("fetchtask"));
 		taskButton.setActionCommand("fetchTask");
 		taskButton.addActionListener(this);
 		taskButton.setIcon(getImage("clock.png"));
 		mBar.add(taskButton);
 
+		monitorButton = new JToggleButton();
+		monitorButton.setToolTipText(JFritz.getMessage("callmonitor"));
+		monitorButton.setActionCommand("callMonitor");
+		monitorButton.addActionListener(this);
+		monitorButton.setIcon(getImage("monitor.png"));
+		mBar.add(monitorButton);
+
 		lookupButton = new JButton();
-		lookupButton.setToolTipText(jfritz.getMessages().getString(
-				"reverse_lookup"));
+		lookupButton
+				.setToolTipText(JFritz.getMessage("reverse_lookup"));
 		lookupButton.setActionCommand("reverselookup");
 		lookupButton.addActionListener(this);
 		lookupButton.setIcon(getImage("reverselookup.png"));
@@ -212,14 +215,14 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		button.setActionCommand("phonebook");
 		button.addActionListener(this);
 		button.setIcon(getImage("phonebook.png"));
-		button.setToolTipText(jfritz.getMessages().getString("phonebook"));
+		button.setToolTipText(JFritz.getMessage("phonebook"));
 		mBar.add(button);
 
 		button = new JButton();
 		button.setActionCommand("quickdial");
 		button.addActionListener(this);
 		button.setIcon(getImage("quickdial.png"));
-		button.setToolTipText(jfritz.getMessages().getString("quickdials"));
+		button.setToolTipText(JFritz.getMessage("quickdials"));
 		mBar.add(button);
 
 		mBar.addSeparator();
@@ -228,22 +231,21 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		button.setActionCommand("export_csv");
 		button.addActionListener(this);
 		button.setIcon(getImage("csv.png"));
-		button.setToolTipText(jfritz.getMessages().getString("export_csv"));
+		button.setToolTipText(JFritz.getMessage("export_csv"));
 		mBar.add(button);
 
 		vcardButton = new JButton();
 		vcardButton.setActionCommand("export_vcard");
 		vcardButton.addActionListener(this);
 		vcardButton.setIcon(getImage("vcard.png"));
-		vcardButton.setToolTipText(jfritz.getMessages().getString(
-				"export_vcard"));
+		vcardButton.setToolTipText(JFritz.getMessage("export_vcard"));
 		mBar.add(vcardButton);
 
 		button = new JButton();
 		button.setActionCommand("stats");
 		button.addActionListener(this);
 		button.setIcon(getImage("stats.png"));
-		button.setToolTipText(jfritz.getMessages().getString("stats"));
+		button.setToolTipText(JFritz.getMessage("stats"));
 		button.setEnabled(JFritz.DEVEL_VERSION);
 		mBar.add(button);
 
@@ -251,7 +253,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		button.setActionCommand("help");
 		button.addActionListener(this);
 		button.setIcon(getImage("help.png"));
-		button.setToolTipText(jfritz.getMessages().getString("help_menu"));
+		button.setToolTipText(JFritz.getMessage("help_menu"));
 		button.setEnabled(JFritz.DEVEL_VERSION);
 		mBar.add(button);
 
@@ -261,7 +263,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		configButton.setActionCommand("config");
 		configButton.addActionListener(this);
 		configButton.setIcon(getImage("config.png"));
-		configButton.setToolTipText(jfritz.getMessages().getString("config"));
+		configButton.setToolTipText(JFritz.getMessage("config"));
 		mBar.add(configButton);
 
 		mBar.addSeparator();
@@ -273,45 +275,38 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	 */
 	public JMenuBar createMenu() {
 		JMenu jfritzMenu = new JMenu(JFritz.PROGRAM_NAME);
-		JMenu editMenu = new JMenu(jfritz.getMessages().getString("edit_menu"));
-		JMenu optionsMenu = new JMenu(jfritz.getMessages().getString(
-				"options_menu"));
-		JMenu helpMenu = new JMenu(jfritz.getMessages().getString("help_menu"));
-		JMenu lnfMenu = new JMenu(jfritz.getMessages().getString("lnf_menu"));
-		JMenu exportMenu = new JMenu(jfritz.getMessages().getString(
-				"export_menu"));
-		JMenu viewMenu = new JMenu(jfritz.getMessages().getString("view_menu"));
+		JMenu editMenu = new JMenu(JFritz.getMessage("edit_menu"));
+		JMenu optionsMenu = new JMenu(JFritz.getMessage("options_menu"));
+		JMenu helpMenu = new JMenu(JFritz.getMessage("help_menu"));
+		JMenu lnfMenu = new JMenu(JFritz.getMessage("lnf_menu"));
+		JMenu exportMenu = new JMenu(JFritz.getMessage("export_menu"));
+		JMenu viewMenu = new JMenu(JFritz.getMessage("view_menu"));
 
-		JMenuItem item = new JMenuItem(jfritz.getMessages().getString(
-				"fetchlist"), 'a');
+		JMenuItem item = new JMenuItem(JFritz.getMessage("fetchlist"), 'a');
 		item.setActionCommand("fetchList");
 		item.addActionListener(this);
 		jfritzMenu.add(item);
-		item = new JMenuItem(jfritz.getMessages().getString("reverse_lookup"),
-				'l');
+		item = new JMenuItem(JFritz.getMessage("reverse_lookup"), 'l');
 		item.setActionCommand("reverselookup");
 		item.addActionListener(this);
 		jfritzMenu.add(item);
-		item = new JMenuItem(jfritz.getMessages().getString("export_csv"), 'c');
+		item = new JMenuItem(JFritz.getMessage("export_csv"), 'c');
 		item.setActionCommand("export_csv");
 		item.addActionListener(this);
 		exportMenu.add(item);
 
-		item = new JMenuItem(jfritz.getMessages().getString("export_vcard"),
-				'v');
+		item = new JMenuItem(JFritz.getMessage("export_vcard"), 'v');
 		item.setActionCommand("export_vcard");
 		item.addActionListener(this);
 		exportMenu.add(item);
 
-		item = new JMenuItem(jfritz.getMessages().getString("export_excel"),
-				'c');
+		item = new JMenuItem(JFritz.getMessage("export_excel"), 'c');
 		item.setActionCommand("export_excel");
 		item.addActionListener(this);
 		item.setEnabled(JFritz.DEVEL_VERSION);
 		exportMenu.add(item);
 
-		item = new JMenuItem(jfritz.getMessages()
-				.getString("export_openoffice"), 'c');
+		item = new JMenuItem(JFritz.getMessage("export_openoffice"), 'c');
 		item.setActionCommand("export_openoffice");
 		item.addActionListener(this);
 		item.setEnabled(JFritz.DEVEL_VERSION);
@@ -319,35 +314,33 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		jfritzMenu.add(exportMenu);
 
 		jfritzMenu.add(new JSeparator());
-		item = new JMenuItem(jfritz.getMessages().getString("phonebook"), 'b');
+		item = new JMenuItem(JFritz.getMessage("phonebook"), 'b');
 		item.setActionCommand("phonebook");
 		item.addActionListener(this);
 		item.setEnabled(JFritz.DEVEL_VERSION);
 		jfritzMenu.add(item);
-		item = new JMenuItem(jfritz.getMessages().getString("quickdials"));
+		item = new JMenuItem(JFritz.getMessage("quickdials"));
 		item.setActionCommand("quickdial");
 		item.addActionListener(this);
 		item.setEnabled(JFritz.DEVEL_VERSION);
 		jfritzMenu.add(item);
 		jfritzMenu.add(new JSeparator());
-		item = new JMenuItem(jfritz.getMessages().getString("prog_exit"), 'x');
+		item = new JMenuItem(JFritz.getMessage("prog_exit"), 'x');
 		item.setActionCommand("exit");
 		item.addActionListener(this);
 		jfritzMenu.add(item);
 
-		item = new JMenuItem(jfritz.getMessages().getString("help_content"),
-				'h');
+		item = new JMenuItem(JFritz.getMessage("help_content"), 'h');
 		item.setActionCommand("help");
 		item.addActionListener(this);
 		item.setEnabled(JFritz.DEVEL_VERSION);
 		helpMenu.add(item);
-		item = new JMenuItem(jfritz.getMessages().getString("jfritz_website"),
-				'w');
+		item = new JMenuItem(JFritz.getMessage("jfritz_website"), 'w');
 		item.setActionCommand("website");
 		item.addActionListener(this);
 		helpMenu.add(item);
 		helpMenu.add(new JSeparator());
-		item = new JMenuItem(jfritz.getMessages().getString("prog_info"), 'i');
+		item = new JMenuItem(JFritz.getMessage("prog_info"), 'i');
 		item.setActionCommand("about");
 		item.addActionListener(this);
 		helpMenu.add(item);
@@ -365,20 +358,20 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			lnfgroup.add(rbmi);
 		}
 		optionsMenu.add(lnfMenu);
-		item = new JMenuItem(jfritz.getMessages().getString("config"), 'e');
+		item = new JMenuItem(JFritz.getMessage("config"), 'e');
 		item.setActionCommand("config");
 		item.addActionListener(this);
 		optionsMenu.add(item);
 
-		item = new JMenuItem(jfritz.getMessages().getString("callerlist"), null);
+		item = new JMenuItem(JFritz.getMessage("callerlist"), null);
 		item.setActionCommand("callerlist");
 		item.addActionListener(this);
 		viewMenu.add(item);
-		item = new JMenuItem(jfritz.getMessages().getString("phonebook"), null);
+		item = new JMenuItem(JFritz.getMessage("phonebook"), null);
 		item.setActionCommand("phonebook");
 		item.addActionListener(this);
 		viewMenu.add(item);
-		item = new JMenuItem(jfritz.getMessages().getString("quickdials"), null);
+		item = new JMenuItem(JFritz.getMessage("quickdials"), null);
 		item.setActionCommand("quickdial");
 		item.addActionListener(this);
 		viewMenu.add(item);
@@ -408,8 +401,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 							jfritz.getJframe().fetchList();
 						}
 
-					}, 5000, Integer.parseInt(properties
-							.getProperty("fetch.timer")) * 60000);
+					}, 5000, Integer.parseInt(JFritz
+							.getProperty("fetch.timer","3")) * 60000);
 			Debug.msg("Timer enabled");
 		} else {
 			timer.cancel();
@@ -430,30 +423,28 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 					while (!isdone) {
 						try {
 							setBusy(true);
-							setStatus(jfritz.getMessages().getString(
-									"fetchdata"));
+							setStatus(JFritz.getMessage("fetchdata"));
 							jfritz.getCallerlist().getNewCalls();
 							isdone = true;
 						} catch (WrongPasswordException e) {
 							setBusy(false);
-							setStatus(jfritz.getMessages().getString(
-									"password_wrong"));
-							String password = showPasswordDialog(Encryption.decrypt(properties
-									.getProperty("box.password")));
+							setStatus(JFritz.getMessage("password_wrong"));
+							String password = showPasswordDialog(Encryption
+									.decrypt(JFritz
+											.getProperty("box.password","")));
 							if (!password.equals("")) {
-								properties.setProperty("box.password", Encryption
-										.encrypt(password));
+								JFritz.setProperty("box.password",
+										Encryption.encrypt(password));
 							} else { // Cancel
 								isdone = true;
 							}
 						} catch (IOException e) {
 							setBusy(false);
-							setStatus(jfritz.getMessages().getString(
-									"box_not_found"));
-							String box_address = showAddressDialog(properties
-									.getProperty("box.address"));
+							setStatus(JFritz.getMessage("box_not_found"));
+							String box_address = showAddressDialog(JFritz
+									.getProperty("box.address","fritz.box"));
 							if (!box_address.equals("")) {
-								properties.setProperty("box.address",
+								JFritz.setProperty("box.address",
 										box_address);
 							} else { // Cancel
 								isdone = true;
@@ -486,8 +477,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 					boolean isdone = false;
 					while (!isdone) {
 						setBusy(true);
-						setStatus(jfritz.getMessages().getString(
-								"reverse_lookup"));
+						setStatus(JFritz.getMessage("reverse_lookup"));
 						for (int i = 0; i < jfritz.getCallerlist()
 								.getRowCount(); i++) {
 							Vector data = jfritz.getCallerlist()
@@ -495,8 +485,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 							Call call = (Call) data.get(i);
 							PhoneNumber number = call.getPhoneNumber();
 							if (number != null && (call.getPerson() == null)) {
-								setStatus(jfritz.getMessages().getString(
-										"reverse_lookup_for")
+								setStatus(JFritz
+										.getMessage("reverse_lookup_for")
 										+ " " + number.getFullNumber() + " ...");
 								Debug.msg("Reverse lookup for "
 										+ number.getFullNumber());
@@ -548,7 +538,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	private void showConfigDialog() {
 		ConfigDialog dialog = new ConfigDialog(this);
 		if (dialog.showDialog()) {
-			dialog.storeValues(properties);
+			dialog.storeValues();
 			jfritz.saveProperties();
 		}
 		dialog.dispose();
@@ -613,9 +603,9 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	public void showExitDialog() {
 		boolean exit = true;
 
-		if (properties.getProperty("option.confirmOnExit", "true") == "true")
-			exit = JOptionPane.showConfirmDialog(this, jfritz.getMessages()
-					.getString("really_quit"), JFritz.PROGRAM_NAME,
+		if (JFritz.getProperty("option.confirmOnExit", "true") == "true")
+			exit = JOptionPane.showConfirmDialog(this, JFritz
+					.getMessage("really_quit"), JFritz.PROGRAM_NAME,
 					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
 
 		if (exit) {
@@ -654,7 +644,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			try {
 				UIManager.setLookAndFeel(info.getClassName());
 				SwingUtilities.updateComponentTreeUI(this);
-				properties.setProperty("lookandfeel", info.getClassName());
+				JFritz.setProperty("lookandfeel", info.getClassName());
 			} catch (Exception e) {
 				Debug.err("Unable to set UI " + e.getMessage());
 			}
@@ -667,8 +657,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	 */
 	public void setStatus() {
 		String status = jfritz.getCallerlist().getRowCount() + " "
-				+ jfritz.getMessages().getString("entries") + ", "
-				+ jfritz.getMessages().getString("total_duration") + ": "
+				+ JFritz.getMessage("entries") + ", "
+				+ JFritz.getMessage("total_duration") + ": "
 				+ (jfritz.getCallerlist().getTotalDuration() / 60) + " min";
 		progressbar.setString(status);
 	}
@@ -755,7 +745,11 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			fetchList();
 		else if (e.getActionCommand() == "fetchTask")
 			fetchTask(((JToggleButton) e.getSource()).isSelected());
-		else if (e.getActionCommand() == "reverselookup")
+		else if (e.getActionCommand() == "callMonitor") {
+			// TODO FETCHTASK
+			yacListener.run();
+			fetchTask(((JToggleButton) e.getSource()).isSelected());
+		} else if (e.getActionCommand() == "reverselookup")
 			reverseLookup();
 		else
 			Debug.err("Unimplemented action: " + e.getActionCommand());
@@ -767,7 +761,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	 */
 	private void expportCSV() {
 		JFileChooser fc = new JFileChooser();
-		fc.setDialogTitle(jfritz.getMessages().getString("export_csv"));
+		fc.setDialogTitle(JFritz.getMessage("export_csv"));
 		fc.setDialogType(JFileChooser.SAVE_DIALOG);
 		fc.setSelectedFile(new File(JFritz.CALLS_CSV_FILE));
 		fc.setFileFilter(new FileFilter() {
@@ -792,7 +786,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	public void exportVCard() {
 		VCardList list = new VCardList();
 		JFileChooser fc = new JFileChooser();
-		fc.setDialogTitle(jfritz.getMessages().getString("export_vcard"));
+		fc.setDialogTitle(JFritz.getMessage("export_vcard"));
 		fc.setDialogType(JFileChooser.SAVE_DIALOG);
 		fc.setFileFilter(new FileFilter() {
 			public boolean accept(File f) {
