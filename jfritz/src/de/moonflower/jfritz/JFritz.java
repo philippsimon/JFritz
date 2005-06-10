@@ -398,7 +398,6 @@ public final class JFritz {
 	 * Loads properties from xml files
 	 */
 	public void loadProperties() {
-		// participants = new JFritzProperties();
 		defaultProperties = new JFritzProperties();
 		properties = new JFritzProperties(defaultProperties);
 
@@ -420,14 +419,6 @@ public final class JFritz {
 					+ " not found, using default values");
 		} catch (Exception e) {
 		}
-		/*
-		 * try { FileInputStream fis = new
-		 * FileInputStream(JFritz.PARTICIPANTS_FILE);
-		 * participants.loadFromXML(fis); fis.close(); } catch
-		 * (FileNotFoundException e) { Debug.err("File " +
-		 * JFritz.PARTICIPANTS_FILE + " not found, using default values"); }
-		 * catch (Exception e) { }
-		 */
 	}
 
 	/**
