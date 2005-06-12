@@ -502,11 +502,15 @@ public final class JFritz {
 	}
 
 	public static void callMsg(String caller, String called) {
-		String callerstr = "", calledstr = "";
+		String callerstr = "", calledstr = "", callername = "", calledname = "";
 		Person callerperson = phonebook.findPerson(new PhoneNumber(caller));
-		String callername = callerperson.getFullname();
 		Person calledperson = phonebook.findPerson(new PhoneNumber(called));
-		String calledname = calledperson.getFullname();
+
+		if (callerperson != null)
+			callername = callerperson.getFullname();
+		if (calledperson != null)
+			calledname = calledperson.getFullname();
+
 		if (callername.length() == 0)
 			callerstr = caller;
 		else
@@ -520,7 +524,6 @@ public final class JFritz {
 				"true"))) {
 			playSound(ringSound);
 		}
-
 	}
 
 	/**
