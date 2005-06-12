@@ -38,17 +38,23 @@
  * Statistik: Top-Caller (Name/Nummer, Wie oft, Wie lange)
  * YAC-Messages: Config-Options: enabled/disabled
  * 
+ * BUG: Password on start
  * 
  * CHANGELOG:
  * 
- * JFritz! 0.3.7
+ * JFritz! 0.3.9
  * - Systray minimizes JFrame
  * - Mobile filter inverted
  * - Removed participant support in favour of person
- * - Phon
+ * - Phonebook support
  * - Added commandline option --fetch
  * - Rewrote xml handler for phonebook
+ * - Option for password check on program start
+ *
+ * 
+ * Internal:
  * - Added PhoneNumber class
+ * - Added PhoneType class
  * - Restructured packages
  * 
  * TODO:
@@ -165,7 +171,7 @@ import de.moonflower.jfritz.exceptions.WrongPasswordException;
 import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzProperties;
-import de.moonflower.jfritz.utils.ReverseLookup;
+import de.moonflower.jfritz.utils.YAClistener;
 import de.moonflower.jfritz.utils.upnp.SSDPdiscoverThread;
 
 /**
@@ -176,9 +182,11 @@ public final class JFritz {
 
 	public final static String PROGRAM_NAME = "JFritz!";
 
-	public final static String PROGRAM_VERSION = "0.3.7";
+	public final static String PROGRAM_VERSION = "0.4.0";
 
 	public final static String PROGRAM_URL = "http://jfritz.sourceforge.net/";
+
+	public final static String PROGRAM_SECRET = "jFrItZsEcReT";
 
 	public final static String DOCUMENTATION_URL = "http://jfritz.sourceforge.net/documentation.php";
 
@@ -226,11 +234,12 @@ public final class JFritz {
 
 	private PhoneBook phonebook;
 
+	private YAClistener yacListener;
+
 	/**
 	 * Constructs JFritz object
 	 */
 	public JFritz(boolean onlyFetchCalls) {
-		new ReverseLookup(); // Initialize ReverseLookup
 		loadProperties();
 		loadMessages(new Locale("de", "DE"));
 
@@ -482,8 +491,6 @@ public final class JFritz {
 		}
 	}
 
-	// Getter methods for private JFritz objects//
-
 	/**
 	 * @return Returns the callerlist.
 	 */
@@ -496,38 +503,6 @@ public final class JFritz {
 	 */
 	public final PhoneBook getPhonebook() {
 		return phonebook;
-	}
-
-	/**
-	 * @return Returns a message.
-	 */
-	public static String getMessage(String msg) {
-		String i18n = messages.getString(msg);
-		if (i18n.length() == 0)
-			i18n = msg;
-		return i18n;
-	}
-
-	/**
-	 * @return Returns the properties.
-	 */
-	public final JFritzProperties getProperties2() {
-		return properties;
-	}
-
-	public static String getProperty(String property, String defaultValue) {
-		return properties.getProperty(property, defaultValue);
-	}
-
-	public static String getProperty(String property) {
-		return getProperty(property, "");
-	}
-
-	public static void setProperty(String property, String value) {
-		properties.setProperty(property, value);
-	}
-	public static void removeProperty(String property) {
-		properties.remove(property);
 	}
 
 	/**
@@ -546,6 +521,37 @@ public final class JFritz {
 		} catch (InterruptedException e) {
 		}
 		return ssdpthread.getDevices();
+	}
+
+	/**
+	 * @return Returns an internationalized message.
+	 */
+	public static String getMessage(String msg) {
+		String i18n = "";
+		try {
+			i18n = messages.getString(msg);
+		} catch (MissingResourceException e) {
+			Debug.err("Can't find resource string for " + msg);
+			i18n = msg;
+		}
+		return i18n;
+	}
+
+	// Property methods
+	public static String getProperty(String property, String defaultValue) {
+		return properties.getProperty(property, defaultValue);
+	}
+
+	public static String getProperty(String property) {
+		return getProperty(property, "");
+	}
+
+	public static void setProperty(String property, String value) {
+		properties.setProperty(property, value);
+	}
+
+	public static void removeProperty(String property) {
+		properties.remove(property);
 	}
 
 }

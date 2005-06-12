@@ -4,7 +4,7 @@
  * Created on 14.05.2005
  *
  */
-package de.moonflower.jfritz.dialogs.quickdial;
+package de.moonflower.jfritz.struct;
 
 
 /**
