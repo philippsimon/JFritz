@@ -49,8 +49,10 @@
  * - Phonebook support
  * - Added commandline option --fetch
  * - Rewrote xml handler for phonebook
- * - Option for password check on program start
  * - Call monitor with sound notification
+ * - Crypted password
+ * - Option for password check on program start
+ * - Option for disabling sounds
  * 
  * Internal:
  * - Added PhoneNumber class
@@ -172,6 +174,7 @@ import org.jdesktop.jdic.tray.TrayIcon;
 import de.moonflower.jfritz.callerlist.CallerList;
 import de.moonflower.jfritz.dialogs.phonebook.PhoneBook;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
+import de.moonflower.jfritz.struct.Person;
 import de.moonflower.jfritz.struct.PhoneNumber;
 import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.Encryption;
@@ -500,10 +503,10 @@ public final class JFritz {
 
 	public static void callMsg(String caller, String called) {
 		String callerstr = "", calledstr = "";
-		String callername = phonebook.findPerson(new PhoneNumber(caller))
-				.getFullname();
-		String calledname = phonebook.findPerson(new PhoneNumber(called))
-				.getFullname();
+		Person callerperson = phonebook.findPerson(new PhoneNumber(caller));
+		String callername = callerperson.getFullname();
+		Person calledperson = phonebook.findPerson(new PhoneNumber(called));
+		String calledname = calledperson.getFullname();
 		if (callername.length() == 0)
 			callerstr = caller;
 		else
