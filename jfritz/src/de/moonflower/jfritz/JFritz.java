@@ -187,8 +187,8 @@ import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.JFritzUtils;
+import de.moonflower.jfritz.utils.TelnetListener;
 import de.moonflower.jfritz.utils.YAClistener;
-import de.moonflower.jfritz.utils.upnp.TelnetListener;
 import de.moonflower.jfritz.utils.upnp.SSDPdiscoverThread;
 
 /**
