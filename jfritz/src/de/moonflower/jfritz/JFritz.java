@@ -41,6 +41,16 @@
  * BUG: Password on start
  * 
  * CHANGELOG:
+ * JFritz! 0.4.2
+ * TODO:
+ * - Bugfix: MacOSX
+ * - Bugfix: PhoneBook too long??
+ * - YAK (Neues Reiterchen)
+ * 
+ * - Merging of person entries
+ * - Implement reverselookup for Switzerland (www.telsearch.ch)
+ * - CMD Option --export-csv
+ * - Password Dialog mit "speichern" Haken
  * 
  * JFritz! 0.4.0
  * - Systray minimizes JFrame
@@ -49,6 +59,7 @@
  * - Phonebook support
  * - Added commandline option --fetch
  * - Rewrote xml handler for phonebook
+ * - Data statistics
  * - Call monitor with sound notification
  * - Crypted password
  * - Option for password check on program start
@@ -59,10 +70,6 @@
  * - Added PhoneType class
  * - Restructured packages
  * 
- * TODO:
- * - Merging of person entries
- * - Implement reverselookup for Switzerland (www.telsearch.ch)
- * - CMD Option --export-csv
  * 
  * JFritz! 0.3.6
  * - New mobile phone filter feature
@@ -192,7 +199,7 @@ public final class JFritz {
 
 	public final static String PROGRAM_NAME = "JFritz!";
 
-	public final static String PROGRAM_VERSION = "0.4.0";
+	public final static String PROGRAM_VERSION = "0.4.1";
 
 	public final static String PROGRAM_URL = "http://jfritz.sourceforge.net/";
 
