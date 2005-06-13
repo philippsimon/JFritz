@@ -188,7 +188,7 @@ import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.JFritzUtils;
 import de.moonflower.jfritz.utils.YAClistener;
-import de.moonflower.jfritz.utils.upnp.JFritzTelnet;
+import de.moonflower.jfritz.utils.upnp.TelnetListener;
 import de.moonflower.jfritz.utils.upnp.SSDPdiscoverThread;
 
 /**
@@ -239,8 +239,6 @@ public final class JFritz {
 
 	private SystemTray systray;
 
-	private static TrayIcon trayIcon;
-
 	private JFritzWindow jframe;
 
 	private Vector devices;
@@ -249,13 +247,16 @@ public final class JFritz {
 
 	private CallerList callerlist;
 
+	private static TrayIcon trayIcon;
+
 	private static PhoneBook phonebook;
 
-	private YAClistener yacListener;
-
-	private JFritzTelnet telnet;
-
 	private static URL ringSound;
+
+	private YAClistener yac;
+
+	private TelnetListener telnet;
+
 
 	/**
 	 * Constructs JFritz object
@@ -641,12 +642,12 @@ public final class JFritz {
 	/**
 	 * @return Returns the telnet connection
 	 */
-	public JFritzTelnet getTelnet() {
+	public TelnetListener getTelnet() {
 		return telnet;
 	}
 
-	public JFritzTelnet newTelnet() {
-		telnet = new JFritzTelnet();
+	public TelnetListener newTelnet() {
+		telnet = new TelnetListener();
 		return telnet;
 	}
 }

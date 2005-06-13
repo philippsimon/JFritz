@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
  *  
  */
 
-public class JFritzTelnet extends Thread {
+public class TelnetListener extends Thread {
 
 	//IncomingCall: ID 0, caller: "017623352711" called: "592904"
 	//IncomingCall from NT: ID 0, caller: "592904" called: "1815212"
