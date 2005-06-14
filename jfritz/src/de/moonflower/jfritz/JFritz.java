@@ -43,6 +43,7 @@
  * CHANGELOG:
  * 
  * JFritz! 0.4.2
+ * - CallByCall information is saved
  * 
  * TODO:
  * - Bugfix: MacOSX
@@ -254,12 +255,11 @@ public final class JFritz {
 
 	private static PhoneBook phonebook;
 
-	private static URL ringSound;
+	private static URL ringSound, callSound;
 
 	private YAClistener yac;
 
 	private TelnetListener telnet;
-
 
 	/**
 	 * Constructs JFritz object
@@ -313,7 +313,9 @@ public final class JFritz {
 	 */
 	private void loadSounds() {
 		ringSound = getClass().getResource(
-				"/de/moonflower/jfritz/resources/sounds/oldphone.wav");
+				"/de/moonflower/jfritz/resources/sounds/call_in.wav");
+		callSound = getClass().getResource(
+				"/de/moonflower/jfritz/resources/sounds/call_out.wav");
 	}
 
 	/**
@@ -533,7 +535,11 @@ public final class JFritz {
 		infoMsg("Telefonanruf\nvon " + callerstr + "\nan " + calledstr + "!");
 		if (JFritzUtils.parseBoolean(JFritz.getProperty("option.playSounds",
 				"true"))) {
-			playSound(ringSound);
+			if (caller.equals("592904")) { // FIXME Local MSN
+				playSound(callSound);
+			} else {				
+				playSound(ringSound);
+			}
 		}
 	}
 
@@ -643,12 +649,16 @@ public final class JFritz {
 	}
 
 	/**
-	 * @return Returns the telnet connection
+	 * @return Returns the TelnetListener
 	 */
 	public TelnetListener getTelnet() {
 		return telnet;
 	}
 
+	/**
+	 * Creates a new TelnetListener
+	 * @return Returns the TelnetListener
+	 */
 	public TelnetListener newTelnet() {
 		telnet = new TelnetListener();
 		return telnet;
