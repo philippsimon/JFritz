@@ -21,7 +21,7 @@
  *
  * This piece of software is distributed in the hope that it will be 
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FöITNESS FOR A PARTICULAR PURPOSE.  See the
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -41,7 +41,9 @@
  * BUG: Password on start
  * 
  * CHANGELOG:
+ * 
  * JFritz! 0.4.2
+ * 
  * TODO:
  * - Bugfix: MacOSX
  * - Bugfix: PhoneBook too long??
@@ -51,6 +53,7 @@
  * - Implement reverselookup for Switzerland (www.telsearch.ch)
  * - CMD Option --export-csv
  * - Password Dialog mit "speichern" Haken
+ * - TFTP Box Konfig verwalten
  * 
  * JFritz! 0.4.0
  * - Systray minimizes JFrame
