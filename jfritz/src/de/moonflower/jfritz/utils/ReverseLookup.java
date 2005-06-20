@@ -49,6 +49,7 @@ public class ReverseLookup {
 	 * @return name
 	 */
 	public static Person lookupDasOertliche(String number) {
+		if (number.equals("")) { return null; }
 		Debug.msg("Looking up " + number + "...");
 		URL url = null;
 		URLConnection urlConn;
@@ -100,7 +101,7 @@ public class ReverseLookup {
 								firstname = firstname.substring(0,
 										firstname.indexOf("  ")).trim();
 							} else {
-								firstname = firstname.replace("  u. ", " und ");
+								firstname = firstname.replaceAll("  u. ", " und ");
 							}
 						}
 						firstname = firstname.trim();
@@ -113,7 +114,7 @@ public class ReverseLookup {
 							zipcity = split[0].trim();
 							address = "";
 						}
-						split = zipcity.split(" ");
+						split = zipcity.split(" ", 2);
 						if (split.length > 1) {
 							zipcode = split[0].trim();
 							city = split[1].trim();
@@ -141,7 +142,7 @@ public class ReverseLookup {
 			}
 		} catch (MalformedURLException e) {
 			Debug.err("URL invalid: " + urlstr);
-		}
+		}		
 		newPerson = new Person();
 		newPerson.addNumber(number, "home");
 		return newPerson;

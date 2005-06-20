@@ -37,8 +37,13 @@
  * CallerList: ev. Popup-Menu?
  * Statistik: Top-Caller (Name/Nummer, Wie oft, Wie lange)
  * YAC-Messages: Config-Options: enabled/disabled
+ * Watchdog for CallMonitor
  * 
  * BUG: Password on start
+ * BUG: No new Phonebook entries after reverselookup, only after restart or double click on an call entry
+ * BUG: Eingabe im IP-Eingabe-PopUp wird ignoriert?
+ * BUG: Box restart beim Call Monitor
+ * BUG: Statistics not working everywhere
  * 
  * CHANGELOG:
  * 
