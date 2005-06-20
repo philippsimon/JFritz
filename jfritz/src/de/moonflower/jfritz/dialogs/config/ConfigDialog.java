@@ -108,9 +108,7 @@ public class ConfigDialog extends JDialog {
 	}
 
 	/**
-	 * sets properties to dialog components
-	 * 
-	 * @param properties
+	 * Sets properties to dialog components
 	 */
 	public void setValues() {
 		notifyOnCallsButton.setSelected(JFritzUtils.parseBoolean(JFritz
@@ -167,9 +165,7 @@ public class ConfigDialog extends JDialog {
 	}
 
 	/**
-	 * stores values in dialog components to programm properties
-	 * 
-	 * @param properties
+	 * Stores values in dialog components to programm properties
 	 */
 	public void storeValues() {
 		// Remove leading "0" from areaCode

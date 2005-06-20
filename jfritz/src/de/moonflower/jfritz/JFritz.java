@@ -508,8 +508,7 @@ public final class JFritz {
 
 	/**
 	 * Displays balloon info message
-	 * 
-	 * @param msg
+	 * @param msg Message to be displayed
 	 */
 	public static void infoMsg(String msg) {
 		System.out.println(msg);
@@ -519,6 +518,11 @@ public final class JFritz {
 		}
 	}
 
+	/**
+	 * Display call monitor message
+	 * @param caller Caller number
+	 * @param called Called number
+	 */
 	public static void callMsg(String caller, String called) {
 		String callerstr = "", calledstr = "", callername = "", calledname = "";
 		Person callerperson = phonebook.findPerson(new PhoneNumber(caller));
@@ -550,6 +554,7 @@ public final class JFritz {
 
 	/**
 	 * Plays a sound by a given resource URL
+	 * @param sound URL of sound to be played
 	 */
 	public static void playSound(URL sound) {
 		try {
@@ -636,19 +641,38 @@ public final class JFritz {
 		return i18n;
 	}
 
-	// Property methods
+	/**
+	 * 
+	 * @param property Property to get the value from
+	 * @param defaultValue Default value to be returned if property does not exist
+	 * @return Returns value of a specific property
+	 */
 	public static String getProperty(String property, String defaultValue) {
 		return properties.getProperty(property, defaultValue);
 	}
 
+	/**
+	 * 
+	 * @param property Property to get the value from
+	 * @return Returns value of a specific property
+	 */
 	public static String getProperty(String property) {
 		return getProperty(property, "");
 	}
 
+	/**
+	 * Sets a property to a specific value
+	 * @param property Property to be set
+	 * @param value Value of property
+	 */
 	public static void setProperty(String property, String value) {
 		properties.setProperty(property, value);
 	}
-
+	
+	/**
+	 * Removes a property
+	 * @param property Property to be removed
+	 */
 	public static void removeProperty(String property) {
 		properties.remove(property);
 	}

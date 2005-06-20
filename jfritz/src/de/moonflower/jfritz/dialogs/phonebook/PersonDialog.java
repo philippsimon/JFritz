@@ -35,8 +35,10 @@ public class PersonDialog extends JDialog implements ActionListener {
 	private boolean pressed_OK = false;
 
 	/**
-	 * @param owner
-	 * @throws java.awt.HeadlessException
+	 * 
+	 * @param jfritz JFritz object
+	 * @param person Person object
+	 * @throws HeadlessException
 	 */
 	public PersonDialog(JFritz jfritz, Person person) throws HeadlessException {
 		super();
@@ -68,7 +70,7 @@ public class PersonDialog extends JDialog implements ActionListener {
 		okButton = new JButton("Okay");
 		okButton.setActionCommand("ok");
 		okButton.addActionListener(this);
-	    
+
 		cancelButton = new JButton("Abbruch");
 		cancelButton.setActionCommand("cancel");
 		cancelButton.addActionListener(this);

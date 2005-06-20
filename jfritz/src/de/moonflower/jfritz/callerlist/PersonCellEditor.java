@@ -26,13 +26,13 @@ import de.moonflower.jfritz.struct.Person;
 public class PersonCellEditor extends AbstractCellEditor implements
 		TableCellEditor {
 
-	private JFritz jfritz;
-
+	
+	CallerList callerlist;
 	JComponent component;
 
-	public PersonCellEditor(JFritz jfritz) {
+	public PersonCellEditor(CallerList callerlist) {
 		super();
-		this.jfritz = jfritz;
+		this.callerlist = callerlist;
 		component = new PersonEditorPanel(this);
 	}
 
@@ -54,7 +54,7 @@ public class PersonCellEditor extends AbstractCellEditor implements
 			strval = person.getFullname();
 		} else {
 			person = new Person();
-			Call c = (Call) jfritz.getCallerlist().getFilteredCallVector().get(row);
+			Call c = (Call) callerlist.getFilteredCallVector().get(row);
 			c.getPhoneNumber().setType();
 			person.addNumber(c.getPhoneNumber());
 		}
@@ -83,6 +83,6 @@ public class PersonCellEditor extends AbstractCellEditor implements
 	 * @return Returns the jfritz.
 	 */
 	public final JFritz getJfritz() {
-		return jfritz;
+		return callerlist.getJfritz();
 	}
 }

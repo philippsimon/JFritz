@@ -38,14 +38,13 @@ public class CallerTable extends JTable {
 	/**
 	 * Constructs CallerTable
 	 * 
-	 * @param callerlist
+	 * @param jfritz JFritz object
 	 */
 	public CallerTable(JFritz jfritz) {
 		super(jfritz.getCallerlist());
-		this.jfritz = jfritz;
 		setTableProperties();
 		createColumns();
-		
+
 	}
 
 	/**
@@ -55,7 +54,8 @@ public class CallerTable extends JTable {
 		setDefaultRenderer(CallType.class, new CallTypeCellRenderer());
 		setDefaultRenderer(Date.class, new DateCellRenderer());
 		// FIXME setDefaultRenderer(Person.class, new PersonCellRenderer());
-		// FIXME setDefaultRenderer(PhoneNumber.class, new NumberCellRenderer(jfritz));
+		// FIXME setDefaultRenderer(PhoneNumber.class, new
+		// NumberCellRenderer(jfritz));
 		// TODO: Create classes for Number, Port and Duration
 		// setDefaultRenderer(Port.class, new PortCellRenderer());
 		// setDefaultRenderer(Duration.class, new DurationCellRenderer());
@@ -100,7 +100,7 @@ public class CallerTable extends JTable {
 
 		col = getColumnModel().getColumn(2);
 		col.setHeaderValue(JFritz.getMessage("number"));
-		col.setCellRenderer(new NumberCellRenderer(jfritz));
+		col.setCellRenderer(new NumberCellRenderer());
 		headerTips.setToolTip(col, JFritz.getMessage("number_desc"));
 		col.setPreferredWidth(Integer.parseInt(JFritz.getProperty(
 				"column2.width", "128")));
@@ -109,7 +109,7 @@ public class CallerTable extends JTable {
 		col.setHeaderValue(JFritz.getMessage("participant"));
 		headerTips.setToolTip(col, JFritz.getMessage("participant_desc"));
 		//col.setCellEditor(new TextFieldCellEditor());
-		col.setCellEditor(new PersonCellEditor(jfritz));
+		col.setCellEditor(new PersonCellEditor((CallerList) getModel()));
 
 		col.setCellRenderer(new PersonCellRenderer());
 		col.setPreferredWidth(Integer.parseInt(JFritz.getProperty(
