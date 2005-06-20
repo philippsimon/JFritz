@@ -2,7 +2,7 @@
  * $Id$
  * 
  * JFritz!
- * http://jfritz.sourceforge.net
+ * http://jfritz.sourceforge.net/
  * 
  *
  * (c) Arno Willig <akw@thinkwiki.org>
@@ -25,12 +25,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this driver; if not, write to the Free Software
+ * along with this software; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  *
  * GLOBAL TODO:
  * 
+ * CSV-Export: Verschönern
  * CallerList: Einzelne Einträge löschen
  * CallerList: Einträge löschen älter als Datum
  * CallerList: Alle Einträge löschen
@@ -38,6 +39,7 @@
  * Statistik: Top-Caller (Name/Nummer, Wie oft, Wie lange)
  * YAC-Messages: Config-Options: enabled/disabled
  * Watchdog for CallMonitor
+ * CallMonitor über syslogd
  * 
  * BUG: Password on start
  * BUG: No new Phonebook entries after reverselookup, only after restart or double click on an call entry
@@ -196,9 +198,10 @@ import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.JFritzUtils;
-import de.moonflower.jfritz.utils.TelnetListener;
-import de.moonflower.jfritz.utils.YAClistener;
-import de.moonflower.jfritz.utils.upnp.SSDPdiscoverThread;
+import de.moonflower.jfritz.utils.network.SSDPdiscoverThread;
+import de.moonflower.jfritz.utils.network.SyslogListener;
+import de.moonflower.jfritz.utils.network.TelnetListener;
+import de.moonflower.jfritz.utils.network.YAClistener;
 
 /**
  * @author Arno Willig
@@ -265,6 +268,8 @@ public final class JFritz {
 	private YAClistener yac;
 
 	private TelnetListener telnet;
+	
+	private SyslogListener syslog;
 
 	/**
 	 * Constructs JFritz object
@@ -680,7 +685,7 @@ public final class JFritz {
 	/**
 	 * @return Returns the TelnetListener
 	 */
-	public TelnetListener getTelnet() {
+	public TelnetListener getTelnet2() {
 		return telnet;
 	}
 
@@ -688,8 +693,21 @@ public final class JFritz {
 	 * Creates a new TelnetListener
 	 * @return Returns the TelnetListener
 	 */
-	public TelnetListener newTelnet() {
+	public TelnetListener newTelnet2() {
 		telnet = new TelnetListener();
 		return telnet;
+	}
+	
+	public SyslogListener startSyslogListener() {
+		Debug.msg("Starting SyslogListener");		
+		syslog = new SyslogListener();
+		return syslog;
+	}
+	
+	public void stopSyslogListener() {
+		Debug.msg("Stopping SyslogListener");
+		if (syslog != null) {
+			syslog.interrupt();
+		}
 	}
 }
