@@ -44,7 +44,8 @@ public class PersonCellRenderer extends DefaultTableCellRenderer {
 		if (value != null) {
 			Person person = (Person) value;
 			//setToolTipText(person.getFullname());
-			label.setText(person.getFullname());
+			label.setText(person.getFullname());			
+			setToolTipText(person.getFullname()+" | "+person.getStreet()+" | " + person.getPostalCode() + " " + person.getCity());
 			label.setIcon(imagePerson);
 			label.setHorizontalAlignment(JLabel.LEFT);
 		} else {
