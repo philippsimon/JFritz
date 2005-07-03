@@ -147,16 +147,12 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		String pass = JFritz.getProperty("box.password", "");
 		if (!Encryption.decrypt(ask).equals(
 				JFritz.PROGRAM_SECRET + Encryption.decrypt(pass))) {
-			String password = showPasswordDialog("");
-			if (!password.equals(Encryption.decrypt(pass))) {
-				Debug.err("Wrong password!");
-				System.exit(0);
-			}
-			/*
-			 * if (!password.equals("")) { String enc =
-			 * Encryption.encrypt(JFritz.PROGRAM_SECRET + pass);
-			 * JFritz.setProperty("jfritz.password", enc); }
-			 */
+				String password = showPasswordDialog("");
+				if (!password.equals(Encryption.decrypt(pass))) {	
+					Debug.errDlg("Falsches Passwort!");
+					Debug.err("Wrong password!");					
+					System.exit(0);
+				}
 		}
 
 	}
@@ -448,6 +444,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 								isdone = true;
 							}
 						} catch (IOException e) {
+							Debug.msg("Callerlist Box not found");
 							setBusy(false);
 							setStatus(JFritz.getMessage("box_not_found"));
 							String box_address = showAddressDialog(JFritz
@@ -619,6 +616,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			quickDialPanel.getDataModel().saveToXMLFile(JFritz.QUICKDIALS_FILE);
 
 			jfritz.saveProperties();
+			
+			jfritz.getPhonebook().saveToXMLFile(JFritz.PHONEBOOK_FILE);
 			// FIXME if (jfritz.getTelnet() != null) jfritz.getTelnet().interrupt();
 			jfritz.stopSyslogListener();
 			System.exit(0);
