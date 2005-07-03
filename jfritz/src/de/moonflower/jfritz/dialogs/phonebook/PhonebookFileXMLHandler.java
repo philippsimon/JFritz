@@ -38,6 +38,8 @@ public class PhonebookFileXMLHandler extends DefaultHandler {
 	Date calldate;
 
 	int duration;
+	
+	boolean privateEntry;
 
 	public PhonebookFileXMLHandler(PhoneBook phonebook) {
 		super();
@@ -59,6 +61,12 @@ public class PhonebookFileXMLHandler extends DefaultHandler {
 		chars = ""; // Important to clear buffer :)
 
 		if (eName.equals("entry")) {
+			if (attrs.getValue("private").equals("true")) { 
+				privateEntry = true; 
+				}
+			else { 
+				privateEntry = false; 
+				}
 			firstName = "";
 			company = "";
 			lastName = "";
@@ -104,6 +112,7 @@ public class PhonebookFileXMLHandler extends DefaultHandler {
 					street, postCode, city, email);
 
 			newPerson.setNumbers(numbers, standard);
+			newPerson.setPrivateEntry(privateEntry);
 			phonebook.addEntry(newPerson);
 
 		}
