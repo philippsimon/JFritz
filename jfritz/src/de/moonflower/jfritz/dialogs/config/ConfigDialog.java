@@ -73,6 +73,8 @@ public class ConfigDialog extends JDialog {
 
 	private JPasswordField pass;
 
+	private String encodedPassword = "";
+	
 	private JSlider timerSlider;
 
 	private JButton okButton, cancelButton, boxtypeButton;
@@ -132,7 +134,8 @@ public class ConfigDialog extends JDialog {
 								"")));
 		passwordAfterStartButton.setSelected(pwAfterStart);
 
-		pass.setText(Encryption.decrypt(JFritz.getProperty("box.password")));
+		pass.setText(JFritzUtils.replaceSpecialCharsURL(Encryption.decrypt(JFritz.getProperty("box.password")), false));
+		encodedPassword = Encryption.decrypt(JFritz.getProperty("box.password"));
 		address.setText(JFritz.getProperty("box.address"));
 		areaCode.setText(JFritz.getProperty("area.code"));
 		countryCode.setText(JFritz.getProperty("country.code"));
@@ -189,13 +192,12 @@ public class ConfigDialog extends JDialog {
 				.toString(soundButton.isSelected()));
 		if (!passwordAfterStartButton.isSelected()) {
 			JFritz.setProperty("jfritz.password", Encryption.encrypt(JFritz.PROGRAM_SECRET
-					+ new String(pass.getPassword())));
+					+ encodedPassword));
 		} else {
 			JFritz.removeProperty("jfritz.password");
 		}
 
-		JFritz.setProperty("box.password", Encryption.encrypt(new String(pass
-				.getPassword())));
+		JFritz.setProperty("box.password", Encryption.encrypt(encodedPassword));
 		JFritz.setProperty("box.address", address.getText());
 		JFritz.setProperty("area.code", areaCode.getText());
 		JFritz.setProperty("country.code", countryCode.getText());
@@ -276,6 +278,7 @@ public class ConfigDialog extends JDialog {
 		ActionListener actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Object source = e.getSource();
+				encodedPassword = JFritzUtils.replaceSpecialCharsURL(new String(pass.getPassword()), true);
 				pressed_OK = (source == pass || source == okButton);
 				if (source == pass || source == okButton
 						|| source == cancelButton) {
@@ -290,8 +293,7 @@ public class ConfigDialog extends JDialog {
 				} else if (e.getActionCommand().equals("detectboxtype")) {
 					try {
 						firmware = FritzBoxFirmware.detectFirmwareVersion(
-								address.getText(), new String(pass
-										.getPassword()));
+								address.getText(), encodedPassword);
 
 						// firmware = new FritzBoxFirmware("14", "1", "35");
 						setBoxTypeLabel();
@@ -309,7 +311,7 @@ public class ConfigDialog extends JDialog {
 				} else if (e.getActionCommand().equals("fetchSIP")) {
 					try {
 						Vector data = JFritzUtils.retrieveSipProvider(address
-								.getText(), new String(pass.getPassword()),
+								.getText(), encodedPassword,
 								firmware);
 						sipmodel.setData(data);
 						sipmodel.fireTableDataChanged();
@@ -529,7 +531,7 @@ public class ConfigDialog extends JDialog {
 
 	public boolean showDialog() {
 		setVisible(true);
-		return okPressed();
+		return okPressed(); 
 	}
 
 	public void setBoxTypeLabel() {
