@@ -31,31 +31,32 @@
  *
  * GLOBAL TODO:
  * 
- * CallerList: Einzelne Einträge löschen
  * CallerList: Einträge löschen älter als Datum
- * CallerList: Alle Einträge löschen
  * CallerList: ev. Popup-Menu?
  * Statistik: Top-Caller (Name/Nummer, Wie oft, Wie lange)
  * YAC-Messages: Config-Options: enabled/disabled
  * Watchdog for CallMonitor
  * CallMonitor über syslogd
  * 
- * BUG: Password on start
  * BUG: No new Phonebook entries after reverselookup, only after restart or double click on an call entry
- * BUG: Eingabe im IP-Eingabe-PopUp wird ignoriert?
+ * BUG: Eingabe im IP-Eingabe-PopUp wird ignoriert!
  * BUG: Box restart beim Call Monitor
- * BUG: Statistics not working everywhere
  * 
  * CHANGELOG:
  * 
  * JFritz! 0.4.2
  * - CallByCall information is saved
+ * - Added Phonebookfilter (Private Phonebook)
  * - Phonebook XML-Saving fixed
+ * - Callerlist deleteable
  * - Bugfix: Statistic-Dialog uses box.ip not 192.168.178.1
- * - Compatibility to Java 1.4.2
+ * - Bugfix: Compatibility to Java 1.4.2
  * - Some little Bugfixes
  * - CMD Option -e : Export CSV
+ * - CMD Option -c : Clear Callerlist
+ * - CMD Option -l : Debug to Logfile
  * - Advanced CSV-File
+ * - Bugfix: Passwords with special chars
  * 
  * TODO:
  * - Bugfix: MacOSX
@@ -280,7 +281,7 @@ public final class JFritz {
 	/**
 	 * Constructs JFritz object
 	 */
-	public JFritz(boolean fetchCalls, boolean csvExport, String csvFileName) {
+	public JFritz(boolean fetchCalls, boolean csvExport, String csvFileName, boolean clearList) {
 		loadProperties();
 		loadMessages(new Locale("de", "DE"));
 		loadSounds();
@@ -304,17 +305,28 @@ public final class JFritz {
 					infoMsg("CSV-Export to " + csvFileName);
 					callerlist.saveToCSVFile(csvFileName);
 				}
+				if (clearList) {
+					infoMsg("Clearing Caller List");
+					callerlist.clearList();
+				}
 				infoMsg("JFritz! beendet sich nun.");
 				System.exit(0);
 			}
 		}
-
 		if (csvExport) {
-			infoMsg("CSV-Export to " + csvFileName);
+			infoMsg("CSV-Export to "+csvFileName);
 			callerlist.saveToCSVFile(csvFileName);
+			if (clearList) {
+				infoMsg("Clearing Caller List");
+				callerlist.clearList();
+			}
 			System.exit(0);
 		}
-
+		if (clearList) {
+			infoMsg("Clearing Caller List");
+			callerlist.clearList();
+			System.exit(0);
+		}
 		jframe = new JFritzWindow(this);
 
 		if (checkForSystraySupport()) {
@@ -355,7 +367,7 @@ public final class JFritz {
 		}
 		return SYSTRAY_SUPPORT;
 	}
-
+	
 	/**
 	 * Main method for starting JFritz!
 	 * 
@@ -367,7 +379,9 @@ public final class JFritz {
 				+ " (c) 2005 by " + PROGRAM_AUTHOR);
 		if (DEVEL_VERSION)
 			Debug.on();
+
 		boolean fetchCalls = false;
+		boolean clearList = false;
 		boolean csvExport = false;
 		String csvFileName = "";
 
@@ -378,8 +392,11 @@ public final class JFritz {
 		options.addOption('v', "debug", null, "Turn on debug information");
 		options.addOption('s', "systray", null, "Turn on systray support");
 		options.addOption('f', "fetch", null, "Fetch new calls and exit");
+		options.addOption('c',"clear_list",null,"Clears Caller List and exit");		
 		options.addOption('e', "export", "filename",
 				"Fetch calls and export to CSV file.");
+		options.addOption('l', "logfile", "filename",
+				"Writes debug messages to logfile");
 
 		Vector foundOptions = options.parseOptions(args);
 		Enumeration en = foundOptions.elements();
@@ -409,12 +426,24 @@ public final class JFritz {
 					System.exit(0);
 				}
 				break;
+			case 'c':
+				clearList = true;
+				break;
+			case 'l':
+				String logFilename = option.getParameter();
+				if (logFilename == null) {
+					System.err.println("Parameter not found!");
+					System.exit(0);
+				}
+				else {
+					Debug.logToFile(logFilename);
+					break;
+				}
 			default:
 				break;
 			}
 		}
-		new JFritz(fetchCalls, csvExport, csvFileName);
-
+		new JFritz(fetchCalls, csvExport, csvFileName, clearList);
 	}
 
 	/**
@@ -546,8 +575,6 @@ public final class JFritz {
 		} catch (FileNotFoundException e) {
 		} catch (IOException e) {
 		}
-
-		phonebook.saveToXMLFile(PHONEBOOK_FILE);
 	}
 
 	/**
