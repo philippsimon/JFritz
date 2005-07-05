@@ -669,7 +669,7 @@ public final class JFritz {
 		Debug.err(msg);
 		if (SYSTRAY_SUPPORT) {
 			trayIcon.displayMessage(JFritz.PROGRAM_NAME, msg,
-					TrayIcon.ERROE_MESSAGE_TYPE);
+					TrayIcon.ERROR_MESSAGE_TYPE);
 		}
 	}
 
