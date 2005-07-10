@@ -876,4 +876,10 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	public void activatePhoneBook() {
 		tabber.setSelectedComponent(phoneBookPanel);
 	}
+	/**
+	 * @return Returns the callerListPanel.
+	 */
+	public CallerListPanel getCallerListPanel() {
+		return callerListPanel;
+	}
 }

@@ -65,7 +65,7 @@ public class CallerTable extends JTable {
 		setColumnSelectionAllowed(false);
 		setCellSelectionEnabled(false);
 		setRowSelectionAllowed(true);
-		setFocusable(false);
+		setFocusable(true);
 		setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
 		getTableHeader().setReorderingAllowed(false);
