@@ -55,6 +55,9 @@ import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzUtils;
 import de.moonflower.jfritz.utils.network.SSDPPacket;
 
+import java.net.URLEncoder;
+import java.net.URLDecoder;
+
 /**
  * JDialog for JFritz configuration.
  * 
@@ -134,7 +137,7 @@ public class ConfigDialog extends JDialog {
 								"")));
 		passwordAfterStartButton.setSelected(pwAfterStart);
 
-		pass.setText(JFritzUtils.replaceSpecialCharsURL(Encryption.decrypt(JFritz.getProperty("box.password")), false));
+		pass.setText(URLEncoder.encode(Encryption.decrypt(JFritz.getProperty("box.password"))));
 		encodedPassword = Encryption.decrypt(JFritz.getProperty("box.password"));
 		address.setText(JFritz.getProperty("box.address"));
 		areaCode.setText(JFritz.getProperty("area.code"));
@@ -278,7 +281,7 @@ public class ConfigDialog extends JDialog {
 		ActionListener actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Object source = e.getSource();
-				encodedPassword = JFritzUtils.replaceSpecialCharsURL(new String(pass.getPassword()), true);
+				encodedPassword = URLDecoder.decode(new String(pass.getPassword()));
 				pressed_OK = (source == pass || source == okButton);
 				if (source == pass || source == okButton
 						|| source == cancelButton) {
@@ -524,7 +527,7 @@ public class ConfigDialog extends JDialog {
 
 		addKeyListener(keyListener);
 
-		setSize(new Dimension(480, 350));
+		setSize(new Dimension(480, 380));
 		setResizable(false);
 		// pack();
 	}
