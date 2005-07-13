@@ -57,10 +57,10 @@
  * - CMD Option -l : Debug to Logfile
  * - Advanced CSV-File
  * - Bugfix: Passwords with special chars
+ * - Bugfix: Bigger Config Dialog
+ * - UTF-8 Coding of Phoneboox.xml 
  * 
  * TODO:
- * - Bugfix: MacOSX
- * - Bugfix: PhoneBook too long??
  * - YAK (Neues Reiterchen)
  * 
  * - Merging of person entries
