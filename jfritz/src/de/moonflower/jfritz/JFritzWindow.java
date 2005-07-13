@@ -617,7 +617,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 
 			jfritz.saveProperties();
 			
-			jfritz.getPhonebook().saveToXMLFile(JFritz.PHONEBOOK_FILE);
 			// FIXME if (jfritz.getTelnet() != null) jfritz.getTelnet().interrupt();
 			jfritz.stopSyslogListener();
 			System.exit(0);
