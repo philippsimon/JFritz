@@ -93,7 +93,7 @@ public class ReverseLookup {
 						header += headerName + ": " + headerValue + " | ";
 					}
 					Debug.msg("Header of dasoertliche.de: " + header);
-					Debug.msg("CHARSET: " + charSet);
+					Debug.msg("CHARSET : " + charSet);
 
 					// Get response data
 					BufferedReader d;
