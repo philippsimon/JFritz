@@ -49,7 +49,9 @@ public class ReverseLookup {
 	 * @return name
 	 */
 	public static Person lookupDasOertliche(String number) {
-		if (number.equals("")) { return null; }
+		if (number.equals("")) {
+			return null;
+		}
 		Debug.msg("Looking up " + number + "...");
 		URL url = null;
 		URLConnection urlConn;
@@ -67,9 +69,41 @@ public class ReverseLookup {
 				try {
 					con = url.openConnection();
 
+					String header = "";
+					String charSet = "";
+					for (int i = 0;; i++) {
+						String headerName = con.getHeaderFieldKey(i);
+						String headerValue = con.getHeaderField(i);
+
+						if (headerName == null && headerValue == null) {
+							// No more headers
+							break;
+						}
+						if ("content-type".equalsIgnoreCase(headerName)) {
+							String[] split = headerValue.split(" ", 2);
+							for (int j = 0; j < split.length; j++) {
+								split[j] = split[j].replaceAll(";", "");
+								if (split[j].toLowerCase().startsWith(
+										"charset=")) {
+									String[] charsetSplit = split[j].split("=");
+									charSet = charsetSplit[1];
+								}
+							}
+						}
+						header += headerName + ": " + headerValue + " | ";
+					}
+					Debug.msg("Header of dasoertliche.de: " + header);
+					Debug.msg("CHARSET: " + charSet);
+
 					// Get response data
-					BufferedReader d = new BufferedReader(
-							new InputStreamReader(con.getInputStream()));
+					BufferedReader d;
+					if (charSet.equals("")) {
+						d = new BufferedReader(new InputStreamReader(con
+								.getInputStream(), "ISO-8859-1"));
+					} else {
+						d = new BufferedReader(new InputStreamReader(con
+								.getInputStream(), charSet));
+					}
 					int i = 0;
 					String str = "";
 
@@ -78,12 +112,13 @@ public class ReverseLookup {
 						i++;
 					}
 					d.close();
+					Debug.msg("DasOertliche Webpage: " + data);
 					Pattern p = Pattern
 							.compile("<a class=\"blb\" href=\"[^\"]*\">([^<]*)</a><br>([^<]*)</td>");
 					Matcher m = p.matcher(data);
 					if (m.find()) {
-						Debug.msg(3, "Pattern: " + m.group(1).trim());
-						Debug.msg(3, "Pattern: " + m.group(2).trim());
+						Debug.msg(3, "Pattern1: " + m.group(1).trim());
+						Debug.msg(3, "Pattern2: " + m.group(2).trim());
 						String line1 = m.group(1).trim();
 						String line2 = m.group(2).trim();
 
@@ -101,7 +136,8 @@ public class ReverseLookup {
 								firstname = firstname.substring(0,
 										firstname.indexOf("  ")).trim();
 							} else {
-								firstname = firstname.replaceAll("  u. ", " und ");
+								firstname = firstname.replaceAll("  u. ",
+										" und ");
 							}
 						}
 						firstname = firstname.trim();
@@ -127,6 +163,13 @@ public class ReverseLookup {
 						Debug.msg(splitAddress[0]);
 						splitPostCodeCity = splitAddress[1].split(" ", 2);
 
+						Debug.msg("Firstname: " + firstname);
+						Debug.msg("Lastname: " + lastname);
+						Debug.msg("Company: " + company);
+						Debug.msg("Address: " + address);
+						Debug.msg("ZipCode: " + zipcode);
+						Debug.msg("City: " + city);
+
 						newPerson = new Person(firstname, company, lastname,
 								address, zipcode, city, "");
 						if (company.length() > 0) {
@@ -142,7 +185,7 @@ public class ReverseLookup {
 			}
 		} catch (MalformedURLException e) {
 			Debug.err("URL invalid: " + urlstr);
-		}		
+		}
 		newPerson = new Person();
 		newPerson.addNumber(number, "home");
 		return newPerson;
