@@ -23,6 +23,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import de.moonflower.jfritz.utils.Debug;
+
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 /**
  * Simple dialog for Fritz!Box address and password input.
@@ -59,7 +62,13 @@ public class AddressPasswordDialog extends JDialog {
 	}
 
 	public String getPass() {
-		return URLEncoder.encode(new String(pass.getPassword()));
+		try {
+			return URLEncoder.encode(new String(pass.getPassword()),"UTF-8");
+			}
+			catch (UnsupportedEncodingException e){
+				Debug.msg("Exception (ConfigDialog:setValues): UnsupportedEncodungException");
+				return "";
+			}
 	}
 
 	public String getAddress() {
