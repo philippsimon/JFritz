@@ -21,6 +21,10 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.dialogs.quickdial.QuickDials;
 import de.moonflower.jfritz.dialogs.sip.SipProvider;
@@ -469,4 +473,17 @@ public class JFritzUtils {
 		return out;
 	}
 
+	public static int showYesNoDialog(String question) {
+		JOptionPane pane = new JOptionPane(question);
+		Object[] options = new String[] { "Ja", "Nein" };
+		pane.setOptions(options);
+		JDialog dialog = pane.createDialog(new JFrame(), "Frage");
+		dialog.setVisible(true);
+		Object obj = pane.getValue();
+		for (int k = 0; k < options.length; k++)
+			if (options[k].equals(obj))
+				return k;
+		return -1;
+	}
+	
 }
