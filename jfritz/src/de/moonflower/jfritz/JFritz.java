@@ -41,6 +41,7 @@
  * BUG: No new Phonebook entries after reverselookup, only after restart or double click on an call entry
  * BUG: Eingabe im IP-Eingabe-PopUp wird ignoriert!
  * BUG: Box restart beim Call Monitor
+ * BUG: 2 Einstellungsfenster können geöffnet werden. Eins normal, eines über Tray
  * 
  * CHANGELOG:
  * 
@@ -538,8 +539,6 @@ public final class JFritz {
 		defaultProperties.setProperty("area.code", "441");
 		defaultProperties.setProperty("fetch.timer", "5");
 		defaultProperties.setProperty("option.yacport","10629");
-		defaultProperties.setProperty("option.startyac","false");
-		defaultProperties.setProperty("option.autostartyac","false");
 
 		try {
 			FileInputStream fis = new FileInputStream(JFritz.PROPERTIES_FILE);
@@ -780,6 +779,7 @@ public final class JFritz {
 	public void stopSyslogListener() {
 		if (syslogListener != null) {
 			syslogListener.stopSyslogListener();
+			syslogListener = null;
 		}
 	}
 
@@ -805,7 +805,7 @@ public final class JFritz {
 		}
  	}
 	
-	public YAClistener getYAC() {
+	public YAClistener getCallMonitor() {
 		return yacListener;
 	}
 }
