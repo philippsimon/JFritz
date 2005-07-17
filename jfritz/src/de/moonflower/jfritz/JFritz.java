@@ -61,7 +61,7 @@
  * - Bugfix: Bigger Config Dialog
  * - UTF-8 Coding of Phoneboox.xml
  * - Bugfix: Some charset bugfixing
- * - Added YAC-CallMonitor
+ * - Anrufmonitor über Telnet, Syslog, YAC
  * 
  * TODO:
  * - YAK (Neues Reiterchen)
@@ -534,6 +534,7 @@ public final class JFritz {
 		defaultProperties.setProperty("area.code", "441");
 		defaultProperties.setProperty("fetch.timer", "5");
 		defaultProperties.setProperty("option.yacport","10629");
+		defaultProperties.setProperty("option.syslogonfritz","false");
 
 		try {
 			FileInputStream fis = new FileInputStream(JFritz.PROPERTIES_FILE);
