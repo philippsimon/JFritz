@@ -94,7 +94,7 @@ public class ConfigDialog extends JDialog {
 	private JCheckBox deleteAfterFetchButton, fetchAfterStartButton,
 			notifyOnCallsButton, confirmOnExitButton, startMinimizedButton,
 			timerAfterStartButton, passwordAfterStartButton, soundButton,
-			callMonitorAfterStartButton, lookupAfterFetchButton;
+			callMonitorAfterStartButton, lookupAfterFetchButton, syslogPassthroughCheckBox;
 
 	private JPanel callMonitorPane, yacMonitorPane, telnetMonitorPane,
 			syslogMonitorPane;
@@ -162,6 +162,7 @@ public class ConfigDialog extends JDialog {
 		}
 
 		ipAddressComboBox.setSelectedItem(JFritz.getProperty("option.syslogclientip","192.168.178.20"));
+		syslogPassthroughCheckBox.setSelected(JFritzUtils.parseBoolean(JFritz.getProperty("option.syslogpassthrough", "false")));
 
 		lookupAfterFetchButton.setSelected(JFritzUtils.parseBoolean(JFritz
 				.getProperty("option.lookupAfterFetch", "false")));
@@ -253,6 +254,8 @@ public class ConfigDialog extends JDialog {
 
 		JFritz.setProperty("option.lookupAfterFetch", Boolean
 				.toString(lookupAfterFetchButton.isSelected()));
+
+		JFritz.setProperty("option.syslogpassthrough", Boolean.toString(syslogPassthroughCheckBox.isSelected()));
 
 		JFritz.setProperty("box.password", Encryption.encrypt(encodedPassword));
 		JFritz.setProperty("box.address", address.getText());
@@ -705,6 +708,10 @@ public class ConfigDialog extends JDialog {
 		});
 		panel.add(ipAddressComboBox, c);
 			
+		c.gridx = 0;
+		c.gridy = 2;
+		syslogPassthroughCheckBox = new JCheckBox("Syslog-passthrough?");
+		panel.add(syslogPassthroughCheckBox, c);
 		/**
 		 * JLabel label = new JLabel("YAC-Port: "); panel.add(label, c); yacPort =
 		 * new JTextField("", 5); panel.add(yacPort, c);
