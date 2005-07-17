@@ -209,9 +209,8 @@ import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.JFritzUtils;
 import de.moonflower.jfritz.utils.CLIOption;
 import de.moonflower.jfritz.utils.network.SSDPdiscoverThread;
-import de.moonflower.jfritz.utils.network.SyslogListener;
-import de.moonflower.jfritz.utils.network.TelnetListener;
-import de.moonflower.jfritz.utils.network.YAClistener;
+import de.moonflower.jfritz.utils.network.CallMonitor;
+
 
 /**
  * @author Arno Willig
@@ -275,11 +274,7 @@ public final class JFritz {
 
 	private static URL ringSound, callSound;
 
-	private YAClistener yacListener = null;
-
-	private TelnetListener telnetListener = null;
-	
-	private SyslogListener syslogListener = null;
+	private CallMonitor callMonitor = null;
 
 	/**
 	 * Constructs JFritz object
@@ -770,42 +765,19 @@ public final class JFritz {
 	public static void removeProperty(String property) {
 		properties.remove(property);
 	}
-
-	public SyslogListener startSyslogListener() {
-		syslogListener = new SyslogListener(this);
-		return syslogListener;
-	}
-
-	public void stopSyslogListener() {
-		if (syslogListener != null) {
-			syslogListener.stopSyslogListener();
-			syslogListener = null;
-		}
-	}
-
-	public void startTelnetListener() {
-		telnetListener = new TelnetListener(this);
-	}
-
-	public void stopTelnetListener() {
-		if (telnetListener != null) {
-			telnetListener.stopTelnetListener();
-			telnetListener = null;
-		}
-	}
-	
-	public void startYACListener() {
-		yacListener = new YAClistener(Integer.parseInt(JFritz.getProperty("option.yacport","10629")));
-	}
-	
-	public void stopYACListener() {
-		if (yacListener != null) {
-			yacListener.stopYACListener();
-			yacListener = null;
+		
+	public void stopCallMonitor() {
+		if (callMonitor != null) {
+			callMonitor.stopCallMonitor();
+			callMonitor = null;
 		}
  	}
 	
-	public YAClistener getCallMonitor() {
-		return yacListener;
+	public CallMonitor getCallMonitor() {
+		return callMonitor;
+	}
+	
+	public void setCallMonitor(CallMonitor cm) {
+		callMonitor = cm;
 	}
 }
