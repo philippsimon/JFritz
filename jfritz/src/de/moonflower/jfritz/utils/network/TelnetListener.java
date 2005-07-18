@@ -10,13 +10,15 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+import javax.swing.JOptionPane;
+
 /**
  * 
  * @author Arno Willig
  *  
  */
 
-public class TelnetListener extends Thread implements CallMonitor{
+public class TelnetListener extends Thread implements CallMonitor {
 
 	//IncomingCall: ID 0, caller: "017623352711" called: "592904"
 	//IncomingCall from NT: ID 0, caller: "592904" called: "1815212"
@@ -29,13 +31,13 @@ public class TelnetListener extends Thread implements CallMonitor{
 	private final String PATTERN_VOIP_CALLTO_TERMINATED = "call to ([^ ]*) terminated";
 
 	private final String PATTERN_VOIP_CALLTO_DISCONNECTED = "disconnected\\([^)]*\\):";
-	
+
 	private Telnet telnet;
-	
+
 	private boolean isRunning = false;
-	
+
 	private JFritz jfritz;
-	
+
 	public TelnetListener(JFritz jfritz) {
 		// Fetch new calls
 		this.jfritz = jfritz;
@@ -47,15 +49,16 @@ public class TelnetListener extends Thread implements CallMonitor{
 
 	public void run() {
 		Debug.msg("run()");
-		if (JFritzUtils
-				.showYesNoDialog("Der telefond muss neu gestartet werden.\n"
-						+ "Dabei wird ein laufendes Gespräch unterbrochen.\n"
-						+ "Ohne Neustart wird der Anrufmonitor nicht funktionieren.\n"
-						+ "Soll der telefond neu gestartet werden?") == 0) {
-
-		jfritz.getJframe().getFetchButton().doClick();
-		restartTelefonDaemon();
-		parseOutput();
+		if (JOptionPane
+				.showConfirmDialog(
+						null,
+						"Der telefond muss neu gestartet werden.\n"
+								+ "Dabei wird ein laufendes Gespräch unterbrochen. Die Anrufliste wird vorher gesichert.\n"
+								+ "Soll der telefond neu gestartet werden?",
+						JFritz.PROGRAM_NAME, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+			jfritz.getJframe().getFetchButton().doClick();
+			restartTelefonDaemon();
+			parseOutput();
 		}
 	}
 
@@ -64,8 +67,7 @@ public class TelnetListener extends Thread implements CallMonitor{
 		telnet.write("telefon &>&1");
 		try {
 			sleep(500);
-		}
-		catch (InterruptedException ie) {
+		} catch (InterruptedException ie) {
 			Debug.msg("Failed to sleep in restartTelefonDaemon()");
 		}
 		Debug.msg("Telefon Daemon restarted.");
@@ -87,7 +89,8 @@ public class TelnetListener extends Thread implements CallMonitor{
 							+ called);
 
 					JFritz.callInMsg(caller, called);
-					if (!isRunning) break;					
+					if (!isRunning)
+						break;
 				}
 
 			}
@@ -97,7 +100,7 @@ public class TelnetListener extends Thread implements CallMonitor{
 		}
 		telnet.disconnect();
 	}
-	
+
 	public void stopCallMonitor() {
 		Debug.msg("Stopping TelnetListener");
 		isRunning = false;

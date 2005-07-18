@@ -16,6 +16,8 @@ import java.net.NetworkInterface;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.utils.JFritzUtils;
 import de.moonflower.jfritz.utils.Debug;
@@ -121,12 +123,14 @@ public class SyslogListener extends Thread implements CallMonitor {
 	}
 
 	public static void startSyslogOnFritzBox(String ip) {
-		if (JFritzUtils
-				.showYesNoDialog("Der telefond muss neu gestartet werden.\n"
-						+ "Dabei wird ein laufendes Gespräch unterbrochen. Die Anrufliste wird vorher gesichert.\n"
-						+ "Diese Aktion muss NUR nach einem Neustart der FritzBox ausgeführt werden.\n"
-						+ "Soll der telefond neu gestartet werden?") == 0) {
-
+		if (JOptionPane
+				.showConfirmDialog(
+						null,
+						"Der telefond muss neu gestartet werden.\n"
+								+ "Dabei wird ein laufendes Gespräch unterbrochen. Die Anrufliste wird vorher gesichert.\n"
+								+ "Diese Aktion muss NUR nach einem Neustart der FritzBox ausgeführt werden.\n"
+								+ "Soll der telefond neu gestartet werden?",
+						JFritz.PROGRAM_NAME, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 			Telnet telnet = new Telnet();
 			telnet.connect();
 			int port = 4711;
