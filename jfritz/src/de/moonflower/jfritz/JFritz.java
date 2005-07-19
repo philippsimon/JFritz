@@ -198,6 +198,7 @@ import org.jdesktop.jdic.tray.TrayIcon;
 
 import de.moonflower.jfritz.callerlist.CallerList;
 import de.moonflower.jfritz.dialogs.phonebook.PhoneBook;
+import de.moonflower.jfritz.dialogs.simple.MessageDlg;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
 import de.moonflower.jfritz.struct.Person;
 import de.moonflower.jfritz.struct.PhoneNumber;
@@ -209,7 +210,7 @@ import de.moonflower.jfritz.utils.JFritzUtils;
 import de.moonflower.jfritz.utils.CLIOption;
 import de.moonflower.jfritz.utils.network.SSDPdiscoverThread;
 import de.moonflower.jfritz.utils.network.CallMonitor;
-
+import de.moonflower.jfritz.dialogs.simple.CallMessageDlg;
 
 /**
  * @author Arno Willig
@@ -278,7 +279,8 @@ public final class JFritz {
 	/**
 	 * Constructs JFritz object
 	 */
-	public JFritz(boolean fetchCalls, boolean csvExport, String csvFileName, boolean clearList) {
+	public JFritz(boolean fetchCalls, boolean csvExport, String csvFileName,
+			boolean clearList) {
 		loadProperties();
 		loadMessages(new Locale("de", "DE"));
 		loadSounds();
@@ -290,7 +292,7 @@ public final class JFritz {
 		callerlist.loadFromXMLFile(CALLS_FILE);
 
 		if (fetchCalls) {
-			infoMsg("Anrufliste wird von Fritz!Box geholt..");
+			Debug.msg("Anrufliste wird von Fritz!Box geholt..");
 			try {
 				callerlist.getNewCalls();
 			} catch (WrongPasswordException e) {
@@ -299,28 +301,28 @@ public final class JFritz {
 				Debug.err(e.toString());
 			} finally {
 				if (csvExport) {
-					infoMsg("CSV-Export to " + csvFileName);
+					Debug.msg("CSV-Export to " + csvFileName);
 					callerlist.saveToCSVFile(csvFileName);
 				}
 				if (clearList) {
-					infoMsg("Clearing Caller List");
+					Debug.msg("Clearing Caller List");
 					callerlist.clearList();
 				}
-				infoMsg("JFritz! beendet sich nun.");
+				Debug.msg("JFritz! beendet sich nun.");
 				System.exit(0);
 			}
 		}
 		if (csvExport) {
-			infoMsg("CSV-Export to "+csvFileName);
+			Debug.msg("CSV-Export to " + csvFileName);
 			callerlist.saveToCSVFile(csvFileName);
 			if (clearList) {
-				infoMsg("Clearing Caller List");
+				Debug.msg("Clearing Caller List");
 				callerlist.clearList();
 			}
 			System.exit(0);
 		}
 		if (clearList) {
-			infoMsg("Clearing Caller List");
+			Debug.msg("Clearing Caller List");
 			callerlist.clearList();
 			System.exit(0);
 		}
@@ -364,7 +366,7 @@ public final class JFritz {
 		}
 		return SYSTRAY_SUPPORT;
 	}
-	
+
 	/**
 	 * Main method for starting JFritz!
 	 * 
@@ -389,7 +391,8 @@ public final class JFritz {
 		options.addOption('v', "debug", null, "Turn on debug information");
 		options.addOption('s', "systray", null, "Turn on systray support");
 		options.addOption('f', "fetch", null, "Fetch new calls and exit");
-		options.addOption('c',"clear_list",null,"Clears Caller List and exit");		
+		options.addOption('c', "clear_list", null,
+				"Clears Caller List and exit");
 		options.addOption('e', "export", "filename",
 				"Fetch calls and export to CSV file.");
 		options.addOption('l', "logfile", "filename",
@@ -431,8 +434,7 @@ public final class JFritz {
 				if (logFilename == null) {
 					System.err.println("Parameter not found!");
 					System.exit(0);
-				}
-				else {
+				} else {
 					Debug.logToFile(logFilename);
 					break;
 				}
@@ -489,7 +491,7 @@ public final class JFritz {
 					jframe.setState(JFrame.ICONIFIED);
 					jframe.setVisible(false);
 				} else {
-					Debug.msg("Show JFritz-Window");					
+					Debug.msg("Show JFritz-Window");
 					jframe.setState(JFrame.NORMAL);
 					jframe.setVisible(true);
 					jframe.toFront();
@@ -532,8 +534,7 @@ public final class JFritz {
 		defaultProperties.setProperty("country.code", "49");
 		defaultProperties.setProperty("area.code", "441");
 		defaultProperties.setProperty("fetch.timer", "5");
-		defaultProperties.setProperty("option.yacport","10629");
-		defaultProperties.setProperty("option.syslogonfritz","false");
+		defaultProperties.setProperty("option.yacport", "10629");
 
 		try {
 			FileInputStream fis = new FileInputStream(JFritz.PROPERTIES_FILE);
@@ -580,17 +581,25 @@ public final class JFritz {
 	}
 
 	/**
-	 * Displays balloon info message
-	 * TODO: Window when no systray_support 
+	 * Displays balloon info message TODO: Window when no systray_support
 	 * 
 	 * @param msg
 	 *            Message to be displayed
 	 */
 	public static void infoMsg(String msg) {
-		System.out.println(msg);
-		if (SYSTRAY_SUPPORT) {
+		switch (Integer.parseInt(JFritz.getProperty("option.popuptype", "1"))) {
+		case 0: { // No Popup
+			break;
+		}
+		case 1: {
+			MessageDlg msgDialog = new MessageDlg(msg);
+			break;
+		}
+		case 2: {
 			trayIcon.displayMessage(JFritz.PROGRAM_NAME, msg,
 					TrayIcon.INFO_MESSAGE_TYPE);
+			break;
+		}
 		}
 	}
 
@@ -620,12 +629,34 @@ public final class JFritz {
 			calledstr = called;
 		else
 			calledstr = called + " (" + calledname + ")";
-		infoMsg("Ankommender Telefonanruf\nvon " + callerstr + "\nan " + calledstr + "!");
+		switch (Integer.parseInt(JFritz.getProperty("option.popuptype", "1"))) {
+		case 0: { // No Popup
+			break;
+		}
+		case 1: {
+			CallMessageDlg msgDialog = new CallMessageDlg(callerstr, calledstr);
+			break;
+		}
+		case 2: {
+			if (callerstr.equals("")) {
+				trayIcon.displayMessage(JFritz.PROGRAM_NAME, "Ankommender Telefonanruf\nan "
+						+ calledstr + "!",
+						TrayIcon.INFO_MESSAGE_TYPE);				
+			}
+			else {
+			trayIcon.displayMessage(JFritz.PROGRAM_NAME, "Ankommender Telefonanruf\nvon " + callerstr + "\nan "
+					+ calledstr + "!",
+					TrayIcon.INFO_MESSAGE_TYPE);
+			}
+			break;
+		}
+		}
+		
 		if (JFritzUtils.parseBoolean(JFritz.getProperty("option.playSounds",
 				"true"))) {
 		}
 	}
-	
+
 	/**
 	 * Display call monitor message
 	 * 
@@ -785,18 +816,18 @@ public final class JFritz {
 	public static void removeProperty(String property) {
 		properties.remove(property);
 	}
-		
+
 	public void stopCallMonitor() {
 		if (callMonitor != null) {
 			callMonitor.stopCallMonitor();
 			callMonitor = null;
 		}
- 	}
-	
+	}
+
 	public CallMonitor getCallMonitor() {
 		return callMonitor;
 	}
-	
+
 	public void setCallMonitor(CallMonitor cm) {
 		callMonitor = cm;
 	}
