@@ -127,6 +127,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		setTitle(JFritz.PROGRAM_NAME);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setDefaultLookAndFeel();
+		ShutdownThread shutdownThread = new ShutdownThread(jfritz);
+		Runtime.getRuntime().addShutdownHook(shutdownThread);
 
 		// Setting size and position
 		int x = Integer.parseInt(JFritz.getProperty("position.left", "10"));
@@ -903,5 +905,9 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	
 	public JButton getFetchButton() {
 		return fetchButton;
+	}
+	
+	public void saveQuickDials() {
+		quickDialPanel.getDataModel().saveToXMLFile(JFritz.QUICKDIALS_FILE);
 	}
 }
