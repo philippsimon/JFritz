@@ -477,7 +477,7 @@ public final class JFritz {
 
 		ImageIcon icon = new ImageIcon(
 				JFritz.class
-						.getResource("/de/moonflower/jfritz/resources/images/phone.png"));
+						.getResource("/de/moonflower/jfritz/resources/images/trayicon.png"));
 
 		trayIcon = new TrayIcon(icon, "JFritz!", menu);
 		trayIcon.setIconAutoSize(false);
