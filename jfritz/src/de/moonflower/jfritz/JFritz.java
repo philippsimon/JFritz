@@ -206,6 +206,7 @@ import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.JFritzUtils;
 import de.moonflower.jfritz.utils.CLIOption;
+import de.moonflower.jfritz.utils.ReverseLookup;
 import de.moonflower.jfritz.utils.network.SSDPdiscoverThread;
 import de.moonflower.jfritz.utils.network.CallMonitor;
 import de.moonflower.jfritz.dialogs.simple.CallMessageDlg;
@@ -611,22 +612,66 @@ public final class JFritz {
 	 */
 	public static void callInMsg(String caller, String called) {
 		String callerstr = "", calledstr = "", callername = "", calledname = "";
-		Person callerperson = phonebook.findPerson(new PhoneNumber(caller));
-		Person calledperson = phonebook.findPerson(new PhoneNumber(called));
+		
+		Debug.msg("Caller: " + caller);
+		Debug.msg("Called: " + called);
+		if (!caller.equals("")) {
+			Debug.msg("Searchin in local database ...");
+			Person callerperson = phonebook.findPerson(new PhoneNumber(caller));
+			if (callerperson != null) {
+				if (callerperson.getFullname().equals("")) {
+					callerstr = caller + "(" + callerperson.getFullname() + ")";					
+				}
+				else {
+				callerstr = caller + "(" + callerperson.getFullname() + ")";
+				}
+				Debug.msg("Found in local database: "
+						+ callerstr);
+			} else {
+				Debug
+						.msg("Searchin on dasoertliche.de ...");
+				Person person = ReverseLookup
+						.lookup(new PhoneNumber(caller));
+				if (!person.getFullname().equals("")) {
+					callerstr = caller + "(" + person.getFullname() + ")";
+					Debug.msg("Found on dasoertliche.de: "
+							+ callerstr);
+				}
+				else {
+					callerstr = caller;
+				}
+			}
 
-		if (callerperson != null)
-			callername = callerperson.getFullname();
-		if (calledperson != null)
-			calledname = calledperson.getFullname();
+		}
+		if (!called.equals("")) {
+			Debug.msg("Searchin in local database ...");
+			Person calledperson = phonebook.findPerson(new PhoneNumber(called));
+			if (calledperson != null) {
+				if (calledperson.getFullname().equals("")) {
+					calledstr = called + "(" + calledperson.getFullname() + ")";					
+				}
+				else {
+				calledstr = called + "(" + calledperson.getFullname() + ")";
+				}
+				Debug.msg("Found in local database: "
+						+ calledstr);
+			} else {
+				Debug
+						.msg("Searchin on dasoertliche.de ...");
+				Person person = ReverseLookup
+						.lookup(new PhoneNumber(called));
+				if (!person.getFullname().equals("")) {
+					calledstr = called + "(" + person.getFullname() + ")";
+					Debug.msg("Found on dasoertliche.de: "
+							+ calledstr);
+				}
+				else {
+					calledstr = called;
+				}
+			}
 
-		if (callername.length() == 0)
-			callerstr = caller;
-		else
-			callerstr = caller + " (" + callername + ")";
-		if (calledname.length() == 0)
-			calledstr = called;
-		else
-			calledstr = called + " (" + calledname + ")";
+		}
+		
 		switch (Integer.parseInt(JFritz.getProperty("option.popuptype", "1"))) {
 		case 0: { // No Popup
 			break;
@@ -663,16 +708,9 @@ public final class JFritz {
 	 *            Called number
 	 */
 	public static void callOutMsg(String called) {
-		String callerstr = "", calledstr = "", callername = "", calledname = "";
-		Person calledperson = phonebook.findPerson(new PhoneNumber(called));
-
-		if (calledperson != null)
-			calledname = calledperson.getFullname();
-
-		if (calledname.length() == 0)
-			calledstr = called;
-		else
-			calledstr = called + " (" + calledname + ")";
+		String calledstr = "", callername = "", calledname = "";
+		Debug.msg("Called: " + called);
+		
 		infoMsg("Ausgehender Telefonanruf\n " + "\nan " + calledstr + "!");
 		if (JFritzUtils.parseBoolean(JFritz.getProperty("option.playSounds",
 				"true"))) {
