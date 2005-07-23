@@ -65,7 +65,7 @@
  * TODO:
  * - Merging of person entries
  * - Implement reverselookup for Switzerland (www.telsearch.ch)
- * - Password Dialog mit "speichern" Haken
+ * - Password Dialog mit "Speichern" Haken
  * - TFTP Box Konfig verwalten
  * 
  * JFritz! 0.4.0
