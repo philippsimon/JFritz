@@ -702,8 +702,6 @@ public final class JFritz {
 	/**
 	 * Display call monitor message
 	 * 
-	 * @param caller
-	 *            Caller number
 	 * @param called
 	 *            Called number
 	 */
