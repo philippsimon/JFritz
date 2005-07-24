@@ -72,7 +72,7 @@ import java.net.InetAddress;
  * TODO: A lot of I18N..
  */
 public class ConfigDialog extends JDialog {
-
+	private static final long serialVersionUID = 1;
 	private JFritz jfritz;
 
 	private JComboBox addressCombo, callMonitorCombo, ipAddressComboBox;

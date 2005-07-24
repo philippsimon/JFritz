@@ -24,7 +24,7 @@ import de.moonflower.jfritz.struct.Person;
  */
 
 public class PersonCellRenderer extends DefaultTableCellRenderer {
-
+	private static final long serialVersionUID = 1;
 	private final ImageIcon imagePerson;
 
 	public PersonCellRenderer() {

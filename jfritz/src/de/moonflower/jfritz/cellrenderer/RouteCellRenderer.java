@@ -23,7 +23,7 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 
 public class RouteCellRenderer extends DefaultTableCellRenderer {
-
+	private static final long serialVersionUID = 1;
 	final ImageIcon imageSIP, imagePhone;
 
 	public RouteCellRenderer() {
