@@ -196,7 +196,7 @@ import org.jdesktop.jdic.tray.TrayIcon;
 
 import de.moonflower.jfritz.callerlist.CallerList;
 import de.moonflower.jfritz.dialogs.phonebook.PhoneBook;
-import de.moonflower.jfritz.dialogs.simple.MessageDlg;
+//import de.moonflower.jfritz.dialogs.simple.MessageDlg;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
 import de.moonflower.jfritz.struct.Person;
 import de.moonflower.jfritz.struct.PhoneNumber;
@@ -209,7 +209,7 @@ import de.moonflower.jfritz.utils.CLIOption;
 import de.moonflower.jfritz.utils.ReverseLookup;
 import de.moonflower.jfritz.utils.network.SSDPdiscoverThread;
 import de.moonflower.jfritz.utils.network.CallMonitor;
-import de.moonflower.jfritz.dialogs.simple.CallMessageDlg;
+//import de.moonflower.jfritz.dialogs.simple.CallMessageDlg;
 
 /**
  * @author Arno Willig
@@ -261,8 +261,6 @@ public final class JFritz {
 
 	private JFritzWindow jframe;
 
-	private Vector devices;
-
 	private SSDPdiscoverThread ssdpthread;
 
 	private CallerList callerlist;
@@ -271,7 +269,7 @@ public final class JFritz {
 
 	private static PhoneBook phonebook;
 
-	private static URL ringSound, callSound;
+	//private static URL ringSound, callSound;
 
 	private CallMonitor callMonitor = null;
 
@@ -348,10 +346,10 @@ public final class JFritz {
 	 * Loads sounds from resources
 	 */
 	private void loadSounds() {
-		ringSound = getClass().getResource(
-				"/de/moonflower/jfritz/resources/sounds/call_in.wav");
-		callSound = getClass().getResource(
-				"/de/moonflower/jfritz/resources/sounds/call_out.wav");
+	//	ringSound = getClass().getResource(
+	//			"/de/moonflower/jfritz/resources/sounds/call_in.wav");
+	//	callSound = getClass().getResource(
+	//			"/de/moonflower/jfritz/resources/sounds/call_out.wav");
 	}
 
 	/**
@@ -591,7 +589,7 @@ public final class JFritz {
 			break;
 		}
 		case 1: {
-			MessageDlg msgDialog = new MessageDlg(msg);
+			//MessageDlg msgDialog = new MessageDlg(msg);
 			break;
 		}
 		case 2: {
@@ -611,7 +609,7 @@ public final class JFritz {
 	 *            Called number
 	 */
 	public static void callInMsg(String caller, String called) {
-		String callerstr = "", calledstr = "", callername = "", calledname = "";
+		String callerstr = "", calledstr = "";
 		
 		Debug.msg("Caller: " + caller);
 		Debug.msg("Called: " + called);
@@ -677,7 +675,7 @@ public final class JFritz {
 			break;
 		}
 		case 1: {
-			CallMessageDlg msgDialog = new CallMessageDlg(callerstr, calledstr);
+			//CallMessageDlg msgDialog = new CallMessageDlg(callerstr, calledstr);
 			break;
 		}
 		case 2: {
@@ -706,7 +704,7 @@ public final class JFritz {
 	 *            Called number
 	 */
 	public static void callOutMsg(String called) {
-		String calledstr = "", callername = "", calledname = "";
+		String calledstr = "";
 		Debug.msg("Called: " + called);
 		
 		infoMsg("Ausgehender Telefonanruf\n " + "\nan " + calledstr + "!");
