@@ -16,7 +16,7 @@ import javax.swing.table.AbstractTableModel;
  * TODO: I18N
  */
 public class SipProviderTableModel extends AbstractTableModel {
-
+	private static final long serialVersionUID = 1;
 	private final String columnNames[] = { "ID", "Aktiv", "SIP-Nummer",
 			"Provider" };
 

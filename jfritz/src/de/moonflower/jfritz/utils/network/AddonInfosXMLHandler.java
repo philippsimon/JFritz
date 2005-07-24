@@ -6,7 +6,7 @@
  */
 package de.moonflower.jfritz.utils.network;
 
-import java.text.SimpleDateFormat;
+//import java.text.SimpleDateFormat;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -55,7 +55,7 @@ public class AddonInfosXMLHandler extends DefaultHandler {
 
 	public void endElement(String namespaceURI, String sName, String qName)
 			throws SAXException {
-		SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+		//SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
 		if (qName.equals("NewByteSendRate")) {
 			ByteSendRate = Integer.parseInt(chars);

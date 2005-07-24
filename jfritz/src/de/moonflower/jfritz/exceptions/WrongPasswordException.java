@@ -12,6 +12,7 @@ package de.moonflower.jfritz.exceptions;
  *
  */
 public class WrongPasswordException extends Exception {
+	private static final long serialVersionUID = 1;
     public WrongPasswordException() {
         super();
     }
