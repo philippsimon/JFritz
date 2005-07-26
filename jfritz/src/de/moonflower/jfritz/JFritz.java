@@ -272,6 +272,8 @@ public final class JFritz {
 	//private static URL ringSound, callSound;
 
 	private CallMonitor callMonitor = null;
+	
+	private static String HostOS = "other";
 
 	/**
 	 * Constructs JFritz object
@@ -282,6 +284,13 @@ public final class JFritz {
 		loadMessages(new Locale("de", "DE"));
 		loadSounds();
 
+		String osName = System.getProperty("os.name");
+		if (osName.startsWith("Mac OS"))
+			HostOS = "mac";
+		else if (osName.startsWith("Windows"))
+			HostOS = "windows";
+		Debug.msg("JFritz runs on "+ HostOS);
+		
 		phonebook = new PhoneBook(this);
 		phonebook.loadFromXMLFile(PHONEBOOK_FILE);
 
@@ -862,4 +871,9 @@ public final class JFritz {
 	public void setCallMonitor(CallMonitor cm) {
 		callMonitor = cm;
 	}
+
+	public static String runsOn() {
+		return HostOS;
+	}
+
 }
