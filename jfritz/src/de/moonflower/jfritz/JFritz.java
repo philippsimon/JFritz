@@ -219,7 +219,7 @@ public final class JFritz {
 
 	public final static String PROGRAM_NAME = "JFritz!";
 
-	public final static String PROGRAM_VERSION = "0.4.1";
+	public final static String PROGRAM_VERSION = "0.4.2";
 
 	public final static String PROGRAM_URL = "http://jfritz.sourceforge.net/";
 
