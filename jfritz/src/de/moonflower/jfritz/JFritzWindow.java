@@ -71,7 +71,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		ItemListener {
 
 	private static final long serialVersionUID = 1;
-	
+
 	private JFritz jfritz;
 
 	private Timer timer;
@@ -354,8 +354,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 
 		jfritzMenu.add(new JSeparator());
 		item = new JMenuItem(JFritz.getMessage("prog_exit"), 'x');
-		item.setAccelerator(KeyStroke.getKeyStroke(
-		        KeyEvent.VK_Q, ActionEvent.ALT_MASK));
+		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,
+				ActionEvent.ALT_MASK));
 		item.setActionCommand("exit");
 		item.addActionListener(this);
 		jfritzMenu.add(item);
@@ -363,7 +363,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		item = new JMenuItem(JFritz.getMessage("help_content"), 'h');
 		item.setActionCommand("help");
 		item.addActionListener(this);
-//		item.setEnabled(JFritz.DEVEL_VERSION);
+		//		item.setEnabled(JFritz.DEVEL_VERSION);
 		helpMenu.add(item);
 		item = new JMenuItem(JFritz.getMessage("jfritz_website"), 'w');
 		item.setActionCommand("website");
@@ -450,6 +450,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			final SwingWorker worker = new SwingWorker() {
 				public Object construct() {
 					boolean isdone = false;
+					int connectionFailures = 0;
 					while (!isdone) {
 						try {
 							setBusy(true);
@@ -469,15 +470,21 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 								isdone = true;
 							}
 						} catch (IOException e) {
-							Debug.msg("Callerlist Box not found");
-							setBusy(false);
-							setStatus(JFritz.getMessage("box_not_found"));
-							String box_address = showAddressDialog(JFritz
-									.getProperty("box.address", "fritz.box"));
-							if (!box_address.equals("")) {
-								JFritz.setProperty("box.address", box_address);
-							} else { // Cancel
-								isdone = true;
+							// Warten, falls wir von einem Standby aufwachen,
+							// oder das Netzwerk temporär nicht erreichbar ist.
+							if (connectionFailures < 5) {
+								Debug.msg("Waiting for FritzBox, retrying ...");
+								connectionFailures++;
+							} else {
+								Debug.msg("Callerlist Box not found");
+								setBusy(false);
+								setStatus(JFritz.getMessage("box_not_found"));
+								String box_address = showAddressDialog(JFritz
+										.getProperty("box.address", "fritz.box"));
+								if (!box_address.equals("")) {
+									JFritz.setProperty("box.address",
+											box_address);
+								}
 							}
 						}
 					}
@@ -575,8 +582,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			jfritz.saveProperties();
 		}
 		dialog.dispose();
-		
-		
+
 		monitorButton.setEnabled((Integer.parseInt(JFritz.getProperty(
 				"option.callMonitorType", "0")) > 0));
 	}
@@ -640,7 +646,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	public void showExitDialog() {
 		boolean exit = true;
 
-		if (JFritzUtils.parseBoolean(JFritz.getProperty("option.confirmOnExit", "false")))
+		if (JFritzUtils.parseBoolean(JFritz.getProperty("option.confirmOnExit",
+				"false")))
 			exit = JOptionPane.showConfirmDialog(this, JFritz
 					.getMessage("really_quit"), JFritz.PROGRAM_NAME,
 					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
