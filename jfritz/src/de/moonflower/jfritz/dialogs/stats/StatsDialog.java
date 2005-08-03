@@ -39,6 +39,7 @@ import de.moonflower.jfritz.utils.network.AddonInfosXMLHandler;
 import de.moonflower.jfritz.utils.network.UPNPUtils;
 
 /**
+ * Displays a dialog with some statistical data
  * @author Arno Willig
  *  
  */

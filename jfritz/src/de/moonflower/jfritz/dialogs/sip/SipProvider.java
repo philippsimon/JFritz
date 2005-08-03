@@ -21,10 +21,16 @@ public class SipProvider {
 		this.phoneNumber = phoneNumber;
 	}
 
+	/**
+	 * @return Returns phone number
+	 */
 	public final String getNumber() {
 		return phoneNumber;
 	}
 
+	/**
+	 * @return Returns name of sip-provider or IP
+	 */
 	public final String getProvider() {
 		return providerName;
 	}
