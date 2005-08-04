@@ -40,9 +40,11 @@
  * 
  * JFritz! 0.4.3
  * - Added support for MacOSX Application Menu
+ * - VCard Export moved from CallerTable to PhoneBook
  * - Telnet: Timeout handling
  * - Telnet: support for username, password TODO: Einstellmöglichkeiten
  * - Wait, when no network reachable (On startup, return of standby, ...)
+ * - Added context menu to phonebook 
  * - Bugfix: Syslog-Monitor get Callerlist on Restart
  * - Bugfix: Check for double entries in Callerlist
  * 
