@@ -14,7 +14,7 @@ import de.moonflower.jfritz.utils.Debug;
  *  
  */
 public class Person {
-	
+
 	private boolean privateEntry = false;
 
 	private String firstName = "";
@@ -22,7 +22,7 @@ public class Person {
 	private String lastName = "";
 
 	private String company = "";
-
+	
 	private String street = "";
 
 	private String postalCode = "";
@@ -59,7 +59,7 @@ public class Person {
 
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.privateEntry = false;		
+		this.privateEntry = false;
 	}
 
 	public Person(Person person) {
@@ -108,15 +108,20 @@ public class Person {
 	}
 
 	public String getFullname() {
-		String ret = "";
-
-		if (lastName.length() == 0 && firstName.length() > 0) {
+		String ret;
+		if ((lastName == null) && (firstName == null)) {
+			ret = "";
+		} else if (lastName == null)
+			ret = firstName;
+		else if (firstName == null)
+			ret = lastName;
+		else if (lastName.length() == 0 && firstName.length() > 0) {
 			ret = firstName;
 		} else if (firstName.length() == 0) {
 			ret = lastName;
 		} else
 			ret = (lastName + ", " + firstName).trim();
-		if (company.length() > 0) {
+		if ((company != null) && (company.length() > 0)) {
 			if (ret.length() > 0)
 				ret += " (" + company + ")";
 			else
@@ -125,14 +130,39 @@ public class Person {
 		return ret;
 	}
 
+	//TODO Privat & Geschäftlich durch Konstanten ersetzen
+	//private String[] basicTypes = { "home", "mobile", "homezone",
+		//	"business", "other", "fax", "sip" };
+	//TODO Sonstiges und Nichtgefundenes
+	//TODO sip != Pager, korrigieren
 	public String toVCard() {
 		String vcard = "";
-		vcard = "BEGIN:vCard\n" + "VERSION:3.0\n" + "FN: " + getFullname()
-				+ "\n" + "TEL;TYPE=VOICE,MSG,WORK:"
-				+ getStandardTelephoneNumber() + "\n" + "END:vCard\n";
+		vcard = "BEGIN:vCard\n" + 
+				"VERSION:2.1\n" + 
+				"FN: " + getFullname()+ "\n" +
+				"ADR;Type=HOME,POSTAL:;;" + getStreet() + ";" + getCity() + ";;" +getPostalCode()+"\n";
+		Enumeration en = numbers.elements();
+		while (en.hasMoreElements()) {
+			PhoneNumber n = (PhoneNumber) en.nextElement();
+			if (n.getType().startsWith("home"))
+				vcard = vcard + "TEL;TYPE=VOICE,HOME:";
+			else if (n.getType().startsWith("business"))
+				vcard = vcard + "TEL;TYPE=VOICE,WORK:";
+			else if (n.getType().startsWith("mobile"))
+				vcard = vcard + "TEL;CELL:";
+			else if (n.getType().startsWith("sip"))
+				vcard = vcard + "TEL;PAGER:";
+			else if (n.getType().startsWith("fax"))
+				vcard = vcard + "TEL;FAX:";
+			else vcard = vcard + "TEL;DIVERS:";
+			vcard = vcard + n.convertToIntNumber() + "\n";
+		}
+		vcard = vcard +
+		"EMAIL;TYPE=INTERNET,PREF:" + getEmailAddress() + "\n" +
+		"END:vCard\n";
 		return vcard;
 	}
-
+	
 	/**
 	 * Saves vcard to file
 	 * 
@@ -253,11 +283,11 @@ public class Person {
 	public final void setStandard(String standard) {
 		this.standard = standard;
 	}
-	
+
 	public void setPrivateEntry(boolean b) {
 		privateEntry = b;
 	}
-	
+
 	public boolean isPrivateEntry() {
 		return privateEntry;
 	}
