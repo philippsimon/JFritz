@@ -107,14 +107,14 @@ public class PhoneBookPanel extends JPanel implements ListSelectionListener,
 		addButton.setActionCommand("addPerson");
 		addButton.addActionListener(this);
 		toolBar.add(addButton);
-		
+
 		JButton delButton = new JButton(JFritz.getMessage("delete_entry"));
 		delButton.setToolTipText(JFritz.getMessage("delete_entry"));
 		delButton.setIcon(getImage("delete.png"));
 		delButton.setActionCommand("deletePerson");
 		delButton.addActionListener(this);
 		toolBar.add(delButton);
-		
+
 		toolBar.addSeparator();
 
 		JButton exportVCardButton = new JButton();
@@ -123,7 +123,7 @@ public class PhoneBookPanel extends JPanel implements ListSelectionListener,
 		exportVCardButton.setActionCommand("export_vcard");
 		exportVCardButton.addActionListener(this);
 		toolBar.add(exportVCardButton);
-		
+
 		toolBar.addSeparator();
 		toolBar.addSeparator();
 		toolBar.addSeparator();
@@ -170,11 +170,15 @@ public class PhoneBookPanel extends JPanel implements ListSelectionListener,
 	 */
 	public void valueChanged(ListSelectionEvent e) {
 		if (!e.getValueIsAdjusting()) {
-			int row = phoneBookTable.getSelectedRow();
-			if (row > -1) {
+			int rows[] = phoneBookTable.getSelectedRows();
+			if (rows.length == 1) {
 				Person p = ((PhoneBook) phoneBookTable.getModel())
-						.getPersonAt(row);
+						.getPersonAt(rows[0]);
 				personPanel.setPerson(p);
+				setStatus();
+			}
+			else {				
+				jfritz.getJframe().setStatus( rows.length + " Einträge ausgewählt");
 			}
 		}
 	}
@@ -272,7 +276,7 @@ public class PhoneBookPanel extends JPanel implements ListSelectionListener,
 				getClass().getResource(
 						"/de/moonflower/jfritz/resources/images/" + filename)));
 	}
-	
+
 	/**
 	 * Exports VCard or VCardList
 	 */
@@ -317,6 +321,11 @@ public class PhoneBookPanel extends JPanel implements ListSelectionListener,
 		}
 	}
 
+	public void setStatus() {
+		PhoneBook pb = (PhoneBook) phoneBookTable.getModel();
+		int entries = pb.getFilteredPersons().size();
+		jfritz.getJframe().setStatus(entries + " Einträge");
+	}
 
 	class PopupListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent e) {
