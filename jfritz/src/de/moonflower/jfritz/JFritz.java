@@ -498,17 +498,7 @@ public final class JFritz {
 				.setCaption(JFritz.PROGRAM_NAME + " v" + JFritz.PROGRAM_VERSION);
 		trayIcon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				if (jframe.isVisible()) {
-					Debug.msg("Hide JFritz-Window");
-					jframe.setState(JFrame.ICONIFIED);
-					jframe.setVisible(false);
-				} else {
-					Debug.msg("Show JFritz-Window");
-					jframe.setState(JFrame.NORMAL);
-					jframe.setVisible(true);
-					jframe.toFront();
-				}
+				hideShowJFritz();
 			}
 		});
 		systray.addTrayIcon(trayIcon);
@@ -883,4 +873,17 @@ public final class JFritz {
 		return HostOS;
 	}
 
+	public void hideShowJFritz() {
+		if (jframe.isVisible()) {
+			Debug.msg("Hide JFritz-Window");
+			jframe.setState(JFrame.ICONIFIED);
+			jframe.setVisible(false);
+		} else {
+			Debug.msg("Show JFritz-Window");
+			jframe.setState(JFrame.NORMAL);
+			jframe.setVisible(true);
+			jframe.toFront();
+		}
+	}
+	
 }
