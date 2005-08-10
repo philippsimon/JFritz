@@ -45,6 +45,7 @@
  * - Telnet: support for username, password TODO: Einstellmöglichkeiten
  * - Wait, when no network reachable (On startup, return of standby, ...)
  * - Added context menu to phonebook 
+ * - Display more information in status bar
  * - Bugfix: Syslog-Monitor get Callerlist on Restart
  * - Bugfix: Check for double entries in Callerlist
  * - Bugfix: Reverselookup on call
@@ -272,6 +273,10 @@ public final class JFritz {
 	private CallMonitor callMonitor = null;
 
 	private static String HostOS = "other";
+
+	public static final int CALLMONITOR_START = 0;
+
+	public static final int CALLMONITOR_STOP = 1;
 
 	/**
 	 * Constructs JFritz object
@@ -860,6 +865,8 @@ public final class JFritz {
 	public void stopCallMonitor() {
 		if (callMonitor != null) {
 			callMonitor.stopCallMonitor();
+			// Let buttons enable start of callMonitor
+			getJframe().setCallMonitorButtons(CALLMONITOR_START);
 			callMonitor = null;
 		}
 	}
