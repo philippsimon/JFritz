@@ -42,7 +42,9 @@
  * - Added support for MacOSX Application Menu
  * - VCard Export moved from CallerTable to PhoneBook
  * - Telnet: Timeout handling
- * - Telnet: support for username, password TODO: Einstellmöglichkeiten
+ * - Telnet-Callmonitor: support for username, password
+ * - Syslog-Callmonitor: syslogd and telefond check configurable
+ * - Added Callmessage-Callmonitor. See Thread Nr. 178199 in IPPF
  * - Wait, when no network reachable (On startup, return of standby, ...)
  * - Added context menu to phonebook 
  * - Display more information in status bar
@@ -288,10 +290,14 @@ public final class JFritz {
 		loadSounds();
 
 		String osName = System.getProperty("os.name");
+		Debug.msg("Betriebssystem: " + osName);
 		if (osName.startsWith("Mac OS"))
 			HostOS = "mac";
 		else if (osName.startsWith("Windows"))
 			HostOS = "windows";
+		else if (osName.equals("Linux")) {
+			HostOS = "linux";
+		}
 		Debug.msg("JFritz runs on " + HostOS);
 
 		if (HostOS.equalsIgnoreCase("mac")) {
@@ -304,6 +310,7 @@ public final class JFritz {
 		callerlist = new CallerList(this);
 		callerlist.loadFromXMLFile(CALLS_FILE);
 
+		Debug.msg("Start des commandline parsing");
 		if (fetchCalls) {
 			Debug.msg("Anrufliste wird von Fritz!Box geholt..");
 			try {
@@ -339,7 +346,10 @@ public final class JFritz {
 			callerlist.clearList();
 			System.exit(0);
 		}
+		Debug.msg("Neue Instanz von JFrame");
 		jframe = new JFritzWindow(this);
+
+		Debug.msg("Checke Systray-Support");
 
 		if (checkForSystraySupport()) {
 			try {
@@ -350,6 +360,8 @@ public final class JFritz {
 				SYSTRAY_SUPPORT = false;
 			}
 		}
+
+		Debug.msg("Suche FritzBox über UPNP / SSDP");
 
 		ssdpthread = new SSDPdiscoverThread(this, SSDP_TIMEOUT);
 		ssdpthread.start();
@@ -885,5 +897,5 @@ public final class JFritz {
 			jframe.toFront();
 		}
 	}
-	
+
 }
