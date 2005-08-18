@@ -69,7 +69,6 @@ public class SelectionListener implements ListSelectionListener {
 			clip.setContents(cont, null);
 
 			if (rows.length == 1) {
-				table.getJfritz().getJframe().setStatus();
 				// table.getJfritz().getJframe().getPhoneBookPanel().getPersonPanel().setPerson(person);
 				PhoneBookTable pt = table.getJfritz().getJframe()
 						.getPhoneBookPanel().getPhoneBookTable();
@@ -86,6 +85,7 @@ public class SelectionListener implements ListSelectionListener {
 				}
 				table.getJfritz().getJframe().getCallerListPanel()
 						.setDeleteEntryButton();
+				table.getJfritz().getJframe().setStatus();
 			} else if (rows.length > 0) {
 				// Setze Statusbar mit Infos über selectierte Anrufe
 				table.getJfritz().getJframe().setStatus(selectedCalls + " Telefonate, Gesamtdauer: " + (selectedCallsTotalMinutes / 60) + " min");
