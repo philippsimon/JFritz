@@ -271,7 +271,7 @@ public final class JFritz {
 
 	private static PhoneBook phonebook;
 
-	//private static URL ringSound, callSound;
+    private static URL ringSound, callSound;
 
 	private CallMonitor callMonitor = null;
 
@@ -375,10 +375,10 @@ public final class JFritz {
 	 * Loads sounds from resources
 	 */
 	private void loadSounds() {
-		//	ringSound = getClass().getResource(
-		//			"/de/moonflower/jfritz/resources/sounds/call_in.wav");
-		//	callSound = getClass().getResource(
-		//			"/de/moonflower/jfritz/resources/sounds/call_out.wav");
+		ringSound = getClass().getResource(
+					"/de/moonflower/jfritz/resources/sounds/call_in.wav");
+		callSound = getClass().getResource(
+					"/de/moonflower/jfritz/resources/sounds/call_out.wav");
 	}
 
 	/**
@@ -397,7 +397,7 @@ public final class JFritz {
 	 * Main method for starting JFritz!
 	 * 
 	 * @param args
-	 *            Program arguments (-h -v)
+	 *            Program arguments (-h -v ...)
 	 */
 	public static void main(String[] args) {
 		System.out.println(PROGRAM_NAME + " v" + PROGRAM_VERSION
@@ -597,7 +597,7 @@ public final class JFritz {
 	}
 
 	/**
-	 * Displays balloon info message TODO: Window when no systray_support
+	 * Displays balloon info message
 	 * 
 	 * @param msg
 	 *            Message to be displayed
@@ -713,6 +713,7 @@ public final class JFritz {
 
 		if (JFritzUtils.parseBoolean(JFritz.getProperty("option.playSounds",
 				"true"))) {
+			playSound(ringSound);
 		}
 	}
 
@@ -729,6 +730,7 @@ public final class JFritz {
 		infoMsg("Ausgehender Telefonanruf\n " + "\nan " + calledstr + "!");
 		if (JFritzUtils.parseBoolean(JFritz.getProperty("option.playSounds",
 				"true"))) {
+			playSound(callSound);
 		}
 	}
 
