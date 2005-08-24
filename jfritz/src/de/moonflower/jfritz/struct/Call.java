@@ -100,23 +100,35 @@ public class Call {
 		SimpleDateFormat date = new SimpleDateFormat("dd.MM.yyyy");
 		SimpleDateFormat time = new SimpleDateFormat("HH:mm");
 		String outString = "";
-		switch (calltype.toInt())
-		{
-		case 1: { outString = "\"Incomming\""; break; }
-		case 2: { outString = "\"Missed\""; break; }
-		case 3: { outString = "\"Outgoing\""; break; }
+		switch (calltype.toInt()) {
+		case 1: {
+			outString = "\"Incomming\"";
+			break;
 		}
-		
-		outString = outString.concat(";\"" + date.format(calldate)+ "\"");
+		case 2: {
+			outString = "\"Missed\"";
+			break;
+		}
+		case 3: {
+			outString = "\"Outgoing\"";
+			break;
+		}
+		}
 
-		outString = outString.concat(";\"" + time.format(calldate)+ "\"");
-		
-		if (number == null) outString = outString.concat(";\"\"");
-		else outString = outString.concat(";\"" + number + "\"");
-		
-		if (route == null) outString = outString.concat(";\"\"");
-		else outString = outString.concat(";\"" + route + "\"");		
-		
+		outString = outString.concat(";\"" + date.format(calldate) + "\"");
+
+		outString = outString.concat(";\"" + time.format(calldate) + "\"");
+
+		if (number == null)
+			outString = outString.concat(";\"\"");
+		else
+			outString = outString.concat(";\"" + number + "\"");
+
+		if (route == null)
+			outString = outString.concat(";\"\"");
+		else
+			outString = outString.concat(";\"" + route + "\"");
+
 		if (port.equals("4"))
 			outString = outString.concat(";\"ISDN\"");
 		else if (port.equals("0"))
@@ -128,18 +140,50 @@ public class Call {
 		else if (port.equals(""))
 			outString = outString.concat(";\"\"");
 		else
-			outString = outString.concat(";\"" + port + "\"");		
-		
+			outString = outString.concat(";\"" + port + "\"");
+
 		outString = outString.concat(";\"" + duration + "\"");
-		
-		if (getPerson() != null ) {
-			outString = outString.concat(";\"" + getPerson().getFullname() + "\"");
-			outString = outString.concat(";\"" + getPerson().getStreet() + "\"");
-			outString = outString.concat(";\"" + getPerson().getPostalCode()+" " + getPerson().getCity() + "\"");
-		}
-		else outString = outString.concat("\"\";\"\";\"\"");
-		
+
+		if (getPerson() != null) {
+			outString = outString.concat(";\"" + getPerson().getFullname()
+					+ "\"");
+			outString = outString
+					.concat(";\"" + getPerson().getStreet() + "\"");
+			outString = outString.concat(";\"" + getPerson().getPostalCode()
+					+ " " + getPerson().getCity() + "\"");
+		} else
+			outString = outString.concat("\"\";\"\";\"\"");
+
 		return outString;
+	}
+
+	/**
+	 * @return Returns XML String
+	 */
+	public String toXML() {
+		String sep = System.getProperty("line.separator", "\n");
+		String output = "";
+		SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+		output = ("<entry calltype=\"" + calltype.toString() + "\">" + sep);
+		output = output + ("\t<date>" + df.format(calldate) + "</date>" + sep);
+		if (number != null) {
+			if (number.getCallByCall().length() > 0) {
+				output = output
+						+ ("\t<caller callbycall=\"" + number.getCallByCall()
+								+ "\">" + number.getFullNumber() + "</caller>" + sep);
+			} else {
+				output = output
+						+ ("\t<caller>" + number.getFullNumber() + "</caller>" + sep);
+			}
+		}
+		if (!port.equals(""))
+			output = output + ("\t<port>" + port + "</port>" + sep);
+		if (!route.equals(""))
+			output = output + ("\t<route>" + route + "</route>" + sep);
+		if (duration > 0)
+			output = output + ("\t<duration>" + duration + "</duration>" + sep);
+		output = output + ("</entry>");
+		return output;
 	}
 
 	public String toString() {
