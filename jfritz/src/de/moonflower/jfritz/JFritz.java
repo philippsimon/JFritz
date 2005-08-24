@@ -49,6 +49,7 @@
  * - Added context menu to phonebook and callerlist
  * - New Callfilter: Route, Fixed call
  * - Display more information in status bar
+ * - Export to XML
  * - Bugfix: Syslog-Monitor get Callerlist on Restart
  * - Bugfix: Check for double entries in Callerlist
  * - Bugfix: Reverselookup on call
@@ -323,7 +324,7 @@ public final class JFritz {
 			} finally {
 				if (csvExport) {
 					Debug.msg("CSV-Export to " + csvFileName);
-					callerlist.saveToCSVFile(csvFileName);
+					callerlist.saveToCSVFile(csvFileName, true);
 				}
 				if (clearList) {
 					Debug.msg("Clearing Caller List");
@@ -335,7 +336,7 @@ public final class JFritz {
 		}
 		if (csvExport) {
 			Debug.msg("CSV-Export to " + csvFileName);
-			callerlist.saveToCSVFile(csvFileName);
+			callerlist.saveToCSVFile(csvFileName, true);
 			if (clearList) {
 				Debug.msg("Clearing Caller List");
 				callerlist.clearList();
