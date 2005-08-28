@@ -30,6 +30,7 @@
  * 
  *
  * GLOBAL TODO:
+ * - Call-By-Call Vorwahlen in einer Spalte anzeigen
  * 
  * BUGS: bitte bei Sourceforge nachschauen und dort auch den Status ändern
  * BUG: die Autoerkennung, ob telefond für Syslog richtig läuft hat ein Sicherheitsloch. Nun kann jede IP auf Port 1011 zugreifen.
@@ -39,12 +40,13 @@
  * CHANGELOG:
  * 
  * JFritz! 0.4.3
+ * - CallByCall information is saved :) once again
  * - Added support for MacOSX Application Menu
  * - VCard Export moved from CallerTable to PhoneBook
  * - Telnet: Timeout handling
  * - Telnet-Callmonitor: support for username, password
  * - Syslog-Callmonitor: syslogd and telefond check configurable
- * - Added Callmessage-Callmonitor. See Thread Nr. 178199 in IPPF
+ * - Added Callmessage-Callmonitor. See Thread-Nr. 178199 in IPPF
  * - Wait, when no network reachable (On startup, return of standby, ...)
  * - Added context menu to phonebook and callerlist
  * - New Callfilter: Route, Fixed call
