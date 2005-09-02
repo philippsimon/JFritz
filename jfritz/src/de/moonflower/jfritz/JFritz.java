@@ -50,6 +50,7 @@
  * - Wait, when no network reachable (On startup, return of standby, ...)
  * - Added context menu to phonebook and callerlist
  * - New Callfilter: Route, Fixed call
+ * - New Datefilter: Right click on date filter button
  * - Display more information in status bar
  * - Export to XML
  * - Bugfix: Syslog-Monitor get Callerlist on Restart
