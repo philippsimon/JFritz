@@ -40,7 +40,7 @@
  * CHANGELOG:
  * 
  * JFritz! 0.4.3
- * - CallByCall information is saved :) once again
+ * - CallByCall information is saved (only 010xy and 0100yy)
  * - Added support for MacOSX Application Menu
  * - VCard Export moved from CallerTable to PhoneBook
  * - Telnet: Timeout handling
