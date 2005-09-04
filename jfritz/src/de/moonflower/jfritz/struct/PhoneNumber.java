@@ -137,17 +137,25 @@ public class PhoneNumber implements Comparable {
 	 * Converts number to string representation
 	 */
 	public String toString() {
-		return getFullNumber();
+		return getIntNumber();
 	}
 
 	/**
 	 * 
-	 * @return the full number
+	 * @return the international number
 	 */
-	public String getFullNumber() {
+	public String getIntNumber() {
 		return number;
 	}
 
+	/**
+	 * 
+	 * @return the number with call by call predial
+	 */
+	public String getFullNumber() {
+		return callbycall + number;
+	}
+	
 	public String getShortNumber() {
 		String countryCode = JFritz.getProperty("country.code");
 		String areaCode = JFritz.getProperty("area.code");
