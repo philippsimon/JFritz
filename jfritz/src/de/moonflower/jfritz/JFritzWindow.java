@@ -639,7 +639,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 						"Call-By-Call")) {
 
 					colModel.removeColumn(colModel.getColumn(2));
-					getCallerListPanel().getCallByCallButton().setEnabled(false);
+					getCallerListPanel().getCallByCallButton()
+							.setEnabled(false);
 				}
 			}
 		}
@@ -893,7 +894,17 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		});
 		if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
-			jfritz.getCallerlist().saveToCSVFile(file.getAbsolutePath(), false);
+			if (file.exists()) {
+				if (JOptionPane.showConfirmDialog(this, "Soll die Datei "
+						+ file.getName() + " überschrieben werden?",
+						"Datei überschreiben?", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+					jfritz.getCallerlist().saveToCSVFile(
+							file.getAbsolutePath(), false);
+				}
+			} else {
+				jfritz.getCallerlist().saveToCSVFile(file.getAbsolutePath(),
+						false);
+			}
 		}
 	}
 
@@ -917,7 +928,17 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		});
 		if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
-			jfritz.getCallerlist().saveToXMLFile(file.getAbsolutePath(), false);
+			if (file.exists()) {
+				if (JOptionPane.showConfirmDialog(this, "Soll die Datei "
+						+ file.getName() + " überschrieben werden?",
+						"Datei überschreiben?", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+					jfritz.getCallerlist().saveToXMLFile(
+							file.getAbsolutePath(), false);
+				}
+			} else {
+				jfritz.getCallerlist().saveToXMLFile(file.getAbsolutePath(),
+						false);
+			}
 		}
 	}
 
