@@ -203,7 +203,7 @@ public class ConfigDialog extends JDialog {
 
 		pass.setText(Encryption.decrypt(JFritz.getProperty("box.password")));
 		password = Encryption.decrypt(JFritz.getProperty("box.password"));
-		address.setText(JFritz.getProperty("box.address"));
+		address.setText(JFritz.getProperty("box.address","192.168.178.1"));
 		areaCode.setText(JFritz.getProperty("area.code"));
 		countryCode.setText(JFritz.getProperty("country.code"));
 		areaPrefix.setText(JFritz.getProperty("area.prefix"));
@@ -1020,5 +1020,8 @@ public class ConfigDialog extends JDialog {
 			startCallMonitorButton.setSelected(true);
 			jfritz.getJframe().getMonitorButton().setSelected(true);
 		}
+	}
+	public SipProviderTableModel getSipModel() {
+		return sipmodel;
 	}
 }
