@@ -524,6 +524,8 @@ public class ConfigDialog extends JDialog {
         callMonitorOptionsButton.setVisible(false);
         callMonitorAfterStartButton.setVisible(false);
         soundButton.setVisible(false);
+        externProgramCheckBox.setVisible(false);
+        externProgramTextField.setVisible(false);
         callMonitorPane.repaint();
     }
     
@@ -532,6 +534,8 @@ public class ConfigDialog extends JDialog {
         callMonitorAfterStartButton.setVisible(true);
         callMonitorOptionsButton.setVisible(true);
         soundButton.setVisible(true);
+        externProgramCheckBox.setVisible(true);
+        externProgramTextField.setVisible(true);
         callMonitorPane.repaint();
     }
     
