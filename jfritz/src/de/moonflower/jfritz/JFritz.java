@@ -748,9 +748,7 @@ public final class JFritz {
                 "option.startExternProgram", "false"))) {
             String programString = JFritz.getProperty("option.externProgram",
                     "");
-            System.err.println(programString);
             programString = programString.replaceAll("\\\\", "\\\\\\\\"); // Replace \ with \\
-            System.err.println(programString);
             programString = programString.replaceAll("%Number", caller);
             programString = programString.replaceAll("%Name", name);
             programString = programString.replaceAll("%Called", caller);
@@ -760,9 +758,10 @@ public final class JFritz {
                 return;
             }
             Process process = null;
+            Debug.msg("Starte externes Programm: " + programString);
             try {
-                process = Runtime.getRuntime().exec(programString);
-            } catch (IOException e) {
+                process = Runtime.getRuntime().exec(programString);               
+            } catch (IOException e) {            
                 Debug.errDlg("Konnte externes Programm nicht ausführen: "
                         + programString);
                 e.printStackTrace();
