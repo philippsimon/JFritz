@@ -73,7 +73,7 @@ public class ConfigDialog extends JDialog {
     private JComboBox addressCombo, callMonitorCombo, ipAddressComboBox;
 
     private JTextField address, areaCode, countryCode, areaPrefix,
-            countryPrefix;
+            countryPrefix, externProgramTextField;
 
     private JPasswordField pass;
 
@@ -90,7 +90,7 @@ public class ConfigDialog extends JDialog {
             notifyOnCallsButton, confirmOnExitButton, startMinimizedButton,
             timerAfterStartButton, passwordAfterStartButton, soundButton,
             callMonitorAfterStartButton, lookupAfterFetchButton,
-            syslogPassthroughCheckBox, showCallByCallButton;
+            syslogPassthroughCheckBox, showCallByCallButton, externProgramCheckBox;
 
     private JPanel callMonitorPane;
 
@@ -140,6 +140,10 @@ public class ConfigDialog extends JDialog {
                 .getProperty("option.startMinimized", "false")));
         soundButton.setSelected(JFritzUtils.parseBoolean(JFritz.getProperty(
                 "option.playSounds", "true")));
+        externProgramCheckBox.setSelected(JFritzUtils.parseBoolean(JFritz.getProperty(
+                "option.startExternProgram", "false")));
+        externProgramTextField.setText(JFritz.getProperty(
+                "option.externProgram", ""));
 
         callMonitorCombo.setSelectedIndex(Integer.parseInt(JFritz.getProperty(
                 "option.callMonitorType", "0")));
@@ -243,6 +247,9 @@ public class ConfigDialog extends JDialog {
                 .toString(startMinimizedButton.isSelected()));
         JFritz.setProperty("option.playSounds", Boolean.toString(soundButton
                 .isSelected()));
+        JFritz.setProperty("option.startExternProgram", Boolean.toString(externProgramCheckBox.isSelected()));
+        JFritz.setProperty("option.externProgram", externProgramTextField.getText());
+
         JFritz.setProperty("option.startcallmonitor", Boolean
                 .toString(startCallMonitorButton.isSelected()));
         JFritz.setProperty("option.autostartcallmonitor", Boolean
@@ -656,8 +663,15 @@ public class ConfigDialog extends JDialog {
 
         soundButton = new JCheckBox("Bei eingehenden Anrufen Sound abspielen");
         c.gridy = 2;
-        c.gridwidth = 3;
         pane.add(soundButton, c);
+        
+        externProgramCheckBox = new JCheckBox("Externes Programm ausführen: ");
+        c.gridy = 3;
+        pane.add(externProgramCheckBox, c);
+
+        externProgramTextField = new JTextField("", 40);
+        c.gridy = 4;
+        pane.add(externProgramTextField, c);        
 
         return callMonitorPane;
     }
