@@ -222,6 +222,7 @@ public class ConfigDialog extends JDialog {
                 sipmodel.addProvider(sip);
             }
         }
+        // TODO: Set SIP active state AND set SIP registered state
     }
 
     /**
