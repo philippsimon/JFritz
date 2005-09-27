@@ -759,10 +759,9 @@ public final class JFritz {
                         + programString);
                 return;
             }
-            Process process = null;
             Debug.msg("Starte externes Programm: " + programString);
             try {
-                process = Runtime.getRuntime().exec(programString);               
+                Runtime.getRuntime().exec(programString);               
             } catch (IOException e) {            
                 Debug.errDlg("Konnte externes Programm nicht ausführen: "
                         + programString);
