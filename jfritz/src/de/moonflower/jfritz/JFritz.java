@@ -231,13 +231,13 @@ public final class JFritz {
 
     public final static String PROGRAM_NAME = "JFritz!";
 
-    public final static String PROGRAM_VERSION = "0.4.4";
+    public final static String PROGRAM_VERSION = "0.4.5";
 
     public final static String PROGRAM_URL = "http://jfritz.sourceforge.net/";
 
     public final static String PROGRAM_SECRET = "jFrItZsEcReT";
 
-    public final static String DOCUMENTATION_URL = "http://jfritz.sourceforge.net/doc/index.html";
+    public final static String DOCUMENTATION_URL = "http://jfritz.sourceforge.net/doc/";
 
     public final static String CVS_TAG = "$Id$";
 
