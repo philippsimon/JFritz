@@ -625,6 +625,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		configDialog = new ConfigDialog(this);
 		configDialog.setLocationRelativeTo(this);
 		if (configDialog.showDialog()) {
+			configDialog.storeValues();
+			jfritz.saveProperties();
 			if (configDialog.getSipModel().getData().size() == 0) { // Noch keine SipProvider eingelesen. 
 				try {
 					Vector data = JFritzUtils.retrieveSipProvider(JFritz.getProperty("box.address","192.168.178.1"), JFritz.getProperty("box.password"), new FritzBoxFirmware(JFritz.getProperty("box.firmware")));
@@ -639,8 +641,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 					jfritz.errorMsg("Firmware-Erkennung gescheitert!");
 				}
 			}
-			configDialog.storeValues();
-			jfritz.saveProperties();
 			monitorButton.setEnabled((Integer.parseInt(JFritz.getProperty(
 					"option.callMonitorType", "0")) > 0));
 
