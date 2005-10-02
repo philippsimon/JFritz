@@ -11,6 +11,7 @@ package de.moonflower.jfritz.dialogs.sip;
  *  
  */
 public class SipProvider {
+        
 	private int providerID;
 
 	private boolean active;
@@ -21,6 +22,13 @@ public class SipProvider {
 		this.providerID = providerID;
 		this.providerName = providerName;
 		this.phoneNumber = phoneNumber;
+	}
+
+	public SipProvider(int providerID, String phoneNumber, String providerName, boolean active) {
+		this.providerID = providerID;
+		this.providerName = providerName;
+		this.phoneNumber = phoneNumber;
+		this.active = active;
 	}
 
 	/**
@@ -55,5 +63,18 @@ public class SipProvider {
 	public final boolean isActive() {
 	    return active;
 	}
-
+	
+	/**
+	 * @return Returns XML String
+	 */
+	public String toXML() {
+		String sep = System.getProperty("line.separator", "\n");
+		String output = "";
+		output = ("<entry id=\"" + providerID + "\">" + sep);
+		output = output + ("\t<name>" + providerName + "</name>" + sep);
+		output = output + ("\t<number>" + phoneNumber + "</number>" + sep);
+		output = output + ("\t<active>" + active + "</active>" + sep);
+		output = output + ("</entry>");
+		return output;
+	}	
 }

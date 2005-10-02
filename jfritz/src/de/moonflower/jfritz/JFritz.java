@@ -222,6 +222,7 @@ import de.moonflower.jfritz.utils.ReverseLookup;
 import de.moonflower.jfritz.utils.network.SSDPdiscoverThread;
 import de.moonflower.jfritz.utils.network.CallMonitor;
 import de.moonflower.jfritz.dialogs.simple.CallMessageDlg;
+import de.moonflower.jfritz.dialogs.sip.SipProviderTableModel;
 
 /**
  * @author Arno Willig
@@ -250,6 +251,8 @@ public final class JFritz {
     public final static String QUICKDIALS_FILE = "jfritz.quickdials.xml";
 
     public final static String PHONEBOOK_FILE = "jfritz.phonebook.xml";
+
+    public final static String SIPPROVIDER_FILE = "jfritz.sipprovider.xml";
 
     public final static String CALLS_CSV_FILE = "calls.csv";
 
@@ -280,7 +283,9 @@ public final class JFritz {
     private static TrayIcon trayIcon;
 
     private static PhoneBook phonebook;
-
+    
+    private static SipProviderTableModel sipprovider;
+    
     private static URL ringSound, callSound;
 
     private CallMonitor callMonitor = null;
@@ -297,6 +302,7 @@ public final class JFritz {
     public JFritz(boolean fetchCalls, boolean csvExport, String csvFileName,
             boolean clearList) {
         loadProperties();
+        clearUnnecesseryProperties();
         loadMessages(new Locale("de", "DE"));
         loadSounds();
 
@@ -312,7 +318,7 @@ public final class JFritz {
         Debug.msg("JFritz runs on " + HostOS);
 
         if (HostOS.equalsIgnoreCase("mac")) {
-            MacHandler macHandler = new MacHandler(this);
+            new MacHandler(this);
         }
 
         phonebook = new PhoneBook(this);
@@ -320,7 +326,10 @@ public final class JFritz {
 
         callerlist = new CallerList(this);
         callerlist.loadFromXMLFile(CALLS_FILE);
-
+        
+        sipprovider = new SipProviderTableModel();
+        sipprovider.loadFromXMLFile(SIPPROVIDER_FILE);
+        
         Debug.msg("Start des commandline parsing");
         if (fetchCalls) {
             Debug.msg("Anrufliste wird von Fritz!Box geholt..");
@@ -381,6 +390,12 @@ public final class JFritz {
 
     }
 
+    public void clearUnnecesseryProperties() {
+        for (int i=0; i<10; i++) {
+            JFritz.removeProperty("SIP"+i);
+        }
+    }
+    
     /**
      * Loads sounds from resources
      */
@@ -955,6 +970,10 @@ public final class JFritz {
             jframe.setVisible(true);
             jframe.toFront();
         }
+    }
+    
+    public SipProviderTableModel getSIPProviderTableModel() {
+        return sipprovider;
     }
 
 }
