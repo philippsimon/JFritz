@@ -41,7 +41,8 @@
  * - Unterstützung für FRITZ!Box Firmware .85
  * - Kostenabrechnung hinzugefügt
  * - Suche über UPNP/SSDP abschaltbar
- * - Bugfix: Firmware konnte nicht erkannt werden.
+ * - Adressbuch nun nach allen Spalten sortierbar
+ * - Bugfix: Firmware konnte nicht erkannt werden
  * - Bugfix: Spaltenbreite wurde nicht korrekt gespeichert
  * 
  * Internal: 
