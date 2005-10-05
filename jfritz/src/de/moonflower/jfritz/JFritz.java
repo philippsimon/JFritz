@@ -29,8 +29,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 
  *
- * GLOBAL TODO:
- * - Call-By-Call Vorwahlen in einer Spalte anzeigen
  * 
  * BUGS: bitte bei Sourceforge nachschauen und dort auch den Status ändern
  * BUG: die Autoerkennung, ob telefond für Syslog richtig läuft hat ein Sicherheitsloch. Nun kann jede IP auf Port 1011 zugreifen.
@@ -38,6 +36,19 @@
  * FeatureRequests: bitte bei Sourceforge nachschauen und dort auch den Status ändern
 
  * CHANGELOG:
+ * 
+ * JFritz! 0.4.5
+ * - Unterstützung für FRITZ!Box Firmware .85
+ * - Kostenabrechnung hinzugefügt
+ * - Suche über UPNP/SSDP abschaltbar
+ * - Bugfix: Firmware konnte nicht erkannt werden.
+ * - Bugfix: Spaltenbreite wurde nicht korrekt gespeichert
+ * 
+ * Internal: 
+ * - SipProvider-Informationen werden nicht mehr in den 
+ * 	 jfritz.properties.xml sondern in jfritz.sipprovider.xml
+ *   gespeichert.
+ * - Zugriff auf SipProvider über jfritz.getSIPProviderTableModel() 
  * 
  * JFritz! 0.4.3
  * - CallByCall information is saved (only 010xy and 0100yy)
@@ -381,10 +392,12 @@ public final class JFritz {
             }
         }
 
-        Debug.msg("Suche FritzBox über UPNP / SSDP");
+        if (JFritzUtils.parseBoolean(JFritz.getProperty("option.useSSDP", "true"))) {
+            Debug.msg("Suche FritzBox über UPNP / SSDP");
 
-        ssdpthread = new SSDPdiscoverThread(this, SSDP_TIMEOUT);
-        ssdpthread.start();
+            ssdpthread = new SSDPdiscoverThread(this, SSDP_TIMEOUT);
+            ssdpthread.start();
+        }        
 
         javax.swing.SwingUtilities.invokeLater(jframe);
 
@@ -604,6 +617,11 @@ public final class JFritz {
         Enumeration en = jframe.getCallerTable().getColumnModel().getColumns();
         int i = 0;
         while (en.hasMoreElements()) {
+            // speichere Dummybreite, wenn CallByCall Spalte ausgeblendet
+            if (i==2 && !JFritzUtils.parseBoolean(JFritz.getProperty("option.showCallByCall", "false"))) {
+                properties.setProperty("column2.width","60");
+                i++;
+            }
             int width = ((TableColumn) en.nextElement()).getWidth();
             properties.setProperty("column" + i + ".width", Integer
                     .toString(width));
@@ -873,11 +891,13 @@ public final class JFritz {
      * @return Returns the fritzbox devices.
      */
     public final Vector getDevices() {
-        try {
-            ssdpthread.join();
-        } catch (InterruptedException e) {
-        }
-        return ssdpthread.getDevices();
+        if (JFritzUtils.parseBoolean(JFritz.getProperty("option.useSSDP", "true"))) {
+            try {
+                ssdpthread.join();
+            } catch (InterruptedException e) {
+            }
+            return ssdpthread.getDevices();
+        } else return null;      
     }
 
     /**
