@@ -7,6 +7,7 @@
 package de.moonflower.jfritz.cellrenderer;
 
 import java.awt.Component;
+import java.text.DecimalFormat;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -26,11 +27,16 @@ public class CostCellRenderer extends DefaultTableCellRenderer {
 				value, isSelected, hasFocus, row, column);
 
 		if (value != null) {
-		    String costs = value.toString();
+		    DecimalFormat df = new DecimalFormat( "0.00" );
+		    double costs = Double.parseDouble(value.toString());
+		    if (costs < 0) {
+		        label.setText("Unbekannt");
+		    }
+		    else {
+			    String costString = df.format(costs );
+				label.setText(costString + " ct");
+		    }
 
-			// setToolTipText(value.toString());
-			
-			label.setText(costs + " €");
 			label.setHorizontalAlignment(JLabel.RIGHT);
 		}
 		return label;
