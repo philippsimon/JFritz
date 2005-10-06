@@ -334,16 +334,6 @@ public final class JFritz {
             new MacHandler(this);
         }
 
-        if (checkForSystraySupport()) {
-            try {
-                systray = SystemTray.getDefaultSystemTray();
-                createTrayMenu();
-            } catch (Exception e) {
-                Debug.err(e.toString());
-                SYSTRAY_SUPPORT = false;
-            }
-        }
-
         phonebook = new PhoneBook(this);
         phonebook.loadFromXMLFile(PHONEBOOK_FILE);
 
@@ -394,6 +384,15 @@ public final class JFritz {
         jframe = new JFritzWindow(this);
 
         Debug.msg("Checke Systray-Support");
+        if (checkForSystraySupport()) {
+            try {
+                systray = SystemTray.getDefaultSystemTray();
+                createTrayMenu();
+            } catch (Exception e) {
+                Debug.err(e.toString());
+                SYSTRAY_SUPPORT = false;
+            }
+        }
 
         if (JFritzUtils.parseBoolean(JFritz.getProperty("option.useSSDP", "true"))) {
             Debug.msg("Suche FritzBox über UPNP / SSDP");
