@@ -12,7 +12,11 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
+import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.struct.Call;
+import de.moonflower.jfritz.utils.JFritzUtils;
 
 /**
  * @author rob
@@ -27,7 +31,7 @@ public class SipProvider {
     private String providerName, phoneNumber;
 
     private int startDate, festnetzTakt1, festnetzTakt2, festnetzFreiminuten,
-            mobileTakt1, mobileTakt2, mobileFreiminuten;
+            mobileTakt1, mobileTakt2, mobileFreiminuten, warnFreiminuten;
 
     private double festnetzKosten, mobileKosten;
 
@@ -142,6 +146,9 @@ public class SipProvider {
         output = output
                 + ("\t<mobilefreiminuten>" + mobileFreiminuten
                         + "</mobilefreiminuten>" + sep);
+        output = output
+                + ("\t<warnfreiminuten>" + warnFreiminuten
+                        + "</warnfreiminuten>" + sep);
         output = output + ("</entry>");
         return output;
     }
@@ -378,6 +385,35 @@ public class SipProvider {
             }
             calculateCost(call);
         }
+        checkRestFreiminuten();
+    }
+
+    /**
+     * Checkt, ob Freiminuten unter den Mindestfreiminuten liegen und warnt den
+     * Nutzer
+     *  
+     */
+    private void checkRestFreiminuten() {
+        if (!JFritzUtils.parseBoolean(JFritz.getProperty(
+                "state.warningFreeminutesShown", "false"))) {
+
+            if (festnetzFreiminuten > 0
+                    && nochFestnetzFreiminuten <= warnFreiminuten) {
+                JOptionPane.showMessageDialog(null,
+                        "Freiminutenlimit für Festnetzgespräche über die Rufnummer "
+                                + this.toString() + " unterschritten.",
+                        "JFritz! - Warnung", JOptionPane.WARNING_MESSAGE);
+                JFritz.setProperty("state.warningFreeminutesShown", "true");
+            }
+            if (mobileFreiminuten > 0
+                    && nochMobileFreiminuten <= warnFreiminuten) {
+                JOptionPane.showMessageDialog(null,
+                        "Freiminutenlimit für Mobilfunkgespräche über die Rufnummer "
+                                + this.toString() + " unterschritten.",
+                        "JFritz! - Warnung", JOptionPane.WARNING_MESSAGE);
+                JFritz.setProperty("state.warningFreeminutesShown", "true");
+            }
+        }
     }
 
     /**
@@ -428,6 +464,7 @@ public class SipProvider {
 
     /**
      * For statistics
+     * 
      * @return Total call costs
      */
     public double getTotalCosts() {
@@ -436,6 +473,7 @@ public class SipProvider {
 
     /**
      * For statistics and warn
+     * 
      * @return Restliche Freiminuten ins Festnetz
      */
     public double getRestFestnetzFreiminuten() {
@@ -444,9 +482,25 @@ public class SipProvider {
 
     /**
      * For statistics and warn
+     * 
      * @return Restliche Freiminuten ins Mobilfunknetz
      */
     public double getRestMobileFreiminuten() {
         return nochMobileFreiminuten;
+    }
+
+    /**
+     * @return Returns the warnFreiminuten.
+     */
+    public int getWarnFreiminuten() {
+        return warnFreiminuten;
+    }
+
+    /**
+     * @param warnFreiminuten
+     *            The warnFreiminuten to set.
+     */
+    public void setWarnFreiminuten(int warnFreiminuten) {
+        this.warnFreiminuten = warnFreiminuten;
     }
 }
