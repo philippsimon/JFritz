@@ -57,7 +57,7 @@ public class SipProvider {
         mobileKosten = 23.0;
         mobileFreiminuten = 0;
     }
-
+    
     /**
      * @return Returns phone number
      */
@@ -81,6 +81,14 @@ public class SipProvider {
      */
     public final int getProviderID() {
         return providerID;
+    }
+    
+    /**
+     * 
+     * @param providerID The providerID to set.
+     */
+    public void setProviderID(int providerID) {
+        this.providerID = providerID;
     }
 
     /**
