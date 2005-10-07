@@ -45,6 +45,7 @@
  * - Adressbuch nun nach allen Spalten sortierbar
  * - Bugfix: Firmware konnte nicht erkannt werden
  * - Bugfix: Spaltenbreite wurde nicht korrekt gespeichert
+ * - Bugfix: Falsche SIP-ID bei gelöschten Einträgen.
  * 
  * Internal: 
  * - SipProvider-Informationen werden nicht mehr in den 
