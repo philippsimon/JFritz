@@ -48,6 +48,7 @@
  * - Bugfix: Firmware konnte nicht erkannt werden
  * - Bugfix: Spaltenbreite wurde nicht korrekt gespeichert
  * - Bugfix: Falsche SIP-ID bei gelöschten Einträgen.
+ * - Bugfix: Wenn Kurzwahl unbekannt war, wurde eine falsche Rufnummer angezeigt.
  * 
  * Internal: 
  * - SipProvider-Informationen werden nicht mehr in den 
