@@ -43,6 +43,8 @@
  * - Unterstützung für Freiminuten
  * - Suche über UPNP/SSDP abschaltbar
  * - Adressbuch nun nach allen Spalten sortierbar
+ * - Beim Export merkt sich JFritz! die Verzeichnisse
+ * - Anrufen aus der Anrufliste heraus (noch nicht getestet)
  * - Bugfix: Firmware konnte nicht erkannt werden
  * - Bugfix: Spaltenbreite wurde nicht korrekt gespeichert
  * - Bugfix: Falsche SIP-ID bei gelöschten Einträgen.
