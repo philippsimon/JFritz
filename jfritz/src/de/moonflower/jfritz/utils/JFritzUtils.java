@@ -188,11 +188,15 @@ public class JFritzUtils {
      * @throws IOException
      */
     public static Vector retrieveQuickDialsFromFritzBox(QuickDials model,
-            String box_address, String box_password, FritzBoxFirmware firmware)
-            throws WrongPasswordException, IOException {
-        String postdata = firmware.getAccessMethod() + POSTDATA_QUICKDIAL
-                + URLEncoder.encode(box_password, "ISO-8859-1");
-        String urlstr = "http://" + box_address + "/cgi-bin/webcm";
+            FritzBoxFirmware firmware) throws WrongPasswordException,
+            IOException {
+        String postdata = firmware.getAccessMethod()
+                + POSTDATA_QUICKDIAL
+                + URLEncoder.encode(Encryption.decrypt(JFritz
+                        .getProperty("box.password")), "ISO-8859-1");
+        String urlstr = "http://"
+                + JFritz.getProperty("box.address", "fritz.box")
+                + "/cgi-bin/webcm";
         String data = fetchDataFromURL(urlstr, postdata);
         return parseQuickDialData(model, data, firmware);
     }
@@ -236,7 +240,7 @@ public class JFritzUtils {
                 Debug.err("File not found: " + filename);
             }
         }
-        
+
         Vector list = parseSipProvider(data);
         return list;
     }
@@ -486,27 +490,36 @@ public class JFritzUtils {
             }
             if (number.startsWith("**7")) // QuickDial
             {
-                // replace QuickDial with
-                // QuickDial-Entry
-                String quickDialNumber = number.substring(3);
-                if (jfritz.getJframe().getQuickDialPanel().getDataModel()
-                        .getQuickDials().size() == 0) {
-                    // get QuickDials from FritzBox
-                    jfritz.getJframe().getQuickDialPanel().getDataModel()
-                            .getQuickDialDataFromFritzBox();
-                }
-                Enumeration en = jfritz.getJframe().getQuickDialPanel()
-                        .getDataModel().getQuickDials().elements();
-                while (en.hasMoreElements()) {
-                    QuickDial quickDial = (QuickDial) en.nextElement();
-                    if (quickDialNumber.equals(quickDial.getQuickdial())) {
-                        number = null;
-                        phoneNumber = new PhoneNumber(quickDial.getNumber());
-                        return phoneNumber;
+                int count = 5;
+                Debug.msg("Kurzwahl entdeckt: " + number +"! Ersetze Kurzwahl mit zugehöriger Nummer.");
+                while (count>0) {
+                    count --;
+                    // replace QuickDial with
+                    // QuickDial-Entry
+                    String quickDialNumber = number.substring(3);
+                    if (jfritz.getJframe().getQuickDialPanel().getDataModel()
+                            .getQuickDials().size() == 0) {
+                        // get QuickDials from FritzBox
+                        jfritz.getJframe().getQuickDialPanel().getDataModel()
+                                .getQuickDialDataFromFritzBox();
                     }
+                    Enumeration en = jfritz.getJframe().getQuickDialPanel()
+                            .getDataModel().getQuickDials().elements();
+                    while (en.hasMoreElements()) {
+                        QuickDial quickDial = (QuickDial) en.nextElement();
+                        if (quickDialNumber.equals(quickDial.getQuickdial())) {
+                            number = null;
+                            phoneNumber = new PhoneNumber(quickDial.getNumber());
+                            Debug.msg("Kurzwahl gefunden. Nummer: "+phoneNumber.getFullNumber());
+                            return phoneNumber;
+                        }
+                    }
+                    Debug.msg("Kurzwahl NICHT gefunden. Aktualisiere Kurzwahl-Liste");
+                    ((QuickDials) jfritz.getJframe().getQuickDialPanel()
+                            .getDataModel()).getQuickDialDataFromFritzBox();
                 }
-
             }
+
             if (number.startsWith(countryCode) && number.length() > 9) {
                 // International numbers without countryPrefix
                 // (some VOIP numbers)
@@ -578,8 +591,7 @@ public class JFritzUtils {
         try {
             String passwort = Encryption.decrypt(JFritz.getProperty(
                     "box.password", Encryption.encrypt("")));
-            number = number.replaceAll(
-                    "\\+", "00");
+            number = number.replaceAll("\\+", "00");
 
             String portStr = "";
             if (port.equals("Fon 1")) {
@@ -624,7 +636,7 @@ public class JFritzUtils {
             System.out.println("PASSWORT: " + passwort);
             System.out.println("Nummer: " + number);
             System.out.println("Port: " + portStr);
-            
+
             System.out.println(urlstr + "?" + postdata);
             System.out.println(data);
         } catch (UnsupportedEncodingException uee) {
