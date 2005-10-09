@@ -399,7 +399,7 @@ public final class JFritz {
         }
 
         if (JFritzUtils.parseBoolean(JFritz.getProperty("option.useSSDP", "true"))) {
-            Debug.msg("Suche FritzBox über UPNP / SSDP");
+            Debug.msg("Suche FritzBox über UPnP / SSDP");
 
             ssdpthread = new SSDPdiscoverThread(this, SSDP_TIMEOUT);
             ssdpthread.start();

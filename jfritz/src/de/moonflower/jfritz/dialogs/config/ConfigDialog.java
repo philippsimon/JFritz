@@ -495,7 +495,7 @@ public class ConfigDialog extends JDialog {
         confirmOnExitButton = new JCheckBox("Bei Beenden nachfragen");
         otherpane.add(confirmOnExitButton);
 
-        searchWithSSDP = new JCheckBox("FRITZ!Box per UPNP / SSDP suchen");
+        searchWithSSDP = new JCheckBox("FRITZ!Box per UPnP / SSDP suchen");
         otherpane.add(searchWithSSDP);
 
         return otherpane;
