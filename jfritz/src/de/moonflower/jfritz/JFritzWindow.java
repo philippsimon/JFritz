@@ -62,7 +62,7 @@ import de.moonflower.jfritz.struct.PhoneNumber;
 import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzUtils;
-//import de.moonflower.jfritz.utils.JTablePrint;
+import de.moonflower.jfritz.utils.ImportOutlookContacts;
 import de.moonflower.jfritz.utils.ReverseLookup;
 import de.moonflower.jfritz.utils.BrowserLaunch;
 import de.moonflower.jfritz.utils.SwingWorker;
@@ -353,6 +353,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		JMenu optionsMenu = new JMenu(JFritz.getMessage("options_menu"));
 		JMenu helpMenu = new JMenu(JFritz.getMessage("help_menu"));
 		JMenu lnfMenu = new JMenu(JFritz.getMessage("lnf_menu"));
+		JMenu importMenu = new JMenu("Importieren...");
 		JMenu exportMenu = new JMenu(JFritz.getMessage("export_menu"));
 		JMenu viewMenu = new JMenu(JFritz.getMessage("view_menu"));
 
@@ -371,6 +372,15 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		item.setEnabled(JFritz.DEVEL_VERSION);
 		jfritzMenu.add(item);
 		
+		if (JFritz.runsOn().startsWith("windows")) {
+			item = new JMenuItem("Kontakte aus Outlook importieren");
+			item.setActionCommand("import_outlook");
+			item.addActionListener(this);
+			item.setEnabled(JFritz.DEVEL_VERSION);
+			importMenu.add(item);
+			jfritzMenu.add(importMenu);		    
+		}
+
 		item = new JMenuItem(JFritz.getMessage("export_csv"), 'c');
 		item.setActionCommand("export_csv");
 		item.addActionListener(this);
@@ -849,9 +859,10 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			BrowserLaunch.openURL(JFritz.PROGRAM_URL);
 		} else if (e.getActionCommand() == "export_csv")
 			exportCSV();
-		else if (e.getActionCommand() == "print_callerlist") {
+		else if (e.getActionCommand() == "print_callerlist")
 		    printCallerList();
-		}
+		else if (e.getActionCommand() == "import_outlook")
+		    importOutlook();
 		else if (e.getActionCommand() == "config")
 			showConfigDialog();
 		else if (e.getActionCommand() == "callerlist")
@@ -1095,5 +1106,10 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		}
 		}
 
+	}
+	
+	private void importOutlook() {
+        Thread thread = new Thread(new ImportOutlookContacts(jfritz));
+        thread.start();	    
 	}
 }
