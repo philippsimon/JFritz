@@ -63,6 +63,7 @@ import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzUtils;
 import de.moonflower.jfritz.utils.ImportOutlookContacts;
+import de.moonflower.jfritz.utils.PrintCallerList;
 import de.moonflower.jfritz.utils.ReverseLookup;
 import de.moonflower.jfritz.utils.BrowserLaunch;
 import de.moonflower.jfritz.utils.SwingWorker;
@@ -996,18 +997,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	}
 //	
 	public void printCallerList() {
-        JFreeReport report = jfritz.createReportDefinition();
-        report.setData(jfritz.getCallerlist());
-        try
-        {
-        PreviewFrame preview = new PreviewFrame(report);
-        preview.pack();
-        preview.setVisible(true);
-        }
-        catch (ReportProcessingException e)
-        {
-        Debug.err("Failed to generate report " + e);
-        }
+	    PrintCallerList printCallerList = new PrintCallerList(jfritz);
+	    printCallerList.print();	    
 	}
 	public ImageIcon getImage(String filename) {
 		return new ImageIcon(Toolkit.getDefaultToolkit().getImage(
