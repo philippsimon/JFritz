@@ -26,7 +26,7 @@ import de.moonflower.jfritz.utils.Debug;
  */
 public class CallFileXMLHandler extends DefaultHandler {
 
-	String chars, caller, callbycall, port, route;
+	String chars, caller, callbycall, port, route, comment;
 
 	CallerList callerlist;
 
@@ -60,6 +60,7 @@ public class CallFileXMLHandler extends DefaultHandler {
 			route = "";
 			caller = "";
 			callbycall = "";
+			comment = "";
 			duration = 0;
 			calldate = null;
 			calltype = null;
@@ -90,6 +91,8 @@ public class CallFileXMLHandler extends DefaultHandler {
 			route = chars;
 		} else if (qName.equals("caller")) {
 			caller = chars;
+		} else if (qName.equals("comment")) {
+			comment = chars;
 		} else if (qName.equals("date")) {
 			try {
 				calldate = df.parse(chars.replaceAll("\"", ""));
@@ -108,7 +111,7 @@ public class CallFileXMLHandler extends DefaultHandler {
 						number.setCallByCall(callbycall);
 				}
 				callerlist.addEntry(calltype, calldate, number, port, route,
-						duration);
+						duration, comment);
 			}
 
 		}

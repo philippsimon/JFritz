@@ -12,6 +12,7 @@ import java.util.Enumeration;
 
 import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.dialogs.sip.SipProvider;
+import de.moonflower.jfritz.utils.JFritzUtils;
 
 /**
  * @author Arno Willig
@@ -33,6 +34,8 @@ public class Call {
     private int duration;
 
     private double cost= -1;
+    
+    private String comment = "";
 
     public Call(JFritz jfritz, CallType calltype, Date calldate,
             PhoneNumber number, String port, String route, int duration) {
@@ -104,6 +107,8 @@ public class Call {
         SimpleDateFormat date = new SimpleDateFormat("dd.MM.yyyy");
         SimpleDateFormat time = new SimpleDateFormat("HH:mm");
         String outString = "";
+
+        // type
         switch (calltype.toInt()) {
         case 1: {
             outString = "\"Incoming\"";
@@ -119,15 +124,19 @@ public class Call {
         }
         }
 
+        // date
         outString = outString.concat(";\"" + date.format(calldate) + "\"");
-
+        
+        // time
         outString = outString.concat(";\"" + time.format(calldate) + "\"");
 
+        // number
         if (number == null)
             outString = outString.concat(";\"\"");
         else
             outString = outString.concat(";\"" + number + "\"");
 
+        // route
         if (route == null)
             outString = outString.concat(";\"\"");
         else {
@@ -151,6 +160,7 @@ public class Call {
             }
         }
 
+        // port
         if (port.equals("4"))
             outString = outString.concat(";\"ISDN\"");
         else if (port.equals("0"))
@@ -164,8 +174,10 @@ public class Call {
         else
             outString = outString.concat(";\"" + port + "\"");
 
+        // duration
         outString = outString.concat(";\"" + duration + "\"");
 
+        // address
         if (getPerson() != null) {
             outString = outString.concat(";\"" + getPerson().getFullname()
                     + "\"");
@@ -185,12 +197,19 @@ public class Call {
             }
         } else
             outString = outString.concat(";\"\";\"\";\"\"");
+
+        // CallByCall
         if (number != null && number.hasCallByCall()) {
             outString = outString.concat(";\"" + number.getCallByCall() + "\"");
         } else {
             outString = outString.concat(";\"\"");
         }
+
+        // costs
         outString = outString.concat(";\"" + getCost() + "\"");
+
+        // comment
+        outString = outString.concat(";\"" + comment + "\"");
 
         return outString;
     }
@@ -220,6 +239,8 @@ public class Call {
             output = output + ("\t<route>" + route + "</route>" + sep);
         if (duration > 0)
             output = output + ("\t<duration>" + duration + "</duration>" + sep);
+        
+        output = output + ("\t<comment>" + JFritzUtils.replaceSpecialChars(comment) + "</comment>" + sep);
         output = output + ("</entry>");
         return output;
     }
@@ -243,4 +264,18 @@ public class Call {
     public void setCost(double cost) {
         this.cost = cost;
     }    
+    
+    /**
+     * @return Returns the comment.
+     */
+    public String getComment() {
+        return comment;
+    }
+    
+    /**
+     * @param comment The comment to set.
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 }
