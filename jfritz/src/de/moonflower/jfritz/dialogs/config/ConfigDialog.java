@@ -19,8 +19,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -50,7 +48,6 @@ import javax.swing.JRadioButton;
 
 import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.JFritzWindow;
-import de.moonflower.jfritz.dialogs.sip.SipProvider;
 import de.moonflower.jfritz.exceptions.InvalidFirmwareException;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
 import de.moonflower.jfritz.firmware.FritzBoxFirmware;
@@ -105,8 +102,6 @@ public class ConfigDialog extends JDialog {
 
     private JRadioButton popupNoButton, popupDialogButton, popupTrayButton;
 
-    private ConfigDialog configDialog;
-
     public ConfigDialog(Frame parent) {
         super(parent, true);
         if (parent != null) {
@@ -117,7 +112,6 @@ public class ConfigDialog extends JDialog {
         devices = jfritz.getDevices();
         drawDialog();
         setValues();
-        configDialog = this;
     }
 
     public boolean okPressed() {
@@ -442,7 +436,8 @@ public class ConfigDialog extends JDialog {
         siptable.getColumnModel().getColumn(1).setMinWidth(40);
         siptable.getColumnModel().getColumn(1).setMaxWidth(40);
         siptable.setSize(200, 200);
-        siptable.addMouseListener(new MouseAdapter() {
+/**		// Deaktiviert, da Kostenkalkulation viel zu ungenau
+           siptable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() > 1) {
                     if (siptable.getSelectedRowCount() > 0) {
@@ -459,7 +454,8 @@ public class ConfigDialog extends JDialog {
                 }
             }
         });
-        JButton b1 = new JButton("Von der Box holen");
+**/
+		JButton b1 = new JButton("Von der Box holen");
         b1.setActionCommand("fetchSIP");
         b1.addActionListener(actionListener);
         JButton b2 = new JButton("Auf die Box speichern");
