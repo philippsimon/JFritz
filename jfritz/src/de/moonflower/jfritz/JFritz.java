@@ -43,8 +43,9 @@
  * - Unterstützung für FRITZ!Box Firmware .85
  * - Unterstützung für FRITZ!Box Firmware .87
  * - Unterstützung für FRITZ!Box Firmware .88
+ * - Spalten sind jetzt frei verschiebbar
  * - Kommentarspalte hinzugefügt
- * - Spalten sind jetzt verschiebbar
+ * - Kommentar- und Anschluß-Spalte können ausgeblendet werden
  * - Suche der FritzBox über UPNP/SSDP abschaltbar
  * - Adressbuch nun nach allen Spalten sortierbar
  * - Beim Export merkt sich JFritz die Verzeichnisse
@@ -52,10 +53,11 @@
  * - Drucken der Anrufliste (und Export nach Excel, RTF, PDF, CSV, ...)
  * - Neue Kommandozeilenoption -n: Schaltet die Tray-Unterstützung aus
  * - Direkter Import von Outlook-Kontakten
+ * - Datumsfilter unterstützt nun "Gestern"
  * - Bugfix: Firmware konnte beim ersten Start nicht erkannt werden
  * - Bugfix: Spaltenbreite wurde nicht korrekt gespeichert
- * - Bugfix: Falsche SIP-ID bei gelöschten Einträgen.
- * - Bugfix: Wenn Kurzwahl unbekannt war, wurde eine falsche Rufnummer angezeigt.
+ * - Bugfix: Falsche SIP-ID bei gelöschten Einträgen
+ * - Bugfix: Wenn Kurzwahl unbekannt war, wurde eine falsche Rufnummer angezeigt
  * 
  * Internal: 
  * - SipProvider-Informationen werden nicht mehr in den 
