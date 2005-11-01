@@ -42,6 +42,7 @@
  * JFritz 0.4.5
  * - Unterstützung für FRITZ!Box Firmware .85
  * - Unterstützung für FRITZ!Box Firmware .87
+ * - Unterstützung für FRITZ!Box Firmware .88
  * - Kommentarspalte hinzugefügt
  * - Spalten sind jetzt verschiebbar
  * - Suche der FritzBox über UPNP/SSDP abschaltbar
