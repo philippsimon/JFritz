@@ -54,6 +54,7 @@
  * - Neue Kommandozeilenoption -n: Schaltet die Tray-Unterstützung aus
  * - Direkter Import von Outlook-Kontakten
  * - Datumsfilter unterstützt nun "Gestern"
+ * - Unterstützung für die neue Version des Callmessage-Anrufomitors (http://www.evil-dead.org/traymessage/index.php4)
  * - Bugfix: Firmware konnte beim ersten Start nicht erkannt werden
  * - Bugfix: Spaltenbreite wurde nicht korrekt gespeichert
  * - Bugfix: Falsche SIP-ID bei gelöschten Einträgen
@@ -751,9 +752,7 @@ public final class JFritz {
         }
         if (called.equals("")) {
             calledstr = "Unbekannt";
-        } else {
-            calledstr = JFritz.getProperty(called, "Unbekannt");
-        }
+        } else calledstr = getSIPProviderTableModel().getSipProvider(called, called);
 
         PhoneNumber callerPhoneNumber = new PhoneNumber(caller);
         if (name.equals("Unbekannt") && !caller.equals("Unbekannt")) {
