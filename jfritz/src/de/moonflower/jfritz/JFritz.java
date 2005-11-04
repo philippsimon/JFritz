@@ -48,7 +48,7 @@
  * - Kommentarspalte hinzugefügt
  * - Kommentar- und Anschluß-Spalte können ausgeblendet werden
  * - Suche der FritzBox über UPNP/SSDP abschaltbar
- * - Adressbuch nun nach allen Spalten sortierbar
+ * - Telefonbuch nun nach allen Spalten sortierbar
  * - Beim Export merkt sich JFritz die Verzeichnisse
  * - Drucken der Anrufliste (und Export nach Excel, RTF, PDF, CSV, ...)
  * - Neue Kommandozeilenoption -n: Schaltet die Tray-Unterstützung aus
