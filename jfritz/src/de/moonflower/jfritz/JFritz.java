@@ -39,6 +39,7 @@
  * 
  * JFritz 0.4.6
  * - Anrufen aus der Anrufliste heraus (noch nicht getestet)
+ * TODO: Checken, ob alle Bibliotheken vorhanden sind
  * 
  * JFritz 0.4.5
  * - Unterstützung für FRITZ!Box Firmware .85
@@ -59,6 +60,7 @@
  * - Bugfix: Spaltenbreite wurde nicht korrekt gespeichert
  * - Bugfix: Falsche SIP-ID bei gelöschten Einträgen
  * - Bugfix: Wenn Kurzwahl unbekannt war, wurde eine falsche Rufnummer angezeigt
+ * - Bugfix: Anrufliste wird nur gelöscht, wenn mind. 1 Eintrag abgeholt wurde
  * 
  * Internal: 
  * - SipProvider-Informationen werden nicht mehr in den 
