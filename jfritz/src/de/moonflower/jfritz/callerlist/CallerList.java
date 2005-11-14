@@ -40,7 +40,6 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 import de.moonflower.jfritz.JFritz;
-import de.moonflower.jfritz.dialogs.sip.SipProvider;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
 import de.moonflower.jfritz.struct.Call;
 import de.moonflower.jfritz.struct.CallType;
@@ -993,6 +992,7 @@ public class CallerList extends AbstractTableModel {
      * Deaktiviert, da eh zu ungenau
      *
      */
+/*
     private void calculateCosts() {
 
         // Lösche Anrufliste der SipProvider
@@ -1049,7 +1049,7 @@ public class CallerList extends AbstractTableModel {
             sipprovider.calculateCosts();
         }
     }
-
+*/
     public String getRealColumnName(int columnIndex) {
         String columnName = "";
         if (jfritz != null && jfritz.getJframe() != null) {
