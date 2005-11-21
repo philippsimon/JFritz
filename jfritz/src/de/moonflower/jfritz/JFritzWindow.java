@@ -113,6 +113,9 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
         this.jfritz = jfritz;
         Debug.msg("Create JFritz-GUI");
         createGUI();
+    }
+    
+    public void checkStartOptions() {
         if (!JFritz.getProperty("option.startMinimized", "false")
                 .equals("true")) {
             setVisible(true);
@@ -831,7 +834,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
         String status = jfritz.getCallerlist().getRowCount() + " "
                 + JFritz.getMessage("entries") + ", "
                 + JFritz.getMessage("total_duration") + ": "
-                + (jfritz.getCallerlist().getTotalDuration() / 60) + " min, ";
+                + (jfritz.getCallerlist().getTotalDuration() / 60) + " min";
         //				+ ((double)jfritz.getCallerlist().getTotalCosts() / 100)+ " Euro";
         progressbar.setString(status);
     }
