@@ -42,8 +42,10 @@
  * - Reset-Button bei den Filtern deaktiviert alle Filter
  * - Neuer Filter: Kontextmenü bei "Verpasste Anrufe"-Filter
  * - Neuer Filter: Kommentarfilter
+ * - Bugfix: Danisahne-Mod wird richtig erkannt
  * - Bugfix: Outlook-Import (entfernen von Klammern)
  * - Bugfix: Anzeigefehler beim Start behoben
+ * - Bugfix: Sortierfunktion beim Telefonbuch korrigiert
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
  * 
  * JFritz 0.4.5
@@ -267,7 +269,7 @@ public final class JFritz {
 
     public final static String PROGRAM_NAME = "JFritz";
 
-    public final static String PROGRAM_VERSION = "0.4.6a";
+    public final static String PROGRAM_VERSION = "0.4.6b";
 
     public final static String PROGRAM_URL = "http://www.jfritz.org/";
 
