@@ -36,9 +36,10 @@
  * FeatureRequests: bitte bei Sourceforge nachschauen und dort auch den Status ändern
 
  * CHANGELOG:
+ * - Anrufen aus der Anrufliste heraus (noch nicht getestet)
+ * TODO: Checken, ob alle Bibliotheken vorhanden sind
  * 
  * JFritz 0.4.6
- * - Anrufen aus der Anrufliste heraus (noch nicht getestet)
  * - Reset-Button bei den Filtern deaktiviert alle Filter
  * - Neuer Filter: Kontextmenü bei "Verpasste Anrufe"-Filter
  * - Neuer Filter: Kommentarfilter
@@ -47,7 +48,6 @@
  * - Bugfix: Outlook-Import (entfernen von Klammern)
  * - Bugfix: Anzeigefehler beim Start behoben
  * - Bugfix: Sortierfunktion beim Telefonbuch korrigiert
- * TODO: Checken, ob alle Bibliotheken vorhanden sind
  * 
  * JFritz 0.4.5
  * - Unterstützung für FRITZ!Box Firmware .85
