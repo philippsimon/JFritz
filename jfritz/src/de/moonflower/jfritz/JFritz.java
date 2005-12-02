@@ -283,7 +283,7 @@ public final class JFritz {
 
     public final static String PROGRAM_SECRET = "jFrItZsEcReT";
 
-    public final static String DOCUMENTATION_URL = "http://jfritz.sourceforge.net/doc/";
+    public final static String DOCUMENTATION_URL = "http://www.jfritz.org/hilfe/";
 
     public final static String CVS_TAG = "$Id$";
 
@@ -1112,10 +1112,10 @@ public final class JFritz {
         try {
             firmware = FritzBoxFirmware.detectFirmwareVersion(
                     JFritz
-                    .getProperty("box.address"),
+                    .getProperty("box.address", "192.168.178.1"),
             Encryption
                     .decrypt(JFritz
-                            .getProperty("box.password")));
+                            .getProperty("box.password", Encryption.encrypt(""))));
 
         } catch (WrongPasswordException e1) {
             Debug.err("Password wrong!");
