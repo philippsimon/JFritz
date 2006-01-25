@@ -662,8 +662,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
                 try {
                     colModel.getColumnIndex("Kommentar");
                 } catch (IllegalArgumentException iae) { // No comment
-                    									 // column found. Add
-                    									 // one
+                    // column found. Add
+                    // one
                     colModel.addColumn(jfritz.getJframe().getCallerTable()
                             .getCommentColumn());
                     colModel.getColumn(colModel.getColumnCount() - 1)
@@ -677,7 +677,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
                     colModel.removeColumn(colModel.getColumn(colModel
                             .getColumnIndex("Kommentar")));
                 } catch (IllegalArgumentException iae) { // No Call-By-Call
-                    									 // column found.
+                    // column found.
                 }
             }
             // Show / hide port column
@@ -686,8 +686,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
                 try {
                     colModel.getColumnIndex(JFritz.getMessage("port"));
                 } catch (IllegalArgumentException iae) { // No port
-                    									 // column found. Add
-                    									 // one
+                    // column found. Add
+                    // one
                     colModel.addColumn(jfritz.getJframe().getCallerTable()
                             .getPortColumn());
                     colModel.getColumn(colModel.getColumnCount() - 1)
@@ -703,7 +703,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
                     colModel.removeColumn(colModel.getColumn(colModel
                             .getColumnIndex(JFritz.getMessage("port"))));
                 } catch (IllegalArgumentException iae) { // No Call-By-Call
-                    									 // column found.
+                    // column found.
                 }
             }
         }
@@ -787,7 +787,11 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
      */
     protected void processWindowEvent(WindowEvent e) {
         if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-            showExitDialog();
+            if (JFritzUtils.parseBoolean(JFritz.getProperty("option.minimize",
+                    "false"))) {
+                setState(JFrame.ICONIFIED);
+            } else
+                showExitDialog();
         } else if (e.getID() == WindowEvent.WINDOW_ICONIFIED) {
             setState(JFrame.ICONIFIED);
             if (JFritz.SYSTRAY_SUPPORT)
