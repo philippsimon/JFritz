@@ -39,6 +39,11 @@
  * - Anrufen aus der Anrufliste heraus (noch nicht getestet)
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
  * 
+ * JFritz 0.5.0
+ * - Neuer Anrufmonitor: FRITZ!Box Anrufmonitor
+ * - Kompatibel zur Firmware xx.03.99
+ * - Einstelloption für "minimieren statt schließen"
+ * 
  * JFritz 0.4.7
  * - New Feature: Variable Programmpriorität (1..10)
  * - Neuer Kommandozeilenparameter -p5 --priority=5
@@ -46,7 +51,7 @@
  * - Anzeige der Gesamtgesprächsdauer in Stunden und Minuten
  * - Bugfix: Manche Spalten ließen sich nicht klein genug machen
  * - Bugfix: Kommandozeilenparameter -c funktionierte nicht mehr
- * - Bugfix; Outlook-Import
+ * - Bugfix: Outlook-Import
  * - Bugfix: RESSOURCES: filter_callbycall, filter_sip
  * - Bugfix: Telefonbuchsortierung
  * 
@@ -277,7 +282,6 @@ import de.moonflower.jfritz.utils.CLIOption;
 import de.moonflower.jfritz.utils.ReverseLookup;
 import de.moonflower.jfritz.utils.network.SSDPdiscoverThread;
 import de.moonflower.jfritz.utils.network.CallMonitor;
-import de.moonflower.jfritz.dialogs.simple.CallMessageDlg;
 import de.moonflower.jfritz.dialogs.sip.SipProviderTableModel;
 
 /**
@@ -288,7 +292,7 @@ public final class JFritz {
 
     public final static String PROGRAM_NAME = "JFritz";
 
-    public final static String PROGRAM_VERSION = "0.4.7";
+    public final static String PROGRAM_VERSION = "0.5.0";
 
     public final static String PROGRAM_URL = "http://www.jfritz.org/";
 
@@ -507,7 +511,8 @@ public final class JFritz {
                 "Fetch calls and export to CSV file.");
         options.addOption('l', "logfile", "filename",
                 "Writes debug messages to logfile");
-        options.addOption('p',"priority","level","Set program priority [1..10]");
+        options.addOption('p', "priority", "level",
+                "Set program priority [1..10]");
 
         Vector foundOptions = options.parseOptions(args);
         Enumeration en = foundOptions.elements();
@@ -558,14 +563,16 @@ public final class JFritz {
                     System.exit(0);
                 } else {
                     try {
-                    int level = Integer.parseInt(priority);
-                    Thread.currentThread().setPriority(level);            
-                    Debug.msg("Set priority to level "+priority);
+                        int level = Integer.parseInt(priority);
+                        Thread.currentThread().setPriority(level);
+                        Debug.msg("Set priority to level " + priority);
                     } catch (NumberFormatException nfe) {
-                        System.err.println("Wrong parameter. Only values from 1 to 10 are allowed.");
+                        System.err
+                                .println("Wrong parameter. Only values from 1 to 10 are allowed.");
                         System.exit(0);
                     } catch (IllegalArgumentException iae) {
-                        System.err.println("Wrong parameter. Only values from 1 to 10 are allowed.");
+                        System.err
+                                .println("Wrong parameter. Only values from 1 to 10 are allowed.");
                         System.exit(0);
                     }
                     break;
@@ -793,6 +800,49 @@ public final class JFritz {
         callInMsg(caller, called, "");
     }
 
+    private String searchNameToPhoneNumber(String caller) {
+        String name = "";
+        PhoneNumber callerPhoneNumber = new PhoneNumber(caller);
+        Debug.msg("Searchin in local database ...");
+        Person callerperson = phonebook.findPerson(callerPhoneNumber);
+        if (callerperson != null) {
+            name = callerperson.getFullname();
+            Debug.msg("Found in local database: " + name);
+            Vector numbers = new Vector();
+            numbers = callerperson.getNumbers();
+            Enumeration en = numbers.elements();
+            while (en.hasMoreElements()) {
+                PhoneNumber checkNumber = (PhoneNumber) en.nextElement();
+                if (checkNumber.getType().startsWith("main")) {
+                    String number = checkNumber.getIntNumber();
+                    if (callerPhoneNumber.getIntNumber().startsWith(number)) {
+                        String prefix = callerPhoneNumber.getIntNumber()
+                                .substring(0, number.length());
+                        String extension = callerPhoneNumber.getIntNumber()
+                                .substring(number.length());
+                        if (extension.length() > 0) {
+                            caller = prefix + " - " + extension;
+                        } else {
+                            caller = prefix;
+                        }
+                    }
+                }
+            }
+        } else {
+            Debug.msg("Searchin on dasoertliche.de ...");
+            Person person = ReverseLookup.lookup(callerPhoneNumber);
+            if (!person.getFullname().equals("")) {
+                name = person.getFullname();
+                Debug.msg("Found on dasoertliche.de: " + name);
+                Debug.msg("Add person to database");
+                phonebook.addEntry(person);
+                phonebook.fireTableDataChanged();
+                caller = callerPhoneNumber.getIntNumber();
+            }
+        }
+        return name;
+    }
+
     /**
      * Display call monitor message
      * 
@@ -821,46 +871,8 @@ public final class JFritz {
         } else
             calledstr = getSIPProviderTableModel().getSipProvider(called,
                     called);
-
-        PhoneNumber callerPhoneNumber = new PhoneNumber(caller);
         if (name.equals("Unbekannt") && !caller.equals("Unbekannt")) {
-            Debug.msg("Searchin in local database ...");
-            Person callerperson = phonebook.findPerson(callerPhoneNumber);
-            if (callerperson != null) {
-                name = callerperson.getFullname();
-                Debug.msg("Found in local database: " + name);
-                Vector numbers = new Vector();
-                numbers = callerperson.getNumbers();
-                Enumeration en = numbers.elements();
-                while (en.hasMoreElements()) {
-                    PhoneNumber checkNumber = (PhoneNumber) en.nextElement();
-                    if (checkNumber.getType().startsWith("main")) {
-                        String number = checkNumber.getIntNumber();
-                        if (callerPhoneNumber.getIntNumber().startsWith(number)) {
-                            String prefix = callerPhoneNumber.getIntNumber()
-                                    .substring(0, number.length());
-                            String extension = callerPhoneNumber.getIntNumber()
-                                    .substring(number.length());
-                            if (extension.length() > 0) {
-                                caller = prefix + " - " + extension;
-                            } else {
-                                caller = prefix;
-                            }
-                        }
-                    }
-                }
-            } else {
-                Debug.msg("Searchin on dasoertliche.de ...");
-                Person person = ReverseLookup.lookup(callerPhoneNumber);
-                if (!person.getFullname().equals("")) {
-                    name = person.getFullname();
-                    Debug.msg("Found on dasoertliche.de: " + name);
-                    Debug.msg("Add person to database");
-                    phonebook.addEntry(person);
-                    phonebook.fireTableDataChanged();
-                    caller = callerPhoneNumber.getIntNumber();
-                }
-            }
+            name = searchNameToPhoneNumber(caller);
         }
 
         if (name.equals("Unbekannt")) {
@@ -877,19 +889,15 @@ public final class JFritz {
         case 0: { // No Popup
             break;
         }
-        case 1: {
-            CallMessageDlg msgDialog = new CallMessageDlg();
-            msgDialog.showMessage(callerstr, calledstr);
-            break;
-        }
-        case 2: {
+        default: {
             String outstring = JFritz.getMessage("incoming_call") + "\nvon "
                     + callerstr;
             if (!calledstr.equals("Unbekannt")) {
                 outstring = outstring + "\nan " + calledstr;
             }
-            JFritz.infoMsg(outstring);
+            infoMsg(outstring);
             break;
+
         }
         }
 
@@ -913,12 +921,13 @@ public final class JFritz {
                     p = Pattern.compile("%URLENCODE\\(([^;]*)\\);");
                     Matcher m = p.matcher(programString);
                     while (m.find()) {
-                        String toReplace = m.group();                        
-                        toReplace = toReplace.replaceAll("\\\\", "\\\\\\\\");                       
+                        String toReplace = m.group();
+                        toReplace = toReplace.replaceAll("\\\\", "\\\\\\\\");
                         toReplace = toReplace.replaceAll("\\(", "\\\\(");
-                        toReplace = toReplace.replaceAll("\\)", "\\\\)");                        
+                        toReplace = toReplace.replaceAll("\\)", "\\\\)");
                         String toEncode = m.group(1);
-                        programString = programString.replaceAll(toReplace, URLEncoder.encode(toEncode, "UTF-8"));
+                        programString = programString.replaceAll(toReplace,
+                                URLEncoder.encode(toEncode, "UTF-8"));
                     }
                 } catch (UnsupportedEncodingException uee) {
                     Debug.err("JFritz.class: UnsupportedEncodingException: "
@@ -950,11 +959,15 @@ public final class JFritz {
      * @param called
      *            Called number
      */
-    public static void callOutMsg(String called) {
-        String calledstr = "";
+    public void callOutMsg(String called, String provider) {
+        String calledStr = "";
         Debug.msg("Called: " + called);
+        calledStr = searchNameToPhoneNumber(called);
+        String providerStr = getSIPProviderTableModel().getSipProvider(
+                provider, provider);
 
-        infoMsg("Ausgehender Telefonanruf\n " + "\nan " + calledstr + "!");
+        infoMsg("Ausgehender Telefonanruf\n " + "\nan " + called + " ("
+                + calledStr + ") " + "über " + providerStr + "!");
         if (JFritzUtils.parseBoolean(JFritz.getProperty("option.playSounds",
                 "true"))) {
             playSound(callSound);
@@ -1137,16 +1150,14 @@ public final class JFritz {
     public SipProviderTableModel getSIPProviderTableModel() {
         return sipprovider;
     }
-    
+
     private void autodetectFirmware() {
         FritzBoxFirmware firmware;
         try {
-            firmware = FritzBoxFirmware.detectFirmwareVersion(
-                    JFritz
-                    .getProperty("box.address", "192.168.178.1"),
-            Encryption
-                    .decrypt(JFritz
-                            .getProperty("box.password", Encryption.encrypt(""))));
+            firmware = FritzBoxFirmware.detectFirmwareVersion(JFritz
+                    .getProperty("box.address", "192.168.178.1"), Encryption
+                    .decrypt(JFritz.getProperty("box.password", Encryption
+                            .encrypt(""))));
 
         } catch (WrongPasswordException e1) {
             Debug.err("Password wrong!");
@@ -1156,7 +1167,8 @@ public final class JFritz {
             firmware = null;
         }
         if (firmware != null) {
-            Debug.msg("Found FritzBox-Firmware: "+firmware.getFirmwareVersion());
+            Debug.msg("Found FritzBox-Firmware: "
+                    + firmware.getFirmwareVersion());
             JFritz.setProperty("box.firmware", firmware.getFirmwareVersion());
         } else {
             Debug.msg("Found no FritzBox-Firmware");
