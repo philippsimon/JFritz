@@ -43,6 +43,7 @@
  * - Priorität auf 5 erhöht
  * - Kompatibel zur Firmware xx.03.101
  * - Datenverbindungen werden als solche angezeigt
+ * - Outlookimport verbessert
  * 
  * JFritz 0.5.0
  * - Neuer Anrufmonitor: FRITZ!Box Anrufmonitor
