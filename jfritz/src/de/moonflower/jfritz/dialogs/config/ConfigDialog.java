@@ -341,6 +341,7 @@ public class ConfigDialog extends JDialog {
         boxpane.add(label, c);
 
         addressCombo = new JComboBox();
+        c.fill = GridBagConstraints.HORIZONTAL;
         if (devices != null) {
             Enumeration en = devices.elements();
             while (en.hasMoreElements()) {
