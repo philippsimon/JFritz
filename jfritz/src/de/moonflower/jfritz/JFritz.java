@@ -42,6 +42,10 @@
  * TODO: Bei den Einstellungen die MAC und IP wegnehmen
  * 
  * JFritz 0.5.2
+ * - Anpassung an englische Firmware (noch nicht commited)
+ * - Bugfix-Anrufmonitor: Nummern werden internationalisiert
+ * 
+ * JFritz 0.5.2
  * - Parameter -n funktioniert wieder
  * - XML-Dateien angepasst. DTDs werden nicht mehr gespeichert. Kann zu Datenverlust kommen
  * - Kompatibel zur Firmware xx.04.01
@@ -304,7 +308,7 @@ public final class JFritz {
 
     public final static String PROGRAM_NAME = "JFritz";
 
-    public final static String PROGRAM_VERSION = "0.5.2";
+    public final static String PROGRAM_VERSION = "0.5.3";
 
     public final static String PROGRAM_URL = "http://www.jfritz.org/";
 
@@ -862,32 +866,41 @@ public final class JFritz {
      * @param name
      *            Known name (only YAC)
      */
-    public void callInMsg(String caller, String called, String name) {
+    public void callInMsg(String callerInput, String calledInput, String name) {
 
-        Debug.msg("Caller: " + caller);
-        Debug.msg("Called: " + called);
+        Debug.msg("Caller: " + callerInput);
+        Debug.msg("Called: " + calledInput);
         Debug.msg("Name: " + name);
 
         String callerstr = "", calledstr = "";
+        if (!callerInput.startsWith("SIP")) {
+            PhoneNumber caller = new PhoneNumber(callerInput);
+            if (caller.getIntNumber().equals("")) {
+                callerstr = "Unbekannt";
+            } else
+                callerstr = caller.getIntNumber();
+        }
+
+        if (!calledInput.startsWith("SIP")) {
+            PhoneNumber called = new PhoneNumber(calledInput);
+            if (called.getIntNumber().equals("")) {
+                calledstr = "Unbekannt";
+            } else
+                calledstr = called.getIntNumber();
+        } else
+            calledstr = getSIPProviderTableModel().getSipProvider(calledInput,
+                    calledInput);
+
         if (name.equals("")) {
             name = "Unbekannt";
         }
-        if (caller.equals("")) {
-            caller = "Unbekannt";
-        }
-        if (called.equals("")) {
-            calledstr = "Unbekannt";
-        } else
-            calledstr = getSIPProviderTableModel().getSipProvider(called,
-                    called);
-        if (name.equals("Unbekannt") && !caller.equals("Unbekannt")) {
-            name = searchNameToPhoneNumber(caller);
+
+        if (name.equals("Unbekannt") && !callerstr.equals("Unbekannt")) {
+            name = searchNameToPhoneNumber(callerstr);
         }
 
-        if (name.equals("Unbekannt")) {
-            callerstr = caller;
-        } else {
-            callerstr = caller + " (" + name + ")";
+        if (!name.equals("Unbekannt")) {
+            callerstr = callerstr + " (" + name + ")";
         }
 
         Debug.msg("Caller: " + callerstr);
@@ -920,9 +933,9 @@ public final class JFritz {
             String programString = JFritz.getProperty("option.externProgram",
                     "");
 
-            programString = programString.replaceAll("%Number", caller);
+            programString = programString.replaceAll("%Number", callerstr);
             programString = programString.replaceAll("%Name", name);
-            programString = programString.replaceAll("%Called", called);
+            programString = programString.replaceAll("%Called", calledstr);
 
             if (programString.indexOf("%URLENCODE") > -1) {
                 try {
@@ -968,15 +981,35 @@ public final class JFritz {
      * @param called
      *            Called number
      */
-    public void callOutMsg(String called, String provider) {
-        String calledStr = "";
-        Debug.msg("Called: " + called);
-        calledStr = searchNameToPhoneNumber(called);
-        String providerStr = getSIPProviderTableModel().getSipProvider(
-                provider, provider);
+    public void callOutMsg(String calledInput, String providerInput) {
+        Debug.msg("Called: " + calledInput);
+        Debug.msg("Provider: " + providerInput);
 
-        infoMsg("Ausgehender Telefonanruf\n " + "\nan " + called + " ("
-                + calledStr + ") " + "über " + providerStr + "!");
+        String calledstr = "", providerstr = "", name = "";
+        if (!calledInput.startsWith("SIP")) {
+            PhoneNumber called = new PhoneNumber(calledInput);
+            if (called.getIntNumber().equals("")) {
+                calledstr = "Unbekannt";
+            } else
+                calledstr = called.getIntNumber();
+        }
+
+        if (!providerInput.startsWith("SIP") && !providerInput.startsWith("Analog")) {
+            PhoneNumber provider = new PhoneNumber(providerInput);
+            if (provider.getIntNumber().equals("")) {
+                providerstr = "Unbekannt";
+            } else
+                providerstr = provider.getIntNumber();
+        } else if (providerInput.equals("Analog")) {
+            providerstr = "Analog";
+        } else
+            providerstr = getSIPProviderTableModel().getSipProvider(
+                    providerInput, providerInput);
+
+        name = searchNameToPhoneNumber(calledstr);
+
+        infoMsg("Ausgehender Telefonanruf\n " + "\nan " + calledstr + " ("
+                + name + ") " + "über " + providerstr + "!");
         if (JFritzUtils.parseBoolean(JFritz.getProperty("option.playSounds",
                 "true"))) {
             playSound(callSound);
