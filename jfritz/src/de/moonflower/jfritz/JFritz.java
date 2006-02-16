@@ -898,9 +898,6 @@ public final class JFritz {
             name = searchNameToPhoneNumber(callerstr);
         }
 
-        if (!name.equals("Unbekannt")) {
-            callerstr = callerstr + " (" + name + ")";
-        }
 
         Debug.msg("Caller: " + callerstr);
         Debug.msg("Called: " + calledstr);
@@ -913,6 +910,10 @@ public final class JFritz {
         default: {
             String outstring = JFritz.getMessage("incoming_call") + "\nvon "
                     + callerstr;
+            if (!name.equals("Unbekannt")) {
+                outstring = outstring + " (" + name + ")";
+            }
+            
             if (!calledstr.equals("Unbekannt")) {
                 outstring = outstring + "\nan " + calledstr;
             }
