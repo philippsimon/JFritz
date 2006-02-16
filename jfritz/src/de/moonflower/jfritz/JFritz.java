@@ -42,7 +42,6 @@
  * TODO: Bei den Einstellungen die MAC und IP wegnehmen
  * 
  * JFritz 0.5.2
- * - Anpassung an englische Firmware (noch nicht commited)
  * - Bugfix-Anrufmonitor: Nummern werden internationalisiert
  * 
  * JFritz 0.5.2
