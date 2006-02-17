@@ -872,6 +872,7 @@ public final class JFritz {
         Debug.msg("Name: " + name);
 
         String callerstr = "", calledstr = "";
+		
         if (!callerInput.startsWith("SIP")) {
             PhoneNumber caller = new PhoneNumber(callerInput);
             if (caller.getIntNumber().equals("")) {
@@ -879,13 +880,13 @@ public final class JFritz {
             } else
                 callerstr = caller.getIntNumber();
         }
-
-        if (!calledInput.startsWith("SIP")) {
+		
+		if (!calledInput.startsWith("SIP")) {
             PhoneNumber called = new PhoneNumber(calledInput);
             if (called.getIntNumber().equals("")) {
                 calledstr = "Unbekannt";
             } else
-                calledstr = called.getIntNumber();
+                calledstr = calledInput;
         } else
             calledstr = getSIPProviderTableModel().getSipProvider(calledInput,
                     calledInput);
@@ -898,6 +899,7 @@ public final class JFritz {
             name = searchNameToPhoneNumber(callerstr);
         }
 
+		if (callerstr.startsWith("+49")) callerstr = "0" + callerstr.substring(3);
 
         Debug.msg("Caller: " + callerstr);
         Debug.msg("Called: " + calledstr);
