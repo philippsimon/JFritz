@@ -433,8 +433,6 @@ public class CallerList extends AbstractTableModel {
                 newEntries++;
         }
 
-        sortAllUnfilteredRows();
-
         // Notify user?
         if ((JFritz.getProperty("option.notifyOnCalls", "true").equals("true"))
                 && (newEntries > 0)) {
@@ -442,6 +440,7 @@ public class CallerList extends AbstractTableModel {
             jfritz.getJframe().toFront();
         }
         if (newEntries > 0) {
+			sortAllUnfilteredRows();
 			saveToXMLFile(JFritz.CALLS_FILE, true);
             String msg;
             // TODO: I18N
