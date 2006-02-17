@@ -1001,7 +1001,7 @@ public final class JFritz {
             if (provider.getIntNumber().equals("")) {
                 providerstr = "Unbekannt";
             } else
-                providerstr = provider.getIntNumber();
+                providerstr = providerInput;
         } else if (providerInput.equals("Analog")) {
             providerstr = "Analog";
         } else
@@ -1010,11 +1010,58 @@ public final class JFritz {
 
         name = searchNameToPhoneNumber(calledstr);
 
+		if (calledstr.startsWith("+49")) calledstr = "0" + calledstr.substring(3);
+		
         infoMsg("Ausgehender Telefonanruf\n " + "\nan " + calledstr + " ("
                 + name + ") " + "über " + providerstr + "!");
         if (JFritzUtils.parseBoolean(JFritz.getProperty("option.playSounds",
                 "true"))) {
             playSound(callSound);
+        }
+		
+        if (JFritzUtils.parseBoolean(JFritz.getProperty(
+                "option.startExternProgram", "false")) && false) { //z.Z. noch deaktiviert
+            String programString = JFritz.getProperty("option.externProgram",
+                    "");
+
+            programString = programString.replaceAll("%Number", providerstr);
+            programString = programString.replaceAll("%Name", name);
+            programString = programString.replaceAll("%Called", calledstr);
+
+            if (programString.indexOf("%URLENCODE") > -1) {
+                try {
+                    Pattern p;
+                    p = Pattern.compile("%URLENCODE\\(([^;]*)\\);");
+                    Matcher m = p.matcher(programString);
+                    while (m.find()) {
+                        String toReplace = m.group();
+                        toReplace = toReplace.replaceAll("\\\\", "\\\\\\\\");
+                        toReplace = toReplace.replaceAll("\\(", "\\\\(");
+                        toReplace = toReplace.replaceAll("\\)", "\\\\)");
+                        String toEncode = m.group(1);
+                        programString = programString.replaceAll(toReplace,
+                                URLEncoder.encode(toEncode, "UTF-8"));
+                    }
+                } catch (UnsupportedEncodingException uee) {
+                    Debug.err("JFritz.class: UnsupportedEncodingException: "
+                            + uee.toString());
+                }
+            }
+
+            if (programString.equals("")) {
+                Debug
+                        .errDlg("Kein externes Programm angegeben"
+                                + programString);
+                return;
+            }
+            Debug.msg("Starte externes Programm: " + programString);
+            try {
+                Runtime.getRuntime().exec(programString);
+            } catch (IOException e) {
+                Debug.errDlg("Konnte externes Programm nicht ausführen: "
+                        + programString);
+                e.printStackTrace();
+            }
         }
     }
 
