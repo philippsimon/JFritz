@@ -31,7 +31,7 @@ public class PhoneNumber implements Comparable {
 	 */
 	public PhoneNumber(String number, String type) {
 		this.type = type;
-		this.number = number;
+		if (!number.equalsIgnoreCase("Unbekannt") ) this.number = number;
 		createMobileMap();
 		refactorNumber();
 	}
@@ -123,7 +123,7 @@ public class PhoneNumber implements Comparable {
 		String countryPrefix = JFritz.getProperty("country.prefix");
 		String areaCode = JFritz.getProperty("area.code");
 		String areaPrefix = JFritz.getProperty("area.prefix");
-
+		
 		if ((number.length() < 4) // A valid number??
 				|| (number.startsWith("+")) // International number
 				|| isSIPNumber() // SIP Number
