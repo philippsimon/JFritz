@@ -820,26 +820,6 @@ public final class JFritz {
         if (callerperson != null) {
             name = callerperson.getFullname();
             Debug.msg("Found in local database: " + name);
-            Vector numbers = new Vector();
-            numbers = callerperson.getNumbers();
-            Enumeration en = numbers.elements();
-            while (en.hasMoreElements()) {
-                PhoneNumber checkNumber = (PhoneNumber) en.nextElement();
-                if (checkNumber.getType().startsWith("main")) {
-                    String number = checkNumber.getIntNumber();
-                    if (callerPhoneNumber.getIntNumber().startsWith(number)) {
-                        String prefix = callerPhoneNumber.getIntNumber()
-                                .substring(0, number.length());
-                        String extension = callerPhoneNumber.getIntNumber()
-                                .substring(number.length());
-                        if (extension.length() > 0) {
-                            caller = prefix + " - " + extension;
-                        } else {
-                            caller = prefix;
-                        }
-                    }
-                }
-            }
         } else {
             Debug.msg("Searchin on dasoertliche.de ...");
             Person person = ReverseLookup.lookup(callerPhoneNumber);
@@ -849,12 +829,37 @@ public final class JFritz {
                 Debug.msg("Add person to database");
                 phonebook.addEntry(person);
                 phonebook.fireTableDataChanged();
-                caller = callerPhoneNumber.getIntNumber();
             }
         }
         return name;
     }
 
+    private String[] searchFirstAndLastNameToPhoneNumber(String caller) {
+        String name[] = new String[3];
+        PhoneNumber callerPhoneNumber = new PhoneNumber(caller);
+        Debug.msg("Searchin in local database ...");
+        Person callerperson = phonebook.findPerson(callerPhoneNumber);
+        if (callerperson != null) {
+            name[0] = callerperson.getFirstName();
+			name[1] = callerperson.getLastName();
+			name[2] = callerperson.getCompany();
+			Debug.msg("Found on dasoertliche.de: " + name[1] + ", " + name[0]);
+        } else {
+            Debug.msg("Searchin on dasoertliche.de ...");
+            Person person = ReverseLookup.lookup(callerPhoneNumber);
+            if (!person.getFullname().equals("")) {
+				name[0] = callerperson.getFirstName();
+				name[1] = callerperson.getLastName();
+				name[2] = callerperson.getCompany();
+                Debug.msg("Found on dasoertliche.de: " + name[1] + ", " + name[0]);
+                Debug.msg("Add person to database");
+                phonebook.addEntry(person);
+                phonebook.fireTableDataChanged();
+            }
+        }
+        return name;
+    }	
+	
     /**
      * Display call monitor message
      * 
@@ -872,6 +877,7 @@ public final class JFritz {
         Debug.msg("Name: " + name);
 
         String callerstr = "", calledstr = "";
+		String firstname = "", surname = "", company = "";
 		
         if (!callerInput.startsWith("SIP")) {
             PhoneNumber caller = new PhoneNumber(callerInput);
@@ -891,13 +897,16 @@ public final class JFritz {
             calledstr = getSIPProviderTableModel().getSipProvider(calledInput,
                     calledInput);
 
-        if (name.equals("")) {
-            name = "Unbekannt";
+        if (name.equals("") && !callerstr.equals("Unbekannt")) {
+			name = searchNameToPhoneNumber(callerstr);
+			String [] nameArray = searchFirstAndLastNameToPhoneNumber(callerstr);
+			firstname = nameArray[0];
+			surname = nameArray[1];
+			company = nameArray[2];
         }
-
-        if (name.equals("Unbekannt") && !callerstr.equals("Unbekannt")) {
-            name = searchNameToPhoneNumber(callerstr);
-        }
+		if (name.equals("")) name = "Unbekannt";
+		if (firstname.equals("") && surname.equals("")) surname = "Unbekannt";
+		if (company.equals("")) company = "Unbekannt";
 
 		if (callerstr.startsWith("+49")) callerstr = "0" + callerstr.substring(3);
 
@@ -938,6 +947,9 @@ public final class JFritz {
             programString = programString.replaceAll("%Number", callerstr);
             programString = programString.replaceAll("%Name", name);
             programString = programString.replaceAll("%Called", calledstr);
+			programString = programString.replaceAll("%Firstname", firstname);
+			programString = programString.replaceAll("%Surname", surname);
+			programString = programString.replaceAll("%Company", company);
 
             if (programString.indexOf("%URLENCODE") > -1) {
                 try {
