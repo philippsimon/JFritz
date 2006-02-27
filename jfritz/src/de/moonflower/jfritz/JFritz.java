@@ -38,8 +38,13 @@
  * CHANGELOG:
  * - Anrufen aus der Anrufliste heraus (noch nicht getestet)
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
- * TODO: Beim neuen Anrufmonitor auf # achten
- * TODO: Bei den Einstellungen die MAC und IP wegnehmen
+ * TODO: Bei den Einstellungen die IP wegnehmen
+ * 
+ * JFritz 0.5.3
+ * - Beim neuen Anrufmonitor auf # achten.
+ * - Callmonitor: Beim Ausführen eines externen Programmes werden %Firstname, %Surname, %Compnay ersetzt.
+ * - Beim Beenden von JFritz keine Speicherung von Calls und Phonebook mehr
+ * - Bei den Einstellungen die MAC weggenommen
  * 
  * JFritz 0.5.2
  * - Bugfix-Anrufmonitor: Nummern werden internationalisiert
