@@ -38,15 +38,16 @@
  * CHANGELOG:
  * - Anrufen aus der Anrufliste heraus (noch nicht getestet)
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
- * TODO: Bei den Einstellungen die IP wegnehmen
  * 
- * JFritz 0.5.3
+ * JFritz 0.5.4
  * - Beim neuen Anrufmonitor auf # achten.
  * - Callmonitor: Beim Ausführen eines externen Programmes werden %Firstname, %Surname, %Compnay ersetzt.
  * - Beim Beenden von JFritz keine Speicherung von Calls und Phonebook mehr
  * - Bei den Einstellungen die MAC weggenommen
+ * - Bugfix: Sonderzeichen bei "Externes Programm starten" werden korrekt gespeichert 
+ * - Watchdog: Anrufmonitor wird nach dem Ruhezustand neu gestartet
  * 
- * JFritz 0.5.2
+ * JFritz 0.5.3
  * - Bugfix-Anrufmonitor: Nummern werden internationalisiert
  * 
  * JFritz 0.5.2
@@ -266,6 +267,8 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -373,12 +376,17 @@ public final class JFritz {
     public static final int CALLMONITOR_START = 0;
 
     public static final int CALLMONITOR_STOP = 1;
+    
+    private static JFritz jfritz;
+    
+    private static WatchdogThread watchdog;
 
     /**
      * Constructs JFritz object
      */
     public JFritz(boolean fetchCalls, boolean csvExport, String csvFileName,
             boolean clearList) {
+        jfritz = this;
         loadMessages(new Locale("de", "DE"));
         loadProperties();
         loadSounds();
@@ -476,6 +484,7 @@ public final class JFritz {
 
         javax.swing.SwingUtilities.invokeLater(jframe);
 
+        startWatchdog();
     }
 
     /**
@@ -946,8 +955,8 @@ public final class JFritz {
 
         if (JFritzUtils.parseBoolean(JFritz.getProperty(
                 "option.startExternProgram", "false"))) {
-            String programString = JFritz.getProperty("option.externProgram",
-                    "");
+            String programString = JFritzUtils.deconvertSpecialChars(JFritz.getProperty("option.externProgram",
+                    ""));
 
             programString = programString.replaceAll("%Number", callerstr);
             programString = programString.replaceAll("%Name", name);
@@ -1295,5 +1304,20 @@ public final class JFritz {
             Debug.msg("Found no FritzBox-Firmware");
             JFritz.removeProperty("box.firmware");
         }
+    }
+    
+    /**
+     * start timer for watchdog
+     * 
+     */
+    private void startWatchdog() {
+            Timer timer = new Timer();            
+            watchdog = new WatchdogThread(jfritz, 1);
+            timer.schedule(new TimerTask() {
+                        public void run() {
+                            watchdog.run();
+                        }
+                    }, 5000, 1*60000);
+            Debug.msg("Watchdog enabled");
     }
 }
