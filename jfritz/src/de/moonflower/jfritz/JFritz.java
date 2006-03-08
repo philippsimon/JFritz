@@ -761,6 +761,7 @@ public final class JFritz {
         removeProperty("state.warningFreeminutesShown"); // don't save
         // warningState
 
+        Debug.msg("Save window position");
         properties.setProperty("position.left", Integer.toString(jframe
                 .getLocation().x));
         properties.setProperty("position.top", Integer.toString(jframe
@@ -769,7 +770,8 @@ public final class JFritz {
                 .getSize().width));
         properties.setProperty("position.height", Integer.toString(jframe
                 .getSize().height));
-
+        
+        Debug.msg("Save column widths");
         Enumeration en = jframe.getCallerTable().getColumnModel().getColumns();
         int i = 0;
         while (en.hasMoreElements()) {
@@ -783,6 +785,7 @@ public final class JFritz {
         }
 
         try {
+            Debug.msg("Save other properties");
             properties.storeToXML(JFritz.PROPERTIES_FILE);
         } catch (IOException e) {
             Debug.err("Couldn't save Properties");
