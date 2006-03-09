@@ -212,7 +212,7 @@ public class JFritzUtils {
      * @throws WrongPasswordException
      * @throws IOException
      */
-    public static Vector retrieveCallersFromFritzBox(String box_address,
+    public static void retrieveHTMLCallerList(String box_address,
             String password, String countryPrefix, String countryCode,
             String areaPrefix, String areaCode, FritzBoxFirmware firmware,
             JFritz jfritz) throws WrongPasswordException, IOException {
@@ -224,29 +224,6 @@ public class JFritzUtils {
         Debug.msg("Postdata: " + postdata);
         Debug.msg("Urlstr: " + urlstr);
         data = fetchDataFromURL(urlstr, postdata);
-
-        // DEBUG: Test other versions
-        if (false) {
-            String filename = "./GroﬂeListe/Anrufliste.html";
-            Debug.msg("Debug mode: Loading " + filename);
-            try {
-                data = "";
-                String thisLine;
-                BufferedReader in = new BufferedReader(new FileReader(filename));
-                while ((thisLine = in.readLine()) != null) {
-                    data += thisLine;
-                }
-                in.close();
-                Debug.msg("\nLoading finisched");
-            } catch (IOException e) {
-                Debug.err("File not found: " + filename);
-            }
-        }
-        // END OF DEBUG SECTION
-        // http://192.168.178.1/cgi-bin/webcm?getpage=../html/de/FRITZ!Box_Anrufliste.csv
-        Vector list = parseCallerData(data, firmware, countryPrefix,
-                countryCode, areaPrefix, areaCode, jfritz);
-        return list;
     }
 
     /**
@@ -468,6 +445,11 @@ public class JFritzUtils {
             String countryPrefix, String countryCode, String areaPrefix,
             String areaCode, FritzBoxFirmware firmware, JFritz jfritz)
             throws WrongPasswordException, IOException {
+		
+		Debug.msg("Recieve HTML Callerlist");
+		retrieveHTMLCallerList(box_address, password, countryPrefix, countryCode,
+	            			   areaPrefix, areaCode, firmware, jfritz);
+		
         Debug.msg("Recieve CSV List");
         String urlstr = "http://" + box_address + "/cgi-bin/webcm";
         String postdata = "getpage=../html/de/FRITZ!Box_Anrufliste.csv&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=foncalls&var%3Aerrorpagename=foncalls&var%3Amenu=fon&var%3Apagemaster=&time%3Asettings%2Ftime=1136559837%2C-60";
