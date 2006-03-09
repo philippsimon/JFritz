@@ -12,6 +12,7 @@
  * Authors working on the project:
  * 		akw			Arno Willig <akw@thinkwiki.org>
  * 		robotniko	Robert Palmer <robotniko@gmx.de>
+ * 		kleinc		Christian Klein <kleinch@users.sourceforge.net>
  * 
  * 
  * This tool is free software; you can redistribute it and/or modify it 
