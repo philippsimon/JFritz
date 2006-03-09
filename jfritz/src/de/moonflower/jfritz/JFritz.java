@@ -46,6 +46,8 @@
  * - Bei den Einstellungen die MAC weggenommen
  * - Bugfix: Sonderzeichen bei "Externes Programm starten" werden korrekt gespeichert 
  * - Watchdog: Anrufmonitor wird nach dem Ruhezustand neu gestartet
+ * - Anrufliste wird per CSV und nicht mehr per Webinterface abgeholt
+ * - Unterstützung für Firmware xx.04.03
  * 
  * JFritz 0.5.3
  * - Bugfix-Anrufmonitor: Nummern werden internationalisiert
