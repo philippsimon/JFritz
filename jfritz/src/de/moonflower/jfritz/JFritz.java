@@ -317,7 +317,7 @@ public final class JFritz {
 
     public final static String PROGRAM_NAME = "JFritz";
 
-    public final static String PROGRAM_VERSION = "0.5.3";
+    public final static String PROGRAM_VERSION = "0.5.4";
 
     public final static String PROGRAM_URL = "http://www.jfritz.org/";
 
