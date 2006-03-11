@@ -40,6 +40,9 @@
  * - Anrufen aus der Anrufliste heraus (noch nicht getestet)
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
  * 
+ * JFritz 0.5.5
+ * - Nummer und Anschrift können aus der Anrufliste heraus in die Zwischenablage kopiert werden
+ * 
  * JFritz 0.5.4
  * - Beim neuen Anrufmonitor auf # achten.
  * - Callmonitor: Beim Ausführen eines externen Programmes werden %Firstname, %Surname, %Compnay ersetzt.
@@ -258,6 +261,9 @@
 
 package de.moonflower.jfritz;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -318,7 +324,7 @@ public final class JFritz {
 
     public final static String PROGRAM_NAME = "JFritz";
 
-    public final static String PROGRAM_VERSION = "0.5.4";
+    public final static String PROGRAM_VERSION = "0.5.5";
 
     public final static String PROGRAM_URL = "http://www.jfritz.org/";
 
@@ -1326,4 +1332,25 @@ public final class JFritz {
                     }, 5000, 1*60000);
             Debug.msg("Watchdog enabled");
     }
+    /**
+     * Copies text to clipboard.
+     * 
+     * @author Benjamin Schmitt
+     * @param text
+     *            the text to be copied to clipboard 
+     */    
+    public void copyToClipboard(String text){
+                try{
+                	Clipboard systemClip = Toolkit.getDefaultToolkit().getSystemClipboard();
+                	StringSelection stringSelection = new StringSelection(text);
+                	systemClip.setContents(stringSelection, stringSelection);
+                }catch(IllegalStateException ise)
+                {
+                	Debug.err("Cannot copy "+text+" into clipboard (clipboard not available)");
+
+                	JOptionPane.showMessageDialog(jfritz.getJframe(), "Die Zwischenablage ist nicht verfügbar!",
+                            JFritz.PROGRAM_NAME, JOptionPane.OK_OPTION+JOptionPane.ERROR_MESSAGE);                	
+                }
+   }    
+    
 }
