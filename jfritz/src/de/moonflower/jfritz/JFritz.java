@@ -42,6 +42,7 @@
  * 
  * JFritz 0.5.5
  * - Nummer und Anschrift können aus der Anrufliste heraus in die Zwischenablage kopiert werden
+ * - Schutz vor mehrfachen Programmstart
  * 
  * JFritz 0.5.4
  * - Beim neuen Anrufmonitor auf # achten.
@@ -389,6 +390,8 @@ public final class JFritz {
     private static JFritz jfritz;
     
     private static WatchdogThread watchdog;
+    
+    private static boolean isRunning = false;
 
     /**
      * Constructs JFritz object
@@ -398,6 +401,50 @@ public final class JFritz {
         jfritz = this;
         loadMessages(new Locale("de", "DE"));
         loadProperties();
+
+        //check isRunning and exit or set lock
+        isRunning=(properties.getProperty("jfritz.isRunning","false").equals("true")?true:false);
+        if (!isRunning)
+        {
+        	Debug.msg("Multiple instance lock: set lock.");
+        	properties.setProperty("jfritz.isRunning","true");
+        }
+        else
+        {
+        	Debug.msg("Multiple instance lock: Another instance is already running.");
+        	//JOptionPane.showMessageDialog(null,JFritz.PROGRAM_NAME+" kann nicht mehrfach gestartet werden.","Information",JOptionPane.OK_OPTION+JOptionPane.INFORMATION_MESSAGE);
+        	int answer=JOptionPane.showConfirmDialog(null,
+        			JFritz.PROGRAM_NAME+" sollte nicht mehrfach gestartet werden!"
+
+        			+"\n\nHinweis:"
+        			+"\nSollten Sie diese Meldung sehen, obwohl Sie "+JFritz.PROGRAM_NAME+" nur einmal"
+        			+"\ngestartet haben, so liegt dies vermutlich daran, dass eine vorige "
+        			+"\n"+JFritz.PROGRAM_NAME+"-Intstanz unplanmäßig beendet wurde (z.B. durch einen "
+        			+"\nSystemabsturz). "
+        			+"\nIn diesem Fall können Sie JFritz mit diesem Dialog starten."
+
+        			+"\n\nBitte beachten Sie jedoch, dass "+JFritz.PROGRAM_NAME+" NICHT MEHRFACH gestartet "+""
+        			+"\nwerden sollte, da es sonst zu DATENVERLUST kommen kann."
+			
+        			+"\n\nSoll diese Instanz von "+JFritz.PROGRAM_NAME+" beendet werden?","Information",JOptionPane.YES_NO_OPTION);
+        	if (answer==JOptionPane.YES_OPTION)
+        	{
+            	Debug.msg("Multiple instance lock: User decided to shut down this instance."); 
+        		System.exit(0);
+        	}
+        	else
+        	{
+        		Debug.msg("Multiple instance lock: User decided NOT to shut down this instance.");
+        	}
+        }
+        //saveProperties cannot used here because jframe (and its dimensions) is not yet initilized.  
+        try {
+            Debug.msg("Save other properties");
+            properties.storeToXML(JFritz.PROPERTIES_FILE);
+        } catch (IOException e) {
+            Debug.err("Couldn't save Properties");
+        }
+        
         loadSounds();
 
         String osName = System.getProperty("os.name");
@@ -751,6 +798,7 @@ public final class JFritz {
         defaultProperties.setProperty("country.code", "49");
         defaultProperties.setProperty("area.code", "441");
         defaultProperties.setProperty("fetch.timer", "5");
+        defaultProperties.setProperty("jfritz.isRunning", "false");
 
         try {
             properties.loadFromXML(JFritz.PROPERTIES_FILE);
