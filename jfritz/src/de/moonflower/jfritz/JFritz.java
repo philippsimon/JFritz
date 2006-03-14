@@ -517,6 +517,7 @@ public final class JFritz {
             try {
                 systray = SystemTray.getDefaultSystemTray();
                 createTrayMenu();
+            
             } catch (Exception e) {
                 Debug.err(e.toString());
                 SYSTRAY_SUPPORT = false;
@@ -1057,7 +1058,7 @@ public final class JFritz {
             } catch (IOException e) {
                 Debug.errDlg("Konnte externes Programm nicht ausführen: "
                         + programString);
-                e.printStackTrace();
+                Debug.err(e.toString());
             }
         }
 
@@ -1159,7 +1160,7 @@ public final class JFritz {
             } catch (IOException e) {
                 Debug.errDlg("Konnte externes Programm nicht ausführen: "
                         + programString);
-                e.printStackTrace();
+                Debug.err(e.toString());
             }
         }
     }
