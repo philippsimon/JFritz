@@ -1394,8 +1394,11 @@ public final class JFritz {
     public void copyToClipboard(String text){
                 try{
                 	Clipboard systemClip = Toolkit.getDefaultToolkit().getSystemClipboard();
-                	StringSelection stringSelection = new StringSelection(text);
-                	systemClip.setContents(stringSelection, stringSelection);
+                	if (text!=null)
+                	{
+                		StringSelection stringSelection = new StringSelection(text);
+                		systemClip.setContents(stringSelection, stringSelection);
+                	}
                 }catch(IllegalStateException ise)
                 {
                 	Debug.err("Cannot copy "+text+" into clipboard (clipboard not available)");
