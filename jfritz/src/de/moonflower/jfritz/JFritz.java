@@ -913,7 +913,7 @@ public final class JFritz {
     }
 
     private String[] searchFirstAndLastNameToPhoneNumber(String caller) {
-        String name[] = new String[3];
+        String name[] = {"", "", ""};
         PhoneNumber callerPhoneNumber = new PhoneNumber(caller);
         Debug.msg("Searchin in local database ...");
         Person callerperson = phonebook.findPerson(callerPhoneNumber);
