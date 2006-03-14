@@ -943,6 +943,13 @@ public final class JFritz {
                 Debug.msg("Add person to database");
                 phonebook.addEntry(person);
                 phonebook.fireTableDataChanged();
+            } else {
+                person = new Person();                
+                person.addNumber(new PhoneNumber(caller));
+                Debug.msg("Found no person");
+                Debug.msg("Add dummy person to database");
+                phonebook.addEntry(person);
+                phonebook.fireTableDataChanged();
             }
         }
         return name;
