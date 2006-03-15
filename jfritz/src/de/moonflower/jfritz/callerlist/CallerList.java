@@ -395,11 +395,22 @@ public class CallerList extends AbstractTableModel {
 
     /**
      * Retrieves data from FRITZ!Box
-     * 
+     *   
      * @throws WrongPasswordException
      * @throws IOException
      */
     public void getNewCalls() throws WrongPasswordException, IOException {
+    	getNewCalls(false);
+    }
+    /**
+     * Retrieves data from FRITZ!Box
+     * 
+     * @param deleteFritzBoxCallerList
+     * 				true indicates that fritzbox callerlist should be deleted without considering number of entries or config
+     * @throws WrongPasswordException
+     * @throws IOException
+     */
+    public void getNewCalls(boolean deleteFritzBoxCallerList) throws WrongPasswordException, IOException {
         alreadyKnownCalls = (Vector) unfilteredCallerData.clone();
         Debug.msg("box.address: " + JFritz.getProperty("box.address"));
         Debug.msg("box.password: " + JFritz.getProperty("box.password"));
@@ -455,9 +466,11 @@ public class CallerList extends AbstractTableModel {
 
         }
         // Clear data on fritz box ?
-        if (newEntries > 0
+        // deleteFritzBoxCallerList=true indicates that list should be deleted in any case
+        if ((newEntries > 0
                 && JFritz.getProperty("option.deleteAfterFetch", "false")
-                        .equals("true")) {
+                        .equals("true")) 
+           || deleteFritzBoxCallerList) {
             JFritzUtils.clearListOnFritzBox(JFritz.getProperty("box.address"),
                     JFritz.getProperty("box.password"), JFritzUtils
                             .detectBoxType(JFritz.getProperty("box.firmware"),

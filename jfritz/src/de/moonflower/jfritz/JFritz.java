@@ -42,7 +42,8 @@
  * 
  * JFritz 0.5.5
  * - Nummer und Anschrift können aus der Anrufliste heraus in die Zwischenablage kopiert werden
- * - Schutz vor mehrfachen Programmstart
+ * - Schutz vor mehrfachem Programmstart
+ * - Löschfunktionalität für Anrufliste der FRITZ!Box (Menü und Toolbar)  
  * - Bugfix: Start auch bei fehlendem Tray
  * - Bugfix: Anrufmonitor arbeitete bei einem Reverselookup einer nicht im Telefonbuch 
  *           eingetragenen Person nicht mehr
