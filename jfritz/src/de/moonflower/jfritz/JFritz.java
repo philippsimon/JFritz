@@ -42,12 +42,13 @@
  * 
  * JFritz 0.5.5
  * - Nummer und Anschrift können aus der Anrufliste heraus in die Zwischenablage kopiert werden
- * - Schutz vor mehrfachem Programmstart
+ * - Schutz vor mehrfachem Programmstart (<- was ist mit Kommandozeilenstart?)
  * - Löschfunktionalität für Anrufliste der FRITZ!Box (Menü und Toolbar)  
  * - Bugfix: Start auch bei fehlendem Tray
  * - Bugfix: Anrufmonitor arbeitete bei einem Reverselookup einer nicht im Telefonbuch 
  *           eingetragenen Person nicht mehr
- * - Bugfix: Eintragen einer über Reverse-Lookup gefundenen Person korrigiert 
+ * - Bugfix: Eintragen einer über Reverse-Lookup gefundenen Person korrigiert
+ * - Neuer Kommandozeilenparameter: -d, --delete_on_box, löscht Anrufliste auf der Box und beendet sich dann (kein GUI)
  * 
  * JFritz 0.5.4
  * - Beim neuen Anrufmonitor auf # achten.
@@ -307,6 +308,7 @@ import org.jdesktop.jdic.tray.TrayIcon;
 import de.moonflower.jfritz.callerlist.CallerList;
 import de.moonflower.jfritz.dialogs.phonebook.PhoneBook;
 import de.moonflower.jfritz.dialogs.simple.MessageDlg;
+import de.moonflower.jfritz.exceptions.InvalidFirmwareException;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
 import de.moonflower.jfritz.firmware.FritzBoxFirmware;
 import de.moonflower.jfritz.struct.Person;
@@ -611,6 +613,8 @@ public final class JFritz {
         options.addOption('s', "systray", null, "Turn on systray support");
         options.addOption('n', "nosystray", null, "Turn off systray support");
         options.addOption('f', "fetch", null, "Fetch new calls and exit");
+		options.addOption('d', "delete_on_box", null,
+				"Delete callerlist of the Fritz!Box.");
         options.addOption('c', "clear_list", null,
                 "Clears Caller List and exit");
         options.addOption('e', "export", "filename",
@@ -649,6 +653,11 @@ public final class JFritz {
                     System.err.println("Parameter not found!");
                     System.exit(0);
                 }
+                break;
+            case 'd':
+				Debug.on();
+				clearCallsOnBox();
+                System.exit(0);
                 break;
             case 'c':
             	enableInstanceControl = false;
@@ -834,6 +843,32 @@ public final class JFritz {
         }
     }
 
+    /**
+     * 
+     */
+    public static void clearCallsOnBox() {
+		Debug.msg("Clearing callerlist on box.");
+		properties = new JFritzProperties();
+        try {
+			properties.loadFromXML(JFritz.PROPERTIES_FILE);
+        } catch (FileNotFoundException e) {
+            Debug.err("File " + JFritz.PROPERTIES_FILE
+                    + " not found, using default values");
+        } catch (Exception e) {
+			Debug.err("Mist");
+        }
+		try {
+			JFritzUtils.clearListOnFritzBox(properties.getProperty("box.address"), Encryption.decrypt(properties.getProperty("box.password")), new FritzBoxFirmware(properties.getProperty("box.firmware")));
+			Debug.msg("Done");
+		} catch (WrongPasswordException e) {
+			Debug.err("Wrong password, can not delete callerlist on Box.");
+		} catch (IOException e) {
+			Debug.err("IOException while deleting callerlist on box (wrong IP-address?).");
+		} catch (InvalidFirmwareException e) {
+			Debug.err("Invalid firmware, can not delete callerlist on Box.");
+		}
+    }	
+	
     /**
      * Saves properties to xml files
      */
