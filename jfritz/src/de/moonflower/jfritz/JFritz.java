@@ -655,6 +655,7 @@ public final class JFritz {
                 }
                 break;
             case 'd':
+				// enableInstanceControl = false; // unnötig, GUI wird nicht gestartet
 				Debug.on();
 				clearCallsOnBox();
                 System.exit(0);
