@@ -49,6 +49,8 @@
  *           eingetragenen Person nicht mehr
  * - Bugfix: Eintragen einer über Reverse-Lookup gefundenen Person korrigiert
  * - Neuer Kommandozeilenparameter: -d, --delete_on_box, löscht Anrufliste auf der Box und beendet sich dann (kein GUI)
+ * - Neuer Kommandozeilenparameter: -b, --backup, erstellt eine Sicherungskopie von allen XML-Dateien
+ * - Neue Option: Sicherungskopien beim Start erstellen
  * - Bugfix: Bei der Suche nach einer Rufnummer werden vor der Zentrale ggf. vorhandene Durchwahlnummern berücksichtigt 
  *  
  * JFritz 0.5.4
@@ -315,6 +317,7 @@ import de.moonflower.jfritz.firmware.FritzBoxFirmware;
 import de.moonflower.jfritz.struct.Person;
 import de.moonflower.jfritz.struct.PhoneNumber;
 import de.moonflower.jfritz.utils.CLIOptions;
+import de.moonflower.jfritz.utils.CopyFile;
 import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzProperties;
@@ -418,6 +421,10 @@ public final class JFritz {
         jfritz = this;
         loadMessages(new Locale("de", "DE"));
         loadProperties();
+        
+        if (JFritzUtils.parseBoolean(properties.getProperty("option.createBackup", "false"))) {
+            doBackup();
+        }
 
         if (enableInstanceControl)
         {
@@ -616,6 +623,7 @@ public final class JFritz {
         options.addOption('f', "fetch", null, "Fetch new calls and exit");
 		options.addOption('d', "delete_on_box", null,
 				"Delete callerlist of the Fritz!Box.");
+        options.addOption('b', "backup", null, "Creates a backup of all xml-Files in the directory 'backup'");
         options.addOption('c', "clear_list", null,
                 "Clears Caller List and exit");
         options.addOption('e', "export", "filename",
@@ -638,6 +646,9 @@ public final class JFritz {
                 break;
             case 'v':
                 Debug.on();
+                break;
+            case 'b':
+                doBackup();
                 break;
             case 's':
                 JFritz.SYSTRAY_SUPPORT = true;
@@ -1477,6 +1488,11 @@ public final class JFritz {
                 	JOptionPane.showMessageDialog(jfritz.getJframe(), "Die Zwischenablage ist nicht verfügbar!",
                             JFritz.PROGRAM_NAME, JOptionPane.OK_OPTION+JOptionPane.ERROR_MESSAGE);                	
                 }
-   }    
+    }    
+    
+    private static void doBackup() {
+        CopyFile backup = new CopyFile();
+        backup.copy(".","xml");
+    }
     
 }
