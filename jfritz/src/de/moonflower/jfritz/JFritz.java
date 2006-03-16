@@ -42,14 +42,15 @@
  * 
  * JFritz 0.5.5
  * - Nummer und Anschrift können aus der Anrufliste heraus in die Zwischenablage kopiert werden
- * - Schutz vor mehrfachem Programmstart (<- was ist mit Kommandozeilenstart?)
- * - Löschfunktionalität für Anrufliste der FRITZ!Box (Menü und Toolbar)  
+ * - Schutz vor mehrfachem Programmstart (<- was ist mit Kommandozeilenstart?, =>BS: werden berücksichtigt - enableInstanceControl=false)
+ * - Löschfunktionalität für Anrufliste der FRITZ!Box (Menü und Toolbar)
  * - Bugfix: Start auch bei fehlendem Tray
  * - Bugfix: Anrufmonitor arbeitete bei einem Reverselookup einer nicht im Telefonbuch 
  *           eingetragenen Person nicht mehr
  * - Bugfix: Eintragen einer über Reverse-Lookup gefundenen Person korrigiert
  * - Neuer Kommandozeilenparameter: -d, --delete_on_box, löscht Anrufliste auf der Box und beendet sich dann (kein GUI)
- * 
+ * - Bugfix: Bei der Suche nach einer Rufnummer werden vor der Zentrale ggf. vorhandene Durchwahlnummern berücksichtigt 
+ *  
  * JFritz 0.5.4
  * - Beim neuen Anrufmonitor auf # achten.
  * - Callmonitor: Beim Ausführen eines externen Programmes werden %Firstname, %Surname, %Compnay ersetzt.
