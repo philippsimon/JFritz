@@ -90,7 +90,7 @@ public class ConfigDialog extends JDialog {
             callMonitorAfterStartButton, lookupAfterFetchButton,
             externProgramCheckBox, searchWithSSDP, showCallByCallColumnButton,
             showCommentColumnButton, showPortColumnButton,
-            minimizeInsteadOfClose;
+            minimizeInsteadOfClose, createBackup;
 
     private JPanel callMonitorPane;
 
@@ -138,6 +138,8 @@ public class ConfigDialog extends JDialog {
                 .getProperty("option.startMinimized", "false")));
         minimizeInsteadOfClose.setSelected(JFritzUtils.parseBoolean(JFritz
                 .getProperty("option.minimize", "false")));
+        createBackup.setSelected(JFritzUtils.parseBoolean(JFritz
+                .getProperty("option.createBackup", "false")));
         soundButton.setSelected(JFritzUtils.parseBoolean(JFritz.getProperty(
                 "option.playSounds", "true")));
         externProgramCheckBox.setSelected(JFritzUtils.parseBoolean(JFritz
@@ -251,6 +253,7 @@ public class ConfigDialog extends JDialog {
                 .toString(startMinimizedButton.isSelected()));
         JFritz.setProperty("option.minimize", Boolean
                 .toString(minimizeInsteadOfClose.isSelected()));
+        JFritz.setProperty("option.createBackup", Boolean.toString(createBackup.isSelected()));
         JFritz.setProperty("option.playSounds", Boolean.toString(soundButton
                 .isSelected()));
 
@@ -500,8 +503,13 @@ protected JPanel createOtherPane() {
         minimizeInsteadOfClose = new JCheckBox("Bei Klick auf X: Minimieren statt schlieﬂen");
         otherpane.add(minimizeInsteadOfClose);
 
+        createBackup = new JCheckBox("Sicherungskopien beim Start erstellen");
+        otherpane.add(createBackup);
+
         return otherpane;
-    }    protected JPanel createCallerListPane() {
+    }
+
+    protected JPanel createCallerListPane() {
         JPanel cPanel = new JPanel();
 
         cPanel.setLayout(new GridBagLayout());
