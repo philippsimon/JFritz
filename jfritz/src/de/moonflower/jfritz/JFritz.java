@@ -14,6 +14,7 @@
  * 		robotniko	Robert Palmer <robotniko@gmx.de>
  * 		kleinc		Christian Klein <kleinch@users.sourceforge.net>
  *      little_ben  Benjamin Schmitt <little_ben@users.sourceforge.net>
+ *      baefer		Bastian Schaefer <baefer@users.sourceforge.net>
  * 
  * This tool is free software; you can redistribute it and/or modify it 
  * under the terms of the GNU General Public License as published by
