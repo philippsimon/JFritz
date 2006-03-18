@@ -23,6 +23,7 @@ import java.util.Vector;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -35,6 +36,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -59,13 +61,13 @@ import de.moonflower.jfritz.struct.PhoneNumber;
 import de.moonflower.jfritz.utils.BrowserLaunch;
 import de.moonflower.jfritz.utils.CopyFile;
 import de.moonflower.jfritz.utils.Debug;
+import de.moonflower.jfritz.utils.DirectoryChooser;
 import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.ImportOutlookContacts;
 import de.moonflower.jfritz.utils.JFritzUtils;
 import de.moonflower.jfritz.utils.PrintCallerList;
 import de.moonflower.jfritz.utils.ReverseLookup;
 import de.moonflower.jfritz.utils.SwingWorker;
-import de.moonflower.jfritz.utils.DirectoryChooser;
 import de.moonflower.jfritz.utils.network.CallmessageListener;
 import de.moonflower.jfritz.utils.network.FBoxListener;
 import de.moonflower.jfritz.utils.network.SyslogListener;
@@ -148,6 +150,9 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
         setDefaultLookAndFeel();
         ShutdownThread shutdownThread = new ShutdownThread(jfritz);
         Runtime.getRuntime().addShutdownHook(shutdownThread);
+        
+        keyListener();
+        
         this
                 .setIconImage(Toolkit
                         .getDefaultToolkit()
@@ -192,7 +197,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(createMainToolBar(), BorderLayout.NORTH);
         getContentPane().add(tabber, BorderLayout.CENTER);
-        getContentPane().add(createStatusBar(), BorderLayout.SOUTH);
+        getContentPane().add(createStatusBar(), BorderLayout.SOUTH);        
 
         jfritz.getCallerlist().fireTableDataChanged();
         jfritz.getCallerlist().fireTableStructureChanged();
@@ -1270,5 +1275,19 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
         catch(NullPointerException e){
         	Debug.msg("No directory choosen for backup!");
         }
+    }   
+    
+    public void keyListener(){
+    	
+        ActionListener keyListener = new ActionListener(){
+        	public void actionPerformed(ActionEvent ae){
+        		fetchList();
+        	}
+        	};
+
+        	this.getRootPane().registerKeyboardAction(keyListener,
+        	KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0, false),
+        	JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
+
 }
