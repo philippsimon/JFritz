@@ -52,9 +52,9 @@ public class CallerTable extends JTable {
 	 */
 	public CallerTable(JFritz jfritz) {
 		super(jfritz.getCallerlist());
+        this.jfritz = jfritz;
 		setTableProperties();
 		createColumns();
-		this.jfritz = jfritz;
 	}
 
 	/**
@@ -189,7 +189,7 @@ public class CallerTable extends JTable {
 		col = getColumnModel().getColumn(8);
 		col.setHeaderValue("Kommentar");
 		headerTips.setToolTip(col, "Kommentar");
-		col.setCellEditor(new CommentCellEditor());
+		col.setCellEditor(new CommentCellEditor(jfritz));
 		col.setMinWidth(10);
 		col.setMaxWidth(1600);
 		col.setPreferredWidth(Integer.parseInt(JFritz.getProperty(
