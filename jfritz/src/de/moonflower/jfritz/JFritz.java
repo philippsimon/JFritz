@@ -41,6 +41,9 @@
  * - Anrufen aus der Anrufliste heraus (noch nicht getestet)
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
  * 
+ * JFritz 0.5.6
+ * - Bugfix: Speicherung der Kommentare
+ * 
  * JFritz 0.5.5
  * - Nummer und Anschrift können aus der Anrufliste heraus in die Zwischenablage kopiert werden
  * - Schutz vor mehrfachem Programmstart (<- was ist mit Kommandozeilenstart?, =>BS: werden berücksichtigt - enableInstanceControl=false)
@@ -337,7 +340,7 @@ public final class JFritz {
 
     public final static String PROGRAM_NAME = "JFritz";
 
-    public final static String PROGRAM_VERSION = "0.5.5";
+    public final static String PROGRAM_VERSION = "0.5.6";
 
     public final static String PROGRAM_URL = "http://www.jfritz.org/";
 
