@@ -42,10 +42,10 @@
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
  * 
  * JFritz 0.5.6
- * - Option "bei jedem abholen der Liste ein Backup machen" hinzugefügt
- * - Manuelle Backups per Button
- * - Einstellungsdialog -> Weiters -> außer Sichtbarkeits-Bug gefixt
- * - per F5 Anrufliste aktualisieren
+ * - Neue Option: Sicherungskopien bei jedem Laden der Anruferliste erstellen
+ * - Manuelle Backups erstellen (Menü und Toolbar)
+ * - Bugfix: unvollständige Anzeige des Einstellungsdialoges -> Weiteres
+ * - per Funktionstaste "F5" Anrufliste aktualisieren
  * - Bugfix: Speicherung der Kommentare
  * 
  * JFritz 0.5.5
