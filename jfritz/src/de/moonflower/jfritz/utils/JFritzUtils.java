@@ -837,6 +837,7 @@ public class JFritzUtils {
         out = out.replaceAll("<", "&#60;");
         out = out.replaceAll(">", "&#62;");
         out = out.replaceAll("\"", "&#34;");
+        out = out.replaceAll("=", "&#61;");
         return out;
     }
 
@@ -847,6 +848,7 @@ public class JFritzUtils {
         out = out.replaceAll("&#39;", "'");
         out = out.replaceAll("&#60;", "<");
         out = out.replaceAll("&#62;", ">");
+        out = out.replaceAll("&#61;", "=");
         out = out.replaceAll("&#34;", "\"");
         return out;
     }
