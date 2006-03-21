@@ -484,6 +484,9 @@ public class CallerList extends AbstractTableModel {
                 && JFritzUtils.parseBoolean(JFritz.getProperty("option.createBackupAfterFetch", "false"))) {
             doBackup();
         }
+        
+        // Garbage collection. Gibt verwendeten Speicher wieder frei.
+        System.gc();
 
     }
 
