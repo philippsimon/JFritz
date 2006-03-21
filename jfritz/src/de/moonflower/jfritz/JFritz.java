@@ -42,6 +42,7 @@
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
  * 
  * JFritz 0.5.6
+ * - Bugfix: Sonderzeichen bei "Externes Programm starten" werden korrekt gespeichert 
  * - Neue Option: Telefonbuch importieren
  * - Neue Option: Nach Standby oder Ruhezustand die Anrufliste automatisch abholen
  * - Bugfix: tritt der unwahrscheinliche Fall auf, dass kein Tray-Icon angezeigt wird, der User aber früher einmal
