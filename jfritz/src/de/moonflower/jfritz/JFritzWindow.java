@@ -45,6 +45,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.TableColumnModel;
 
+import de.moonflower.jfritz.callerlist.CallCellEditor;
+import de.moonflower.jfritz.callerlist.CallDialog;
+import de.moonflower.jfritz.callerlist.CallPanel;
 import de.moonflower.jfritz.callerlist.CallerListPanel;
 import de.moonflower.jfritz.callerlist.CallerTable;
 import de.moonflower.jfritz.dialogs.config.ConfigDialog;
@@ -112,6 +115,8 @@ public class JFritzWindow extends JFrame
 	private QuickDialPanel quickDialPanel;
 
 	private ConfigDialog configDialog;
+	
+	private FritzBoxFirmware firmware = null;
 
 	/**
 	 * Constructs JFritzWindow
@@ -265,6 +270,15 @@ public class JFritzWindow extends JFrame
 		fetchButton.setIcon(getImage("fetch.png"));
 		fetchButton.setFocusPainted(false);
 		mBar.add(fetchButton);
+		
+		JButton button = new JButton();
+		button = new JButton();
+		button.setActionCommand("call");
+		button.addActionListener(this);
+		button.setIcon(getImage("Phone.gif"));
+		button.setToolTipText(JFritz.getMessage("call"));
+		mBar.add(button);
+		
 		taskButton = new JToggleButton();
 		taskButton.setToolTipText(JFritz.getMessage("fetchtask"));
 		taskButton.setActionCommand("fetchTask");
@@ -286,7 +300,7 @@ public class JFritzWindow extends JFrame
 		lookupButton.setIcon(getImage("reverselookup.png"));
 		mBar.add(lookupButton);
 
-		JButton button = new JButton();
+		button = new JButton();
 		button.setActionCommand("phonebook");
 		button.addActionListener(this);
 		button.setIcon(getImage("phonebook.png"));
@@ -386,7 +400,7 @@ public class JFritzWindow extends JFrame
 		item.setActionCommand("backup");
 		item.addActionListener(this);
 		jfritzMenu.add(item);
-
+		
 		if (JFritz.runsOn().startsWith("Windows")) {
 			item = new JMenuItem("Kontakte aus Outlook importieren");
 			item.setActionCommand("import_outlook");
@@ -963,6 +977,12 @@ public class JFritzWindow extends JFrame
 			deleteFritzBoxCallerList();
 		else if (e.getActionCommand() == "backup")
 			backupToChoosenDirectory();
+		else if (e.getActionCommand() == "call"){
+			CallCellEditor ce = new CallCellEditor(jfritz.getCallerlist());
+			PhoneNumber n = new PhoneNumber("Nummer muss noch von Hand in den Quelltext eingetragen werden");
+			CallDialog c = new CallDialog(jfritz, n);
+			c.setVisible(true);
+		}
 		else if (e.getActionCommand() == "fetchTask")
 			fetchTask(((JToggleButton) e.getSource()).isSelected());
 		else if (e.getActionCommand() == "callMonitor") {
