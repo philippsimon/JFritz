@@ -1,8 +1,8 @@
 /**
  * $Id$
  * 
- * Created on 14.04.2005
- *@author Bastian Schaefer
+ * Created on 22.03.2006
+ * @author Bastian Schaefer
  */
 package de.moonflower.jfritz.dialogs.phonebook;
 
@@ -96,7 +96,6 @@ public class NumberCellEditor extends AbstractCellEditor
 		if (Character.isLetterOrDigit(code) || code == KeyEvent.VK_BACK_SPACE
 				|| code == KeyEvent.VK_DELETE) {
 			personPanel.firePropertyChange(true);
-			System.out.println("fire!");
 		}
 
 	}
