@@ -123,9 +123,8 @@ public class CallerList extends AbstractTableModel {
             return ((Call) filteredCallerData.get(rowIndex)).getPhoneNumber() != null;
         } else if (columnName.equals("Kommentar")) {
             return true;
-            // TODO: Aktivieren für "Anrufen aus Anrufliste heraus"
-            // if (columnName.equals(JFritz.getMessage("number"))) {
-            // return true;
+        } else if (columnName.equals(JFritz.getMessage("number"))) {
+        	return true;
         }
         return false;
     }
