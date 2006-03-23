@@ -42,6 +42,7 @@
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
  * 
  * JFritz 0.5.6
+ * - Neu: Wahlhilfe
  * - Änderung: Das Durchsuchen der Anruferliste muss nun per [ENTER] gestartet werden.
  * - Bugfix: "Übernehmen" Button im Telefonbuch wird nun anklickbar, wenn man eine Telefonnummer geändert hat.
  * - Bugfix: Sonderzeichen bei "Externes Programm starten" werden korrekt gespeichert 
