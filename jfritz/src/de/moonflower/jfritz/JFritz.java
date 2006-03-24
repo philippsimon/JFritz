@@ -57,6 +57,7 @@
  * - per Funktionstaste "F5" Anrufliste aktualisieren
  * - Bugfix: Speicherung der Kommentare
  * - INTERN: Bereitstellen von utils.JFritzClipboard und CallerList.getSelectedCall
+ * - INTERN: JDIC-Update auf 0.9.1
  * 
  * JFritz 0.5.5
  * - Nummer und Anschrift können aus der Anrufliste heraus in die Zwischenablage kopiert werden
