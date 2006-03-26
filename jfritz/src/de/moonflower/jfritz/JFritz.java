@@ -377,6 +377,8 @@ public final class JFritz {
     public final static String SIPPROVIDER_FILE = "jfritz.sipprovider.xml";
 
     public final static String CALLS_CSV_FILE = "calls.csv";
+    
+    public final static String PHONEBOOK_CSV_FILE = "contacts.csv";
 
     public final static int SSDP_TIMEOUT = 1000;
 
