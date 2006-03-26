@@ -408,6 +408,11 @@ public class JFritzWindow extends JFrame
 	    item.addActionListener(this);
 	    importMenu.add(item);
 	    
+	    item = new JMenuItem(JFritz.getMessage("phonebook_import"));
+	    item.setActionCommand("phonebook_import");
+	    item.addActionListener(this);
+	    importMenu.add(item);
+	    
 	    jfritzMenu.add(importMenu);
 
 		item = new JMenuItem(JFritz.getMessage("export_csv"), 'c');
@@ -415,7 +420,7 @@ public class JFritzWindow extends JFrame
 		item.addActionListener(this);
 		exportMenu.add(item);
 		
-		item = new JMenuItem(JFritz.getMessage("export_csv_phonebook"), 'c');
+		item = new JMenuItem(JFritz.getMessage("export_csv_phonebook"));
 		item.setActionCommand("export_phonebook");
 		item.addActionListener(this);
 		exportMenu.add(item);
@@ -1011,6 +1016,8 @@ public class JFritzWindow extends JFrame
 			fetchList();
 	    else if (e.getActionCommand() == "import_csv")
 	        importCSV();
+	    else if (e.getActionCommand() == "phonebook_import")
+	    	phoneBookPanel.importFromXML();
 		else
 			Debug.err("Unimplemented action: " + e.getActionCommand());
 
