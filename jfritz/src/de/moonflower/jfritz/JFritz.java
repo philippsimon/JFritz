@@ -42,7 +42,9 @@
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
  * 
  * JFritz 0.5.6
- * - Neu: CSV-Dateien importieren
+ * - Neu: Telefonbuch als CSV-Datei exportieren
+ * - Neu: Suchfunktion für Telefonbuch
+ * - Neu: Anruferliste importieren (CSV-Dateien)
  * - Neu: Wahlhilfe
  * - Änderung: Das Durchsuchen der Anruferliste muss nun per [ENTER] gestartet werden.
  * - Bugfix: "Übernehmen" Button im Telefonbuch wird nun anklickbar, wenn man eine Telefonnummer geändert hat.
@@ -59,7 +61,6 @@
  * - Bugfix: Speicherung der Kommentare
  * - INTERN: Bereitstellen von utils.JFritzClipboard und CallerList.getSelectedCall
  * - INTERN: JDIC-Update auf 0.9.1
- * - Neu: Suchfunktion für Telefonbuch
  * 
  * JFritz 0.5.5
  * - Nummer und Anschrift können aus der Anrufliste heraus in die Zwischenablage kopiert werden
