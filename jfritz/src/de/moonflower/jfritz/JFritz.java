@@ -38,10 +38,10 @@
  * FeatureRequests: bitte bei Sourceforge nachschauen und dort auch den Status ändern
 
  * CHANGELOG:
- * - Anrufen aus der Anrufliste heraus (noch nicht getestet)
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
  * 
  * JFritz 0.5.6
+ * - Thunderbird-Kontakte importieren
  * - Neu: Telefonbuch als CSV-Datei exportieren
  * - Neu: Suchfunktion für Telefonbuch
  * - Neu: Anruferliste importieren (CSV-Dateien)
@@ -49,13 +49,13 @@
  * - Änderung: Das Durchsuchen der Anruferliste muss nun per [ENTER] gestartet werden.
  * - Bugfix: "Übernehmen" Button im Telefonbuch wird nun anklickbar, wenn man eine Telefonnummer geändert hat.
  * - Bugfix: Sonderzeichen bei "Externes Programm starten" werden korrekt gespeichert 
- * - Neue Option: Telefonbuch importieren
+ * - Neu: (JFritz)Telefonbuch importieren
  * - Neue Option: Nach Standby oder Ruhezustand die Anrufliste automatisch abholen
  * - Bugfix: tritt der unwahrscheinliche Fall auf, dass kein Tray-Icon angezeigt wird, der User aber früher einmal
  * 			 (als das Tray-Icon noch verfügbar war) Tray-Messages zu Benachrichtigung ausgewählt hatte, wurde gar kein
  * 			 Anruf mehr signalisiert. Jetzt wird in diesem Fall auf ein PopUp zurückgegriffen.
  * - Neue Option: Sicherungskopien bei jedem Laden der Anruferliste erstellen
- * - Manuelle Backups erstellen (Menü und Toolbar)
+ * - Neu: Manuelle Backups erstellen (Menü und Toolbar)
  * - Bugfix: unvollständige Anzeige des Einstellungsdialoges -> Weiteres
  * - per Funktionstaste "F5" Anrufliste aktualisieren
  * - Bugfix: Speicherung der Kommentare
