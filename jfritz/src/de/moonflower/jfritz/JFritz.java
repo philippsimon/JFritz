@@ -446,6 +446,7 @@ public final class JFritz {
         boolean fetchCalls = false;
         boolean clearList = false;
         boolean csvExport = false;
+		boolean foreign = false;
         String csvFileName = "";
         boolean enableInstanceControl=true;
         //TODO: If we ever make different packages for different languages
@@ -466,6 +467,8 @@ public final class JFritz {
                 "Clears Caller List and exit");
         options.addOption('e', "export", "filename",
                 "Fetch calls and export to CSV file.");
+        options.addOption('z', "exportForeign", null,
+				"Write phonebooks compatible to BIT FBF Dialer and some other callmonitors.");		
         options.addOption('l', "logfile", "filename",
                 "Writes debug messages to logfile");
         options.addOption('p', "priority", "level",
@@ -492,6 +495,9 @@ public final class JFritz {
             case 's':
                 JFritz.SYSTRAY_SUPPORT = true;
                 break;
+            case 'z':
+            	foreign = true;
+                break;					
             case 'f':
             	enableInstanceControl = false;
             	fetchCalls = true;
@@ -567,16 +573,7 @@ public final class JFritz {
                 break;
             }
         }
-        new JFritz(fetchCalls, csvExport, csvFileName, clearList, enableInstanceControl);
-    }
-    
-    /**
-     * Constructs JFritz object
-     * @author Benjamin Schmitt
-     */
-    public JFritz(boolean fetchCalls, boolean csvExport, String csvFileName,
-            boolean clearList){
-    	this(fetchCalls,csvExport,csvFileName,clearList,true);
+        new JFritz(fetchCalls, csvExport, csvFileName, clearList, enableInstanceControl, foreign);
     }
     
     /**
@@ -584,6 +581,24 @@ public final class JFritz {
      */
     public JFritz(boolean fetchCalls, boolean csvExport, String csvFileName,
             boolean clearList, boolean enableInstanceControl) {
+		this(fetchCalls,csvExport,csvFileName,clearList,enableInstanceControl,false);
+    }
+
+	
+    /**
+     * Constructs JFritz object
+     * @author Benjamin Schmitt
+     */
+    public JFritz(boolean fetchCalls, boolean csvExport, String csvFileName,
+            boolean clearList){
+    	this(fetchCalls,csvExport,csvFileName,clearList,true,false);
+    }
+    
+    /**
+     * Constructs JFritz object
+     */
+    public JFritz(boolean fetchCalls, boolean csvExport, String csvFileName,
+            boolean clearList, boolean enableInstanceControl, boolean writeForeignFormats) {
         jfritz = this;
         loadMessages(locale);
         loadProperties();
@@ -701,6 +716,10 @@ public final class JFritz {
             callerlist.clearList();
             System.exit(0);
         }
+		if (writeForeignFormats) {
+			phonebook.saveToBITFBFDialerFormat("bitbook.dat");
+			phonebook.saveToCallMonitorFormat("CallMonitor.adr");
+		}
 
         Debug.msg("Neue Instanz von JFrame");
         jframe = new JFritzWindow(this);
@@ -815,7 +834,6 @@ public final class JFritz {
                     .getProperty("box.address", "192.168.178.1"), Encryption
                     .decrypt(JFritz.getProperty("box.password", Encryption
                             .encrypt(""))));
-
         } catch (WrongPasswordException e1) {
             Debug.err("Password wrong!");
             firmware = null;
