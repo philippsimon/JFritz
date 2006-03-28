@@ -52,6 +52,7 @@
  * - Bugfix: Sonderzeichen bei "Externes Programm starten" werden korrekt gespeichert 
  * - Neu: (JFritz)Telefonbuch importieren
  * - Neue Option: Nach Standby oder Ruhezustand die Anrufliste automatisch abholen
+ * - Neuer Kommandozeilenparameter: 'z' - exportiert das Telefonbuch in BIT FBF Dialer Format und ein einfaches CSV-Format für andere Anwendungen
  * - Bugfix: tritt der unwahrscheinliche Fall auf, dass kein Tray-Icon angezeigt wird, der User aber früher einmal
  * 			 (als das Tray-Icon noch verfügbar war) Tray-Messages zu Benachrichtigung ausgewählt hatte, wurde gar kein
  * 			 Anruf mehr signalisiert. Jetzt wird in diesem Fall auf ein PopUp zurückgegriffen.
