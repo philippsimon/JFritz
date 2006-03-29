@@ -62,6 +62,7 @@
  * - Bugfix: Speicherung der Kommentare
  * - INTERN: Bereitstellen von utils.JFritzClipboard und CallerList.getSelectedCall
  * - INTERN: JDIC-Update auf 0.9.1
+ * - INTERN: Bugfix: Internationalisierung repariert. Property-Werte haben sich ge‰ndert 
  * 
  * JFritz 0.5.5
  * - Nummer und Anschrift kˆnnen aus der Anrufliste heraus in die Zwischenablage kopiert werden
@@ -907,42 +908,50 @@ public final class JFritz {
             JFritz.removeProperty("SIP" + i);
         }
 
-        if (properties.contains("column0.width")) {
-            properties.setProperty("column." + getMessage("type") + ".width",
-                    properties.getProperty("column0.width"));
-            JFritz.removeProperty("column0.width");
-        } else if (properties.contains("column1.width")) {
-            properties.setProperty("column." + getMessage("date") + ".width",
-                    properties.getProperty("column1.width"));
-            JFritz.removeProperty("column1.width");
-        } else if (properties.contains("column2.width")) {
-            properties.setProperty("column." + "Call-By-Call" + ".width",
-                    properties.getProperty("column2.width"));
-            JFritz.removeProperty("column2.width");
-        } else if (properties.contains("column3.width")) {
-            properties.setProperty("column." + getMessage("number") + ".width",
-                    properties.getProperty("column3.width"));
-            JFritz.removeProperty("column3.width");
-        } else if (properties.contains("column4.width")) {
-            properties.setProperty("column." + getMessage("participant")
-                    + ".width", properties.getProperty("column4.width"));
-            JFritz.removeProperty("column4.width");
-        } else if (properties.contains("column5.width")) {
-            properties.setProperty("column." + getMessage("port") + ".width",
-                    properties.getProperty("column5.width"));
-            JFritz.removeProperty("column5.width");
-        } else if (properties.contains("column6.width")) {
-            properties.setProperty("column." + getMessage("route") + ".width",
-                    properties.getProperty("column6.width"));
-            JFritz.removeProperty("column6.width");
-        } else if (properties.contains("column7.width")) {
-            properties.setProperty("column." + getMessage("duration")
-                    + ".width", properties.getProperty("column7.width"));
-            JFritz.removeProperty("column7.width");
-        } else if (properties.contains("column8.width")) {
-            properties.setProperty("column." + "Kommentar" + ".width",
-                    properties.getProperty("column8.width"));
-            JFritz.removeProperty("column8.width");
+        if (properties.containsKey("column.Typ.width")) {
+            properties.setProperty("column.type.width",
+                    properties.getProperty("column.Typ.width"));
+            JFritz.removeProperty("column.Typ.width");
+        } 
+        if (properties.containsKey("column.Zeitpunkt.width")) {
+            properties.setProperty("column.date.width",
+                    properties.getProperty("column.Zeitpunkt.width"));
+            JFritz.removeProperty("column.Zeitpunkt.width");
+        }
+        if (properties.containsKey("column.Call-By-Call.width")) {
+            properties.setProperty("column.callbycall.width",
+                    properties.getProperty("column.Call-By-Call.width"));
+            JFritz.removeProperty("column.Call-By-Call.width");
+        }
+        if (properties.containsKey("column.Rufnummer.width")) {
+            properties.setProperty("column.number.width",
+                    properties.getProperty("column.Rufnummer.width"));
+            JFritz.removeProperty("column.Rufnummer.width");
+        }
+        if (properties.containsKey("column.Teilnehmer.width")) {
+            properties.setProperty("column.participant.width", 
+            		properties.getProperty("column.Teilnehmer.width"));
+            JFritz.removeProperty("column.Teilnehmer.width");
+        }
+        if (properties.containsKey("column.Anschluﬂ.width")) {
+            properties.setProperty("column.port.width",
+                    properties.getProperty("column.Anschluﬂ.width"));
+            JFritz.removeProperty("column.Anschluﬂ.width");
+        }
+        if (properties.containsKey("column.MSN.width")) {
+            properties.setProperty("column.route.width",
+                    properties.getProperty("column.MSN.width"));
+            JFritz.removeProperty("column.MSN.width");
+        }
+        if (properties.containsKey("column.Dauer.width")) {
+            properties.setProperty("column.duration.width", 
+            		properties.getProperty("column.Dauer.width"));
+            JFritz.removeProperty("column.Dauer.width");
+        }
+        if (properties.containsKey("column.Kommentar.width")) {
+            properties.setProperty("column.comment.width",
+                    properties.getProperty("column.Kommentar.width"));
+            JFritz.removeProperty("column.Kommentar.width");
         }
     }
 
@@ -998,9 +1007,9 @@ public final class JFritz {
         while (en.hasMoreElements()) {
             TableColumn col = (TableColumn) en.nextElement();
 
-            properties.setProperty("column." + col.getHeaderValue().toString()
+            properties.setProperty("column." + col.getIdentifier().toString()
                     + ".width", Integer.toString(col.getWidth()));
-            properties.setProperty("column" + i + ".name", col.getHeaderValue()
+            properties.setProperty("column" + i + ".name", col.getIdentifier()
                     .toString());
             i++;
         }
