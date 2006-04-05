@@ -69,6 +69,7 @@
  * 			 Anruf mehr signalisiert. Jetzt wird in diesem Fall auf ein PopUp zurückgegriffen.
  * - Bugfix: unvollständige Anzeige des Einstellungsdialoges -> Weiteres
  * - Bugfix: Speicherung der Kommentare
+ * - Bugfix: Überschreiben der Rufnummer im Telefonbuch tritt nicht mehr auf
  * - INTERN: Bereitstellen von utils.JFritzClipboard und CallerList.getSelectedCall
  * - INTERN: JDIC-Update auf "JDIC 20050930 Build"
  * 
