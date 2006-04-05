@@ -53,7 +53,8 @@
  *                      Benutze ich dann die Wahlhilfe erneut, wird ISDN 2 benutzt - egal welchen Port ich einstelle. D.h., benutze
  *                      ich ständig die gleichen Ports, fällt es nicht weiter auf.
  *                      Ich denke, das hängt damit zusammen, dass man auf der Weboberfläche erst den Port auswählt, dann übernehmen
- *                      drückt und dann erst die Nummer anklickt. Diesen Vorgang müsste man in JFritz nachbilden.)
+ *                      drückt und dann erst die Nummer anklickt. Diesen Vorgang müsste man in JFritz nachbilden.
+ *                   <- Eigentlich sollte es auch mit einem direkten URL-Aufruf funktionieren. Machen andere Tools genau so. (Robert))
  * - Neu: (JFritz)Telefonbuch importieren (XML)
  * - Neu: Manuelle Backups erstellen (Menü und Toolbar)
  * - Neu: per Funktionstaste "F5" Anrufliste aktualisieren
