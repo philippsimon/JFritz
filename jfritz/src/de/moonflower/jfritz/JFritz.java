@@ -44,6 +44,7 @@
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
  * 
  * JFritz 0.6.0
+ * - Neu: Sprache einstellbar ( <- Wahlhilfe im Telefonbuch funktioniert bei englischer Sprache nicht (Bastian))
  * - Neu: Fritzbox Anrufliste als CSV-Datei importieren
  * - Neu: Thunderbird/Mozilla-Kontakte importieren
  * - Neu: Telefonbuch als CSV-Datei exportieren
