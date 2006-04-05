@@ -131,13 +131,13 @@ public class CallerList extends AbstractTableModel {
      */
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         String columnName = getRealColumnName(columnIndex);
-        if (columnName.equals(JFritz.getMessage("participant"))) {
+        if (columnName.equals("participant")) {
             return ((Call) filteredCallerData.get(rowIndex)).getPhoneNumber() != null;
         } else if (columnName.equals("comment")) {
             return true;
         } else if (columnName.equals("number")) {
         	return true;
-        }
+        } 
         return false;
     }
 
