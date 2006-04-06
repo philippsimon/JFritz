@@ -42,9 +42,6 @@
  
  * CHANGELOG:
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
- * TODO: Anrufmonitor überprüfen
- * TODO: Wahlhilfe überprüfen (auch mit englischer Sprache)
- * TODO: Internationalisierung testen
  * 
  * JFritz 0.6.0
  * - Bugfix: Beim Ändern des Look And Feel's werden die Buttons korrekt dargestellt.
@@ -445,7 +442,7 @@ public final class JFritz {
     private static boolean isRunning = false;
 
     private static Locale locale;
-    
+
     /**
      * Main method for starting JFritz
      * 
@@ -466,7 +463,7 @@ public final class JFritz {
         boolean csvExport = false;
 		boolean foreign = false;
         String csvFileName = "";
-        boolean enableInstanceControl=true;
+        boolean enableInstanceControl = true;
         //TODO: If we ever make different packages for different languages
         //change the default language here
         locale = new Locale("de", "DE");        
@@ -492,7 +489,9 @@ public final class JFritz {
         options.addOption('p', "priority", "level",
                 "Set program priority [1..10]");
         options.addOption('i',"lang", "language","set the display language, currently supported: german, english");
-
+        options.addOption('w', "without-control", null, 
+        		"Turns off multiple instance control. DON'T USE, unless you know what your are doing");
+        
         Vector foundOptions = options.parseOptions(args);
         Enumeration en = foundOptions.elements();
         while (en.hasMoreElements()) {
@@ -565,7 +564,12 @@ public final class JFritz {
             		System.exit(0);
             	}
             	break;
-            
+            case 'w':
+            	enableInstanceControl = false;
+            	System.err.println("Turning off Multiple instance control!");
+            	System.err.println("You were warned! Data loss may occur.");
+            	break;
+            	
             case 'p':
                 String priority = option.getParameter();
                 if (priority == null || priority.equals("")) {
