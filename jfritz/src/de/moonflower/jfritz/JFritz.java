@@ -42,6 +42,9 @@
  
  * CHANGELOG:
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
+ * TODO: Anrufmonitor überprüfen
+ * TODO: Wahlhilfe überprüfen (auch mit englischer Sprache)
+ * TODO: Internationalisierung testen
  * 
  * JFritz 0.6.0
  * - Bugfix: Beim Ändern des Look And Feel's werden die Buttons korrekt dargestellt.
