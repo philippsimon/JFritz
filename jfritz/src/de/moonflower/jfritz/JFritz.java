@@ -1598,6 +1598,7 @@ public final class JFritz {
      */
     
     public void refreshWindow(){
+    	jfritz.saveProperties();
     	jframe.dispose();
     	javax.swing.SwingUtilities.invokeLater(jframe);
     	jframe = new JFritzWindow(this);
