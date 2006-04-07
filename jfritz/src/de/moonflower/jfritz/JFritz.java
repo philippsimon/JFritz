@@ -1594,15 +1594,18 @@ public final class JFritz {
     /**
      * @ Bastian Schaefer
      *
+     *	Destroys and repaints the Frame.
+     *
      */
     
     public void refreshWindow(){
-    	jfritz.saveProperties();
     	jframe.dispose();
     	javax.swing.SwingUtilities.invokeLater(jframe);
     	jframe = new JFritzWindow(this);
     	javax.swing.SwingUtilities.invokeLater(jframe);
-    	jframe.checkStartOptions();
+    	jframe.checkOptions();
+    	javax.swing.SwingUtilities.invokeLater(jframe);
+    	jframe.setVisible(true);
     
     }
     
