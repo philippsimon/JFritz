@@ -530,7 +530,7 @@ public final class JFritz {
                 }
                 break;
             case 'd':
-				// enableInstanceControl = false; // unn?tig, GUI wird nicht gestartet
+				// enableInstanceControl = false; // ung¸tig, GUI wird nicht gestartet
 				Debug.on();
 				clearCallsOnBox();
                 System.exit(0);
@@ -952,10 +952,10 @@ public final class JFritz {
             		properties.getProperty("column.Teilnehmer.width"));
             JFritz.removeProperty("column.Teilnehmer.width");
         }
-        if (properties.containsKey("column.Anschlu?.width")) {
+        if (properties.containsKey("column.Anschluﬂ.width")) {
             properties.setProperty("column.port.width",
-                    properties.getProperty("column.Anschlu?.width"));
-            JFritz.removeProperty("column.Anschlu?.width");
+                    properties.getProperty("column.Anschluﬂ.width"));
+            JFritz.removeProperty("column.Anschluﬂ.width");
         }
         if (properties.containsKey("column.MSN.width")) {
             properties.setProperty("column.route.width",

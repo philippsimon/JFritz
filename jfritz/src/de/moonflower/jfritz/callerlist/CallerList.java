@@ -325,7 +325,7 @@ public class CallerList extends AbstractTableModel {
                             "Invalid system identifier")) {
                 Debug.err(e.getLocalizedMessage());
                 Debug
-                        .errDlg("STRUKTUR?NDERUNG!\n\nBitte in der Datei jfritz.calls.xml\n "
+                        .errDlg("STRUKTURÄNDERUNG!\n\nBitte in der Datei jfritz.calls.xml\n "
                                 + "die Zeichenkette \"calls.dtd\" durch\n \""
                                 + CALLS_DTD_URI + "\"\n ersetzen!");
                 System.exit(0);
@@ -1038,7 +1038,7 @@ public class CallerList extends AbstractTableModel {
 
     public void fireTableDataChanged() {
         // Kostenberechnung deaktiviert, weil es zu ungenau ist
-        // und nur zu Problemen f?hrt
+        // und nur zu Problemen führt
         // calculateCosts();
         super.fireTableDataChanged();
     }
@@ -1049,7 +1049,7 @@ public class CallerList extends AbstractTableModel {
      */
     /*
      * private void calculateCosts() {
-     *  // L?sche Anrufliste der SipProvider for (int k = 0; k <
+     *  // Lösche Anrufliste der SipProvider for (int k = 0; k <
      * jfritz.getSIPProviderTableModel().getProviderList() .size(); k++) {
      * SipProvider sipprovider = (SipProvider) jfritz
      * .getSIPProviderTableModel().getProviderList().get(k);
@@ -1057,7 +1057,7 @@ public class CallerList extends AbstractTableModel {
      * 
      * for (int i = unfilteredCallerData.size(); i > 0; i--) { Call call =
      * (Call) unfilteredCallerData.get(i - 1); if (call.getCalltype().toInt() ==
-     * 3) { // Nur abgehende Gespr?che // berechnen if
+     * 3) { // Nur abgehende Gespräche // berechnen if
      * (call.getPhoneNumber().isEmergencyCall() ||
      * call.getPhoneNumber().isFreeCall() ||
      * call.getPhoneNumber().isSIPNumber()) { call.setCost(0); } else if
@@ -1074,7 +1074,7 @@ public class CallerList extends AbstractTableModel {
      * kein (oder unbekannter) VoIP-Provider // benutzt => unbekannte Kosten
      * call.setCost(-1); } } else { // Ankommende oder verpasse Anrufe => keine
      * Kosten call.setCost(0); } }
-     *  // Berechne die Kosten f?r die Anrufe, die ?ber SipProvider gef?hrt //
+     *  // Berechne die Kosten für die Anrufe, die über SipProvider geführt //
      * wurden for (int k = 0; k <
      * jfritz.getSIPProviderTableModel().getProviderList() .size(); k++) {
      * SipProvider sipprovider = (SipProvider) jfritz
