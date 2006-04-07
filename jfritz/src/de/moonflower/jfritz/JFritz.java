@@ -1583,14 +1583,11 @@ public final class JFritz {
      */
     public void createNewWindow(Locale l){
     	locale = l;
+    	
     	Debug.msg("Loading new locale");
     	loadMessages(locale);
     	
-    	jframe.dispose();
-    	javax.swing.SwingUtilities.invokeLater(jframe);
-    	jframe = new JFritzWindow(this);
-    	javax.swing.SwingUtilities.invokeLater(jframe);
-    	jframe.checkStartOptions();
+    	refreshWindow();
     
     }
     
@@ -1600,6 +1597,7 @@ public final class JFritz {
      */
     
     public void refreshWindow(){
+    	jfritz.saveProperties();
     	jframe.dispose();
     	javax.swing.SwingUtilities.invokeLater(jframe);
     	jframe = new JFritzWindow(this);
