@@ -498,7 +498,7 @@ protected JPanel createOtherPane() {
         otherpane.add(passwordAfterStartButton);
 
         timerAfterStartButton = new JCheckBox(
-                "Nach Programmstart Timer aktivieren");
+        		JFritz.getMessage("get_timer_after"));
         otherpane.add(timerAfterStartButton);
 
         startMinimizedButton = new JCheckBox(
@@ -552,7 +552,7 @@ protected JPanel createOtherPane() {
 
         c.gridy = 3;
         lookupAfterFetchButton = new JCheckBox(
-                "Nach Laden Rückwärtssuche ausführen");
+        		JFritz.getMessage("lookup_after_fetch"));
         cPanel.add(lookupAfterFetchButton, c);
 
         c.gridy = 4;
@@ -984,11 +984,13 @@ protected JPanel createOtherPane() {
      */
     public void setCallMonitorButtons(int option) {
         if (option == JFritz.CALLMONITOR_START) {
-            startCallMonitorButton.setText("Starte Anrufmonitor");
+            startCallMonitorButton.setText(
+            		JFritz.getMessage("start_call_monitor"));
             startCallMonitorButton.setSelected(false);
             jfritz.getJframe().getMonitorButton().setSelected(false);
         } else if (option == JFritz.CALLMONITOR_STOP) {
-            startCallMonitorButton.setText("Stoppe Anrufmonitor");
+            startCallMonitorButton.setText(
+            		JFritz.getMessage("stop_call_monitor"));
             startCallMonitorButton.setSelected(true);
             jfritz.getJframe().getMonitorButton().setSelected(true);
         }
