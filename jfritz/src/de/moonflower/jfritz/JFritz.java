@@ -448,9 +448,9 @@ public final class JFritz {
     /**
      * Main method for starting JFritz
      * 
-     * LAST MODIFIED: Brian Jensen 28.03.06
-     * fixed the broken internationalization
-     * added a new parameter switch: --lang
+     * LAST MODIFIED: Brian Jensen 04.06.06
+     * added option to disable mulitple instance control
+     * added a new parameter switch: -w
      * 
      * @param args
      *            Program arguments (-h -v ...)
