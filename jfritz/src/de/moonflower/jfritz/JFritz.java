@@ -44,6 +44,7 @@
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
  * 
  * JFritz 0.6.0
+ * - Bugfix: Wahlhilfe im Telefonbuch funktioniert jetzt bei englischer Sprache (Brian) 
  * - Bugfix: Beim Metal-LAF werden jetzt immer die Metal-Decorations verwendet.
  * - Bugfix: Beim Ändern des Look And Feel's werden die Buttons korrekt dargestellt.
  * - Neu: Sprache einstellbar ( <- Wahlhilfe im Telefonbuch funktioniert bei englischer Sprache nicht (Bastian))
