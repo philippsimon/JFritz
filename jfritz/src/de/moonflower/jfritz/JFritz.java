@@ -42,6 +42,7 @@
  
  * CHANGELOG:
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
+ * TODO: Neue Kurzwahlen von der Beta-FW ins Telefonbuch aufnehmen
  * 
  * JFritz 0.6.0
  * - Bugfix: Wahlhilfe im Telefonbuch funktioniert jetzt bei englischer Sprache (Brian) 
@@ -490,7 +491,7 @@ public final class JFritz {
                 "Writes debug messages to logfile");
         options.addOption('p', "priority", "level",
                 "Set program priority [1..10]");
-        options.addOption('i',"lang", "language","set the display language, currently supported: german, english");
+        options.addOption('i',"lang", "language","Set the display language, currently supported: german, english");
         options.addOption('w', "without-control", null, 
         		"Turns off multiple instance control. DON'T USE, unless you know what your are doing");
         
