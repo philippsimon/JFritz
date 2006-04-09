@@ -45,13 +45,13 @@
  * (TODO: Neue Kurzwahlen von der Beta-FW ins Telefonbuch aufnehmen)
  * TODO: Import der Anrufliste im XML-Format beim Kontextmenü einbauen
  * TODO: Einstelloption, wie lange die Popups geöffnet bleiben sollen
- * TODO-Wichtig: Sprache im Tray-Menü nach einem Wechsel der Sprache anpassen.
  * 
  * JFritz 0.6.0
  * - Bugfix: Wahlhilfe im Telefonbuch funktioniert jetzt bei englischer Sprache (Brian) 
  * - Bugfix: Beim Metal-LAF werden jetzt immer die Metal-Decorations verwendet.
  * - Bugfix: Beim Ändern des Look And Feel's werden die Buttons korrekt dargestellt.
- * - Neu: Sprache einstellbar ( <- Wahlhilfe im Telefonbuch funktioniert bei englischer Sprache nicht (Bastian))
+ * - Neu: Sprache einstellbar ( <- Wahlhilfe im Telefonbuch funktioniert bei englischer Sprache nicht (Bastian)
+ * 								<- TrayMenu angepasst (Benjamin))
  * - Neu: Fritzbox Anrufliste als CSV-Datei importieren
  * - Neu: Thunderbird/Mozilla-Kontakte importieren
  * - Neu: Telefonbuch als CSV-Datei exportieren
@@ -1614,4 +1614,13 @@ public final class JFritz {
     
     }
     
+    /**
+     *	Deletes actual systemtray and creates a new one.
+     * @author Benjamin Schmitt
+     */    
+    public void refreshTrayMenu()
+    {
+    	systray.removeTrayIcon(trayIcon);
+    	this.createTrayMenu();
+    }
 }
