@@ -1620,7 +1620,10 @@ public final class JFritz {
      */    
     public void refreshTrayMenu()
     {
-    	systray.removeTrayIcon(trayIcon);
-    	this.createTrayMenu();
+    	if (systray!=null && trayIcon!=null)
+    	{
+    		systray.removeTrayIcon(trayIcon);
+    		this.createTrayMenu();
+    	}
     }
 }
