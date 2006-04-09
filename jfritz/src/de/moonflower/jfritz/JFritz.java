@@ -43,6 +43,7 @@
  * CHANGELOG:
  * TODO: Checken, ob alle Bibliotheken vorhanden sind
  * TODO: Neue Kurzwahlen von der Beta-FW ins Telefonbuch aufnehmen
+ * TODO: Import der Anrufliste im XML-Format beim Kontextmenü einbauen
  * 
  * JFritz 0.6.0
  * - Bugfix: Wahlhilfe im Telefonbuch funktioniert jetzt bei englischer Sprache (Brian) 
