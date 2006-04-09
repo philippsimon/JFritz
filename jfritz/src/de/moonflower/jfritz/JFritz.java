@@ -41,9 +41,11 @@
  * FeatureRequests: http://sourceforge.net/tracker/?func=browse&group_id=138196&atid=741416
  
  * CHANGELOG:
- * TODO: Checken, ob alle Bibliotheken vorhanden sind
- * TODO: Neue Kurzwahlen von der Beta-FW ins Telefonbuch aufnehmen
+ * (TODO: Checken, ob alle Bibliotheken vorhanden sind)
+ * (TODO: Neue Kurzwahlen von der Beta-FW ins Telefonbuch aufnehmen)
  * TODO: Import der Anrufliste im XML-Format beim Kontextmenü einbauen
+ * TODO: Einstelloption, wie lange die Popups geöffnet bleiben sollen
+ * TODO-Wichtig: Sprache im Tray-Menü nach einem Wechsel der Sprache anpassen.
  * 
  * JFritz 0.6.0
  * - Bugfix: Wahlhilfe im Telefonbuch funktioniert jetzt bei englischer Sprache (Brian) 
