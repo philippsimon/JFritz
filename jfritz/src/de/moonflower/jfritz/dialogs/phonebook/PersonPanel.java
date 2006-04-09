@@ -65,6 +65,7 @@ public class PersonPanel extends JPanel implements ActionListener,
 		private PhoneType sel;
 
 		private Vector types;
+		
 
 		public PhoneTypeModel() {
 			super();
@@ -127,6 +128,15 @@ public class PersonPanel extends JPanel implements ActionListener,
 
 		public Object getSelectedItem() {
 			return sel;
+		}
+		
+		/**
+		 * @author Bastian Schaefer
+		 * 
+		 * @return all available types
+		 */
+		public String[] getBasicTypes(){
+			return basicTypes;
 		}
 
 	}
@@ -664,6 +674,6 @@ public class PersonPanel extends JPanel implements ActionListener,
 	*/
 	public boolean focusFirstName() {
 		return tfFirstName.requestFocusInWindow();
-	}
-	
+	}	
+
 }
