@@ -47,6 +47,7 @@
  * TODO: Einstelloption, wie lange die Popups geöffnet bleiben sollen
  * 
  * JFritz 0.6.0
+ * - Bugfix: MAC-Handling funktioniert wieder
  * - Bugfix: Wahlhilfe im Telefonbuch funktioniert jetzt bei englischer Sprache (Brian) 
  * - Bugfix: Beim Metal-LAF werden jetzt immer die Metal-Decorations verwendet.
  * - Bugfix: Beim Ändern des Look And Feel's werden die Buttons korrekt dargestellt.
@@ -676,7 +677,7 @@ public final class JFritz {
 
         String osName = System.getProperty("os.name");
         Debug.msg("Operating System : " + osName);
-        if (osName.startsWith("Mac OS"))
+        if (osName.toLowerCase().startsWith("mac os"))
             HostOS = "Mac";
         else if (osName.startsWith("Windows"))
             HostOS = "Windows";
@@ -685,7 +686,7 @@ public final class JFritz {
         }
         Debug.msg("JFritz runs on " + HostOS);
 
-        if (HostOS.equalsIgnoreCase("mac")) {
+        if (HostOS.equals("Mac")) {
             new MacHandler(this);
         }
         autodetectFirmware();
