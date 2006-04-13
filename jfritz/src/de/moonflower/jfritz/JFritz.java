@@ -1173,6 +1173,7 @@ public final class JFritz {
         String callerstr = "", calledstr = "";
 		String firstname = "", surname = "", company = "";
 		
+		callerstr = calledInput;
         if (!callerInput.startsWith("SIP")) {
             PhoneNumber caller = new PhoneNumber(callerInput);
             if (caller.getIntNumber().equals("")) {
@@ -1181,17 +1182,13 @@ public final class JFritz {
                 callerstr = caller.getIntNumber();
         }
 		
-		if (!calledInput.startsWith("SIP")) {
-            PhoneNumber called = new PhoneNumber(calledInput);
-            if (called.getIntNumber().equals("")) {
-                calledstr = JFritz.getMessage("unknown");
-            } else
-                calledstr = calledInput;
-        } else
-            calledstr = getSIPProviderTableModel().getSipProvider(calledInput,
+		calledstr = calledInput;
+		if (calledInput.startsWith("SIP"))
+			calledstr = getSIPProviderTableModel().getSipProvider(calledInput,
                     calledInput);
+            
 
-        if (name.equals("") && !callerstr.equals("Unbekannt")) {
+        if (name.equals("") && !callerstr.equals(JFritz.getMessage("unknown"))) {
 			name = searchNameToPhoneNumber(callerstr);
 			String [] nameArray = searchFirstAndLastNameToPhoneNumber(callerstr);
 			firstname = nameArray[0];
@@ -1209,23 +1206,23 @@ public final class JFritz {
         Debug.msg("Name: " + name);
 
         switch (Integer.parseInt(JFritz.getProperty("option.popuptype", "1"))) {
-        case 0: { // No Popup
-            break;
-        }
-        default: {
-            String outstring = JFritz.getMessage("incoming_call") + "\n " + JFritz.getMessage("from")
-                    + callerstr;
-            if (!name.equals(JFritz.getMessage("unknown"))) {
-                outstring = outstring + " (" + name + ")";
-            }
-            
-            if (!calledstr.equals(JFritz.getMessage("unknown"))) {
-                outstring = outstring + "\n" +JFritz.getMessage("to") + calledstr;
-            }
-            infoMsg(outstring);
-            break;
-
-        }
+	        case 0: { // No Popup
+	            break;
+	        }
+	        default: {
+	            String outstring = JFritz.getMessage("incoming_call") + "\n " + JFritz.getMessage("from")
+	                    + " " + callerstr;
+	            if (!name.equals(JFritz.getMessage("unknown"))) {
+	                outstring = outstring + " (" + name + ")";
+	            }
+	            
+	            if (!calledstr.equals(JFritz.getMessage("unknown"))) {
+	                outstring = outstring + "\n " + JFritz.getMessage("to") + " " + calledstr;
+	            }
+	            infoMsg(outstring);
+	            break;
+	
+	        }
         }
 
         if (JFritzUtils.parseBoolean(JFritz.getProperty("option.playSounds",
@@ -1296,24 +1293,16 @@ public final class JFritz {
         String calledstr = "", providerstr = "", name = "";
 		String firstname = "", surname = "", company = "";
 		
+		calledstr = calledInput;
         if (!calledInput.startsWith("SIP")) {
             PhoneNumber called = new PhoneNumber(calledInput);
-            if (called.getIntNumber().equals("")) {
-                calledstr = JFritz.getMessage("unknown");
-            } else
-                calledstr = called.getIntNumber();
+            if (!called.getIntNumber().equals(""))
+				calledstr = called.getIntNumber();     
         }
 
-        if (!providerInput.startsWith("SIP") && !providerInput.startsWith("Analog")) {
-            PhoneNumber provider = new PhoneNumber(providerInput);
-            if (provider.getIntNumber().equals("")) {
-                providerstr = JFritz.getMessage("unknown");
-            } else
-                providerstr = providerInput;
-        } else if (providerInput.equals("Analog")) {
-            providerstr = "Analog";
-        } else
-            providerstr = getSIPProviderTableModel().getSipProvider(
+		providerstr = providerInput;
+        if (providerInput.startsWith("SIP"))
+			providerstr = getSIPProviderTableModel().getSipProvider(
                     providerInput, providerInput);
 
         name = searchNameToPhoneNumber(calledstr);
@@ -1328,9 +1317,14 @@ public final class JFritz {
 		
 		if (calledstr.startsWith("+49")) calledstr = "0" + calledstr.substring(3);
 		
-        infoMsg(JFritz.getMessage("outgoing_call")+"\n\n"
-        		+JFritz.getMessage("to") + calledstr + " ("
-                + name + ") " + JFritz.getMessage("through_provider") + providerstr);
+		String outstring = JFritz.getMessage("outgoing_call")+"\n "
+		                   + JFritz.getMessage("to") +  " " + calledstr;
+		if (!name.equals(JFritz.getMessage("unknown"))) outstring += " (" + name + ")\n ";
+		else  outstring += "\n ";
+		outstring += JFritz.getMessage("through_provider") + " " + providerstr;
+		
+        infoMsg(outstring);
+                
         if (JFritzUtils.parseBoolean(JFritz.getProperty("option.playSounds",
                 "true"))) {
             playSound(callSound);
