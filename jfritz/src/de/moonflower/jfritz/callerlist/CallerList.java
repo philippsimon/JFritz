@@ -97,6 +97,8 @@ public class CallerList extends AbstractTableModel {
     private int sortColumn;
 
     private boolean sortDirection = false;
+	
+	private boolean tryBETAparser = true;
 
     /**
      * CallerList Constructor
@@ -1114,6 +1116,8 @@ public class CallerList extends AbstractTableModel {
 	    boolean isNewFirmware = false;  //check if its was exported with a new box
 	    int newEntries = 0;
 	    
+		tryBETAparser = true;
+		
 	    try {
 	    	//FileReader fr = new FileReader(filename);
 	        //BufferedReader br = new BufferedReader(fr);
@@ -1139,7 +1143,10 @@ public class CallerList extends AbstractTableModel {
 	        		  else
 	        			  c = parseCallFritzboxCSV(line, isNewFirmware);
 	        		  
-	        		  if(c == null)
+	        		  if(c == null && tryBETAparser)
+						  c = parseCallFritzboxBETACSV (line);
+
+					  if(c == null)
 	        			  Debug.msg("Error encountered processing the csv file, continuing");
 	        		  else if(addEntry(c)){
 	        			  newEntries++;
@@ -1311,8 +1318,8 @@ public class CallerList extends AbstractTableModel {
 		    PhoneNumber number;
 		    
 		    //check if line has correct amount of entries
-		    if(field.length < 6){
-		      Debug.err("Invalid CSV format!");		//if you find an error here, its not because
+		    if(field.length != 6){
+		      Debug.err("Invalid CSV format - might be the beta firmware, then everything is OK. :-)");		//if you find an error here, its not because
 		      return null;						//jfritz is broken, the fritz box exports things
 		    }								//with an extra empty line for whatever reason
 		    
@@ -1393,4 +1400,99 @@ public class CallerList extends AbstractTableModel {
 	  
 	  }
 
+	  /**
+	   * @author KCh
+	   * function parses a line of a csv file, that was directly exported
+	   * from the Fritzbox web interface with BETA FW (with Bug).
+	   * 
+	   * 
+	   * @param line contains the line to be processed
+	   * @return is call object, or null if the csv was invalid
+	   */
+	  public Call parseCallFritzboxBETACSV(String line){
+		    String[] field = line.split(PATTERN_CSV);
+		    Call call;
+		    CallType calltype;
+		    Date calldate;
+		    PhoneNumber number;
+		    
+		    //check if line has correct amount of entries
+		    if(field.length != 7){
+			  tryBETAparser = false;
+		      Debug.err("Invalid CSV format!");
+		      return null;
+		    }
+		    
+	  
+		    //Call type
+		    if((field[0].equals("1"))){
+		        calltype = new CallType("call_in");
+		    }else if((field[0].equals("2"))){
+		      calltype = new CallType("call_in_failed");
+		    }else if((field[0].equals("3"))){
+		      calltype = new CallType("call_out");
+		    }else{
+		      Debug.err("Invalid Call type in CSV file!");
+		      return null;
+		    }
+		    
+		    //Call date and time
+		    if(field[1] != null){
+		    	try{
+			        calldate = new SimpleDateFormat("dd.MM.yy HH:mm").parse(field[1]);
+			      }catch(ParseException e){
+			        Debug.err("Invalid date format in csv file!");
+			        return null;
+			      }
+		    }else{
+		    	Debug.err("Invalid CSV file!");
+		    	return null;
+		    }
+		    
+		    //Phone number
+		    if(field[3] != null)
+		      number = new PhoneNumber(field[3]);
+		    else
+		      number = null;
+		    
+		    //split the duration into two stings, hours:minutes
+		    String[] time = field[6].split(":");
+		    //make the call object
+		    
+		    //change the port to fit the jfritz naming convention
+		    if (field[4].equals("FON 1")) {
+              field[4] = "0";
+          } else if (field[4].equals("FON 2")) {
+              field[4] = "1";
+          } else if (field[4].equals("FON 3")) {
+              field[4] = "2";
+          } else if (field[4].equals("Durchwahl")){
+          	field[4] = "3";
+          } else if (field[4].equals("FON S0")) {
+              field[4] = "4";
+          } else if (field[4].equals("DATA S0")){
+          	field[4] = "36";
+          }
+		    
+		    //Parse the SIP Provider and save it correctly
+		    if (field[5].startsWith("Internet: ")) {
+              Enumeration en = jfritz.getSIPProviderTableModel()
+                      .getProviderList().elements();
+              while (en.hasMoreElements()) {
+                  SipProvider sipProvider = (SipProvider) en
+                          .nextElement();
+                  if (sipProvider.getNumber().equals(field[5].substring(10))) {
+                      field[5] = "SIP" + sipProvider.getProviderID();
+                      break;
+                  }
+              }
+          }
+		    
+		    //make the call object and exit
+		    call = new Call(jfritz, calltype, calldate, number, field[4], field[5], 
+		        Integer.parseInt(time[0])*3600 + Integer.parseInt(time[1])*60);
+		    
+		    return call;
+	  
+	  }
 }
