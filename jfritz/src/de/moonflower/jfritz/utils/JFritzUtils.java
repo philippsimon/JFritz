@@ -395,6 +395,8 @@ public class JFritzUtils {
         fetchDataFromURL(urlstr, postdata, true);
     }
 
+    
+    //test
     public static Vector retrieveCSVList(String box_address, String password,
             String countryPrefix, String countryCode, String areaPrefix,
             String areaCode, FritzBoxFirmware firmware, JFritz jfritz)
