@@ -885,7 +885,7 @@ protected JPanel createOtherPane() {
                     } catch (WrongPasswordException e1) {
                         Debug.err("Password wrong!");
                         boxtypeLabel.setForeground(Color.RED);
-                        boxtypeLabel.setText("Passwort ungültig!");
+                        boxtypeLabel.setText(JFritz.getMessage("wrong_password"));
                         firmware = null;
                     } catch (IOException e1) {
                         Debug.err("Address wrong!");
