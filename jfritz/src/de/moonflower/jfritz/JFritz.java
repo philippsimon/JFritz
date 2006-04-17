@@ -804,7 +804,7 @@ public final class JFritz {
     private void loadMessages(Locale locale) {
         try {
             messages = ResourceBundle.getBundle(
-                    "de.moonflower.jfritz.resources.jfritz", locale);//$NON-NLS-1$
+                    "jfritz", locale);//$NON-NLS-1$
         } catch (MissingResourceException e) {
             Debug.err("Can't find i18n resource!");//$NON-NLS-1$
             JOptionPane.showMessageDialog(null, JFritz.PROGRAM_NAME + " v"//$NON-NLS-1$
