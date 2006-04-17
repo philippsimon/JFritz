@@ -642,7 +642,7 @@ public final class JFritz {
             boolean clearList, boolean enableInstanceControl, boolean writeForeignFormats) {
         jfritz = this;    
         loadProperties();
-        loadMessages(new Locale(JFritz.getProperty("locale","de_DE")));
+        loadMessages(new Locale(JFritz.getProperty("locale","de_DE"))); //$NON-NLS-1$,  //$NON-NLS-2$
         
         if (JFritzUtils.parseBoolean(properties.getProperty("option.createBackup", "false"))) { //$NON-NLS-1$,  //$NON-NLS-2$
             doBackup();
