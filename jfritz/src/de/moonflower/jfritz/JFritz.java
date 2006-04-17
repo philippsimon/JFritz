@@ -898,7 +898,8 @@ public final class JFritz {
         JPopupMenu menu = new JPopupMenu("JFritz Menu"); //$NON-NLS-1$
         JMenuItem menuItem = new JMenuItem(PROGRAM_NAME + " v" //$NON-NLS-1$
                 + PROGRAM_VERSION);
-        menuItem.setEnabled(false);
+        menuItem.setActionCommand("showhide");
+        menuItem.addActionListener(jframe);
         menu.add(menuItem);
         menu.addSeparator();
         menuItem = new JMenuItem(getMessage("fetchlist")); //$NON-NLS-1$
