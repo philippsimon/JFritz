@@ -423,6 +423,8 @@ public final class JFritz {
     private JFritzProperties defaultProperties;
 
     private static JFritzProperties properties;
+    
+    private static ResourceBundle localeMeanings;
 
     private static ResourceBundle messages;
 
@@ -644,6 +646,7 @@ public final class JFritz {
         jfritz = this;    
         loadProperties();
         loadMessages(new Locale(JFritz.getProperty("locale","de_DE"))); //$NON-NLS-1$,  //$NON-NLS-2$
+        loadLocaleMeanings(new Locale("int_INT"));
         
         if (JFritzUtils.parseBoolean(properties.getProperty("option.createBackup", "false"))) { //$NON-NLS-1$,  //$NON-NLS-2$
             doBackup();
@@ -815,6 +818,21 @@ public final class JFritz {
         }
     }
     
+    /**
+     * Loads resource messages
+     * 
+     * @param locale
+     */
+    private void loadLocaleMeanings(Locale locale) {
+        try {
+            localeMeanings = ResourceBundle.getBundle(
+                    "languages", locale);//$NON-NLS-1$
+        } catch (MissingResourceException e) {
+            Debug.err("Can't find locale Meanings resource!");//$NON-NLS-1$
+        }
+    }
+    
+   
     /**
      * Loads properties from xml files
      */
@@ -1480,6 +1498,20 @@ public final class JFritz {
         }
         return i18n;
     }
+    
+    /**
+     * @return Returns something.
+     */
+    public static String getLocaleMeaning(String msg) {
+        String localeMeaning = ""; //$NON-NLS-1$
+        try {
+        	localeMeaning = localeMeanings.getString(msg);
+        } catch (MissingResourceException e) {
+            Debug.err("Can't find resource string for " + msg); //$NON-NLS-1$
+            localeMeaning = msg;
+        }
+        return localeMeaning;
+    }
 
     /**
      * 
@@ -1503,6 +1535,7 @@ public final class JFritz {
         return getProperty(property, ""); //$NON-NLS-1$
     }
 
+    
     /**
      * Sets a property to a specific value
      * 
