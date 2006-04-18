@@ -647,7 +647,7 @@ public final class JFritz {
         jfritz = this;    
         loadProperties();
         loadMessages(new Locale(JFritz.getProperty("locale","de_DE"))); //$NON-NLS-1$,  //$NON-NLS-2$
-        loadLocaleMeanings(new Locale("int_INT"));
+        loadLocaleMeanings(new Locale("int","INT"));
         
         if (JFritzUtils.parseBoolean(properties.getProperty("option.createBackup", "false"))) { //$NON-NLS-1$,  //$NON-NLS-2$
             doBackup();
@@ -1501,7 +1501,7 @@ public final class JFritz {
     }
     
     /**
-     * @return Returns something.
+     * @return Returns the meanings of a locale abbreviation.
      */
     public static String getLocaleMeaning(String msg) {
         String localeMeaning = ""; //$NON-NLS-1$
