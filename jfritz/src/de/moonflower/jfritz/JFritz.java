@@ -819,7 +819,7 @@ public final class JFritz {
     }
     
     /**
-     * Loads resource messages
+     * Loads locale meanings
      * 
      * @param locale
      */
@@ -1505,9 +1505,16 @@ public final class JFritz {
     public static String getLocaleMeaning(String msg) {
         String localeMeaning = ""; //$NON-NLS-1$
         try {
+        	if(!localeMeanings.getString(msg).equals("")){
         	localeMeaning = localeMeanings.getString(msg);
+        	}else{
+        		localeMeaning = msg;
+        	}
         } catch (MissingResourceException e) {
             Debug.err("Can't find resource string for " + msg); //$NON-NLS-1$
+            localeMeaning = msg;
+        } catch (NullPointerException e){
+            Debug.err("Can't find locale Meanings file"); //$NON-NLS-1$
             localeMeaning = msg;
         }
         return localeMeaning;
