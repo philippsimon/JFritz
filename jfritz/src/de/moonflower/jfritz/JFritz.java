@@ -48,6 +48,7 @@
  * TODO: Filter für Ports
  * TODO: Internationalisierung abschließen
  * TODO: Vergleich auf doppelte Anrufe optimieren (HASH-Tabelle?)
+ * TODO: Language-Files checken, ob tatsächlich alle Werte benötigt werden
  * 
  * JFritz 0.6.0
  * - Neu: Sprache einstellbar ( <- Wahlhilfe im Telefonbuch funktioniert bei englischer Sprache nicht (Bastian)
