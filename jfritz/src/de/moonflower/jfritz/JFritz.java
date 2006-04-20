@@ -35,7 +35,7 @@
  * 
  * BUGS: bitte bei Sourceforge nachschauen und dort auch den Status ändern
  * BUGS: http://sourceforge.net/tracker/?group_id=138196&atid=741413
- * BUG: die Autoerkennung, ob telefond für Syslog richtig läuft hat ein Sicherheitsloch. Nun kann jede IP auf Port 1011 zugreifen.
+ * BUG: die Autoerkennung, ob telefond für Syslog richtig läuft hat ein Sicherheitsloch. Nun kann jede IP auf Port 1011 zugreifen. 
  * 
  * FeatureRequests: bitte bei Sourceforge nachschauen und dort auch den Status ändern
  * FeatureRequests: http://sourceforge.net/tracker/?func=browse&group_id=138196&atid=741416
@@ -53,7 +53,7 @@
  * JFritz 0.6.0
  * - Neu: Sprache einstellbar ( <- Wahlhilfe im Telefonbuch funktioniert bei englischer Sprache nicht (Bastian)
  * 								<- TrayMenu angepasst (Benjamin)
- * 								<- komplett geändert, Sprachfiles werden jetzt dynamisch erkannt und können in den Einstellungen ausgewählt werden. Arbeiten noch nicht beendet (Bastian))
+ * 								<- komplett geändert, Sprachfiles werden jetzt dynamisch erkannt und können in den Einstellungen ausgewählt werden. (Bastian))
  * - Bugfix: Spracheinstellungen werden gespeichert.
  * - Neu: Verbesserte Anzeige des aus- und eingehenden Verbindungstyps bei verwendung des JFritz-Anrufmonitors im Format "interne MSN (Leitungsart)", z.B. "1234 (ISDN)" oder "1234 (SIP)" bei eingehenden Anrufen oder "56789 (88sdg4@dus.net)" bei ausgehenden
  * - Bugfix: Anrufmonitor zeigt ausgehende und eingehende Anrufe im gleichen Format an 
