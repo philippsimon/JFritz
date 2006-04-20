@@ -164,7 +164,7 @@ public class ConfigDialog extends JDialog {
 		callMonitorCombo.setSelectedIndex(Integer.parseInt(JFritz.getProperty(
 				"option.callMonitorType", "0"))); //$NON-NLS-1$,  //$NON-NLS-2$
 
-		languageCombo.setSelectedItem(JFritz.getLocaleMeaning(JFritz.getProperty("locale", "de_DE")));
+	//	languageCombo.setSelectedItem(JFritz.getLocaleMeaning(JFritz.getProperty("locale", "de_DE"))); //TODO
 
 		if (jfritz.getCallMonitor() == null) {
 			startCallMonitorButton.setSelected(false);
@@ -344,8 +344,8 @@ public class ConfigDialog extends JDialog {
 		}
 
 		if (!JFritz	.getProperty("locale", "de_DE").equals(localeList[languageCombo.getSelectedIndex()])) { //$NON-NLS-1$ //$NON-NLS-2$
-			JFritz.setProperty(
-					"locale", localeList[languageCombo.getSelectedIndex()]); //$NON-NLS-1$
+//			JFritz.setProperty(//TODO
+//					"locale", localeList[languageCombo.getSelectedIndex()]); //$NON-NLS-1$
 			loc = localeList[languageCombo.getSelectedIndex()];
 			jfritz.getJframe().setLanguage(	
 					new Locale(loc.substring(0, loc.indexOf("_")), loc.substring(loc.indexOf("_")+1, loc.length())));
@@ -643,6 +643,7 @@ public class ConfigDialog extends JDialog {
 		languageCombo.setActionCommand("languageCombo"); //$NON-NLS-1$
 		languageCombo.setMaximumRowCount(8);
 		languageCombo.addActionListener(actionListener);
+
 		localePane.add(languageCombo, c);
 
 		return localePane;
