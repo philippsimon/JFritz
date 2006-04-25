@@ -87,10 +87,13 @@ public class CallerList extends AbstractTableModel {
     
     private JFritz jfritz;
 
+    //call list used to display entries in the table, can be sorted by other criteria
     private Vector filteredCallerData;
 
+    //internal call list, sorted descending by date
     private Vector unfilteredCallerData;
 
+    //temp vector for adding in new calls
     private Vector newCalls;
     
     private int sortColumn;
@@ -101,7 +104,9 @@ public class CallerList extends AbstractTableModel {
 
     /**      
      * CallerList Constructor
-     * 
+     * new contrustor, using binary sizes
+     * NOTE:filteredCallerData = unfilteredCallerData is forbidden!!
+     * use filteredCallerData = unfilteredCallerData.clone() instead
      * 
      * @author Brian Jensen
      * 
@@ -110,7 +115,7 @@ public class CallerList extends AbstractTableModel {
     public CallerList(JFritz jfritz) {
         //Powers of 2 always have better performance
     	unfilteredCallerData = new Vector(256);
-        filteredCallerData = unfilteredCallerData;
+        filteredCallerData = new Vector();
 
         //lets see if my new method works better
         newCalls = new Vector(32);
@@ -378,46 +383,14 @@ public class CallerList extends AbstractTableModel {
         return addEntry(call);
     }
 
-
-
-/*
-    public boolean addEntry(Call call) {
-        boolean newEntry = true;
-        Enumeration en = alreadyKnownCalls.elements();
-        while (en.hasMoreElements()) {
-            Call c = (Call) en.nextElement();
-            String nr1 = "", nr2 = ""; //$NON-NLS-1$,  //$NON-NLS-2$
-            if (c.getPhoneNumber() != null)
-                nr1 = c.getPhoneNumber().getFullNumber();
-            if (call.getPhoneNumber() != null)
-                nr2 = call.getPhoneNumber().getFullNumber();
-            String route1 = "", route2 = ""; //$NON-NLS-1$,  //$NON-NLS-2$
-            if (c.getRoute() != null)
-                route1 = c.getRoute();
-            if (call.getRoute() != null)
-                route2 = call.getRoute();
-            if (c.getCalldate().equals(call.getCalldate()) && (nr1).equals(nr2)
-                    && (c.getPort().equals(call.getPort()))
-                    && (c.getDuration() == call.getDuration())
-                    && (c.getCalltype().toInt() == call.getCalltype().toInt())
-                    && (route1.equals(route2))) {
-                newEntry = false; // We already have this call
-                alreadyKnownCalls.remove(c);
-                break;
-            }
-        }
-
-        if (newEntry) { // Add new entry to table model
-            unfilteredCallerData.add(call);
-        }
-        return newEntry;
-    }
-
-*/
-   
     /**
-     * Adds an entry to the call list, 
-     * this is my test version, lets see what i can do...
+     * Adds an entry to the call list
+     * this function calls contains(Call newCall) to test
+     * if the given call is contained in the list
+     * the function then adds the entry to newCalls if appropriate
+     * 
+     * Note: After all import processes make sure to call fireUpdateCallVector()
+     * 
      * 
      * @author Brian Jensen
      */
@@ -434,6 +407,10 @@ public class CallerList extends AbstractTableModel {
      /**
       * This function tests if the given call (not the call object!!!)
       * is contained in the call list
+      * 
+      * This new method is using a binary search algorithm, that means 
+      * unfilteredCallerData has to be sorted ascending by date or it won't work
+      * 
       * 
       * @author Brian Jensen
       * 
@@ -473,25 +450,17 @@ public class CallerList extends AbstractTableModel {
     	        	if (newCall.getRoute() != null)
     	        		route2 = newCall.getRoute();
     	        	
-//    	        	System.out.println("Number 1 date: "+c.getCalldate()+" Number 2 date: "+newCall.getCalldate());
-//    	        	System.out.println("Number in list: "+nr1+" Number being checked: "+nr2);
-//    	        	System.out.println("Route in list: "+route1+" Route being checked: "+route2);
-//    	        	System.out.println("Calltype 1: "+c.getCalltype()+" Calltype 2: "+newCall.getCalltype());
-//    	        	System.out.println("Port 1: "+c.getPort()+" Port 2: "+newCall.getPort());
-    	        	
     	        	if ((nr1).equals(nr2)
                         && (c.getPort().equals(newCall.getPort()))
                         && (c.getDuration() == newCall.getDuration())
                         && (c.getCalltype().toInt() == newCall.getCalltype().toInt())
                         && (route1.equals(route2))) {
-//    	        		System.out.println("I've found an equal call");
     	        		return true;
     	        	}else
     	        		return false;
     	        }
      	 }
  
-//    	 System.out.println("Loop exited, not equal call found!");
     	 //we exited the loop => no matching date found
     	 return false;
      
@@ -503,6 +472,7 @@ public class CallerList extends AbstractTableModel {
      * with the recently added calls per addEntry(Call call)
      * 
      * NOTE: This method must be called after any calls have been added
+     * but should not be called until done importing all calls
      * 
      * @author Brian Jensen
      *
@@ -527,6 +497,12 @@ public class CallerList extends AbstractTableModel {
     }
     /**
      * Retrieves data from FRITZ!Box
+     * Function calls JFritzUtils.retrieveCSVList(...) which reads the HTML page
+     * from the box then reads the csv-file in and passes it on to 
+     * CallerList.importFromCSVFile(BufferedReader br) which then parses all the entries
+     * makes backups and deletes entries from the box as appropriate     * 
+     * 
+     * @author Brian Jensen
      * 
      * @param deleteFritzBoxCallerList
      * 				true indicates that fritzbox callerlist should be deleted without considering number of entries or config
@@ -688,7 +664,9 @@ public class CallerList extends AbstractTableModel {
      */
     public void sortAllFilteredRowsBy(int col, boolean asc) {
         // Debug.msg("Sorting column " + col + " " + asc);
-        Collections.sort(filteredCallerData, new ColumnSorter(col, asc));
+        
+    	Debug.msg("Sorting all filtered Rows");
+    	Collections.sort(filteredCallerData, new ColumnSorter(col, asc));
         fireTableDataChanged();
         fireTableStructureChanged();
     }
@@ -701,7 +679,7 @@ public class CallerList extends AbstractTableModel {
      *            Index of column to be sorted by
      */
     public void sortAllFilteredRowsBy(int col) {
-        if ((sortColumn == col) && (sortDirection == false)) {
+    	if ((sortColumn == col) && (sortDirection == false)) {
             sortDirection = true;
         } else {
             sortColumn = col;
@@ -845,7 +823,9 @@ public class CallerList extends AbstractTableModel {
      * Updates the call filter.
      */
     public void updateFilter() {
-        boolean filterCallIn = JFritzUtils.parseBoolean(JFritz
+    	Debug.msg("updating the filter");
+    	
+    	boolean filterCallIn = JFritzUtils.parseBoolean(JFritz
                 .getProperty("filter.callin")); //$NON-NLS-1$
         boolean filterCallInFailed = JFritzUtils.parseBoolean(JFritz
                 .getProperty("filter.callinfailed")); //$NON-NLS-1$
@@ -869,6 +849,7 @@ public class CallerList extends AbstractTableModel {
         String filterDateFrom = JFritz.getProperty("filter.date_from", ""); //$NON-NLS-1$,  //$NON-NLS-2$
         String filterDateTo = JFritz.getProperty("filter.date_to", ""); //$NON-NLS-1$,  //$NON-NLS-2$
 
+        
         try {
             jfritz.getJframe().getCallerTable().getCellEditor()
                     .cancelCellEditing();
@@ -879,8 +860,9 @@ public class CallerList extends AbstractTableModel {
                 && (!filterNumber) && (!filterDate) && (!filterHandy)
                 && (!filterFixed) && (!filterSip) && (!filterCallByCall)
                 && (!filterComment) && (filterSearch.length() == 0)) {
-            // Use unfiltered data
-            filteredCallerData = unfilteredCallerData;
+            
+        	// Use unfiltered data
+            filteredCallerData =  (Vector) unfilteredCallerData.clone();
             sortAllFilteredRowsBy(sortColumn, sortDirection);
         } else { // Data got to be filtered
             Vector filteredSipProviders = new Vector();
@@ -1220,7 +1202,11 @@ public class CallerList extends AbstractTableModel {
 	        	  if (newEntries > 0) {
 	        		  
 	        		  fireUpdateCallVector();
-	        		  
+
+	        		  //uncomment these in case the import function is broken
+	        		  //for(int i=0; i < unfilteredCallerData.size(); i++)
+	        		  //	  System.out.println(unfilteredCallerData.elementAt(i).toString());
+	        		 
 	        		  saveToXMLFile(JFritz.CALLS_FILE, true);
 	        		  String msg;
 	              
@@ -1381,8 +1367,8 @@ public class CallerList extends AbstractTableModel {
 		    
 		    //check if line has correct amount of entries
 		    if(field.length != 6){
-		      Debug.err("Invalid CSV format - might be the beta firmware, then everything is OK. :-)");		//if you find an error here, its not because
-		      return null;						//jfritz is broken, the fritz box exports things
+		    	Debug.err("Invalid CSV format - might be the beta firmware, then everything is OK. :-)");		//if you find an error here, its not because
+		    	return null;						//jfritz is broken, the fritz box exports things
 		    }								//with an extra empty line for whatever reason
 		    
 	  
