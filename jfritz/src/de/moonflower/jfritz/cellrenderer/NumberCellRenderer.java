@@ -114,12 +114,13 @@ public class NumberCellRenderer extends DefaultTableCellRenderer {
 				} else if (number.isLocalCall()) {
 					label.setIcon(imageHome);
 					setToolTipText(JFritz.getMessage("local_call")); //$NON-NLS-1$
-				} else if (number.getIntNumber().startsWith(
-						JFritz.getProperty("country.prefix"))) { //$NON-NLS-1$
-					label.setIcon(imageWorld);
-					setToolTipText(JFritz.getMessage("int_call")); //$NON-NLS-1$
-				} else if (number.isFreeCall()) {
-					label.setIcon(imageFreeCall);
+				} else if ((number.getIntNumber().startsWith(JFritz
+						.getProperty("area.prefix") //$NON-NLS-1$
+						+ JFritz.getProperty("area.code") + "1988")) //$NON-NLS-1$,  //$NON-NLS-2$
+						|| (number.getIntNumber().startsWith("01801777"))) { //$NON-NLS-1$
+					label.setIcon(imageSipgate);
+					setToolTipText(JFritz.getMessage("voip_call")); //$NON-NLS-1$
+				} else if (number.isLocalCall()) {					label.setIcon(imageFreeCall);
 					setToolTipText(JFritz.getMessage("freecall")); //$NON-NLS-1$
 				} else {
 					label.setIcon(imagePhone);
