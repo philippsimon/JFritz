@@ -11,7 +11,6 @@ import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -92,24 +91,32 @@ public class CallerList extends AbstractTableModel {
 
     private Vector unfilteredCallerData;
 
-    private Vector alreadyKnownCalls;
-
+    private Vector newCalls;
+    
     private int sortColumn;
 
     private boolean sortDirection = false;
 	
 	private boolean tryBETAparser = true;
 
-    /**
+    /**      
      * CallerList Constructor
+     * 
+     * 
+     * @author Brian Jensen
      * 
      * @param jfritz
      */
     public CallerList(JFritz jfritz) {
-        filteredCallerData = new Vector();
-        unfilteredCallerData = new Vector();
+        //Powers of 2 always have better performance
+    	unfilteredCallerData = new Vector(256);
+        filteredCallerData = unfilteredCallerData;
+
+        //lets see if my new method works better
+        newCalls = new Vector(32);
+        
         this.jfritz = jfritz;
-        alreadyKnownCalls = new Vector();
+        
         sortColumn = 1;
     }
 
@@ -128,9 +135,9 @@ public class CallerList extends AbstractTableModel {
     public Vector getFilteredCallVector() {
         return filteredCallerData;
     }
-
+    
     /**
-     * 
+     * Is used for the clickability!
      */
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         String columnName = getRealColumnName(columnIndex);
@@ -317,7 +324,10 @@ public class CallerList extends AbstractTableModel {
             });
             reader.setContentHandler(new CallFileXMLHandler(this));
             reader.parse(new InputSource(new FileInputStream(filename)));
-            sortAllUnfilteredRows();
+            
+            //Synchronise the call vectors
+            fireUpdateCallVector();
+
 
         } catch (ParserConfigurationException e) {
             Debug.err("Error with ParserConfiguration!"); //$NON-NLS-1$
@@ -368,13 +378,9 @@ public class CallerList extends AbstractTableModel {
         return addEntry(call);
     }
 
-    /**
-     * adds new Call to CallerList
-     * 
-     * @param call
-     * @return true if call was added successfully
-     */
 
+
+/*
     public boolean addEntry(Call call) {
         boolean newEntry = true;
         Enumeration en = alreadyKnownCalls.elements();
@@ -407,6 +413,109 @@ public class CallerList extends AbstractTableModel {
         return newEntry;
     }
 
+*/
+   
+    /**
+     * Adds an entry to the call list, 
+     * this is my test version, lets see what i can do...
+     * 
+     * @author Brian Jensen
+     */
+     public boolean addEntry(Call call) {
+
+    	if(contains(call)) { 
+    		return false;
+        }else{				//add a new enty to the call list
+        	newCalls.add(call);
+        	return true;
+        }
+    }
+
+     /**
+      * This function tests if the given call (not the call object!!!)
+      * is contained in the call list
+      * 
+      * @author Brian Jensen
+      * 
+      **/
+     public boolean contains(Call newCall){
+    	 int left, right, middle;
+    	 left = 0;
+    	 right = unfilteredCallerData.size() -1;
+    	 
+    	 while(left <= right){
+
+    		 middle = ((right-left)/2)+left;
+    	        
+    		 if(unfilteredCallerData.isEmpty())
+    			 return false;
+    	        
+    		 Call c = (Call) unfilteredCallerData.elementAt(middle);
+    		 int Compare = newCall.getCalldate().compareTo(c.getCalldate());
+    	        
+    		 //check if the date is before or after the current element in the vector
+    		 //Note: change the values here to fit the current sorting method
+    		 if(Compare > 0)
+    			 right = middle -1;
+    		 else if(Compare < 0)
+    			 left = middle +1;
+    		 else{      
+    	        	//if we are here, then the dates match
+    	        	//lets check if everything else matches
+    	        	String nr1 = "", nr2 = ""; //$NON-NLS-1$,  //$NON-NLS-2$
+    	        	if (c.getPhoneNumber() != null)
+    	        		nr1 = c.getPhoneNumber().getFullNumber();
+    	        	if (newCall.getPhoneNumber() != null)
+    	        		nr2 = newCall.getPhoneNumber().getFullNumber();
+    	        	String route1 = "", route2 = ""; //$NON-NLS-1$,  //$NON-NLS-2$
+    	        	if (c.getRoute() != null)
+    	        		route1 = c.getRoute();
+    	        	if (newCall.getRoute() != null)
+    	        		route2 = newCall.getRoute();
+    	        	
+//    	        	System.out.println("Number 1 date: "+c.getCalldate()+" Number 2 date: "+newCall.getCalldate());
+//    	        	System.out.println("Number in list: "+nr1+" Number being checked: "+nr2);
+//    	        	System.out.println("Route in list: "+route1+" Route being checked: "+route2);
+//    	        	System.out.println("Calltype 1: "+c.getCalltype()+" Calltype 2: "+newCall.getCalltype());
+//    	        	System.out.println("Port 1: "+c.getPort()+" Port 2: "+newCall.getPort());
+    	        	
+    	        	if ((nr1).equals(nr2)
+                        && (c.getPort().equals(newCall.getPort()))
+                        && (c.getDuration() == newCall.getDuration())
+                        && (c.getCalltype().toInt() == newCall.getCalltype().toInt())
+                        && (route1.equals(route2))) {
+//    	        		System.out.println("I've found an equal call");
+    	        		return true;
+    	        	}else
+    	        		return false;
+    	        }
+     	 }
+ 
+//    	 System.out.println("Loop exited, not equal call found!");
+    	 //we exited the loop => no matching date found
+    	 return false;
+     
+     }
+     
+     
+    /**
+     * This method synchronises the main call vector with
+     * with the recently added calls per addEntry(Call call)
+     * 
+     * NOTE: This method must be called after any calls have been added
+     * 
+     * @author Brian Jensen
+     *
+     */
+    public void fireUpdateCallVector(){
+    	//update the call list and then sort it
+    	unfilteredCallerData.addAll(newCalls);
+    	newCalls.clear();
+    	sortAllUnfilteredRows();
+    }
+     
+     
+    
     /**
      * Retrieves data from FRITZ!Box
      *   
@@ -425,7 +534,7 @@ public class CallerList extends AbstractTableModel {
      * @throws IOException
      */
     public void getNewCalls(boolean deleteFritzBoxCallerList) throws WrongPasswordException, IOException {
-    	alreadyKnownCalls = (Vector) unfilteredCallerData.clone();
+
         Debug.msg("box.address: " + JFritz.getProperty("box.address"));
         Debug.msg("box.password: " + JFritz.getProperty("box.password"));
         Debug.msg("box.firmware: " + JFritz.getProperty("box.firmware"));
@@ -448,10 +557,6 @@ public class CallerList extends AbstractTableModel {
             jfritz.getJframe().setVisible(true);
             jfritz.getJframe().toFront();
         }
-
-        
-		sortAllUnfilteredRows();
-		saveToXMLFile(JFritz.CALLS_FILE, true);
 
         if ((newEntries 
                 && JFritz.getProperty("option.deleteAfterFetch", "false")
@@ -1067,21 +1172,15 @@ public class CallerList extends AbstractTableModel {
 	   * @param filename of the csv file to import from
 	   */
 	  public boolean importFromCSVFile(BufferedReader br){
-	    //Is the performace gain from this really worth it?
-	    //And if there are duplicate calls, only the first one gets filtered out
-	    alreadyKnownCalls = (Vector) unfilteredCallerData.clone();
 	    
-	    //Debug.msg("Importing from csv file " + filename);
 	    String line = "";
-	    boolean isJFritzExport = false; //flag to check which type to parse
-	    boolean isNewFirmware = false;  //check if its was exported with a new box
+	    boolean isJFritzExport = false; //flags to check which type to parse
+	    boolean isNewFirmware = false;  
 	    int newEntries = 0;
 	    
 		tryBETAparser = true;
 		
 	    try {
-	    	//FileReader fr = new FileReader(filename);
-	        //BufferedReader br = new BufferedReader(fr);
 	          line = br.readLine();   
 	          
 	          //check if we have a correct header
@@ -1119,7 +1218,9 @@ public class CallerList extends AbstractTableModel {
 	        	  Debug.msg(newEntries+" New entries processed");
 	                                 
 	        	  if (newEntries > 0) {
-	        		  sortAllUnfilteredRows();
+	        		  
+	        		  fireUpdateCallVector();
+	        		  
 	        		  saveToXMLFile(JFritz.CALLS_FILE, true);
 	        		  String msg;
 	              
@@ -1141,7 +1242,7 @@ public class CallerList extends AbstractTableModel {
 	          }
 	          
 	          //NOTE: the caller must close the stream!
-	          //br.close();
+
 	          } catch (FileNotFoundException e) {
 	              Debug.err("Could not read from File!");
 	          } catch(IOException e){

@@ -455,7 +455,6 @@ public class JFritzUtils {
             if (postdata != null) {
                 urlConn.setRequestProperty("Content-Type",
                         "application/x-www-form-urlencoded");
-                Debug.msg("Sending POSTDATA to the box");
                 printout = new DataOutputStream(urlConn.getOutputStream());
                 printout.writeBytes(postdata);
                 printout.flush();
@@ -497,7 +496,6 @@ public class JFritzUtils {
         //If the url is valid load the data
         if (url != null) {
             
-        	Debug.msg("Opening the connection to the box");
         	urlConn = url.openConnection();
             urlConn.setDoInput(true);
             urlConn.setDoOutput(true);
@@ -510,7 +508,6 @@ public class JFritzUtils {
             printout.flush();
             printout.close();
             
-            Debug.msg("Wrote request to Box, waiting for response");
             BufferedReader reader;
 
             try {
@@ -519,8 +516,10 @@ public class JFritzUtils {
             			.getInputStream()));
            		
            		//pass it on to the import function
-           	   	newEntries = jfritz.getCallerlist().importFromCSVFile(reader);
-            	
+           	   	
+            	Debug.msg("Recieved response, begin processin call list");
+            	newEntries = jfritz.getCallerlist().importFromCSVFile(reader);
+            	Debug.msg("Finished processing response");
            		/*while (null != ((str = HTMLUtil.stripEntities(reader.readLine())))) {
             			// Password seems to be wrong
             			// if (str.indexOf("FEHLER: Das angegebene Kennwort ") > 0)
