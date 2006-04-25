@@ -123,6 +123,7 @@ public class NumberCellRenderer extends DefaultTableCellRenderer {
 					label.setIcon(imageWorld);
 					setToolTipText(JFritz.getMessage("int_call")); //$NON-NLS-1$
 				} else if (number.isFreeCall()) {
+					label.setIcon(imageFreeCall);
 					setToolTipText(JFritz.getMessage("freecall")); //$NON-NLS-1$
 				} else {
 					label.setIcon(imagePhone);
