@@ -114,12 +114,15 @@ public class NumberCellRenderer extends DefaultTableCellRenderer {
 				} else if (number.isLocalCall()) {
 					label.setIcon(imageHome);
 					setToolTipText(JFritz.getMessage("local_call")); //$NON-NLS-1$
-				} else if (number.getIntNumber().startsWith(
-						JFritz.getProperty("country.prefix"))) { //$NON-NLS-1$
+				} else if (
+						(number.getIntNumber().startsWith(JFritz.getProperty("country.prefix")) 
+							|| 
+							(number.getIntNumber().startsWith("+"))
+						&& !(number.getIntNumber().startsWith("+" + JFritz.getProperty("country.code"))) 
+								)) { //$NON-NLS-1$
 					label.setIcon(imageWorld);
 					setToolTipText(JFritz.getMessage("int_call")); //$NON-NLS-1$
 				} else if (number.isFreeCall()) {
-					label.setIcon(imageFreeCall);
 					setToolTipText(JFritz.getMessage("freecall")); //$NON-NLS-1$
 				} else {
 					label.setIcon(imagePhone);
