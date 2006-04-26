@@ -1489,11 +1489,16 @@ public final class JFritz {
 
     /**
      * @return Returns an internationalized message.
+     * Last modified: 26.04.06 by Bastian
      */
     public static String getMessage(String msg) {
         String i18n = ""; //$NON-NLS-1$
         try {
-            i18n = messages.getString(msg);
+        	if(!messages.getString(msg).equals("")){
+        		i18n = messages.getString(msg);
+            	}else{
+            		i18n = msg;
+            	}
         } catch (MissingResourceException e) {
             Debug.err("Can't find resource string for " + msg); //$NON-NLS-1$
             i18n = msg;
