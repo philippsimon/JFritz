@@ -50,15 +50,15 @@ import java.net.URLEncoder;
  */
 public class JFritzUtils {
 
-    private final static String POSTDATA_LIST = "&var%3Alang=de&var%3Amenu=fon&var%3Apagename=foncalls&login%3Acommand%2Fpassword="; //$NON-NLS-1$
+    private final static String POSTDATA_LIST = "&var%3Alang=en&var%3Amenu=fon&var%3Apagename=foncalls&login%3Acommand%2Fpassword="; //$NON-NLS-1$
 
-    private final static String POSTDATA_QUICKDIAL = "&var%3Alang=de&var%3Amenu=fon&var%3Apagename=kurzwahlen&login%3Acommand%2Fpassword="; //$NON-NLS-1$
+    private final static String POSTDATA_QUICKDIAL = "&var%3Alang=en&var%3Amenu=fon&var%3Apagename=kurzwahlen&login%3Acommand%2Fpassword="; //$NON-NLS-1$
 
-    private final static String POSTDATA_QUICKDIAL_NEW = "&var%3Alang=de&var%3Amenu=fon&var%3Apagename=fonbuch&login%3Acommand%2Fpassword="; //$NON-NLS-1$
+    private final static String POSTDATA_QUICKDIAL_NEW = "&var%3Alang=en&var%3Amenu=fon&var%3Apagename=fonbuch&login%3Acommand%2Fpassword="; //$NON-NLS-1$
 
-    private final static String POSTDATA_SIPPROVIDER = "&var%3Alang=de&var%3Amenu=fon&var%3Apagename=siplist&login%3Acommand%2Fpassword="; //$NON-NLS-1$
+    private final static String POSTDATA_SIPPROVIDER = "&var%3Alang=en&var%3Amenu=fon&var%3Apagename=siplist&login%3Acommand%2Fpassword="; //$NON-NLS-1$
 
-    private final static String POSTDATA_CLEAR = "&var%3Alang=de&var%3Apagename=foncalls&var%3Amenu=fon&telcfg%3Asettings/ClearJournal=1"; //$NON-NLS-1$
+    private final static String POSTDATA_CLEAR = "&var%3Alang=en&var%3Apagename=foncalls&var%3Amenu=fon&telcfg%3Asettings/ClearJournal=1"; //$NON-NLS-1$
 
     private final static String POSTDATA_CALL = "&login:command/password=$PASSWORT&telcfg:settings/UseClickToDial=1&telcfg:command/Dial=$NUMMER&telcfg:settings/DialPort=$NEBENSTELLE"; //$NON-NLS-1$
 
@@ -402,7 +402,7 @@ public class JFritzUtils {
 		
         Debug.msg("Recieve CSV List"); //$NON-NLS-1$
         String urlstr = "http://" + box_address + "/cgi-bin/webcm"; //$NON-NLS-1$,  //$NON-NLS-2$
-        String postdata = "getpage=../html/de/FRITZ!Box_Anrufliste.csv&errorpage=..%2Fhtml%2Fde%2Fmenus%2Fmenu2.html&var%3Alang=de&var%3Apagename=foncalls&var%3Aerrorpagename=foncalls&var%3Amenu=fon&var%3Apagemaster=&time%3Asettings%2Ftime=1136559837%2C-60"; //$NON-NLS-1$
+        String postdata = "getpage=../html/en/FRITZ!Box_Anrufliste.csv&errorpage=..%2Fhtml%2Fen%2Fmenus%2Fmenu2.html&var%3Alang=en&var%3Apagename=foncalls&var%3Aerrorpagename=foncalls&var%3Amenu=fon&var%3Apagemaster=&time%3Asettings%2Ftime=1136559837%2C-60"; //$NON-NLS-1$
         String data = fetchDataFromURL(urlstr, postdata, true);
         return parseCallerData(data, firmware, countryPrefix, countryCode,
                 areaPrefix, areaCode, jfritz);

@@ -1,9 +1,5 @@
 /*
-<<<<<<< ConfigDialog.java
  * $Id$
-=======
- * $Id$
->>>>>>> 1.78
  * 
  * Password dialog box
  */
@@ -909,7 +905,7 @@ public class ConfigDialog extends JDialog {
 				if (timerSlider.getValue() < 3)
 					timerSlider.setValue(3);
 				timerLabel
-						.setText("Timer: " + timerSlider.getValue() + " min."); //$NON-NLS-1$,  //$NON-NLS-2$
+						.setText(JFritz.getMessage("timer")+": " + timerSlider.getValue() +" "+ JFritz.getMessage("abbreviation_minutes")); //$NON-NLS-1$,  //$NON-NLS-2$
 			}
 
 		});

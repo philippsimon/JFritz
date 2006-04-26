@@ -15,11 +15,11 @@
 	<property name="javac.optimize" value="false"/>
 
 	 <!-- include all jars in lib to classpath --> 
-	     <path id="classpath"> 
-	          <fileset dir="${lib}"> 
-	             <include name="**/*.jar"/>
-	         </fileset>
-	     </path> 
+     <path id="classpath"> 
+          <fileset dir="${lib}"> 
+          <include name="**/*.jar"/>
+          </fileset>
+     </path> 
 
 
 	<target name="compile">

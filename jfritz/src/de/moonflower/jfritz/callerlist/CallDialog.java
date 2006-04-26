@@ -196,7 +196,6 @@ public class CallDialog extends JDialog implements ActionListener {
 					case FritzBoxFirmware.BOXTYPE_FRITZBOX_ATA :
 						port.addItem("Fon 2"); //$NON-NLS-1$
 						break;
-
 					case FritzBoxFirmware.BOXTYPE_FRITZBOX_5010:
 						// die 5010 hat nur einen analogen Anschluss
 						break;

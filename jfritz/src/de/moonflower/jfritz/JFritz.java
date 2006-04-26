@@ -41,6 +41,7 @@
  * FeatureRequests: http://sourceforge.net/tracker/?func=browse&group_id=138196&atid=741416
  
  * CHANGELOG:
+ * 
  * (TODO: Checken, ob alle Bibliotheken vorhanden sind)
  * (TODO: Neue Kurzwahlen von der Beta-FW ins Telefonbuch aufnehmen)
  * (TODO: Import der Anrufliste im XML-Format beim Kontextmenü einbauen)
@@ -49,8 +50,11 @@
  * TODO: Internationalisierung abschließen
  * TODO: Vergleich auf doppelte Anrufe optimieren (HASH-Tabelle?)
  * TODO: Language-Files checken, ob tatsächlich alle Werte benötigt werden
+ * TODO: Sonderzeichen werden in den Balloontips unter Windows nicht korrekt angezeigt. Scheint ein Windowsproblem zu sein. Lösung/Workaround noch nicht gefunden.
  * 
  * JFritz 0.6.0
+ * - Neue Strings:
+ * - Bugfix: Alle internationalen Gespräche werden jetzt erkannt.
  * - Neu: Sprache einstellbar ( <- Wahlhilfe im Telefonbuch funktioniert bei englischer Sprache nicht (Bastian)
  * 								<- TrayMenu angepasst (Benjamin)
  * 								<- komplett geändert, Sprachfiles werden jetzt dynamisch erkannt und können in den Einstellungen ausgewählt werden. (Bastian))
@@ -1488,11 +1492,16 @@ public final class JFritz {
 
     /**
      * @return Returns an internationalized message.
+     * Last modified: 26.04.06 by Bastian
      */
     public static String getMessage(String msg) {
         String i18n = ""; //$NON-NLS-1$
         try {
-            i18n = messages.getString(msg);
+        	if(!messages.getString(msg).equals("")){
+        		i18n = messages.getString(msg);
+            	}else{
+            		i18n = msg;
+            	}
         } catch (MissingResourceException e) {
             Debug.err("Can't find resource string for " + msg); //$NON-NLS-1$
             i18n = msg;

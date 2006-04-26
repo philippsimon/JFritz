@@ -1,9 +1,5 @@
 /**
-<<<<<<< JFritzWindow.java
  * $Id$
-=======
- * $Id$
->>>>>>> 1.143
  */
 
 package de.moonflower.jfritz;

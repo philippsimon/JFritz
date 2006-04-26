@@ -53,10 +53,10 @@ public class FritzBoxFirmware {
 	private String modFirmwareVersion;
 
 	private final static String[] POSTDATA_ACCESS_METHOD = {
-			"getpage=../html/de/menus/menu2.html", //$NON-NLS-1$
+			"getpage=../html/en/menus/menu2.html", //$NON-NLS-1$
 			"getpage=../html/menus/menu2.html" }; //$NON-NLS-1$
 
-	private final static String POSTDATA_DETECT_FIRMWARE = "&var%3Alang=de&var%3Amenu=home&var%3Apagename=home&login%3Acommand%2Fpassword="; //$NON-NLS-1$
+	private final static String POSTDATA_DETECT_FIRMWARE = "&var%3Alang=en&var%3Amenu=home&var%3Apagename=home&login%3Acommand%2Fpassword="; //$NON-NLS-1$
 
 	private final static String PATTERN_DETECT_FIRMWARE = "<span class=\"Dialoglabel\">[^<]*</span>(\\d\\d).(\\d\\d).(\\d\\d\\d*)([^<]*)"; //$NON-NLS-1$
 
