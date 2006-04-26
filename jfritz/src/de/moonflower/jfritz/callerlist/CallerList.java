@@ -416,12 +416,11 @@ public class CallerList extends AbstractTableModel {
       * 
       **/
      public boolean contains(Call newCall){
-    	 int left, right, middle;
+    	 int i=0, left, right, middle;
     	 left = 0;
     	 right = unfilteredCallerData.size() -1;
     	 
     	 while(left <= right){
-
     		 middle = ((right-left)/2)+left;
     	        
     		 if(unfilteredCallerData.isEmpty())
@@ -456,11 +455,75 @@ public class CallerList extends AbstractTableModel {
                         && (c.getCalltype().toInt() == newCall.getCalltype().toInt())
                         && (route1.equals(route2))) {
     	        		return true;
-    	        	}else
+    	        	}else{    	        		
+    	        		//two calls, same date, different values...
+    	        		//this is really a performance killer...
+    	        		
+    	        		c = (Call) unfilteredCallerData.elementAt(middle-1);
+    	        		int tmpMiddle = middle -1;
+    	        		
+    	        		//search left as long as the dates still match
+    	        		while(c.getCalldate().equals(newCall.getCalldate())){
+    	        			nr1 = "";	//$NON-NLS-1$
+    	        			nr2 = ""; //$NON-NLS-1$
+    	    	        	if (c.getPhoneNumber() != null)
+    	    	        		nr1 = c.getPhoneNumber().getFullNumber();
+    	    	        	if (newCall.getPhoneNumber() != null)
+    	    	        		nr2 = newCall.getPhoneNumber().getFullNumber();
+    	    	        	route1 = "";	//$NON-NLS-1$
+    	    	        	route2 = ""; //$NON-NLS-1$
+    	    	        	if (c.getRoute() != null)
+    	    	        		route1 = c.getRoute();
+    	    	        	if (newCall.getRoute() != null)
+    	    	        		route2 = newCall.getRoute();
+    	    	        	
+    	    	        	if ((nr1).equals(nr2)
+    	                        && (c.getPort().equals(newCall.getPort()))
+    	                        && (c.getDuration() == newCall.getDuration())
+    	                        && (c.getCalltype().toInt() == newCall.getCalltype().toInt())
+    	                        && (route1.equals(route2))) {
+    	    	        		return true;
+    	    	        	}
+    	    	        	
+    	    	        	c = (Call) unfilteredCallerData.elementAt(--tmpMiddle);
+    	        		}
+    	        		
+    	        		c = (Call) unfilteredCallerData.elementAt(middle+1);
+    	        		tmpMiddle = middle +1;
+    	        		
+    	        		//search right of the middle as long as the dates still match
+    	        		while(c.getCalldate().equals(newCall.getCalldate())){
+    	        			nr1 = "";	//$NON-NLS-1$
+    	        			nr2 = ""; //$NON-NLS-1$
+    	    	        	if (c.getPhoneNumber() != null)
+    	    	        		nr1 = c.getPhoneNumber().getFullNumber();
+    	    	        	if (newCall.getPhoneNumber() != null)
+    	    	        		nr2 = newCall.getPhoneNumber().getFullNumber();
+    	    	        	route1 = "";	//$NON-NLS-1$
+    	    	        	route2 = ""; //$NON-NLS-1$
+    	    	        	if (c.getRoute() != null)
+    	    	        		route1 = c.getRoute();
+    	    	        	if (newCall.getRoute() != null)
+    	    	        		route2 = newCall.getRoute();
+    	    	        	
+    	    	        	if ((nr1).equals(nr2)
+    	                        && (c.getPort().equals(newCall.getPort()))
+    	                        && (c.getDuration() == newCall.getDuration())
+    	                        && (c.getCalltype().toInt() == newCall.getCalltype().toInt())
+    	                        && (route1.equals(route2))) {
+    	    	        		return true;
+    	    	        	}
+    	        		
+    	    	        	c = (Call) unfilteredCallerData.elementAt(++tmpMiddle);
+    	        		}
+    	        	
+    	        		//No matching calls found with the same date
     	        		return false;
+    	        	
+    	        	}
     	        }
      	 }
- 
+    	 
     	 //we exited the loop => no matching date found
     	 return false;
      
