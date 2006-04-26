@@ -83,7 +83,10 @@ public class CallerList extends AbstractTableModel {
     private final static String EXPORT_CSV_FORMAT_FRITZBOX = "Typ;Datum;Rufnummer;Nebenstelle;Eigene Rufnummer;Dauer"; //$NON-NLS-1$
     
     //Is the type eyported from a 7170
-    private final static String EXPORT_CSV_FORMAT_FRITZBOX_NEWFIRMWARE = "Typ; Datum; Rufnummer; Nebenstelle; Eigene Rufnummer; Dauer"; //$NON-NLS-1$
+    private final static String EXPORT_CSV_FORMAT_FRITZBOX_PUSHSERVICE = "Typ; Datum; Rufnummer; Nebenstelle; Eigene Rufnummer; Dauer"; //$NON-NLS-1$
+    
+    //is the type exported from the new firmware, (don't tell no one yet)
+    private final static String EXPORT_CSV_FORMAT_FRITZBOX_NEWFIRMWARE = "Typ;Datum;Name;Rufnummer;Nebenstelle;Eigene Rufnummer;Dauer";
     
     private JFritz jfritz;
 
@@ -1208,7 +1211,8 @@ public class CallerList extends AbstractTableModel {
 	   * currently supported file types: 
 	   * JFritz's own export format: EXPORT_CSV_FOMAT_JFRITZ
 	   * Exported files from the fritzbox's web interface: EXPORT_CSV_FORMAT_FRITZBOX 
-	   * Exported files from newer boxes (7170) EXPORT_CSV_FORMAT_FRITZBOX_NEWFIRMWARE
+	   * Exported files from fritzbox's Push service EXPORT_CSV_FORMAT_FRITZBOX_PUSHSERVICE
+	   * Exported files from the new fritzbox's new Firmware EXPORT_CSV_FORMAT_FRITZBOX_NEWFIRMWARE
 	   * 
 	   * function also has the ability to 'nicely' handle broken CSV lines
 	   * 
@@ -1220,7 +1224,8 @@ public class CallerList extends AbstractTableModel {
 	    
 	    String line = "";
 	    boolean isJFritzExport = false; //flags to check which type to parse
-	    boolean isNewFirmware = false;  
+	    boolean isPushFile = false;  
+	    boolean isNewFirmware = false;
 	    int newEntries = 0;
 	    
 		tryBETAparser = true;
@@ -1230,12 +1235,17 @@ public class CallerList extends AbstractTableModel {
 	          
 	          //check if we have a correct header
 	          if(line.equals(EXPORT_CSV_FORMAT_JFRITZ) || line.equals(EXPORT_CSV_FORMAT_FRITZBOX)
+	        		  || line.equals(EXPORT_CSV_FORMAT_FRITZBOX_PUSHSERVICE)
 	        		  || line.equals(EXPORT_CSV_FORMAT_FRITZBOX_NEWFIRMWARE)){
 	        	  
+	        	  //check which kind of a file it is
 	        	  if(line.equals(EXPORT_CSV_FORMAT_JFRITZ))
 	        		  isJFritzExport = true;
+	        	  else if(line.equals(EXPORT_CSV_FORMAT_FRITZBOX_PUSHSERVICE))
+	        	  		isPushFile = true;
 	        	  else if(line.equals(EXPORT_CSV_FORMAT_FRITZBOX_NEWFIRMWARE))
-	        	  		isNewFirmware = true;
+	        		  	isNewFirmware = true;
+	        	  
 	        	  
 	        	  int linesRead = 0;
 	        	  Call c;
@@ -1245,11 +1255,13 @@ public class CallerList extends AbstractTableModel {
 	        		  //call the apropriate parse function
 	        		  if(isJFritzExport)
 	        			  c = parseCallJFritzCSV(line);
+	        		  else if(isNewFirmware)
+	        			  c = parseCallFritzboxNewCSV(line);
 	        		  else
-	        			  c = parseCallFritzboxCSV(line, isNewFirmware);
+	        			  c = parseCallFritzboxCSV(line, isPushFile);
 	        		  
 	        		  if(c == null && tryBETAparser)
-						  c = parseCallFritzboxBETACSV (line);
+						  c = parseCallFritzboxNewCSV (line);
 
 					  if(c == null)
 	        			  Debug.msg("Error encountered processing the csv file, continuing");
@@ -1416,12 +1428,12 @@ public class CallerList extends AbstractTableModel {
 	   * from the Fritzbox web interface, either directly or through jfritz
 	   * 
 	   * function parses according to format: EXPORT_CSV_FORMAT_FRITZBOX 
-	   * and EXPORT_CSV_FORMAT_FRITZBOX_NEWFIRMWARE
+	   * and EXPORT_CSV_FORMAT_FRITZBOX_PUSHSERVICE
 	   * 
 	   * @param line contains the line to be processed
 	   * @return is call object, or null if the csv was invalid
 	   */
-	  public Call parseCallFritzboxCSV(String line, boolean isNewFirmware){
+	  public Call parseCallFritzboxCSV(String line, boolean isPushFile){
 		  String[] field = line.split(PATTERN_CSV);
 		    Call call;
 		    CallType calltype;
@@ -1437,14 +1449,14 @@ public class CallerList extends AbstractTableModel {
 	  
 		    //Call type
 		    //Why would they change the cvs format in the new firmware???
-		    if((field[0].equals("1") && !isNewFirmware) //$NON-NLS-1$
-		    		|| (field[0].equals("2") && isNewFirmware)){ //$NON-NLS-1$
+		    if((field[0].equals("1") && !isPushFile) //$NON-NLS-1$
+		    		|| (field[0].equals("2") && isPushFile)){ //$NON-NLS-1$
 		        calltype = new CallType("call_in"); //$NON-NLS-1$
-		    }else if((field[0].equals("2") && !isNewFirmware) //$NON-NLS-1$
-		    		|| (field[0].equals("3") && isNewFirmware)){ //$NON-NLS-1$
+		    }else if((field[0].equals("2") && !isPushFile) //$NON-NLS-1$
+		    		|| (field[0].equals("3") && isPushFile)){ //$NON-NLS-1$
 		      calltype = new CallType("call_in_failed"); //$NON-NLS-1$
-		    }else if((field[0].equals("3") && !isNewFirmware) //$NON-NLS-1$
-		    		|| (field[0].equals("1") && isNewFirmware)){ //$NON-NLS-1$
+		    }else if((field[0].equals("3") && !isPushFile) //$NON-NLS-1$
+		    		|| (field[0].equals("1") && isPushFile)){ //$NON-NLS-1$
 		      calltype = new CallType("call_out"); //$NON-NLS-1$
 		    }else{
 		      Debug.err("Invalid Call type in CSV file!"); //$NON-NLS-1$
@@ -1513,13 +1525,14 @@ public class CallerList extends AbstractTableModel {
 	  /**
 	   * @author KCh
 	   * function parses a line of a csv file, that was directly exported
-	   * from the Fritzbox web interface with BETA FW (with Bug).
+	   * from the Fritzbox web interface with BETA FW or with
+	   * a fritzbox with the new firmware XX.04.03
 	   * 
 	   * 
 	   * @param line contains the line to be processed
 	   * @return is call object, or null if the csv was invalid
 	   */
-	  public Call parseCallFritzboxBETACSV(String line){
+	  public Call parseCallFritzboxNewCSV(String line){
 		    String[] field = line.split(PATTERN_CSV);
 		    Call call;
 		    CallType calltype;
