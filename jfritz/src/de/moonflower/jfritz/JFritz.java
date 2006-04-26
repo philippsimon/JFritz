@@ -41,6 +41,7 @@
  * FeatureRequests: http://sourceforge.net/tracker/?func=browse&group_id=138196&atid=741416
  
  * CHANGELOG:
+ * 
  * (TODO: Checken, ob alle Bibliotheken vorhanden sind)
  * (TODO: Neue Kurzwahlen von der Beta-FW ins Telefonbuch aufnehmen)
  * (TODO: Import der Anrufliste im XML-Format beim Kontextmenü einbauen)
@@ -51,6 +52,7 @@
  * TODO: Language-Files checken, ob tatsächlich alle Werte benötigt werden
  * 
  * JFritz 0.6.0
+ * - Neue Strings:
  * - Bugfix: Alle internationalen Gespräche werden jetzt erkannt.
  * - Neu: Sprache einstellbar ( <- Wahlhilfe im Telefonbuch funktioniert bei englischer Sprache nicht (Bastian)
  * 								<- TrayMenu angepasst (Benjamin)
