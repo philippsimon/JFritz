@@ -433,9 +433,9 @@ public class CallerList extends AbstractTableModel {
     		 //check if the date is before or after the current element in the vector
     		 //Note: change the values here to fit the current sorting method
     		 if(Compare > 0)
-    			 right = middle -1;
-    		 else if(Compare < 0)
-    			 left = middle +1;
+    			 right = middle-1;	
+    		 else if(Compare < 0)	
+    			 left = middle+1;
     		 else{      
     	        	//if we are here, then the dates match
     	        	//lets check if everything else matches
