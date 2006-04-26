@@ -50,6 +50,7 @@
  * TODO: Internationalisierung abschließen
  * TODO: Vergleich auf doppelte Anrufe optimieren (HASH-Tabelle?)
  * TODO: Language-Files checken, ob tatsächlich alle Werte benötigt werden
+ * TODO: Sonderzeichen werden in den Balloontips unter Windows nicht korrekt angezeigt. Scheint ein Windowsproblem zu sein. Lösung/Workaround noch nicht gefunden.
  * 
  * JFritz 0.6.0
  * - Neue Strings:
