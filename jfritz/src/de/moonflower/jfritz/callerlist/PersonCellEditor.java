@@ -58,6 +58,7 @@ public class PersonCellEditor extends AbstractCellEditor implements
 			c.getPhoneNumber().setType();
 			person.addNumber(c.getPhoneNumber());
 		}
+		
 		panel.setPerson(person);
 		panel.setText(strval);
 

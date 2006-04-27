@@ -87,6 +87,9 @@ public class CallerList extends AbstractTableModel {
     
     //is the type exported from the new firmware, (don't tell no one yet)
     private final static String EXPORT_CSV_FORMAT_FRITZBOX_NEWFIRMWARE = "Typ;Datum;Name;Rufnummer;Nebenstelle;Eigene Rufnummer;Dauer";
+ 
+    //english firmware, unknown version
+    private final static String EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH = "Typ;Date;Number;Extension;Outgoing Caller ID;Duration";
     
     private JFritz jfritz;
 
@@ -419,7 +422,7 @@ public class CallerList extends AbstractTableModel {
       * 
       **/
      public boolean contains(Call newCall){
-    	 int i=0, left, right, middle;
+    	 int left, right, middle;
     	 left = 0;
     	 right = unfilteredCallerData.size() -1;
     	 
@@ -561,6 +564,7 @@ public class CallerList extends AbstractTableModel {
     public void getNewCalls() throws WrongPasswordException, IOException {
     	getNewCalls(false);
     }
+
     /**
      * Retrieves data from FRITZ!Box
      * Function calls JFritzUtils.retrieveCSVList(...) which reads the HTML page
@@ -1213,6 +1217,8 @@ public class CallerList extends AbstractTableModel {
 	   * Exported files from the fritzbox's web interface: EXPORT_CSV_FORMAT_FRITZBOX 
 	   * Exported files from fritzbox's Push service EXPORT_CSV_FORMAT_FRITZBOX_PUSHSERVICE
 	   * Exported files from the new fritzbox's new Firmware EXPORT_CSV_FORMAT_FRITZBOX_NEWFIRMWARE
+	   * Exported files from the fritzbox's web interface: EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH (english firmware)
+	   * 
 	   * 
 	   * function also has the ability to 'nicely' handle broken CSV lines
 	   * 
@@ -1226,6 +1232,7 @@ public class CallerList extends AbstractTableModel {
 	    boolean isJFritzExport = false; //flags to check which type to parse
 	    boolean isPushFile = false;  
 	    boolean isNewFirmware = false;
+	    boolean isEnglishFirmware = false;
 	    int newEntries = 0;
 	    
 		tryBETAparser = true;
@@ -1236,7 +1243,8 @@ public class CallerList extends AbstractTableModel {
 	          //check if we have a correct header
 	          if(line.equals(EXPORT_CSV_FORMAT_JFRITZ) || line.equals(EXPORT_CSV_FORMAT_FRITZBOX)
 	        		  || line.equals(EXPORT_CSV_FORMAT_FRITZBOX_PUSHSERVICE)
-	        		  || line.equals(EXPORT_CSV_FORMAT_FRITZBOX_NEWFIRMWARE)){
+	        		  || line.equals(EXPORT_CSV_FORMAT_FRITZBOX_NEWFIRMWARE)
+	        		  || line.equals(EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH)){
 	        	  
 	        	  //check which kind of a file it is
 	        	  if(line.equals(EXPORT_CSV_FORMAT_JFRITZ))
@@ -1245,7 +1253,8 @@ public class CallerList extends AbstractTableModel {
 	        	  		isPushFile = true;
 	        	  else if(line.equals(EXPORT_CSV_FORMAT_FRITZBOX_NEWFIRMWARE))
 	        		  	isNewFirmware = true;
-	        	  
+	        	  else if(line.equals(EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH))
+	        		  	isEnglishFirmware = true;
 	        	  
 	        	  int linesRead = 0;
 	        	  Call c;
@@ -1257,6 +1266,8 @@ public class CallerList extends AbstractTableModel {
 	        			  c = parseCallJFritzCSV(line);
 	        		  else if(isNewFirmware)
 	        			  c = parseCallFritzboxNewCSV(line);
+	        		  else if(isEnglishFirmware)
+	        			  c = parseCallFritzboxEnglishCSV(line);
 	        		  else
 	        			  c = parseCallFritzboxCSV(line, isPushFile);
 	        		  
@@ -1448,7 +1459,7 @@ public class CallerList extends AbstractTableModel {
 		    
 	  
 		    //Call type
-		    //Why would they change the cvs format in the new firmware???
+		    //Why would they change the cvs format in the Push???
 		    if((field[0].equals("1") && !isPushFile) //$NON-NLS-1$
 		    		|| (field[0].equals("2") && isPushFile)){ //$NON-NLS-1$
 		        calltype = new CallType("call_in"); //$NON-NLS-1$
@@ -1618,4 +1629,115 @@ public class CallerList extends AbstractTableModel {
 		    return call;
 	  
 	  }
+
+	  /**
+	   * @author Brian Jensen
+	   * function parses a line of a csv file, that was directly exported
+	   * from the Fritzbox web interface, either directly or through jfritz
+	   * 
+	   * function parses according to format: EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH
+	   * this is the format exported by boxes with english firmwar (unkown version)
+	   * 
+	   * Note: This function has yet to be tested!
+	   * 
+	   * @param line contains the line to be processed
+	   * @return is call object, or null if the csv was invalid
+	   * 
+	   */
+	  public Call parseCallFritzboxEnglishCSV(String line){
+		  String[] field = line.split(PATTERN_CSV);
+		  //leave this in here in case the push file is different, like with the german firmware
+		  boolean isPushFile = false;
+		  Call call;
+		  CallType calltype;
+		  Date calldate;
+		  PhoneNumber number;
+		    
+		  //check if line has correct amount of entries
+		  if(field.length != 6){
+		    	Debug.err("Invalid CSV format - might be the beta firmware, then everything is OK. :-)");		//if you find an error here, its not because
+		    	return null;						//jfritz is broken, the fritz box exports things
+		    }								//with an extra empty line for whatever reason
+		    
+	  
+		    //Call type
+		    //Why would they change the cvs format in the Push file???
+		    if((field[0].equals("1") && !isPushFile) //$NON-NLS-1$
+		    		|| (field[0].equals("2") && isPushFile)){ //$NON-NLS-1$
+		        calltype = new CallType("call_in"); //$NON-NLS-1$
+		    }else if((field[0].equals("2") && !isPushFile) //$NON-NLS-1$
+		    		|| (field[0].equals("3") && isPushFile)){ //$NON-NLS-1$
+		      calltype = new CallType("call_in_failed"); //$NON-NLS-1$
+		    }else if((field[0].equals("3") && !isPushFile) //$NON-NLS-1$
+		    		|| (field[0].equals("1") && isPushFile)){ //$NON-NLS-1$
+		      calltype = new CallType("call_out"); //$NON-NLS-1$
+		    }else{
+		      Debug.err("Invalid Call type in CSV file!"); //$NON-NLS-1$
+		      return null;
+		    }
+		    
+		    //Call date and time
+		    if(field[1] != null){
+		    	try{
+			        calldate = new SimpleDateFormat("dd.MM.yy HH:mm").parse(field[1]); //$NON-NLS-1$
+			      }catch(ParseException e){
+			        Debug.err("Invalid date format in csv file!"); //$NON-NLS-1$
+			        return null;
+			      }
+		    }else{
+		    	Debug.err("Invalid CSV file!"); //$NON-NLS-1$
+		    	return null;
+		    }
+		    
+		    //Phone number
+		    if(field[2] != null)
+		      number = new PhoneNumber(field[2]);
+		    else
+		      number = null;
+		    
+		    //split the duration into two stings, hours:minutes
+		    String[] time = field[5].split(":");
+		    
+		    //change the port to fit the jfritz naming convention
+		    if (field[3].equals("FON 1")) {
+              field[3] = "0";
+          } else if (field[3].equals("FON 2")) {
+              field[3] = "1";
+          } else if (field[3].equals("FON 3")) {
+              field[3] = "2";
+          } else if (field[3].equals("Durchwahl")){
+          	field[3] = "3";
+          } else if (field[3].equals("FON S0")) {
+              field[3] = "4";
+          } else if (field[3].equals("DATA S0")){
+          	field[3] = "36";
+          }
+		    
+		    //Parse the SIP Provider and save it correctly
+		    if (field[4].startsWith("Internet: ")) {
+              Enumeration en = jfritz.getSIPProviderTableModel()
+                      .getProviderList().elements();
+              while (en.hasMoreElements()) {
+                  SipProvider sipProvider = (SipProvider) en
+                          .nextElement();
+                  if (sipProvider.getNumber().equals(field[4].substring(10))) {
+                      field[4] = "SIP" + sipProvider.getProviderID();
+                      break;
+                  }
+              }
+          }
+		    
+		    //make the call object and exit
+		    call = new Call(jfritz, calltype, calldate, number, field[3], field[4], 
+		        Integer.parseInt(time[0])*3600 + Integer.parseInt(time[1])*60);
+		    
+		    return call;
+	  
+	  }
+
+
+
+
+
+
 }

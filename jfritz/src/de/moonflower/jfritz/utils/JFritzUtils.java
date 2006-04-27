@@ -472,9 +472,11 @@ public class JFritzUtils {
            	   		//If you don't read the list, you may not get an
            	   		//Updated list from the box
            	   	}
-               		
-           		reader.close();
-            
+               	
+           	   	//close the streams
+           	   	reader.close();
+           		urlConn.getInputStream().close();
+           	   	
             } catch (IOException e1) {
             	throw new IOException("Network unavailable");
             }
@@ -520,31 +522,21 @@ public class JFritzUtils {
             	Debug.msg("Recieved response, begin processin call list");
             	newEntries = jfritz.getCallerlist().importFromCSVFile(reader);
             	Debug.msg("Finished processing response");
-           		/*while (null != ((str = HTMLUtil.stripEntities(reader.readLine())))) {
-            			// Password seems to be wrong
-            			// if (str.indexOf("FEHLER: Das angegebene Kennwort ") > 0)
             		
-            		//Do i even need this
-            		//TODO: Check if this part is broken
-            		if (str.indexOf("FRITZ!Box Anmeldung") > 0)
-            				wrong_pass = true;
-            			// Skip a few lines
-            			// if (i > 778)
-            			data += str;
-            			i++;
-            		}*/
-            		
-           		
+            	//close the reader and the cocket connection
            		reader.close();
+           		urlConn.getInputStream().close();
             
             } catch (IOException e1) {
             	throw new IOException("Network unavailable");
             }
             
+            
+            
             if (wrong_pass)
             	throw new WrongPasswordException("Password invalid");
         }
-
+        
         //return if there were new entries or not
         return newEntries;
     }
