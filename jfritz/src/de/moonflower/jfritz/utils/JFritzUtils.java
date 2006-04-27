@@ -402,7 +402,7 @@ public class JFritzUtils {
 		
         Debug.msg("Recieve CSV List"); //$NON-NLS-1$
         String urlstr = "http://" + box_address + "/cgi-bin/webcm"; //$NON-NLS-1$,  //$NON-NLS-2$
-        String postdata = "getpage=../html/en/FRITZ!Box_Anrufliste.csv&errorpage=..%2Fhtml%2Fen%2Fmenus%2Fmenu2.html&var%3Alang=en&var%3Apagename=foncalls&var%3Aerrorpagename=foncalls&var%3Amenu=fon&var%3Apagemaster=&time%3Asettings%2Ftime=1136559837%2C-60"; //$NON-NLS-1$
+        String postdata = "getpage=../html/en/FRITZ!Box_Calllist.csv&errorpage=..%2Fhtml%2Fen%2Fmenus%2Fmenu2.html&var%3Alang=en&var%3Apagename=foncalls&var%3Aerrorpagename=foncalls&var%3Amenu=fon&var%3Apagemaster=&time%3Asettings%2Ftime=1136559837%2C-60"; //$NON-NLS-1$
         String data = fetchDataFromURL(urlstr, postdata, true);
         return parseCallerData(data, firmware, countryPrefix, countryCode,
                 areaPrefix, areaCode, jfritz);
