@@ -444,24 +444,9 @@ public class CallerList extends AbstractTableModel {
     		 else{      
     	        	//if we are here, then the dates match
     	        	//lets check if everything else matches
-    	        	String nr1 = "", nr2 = ""; //$NON-NLS-1$,  //$NON-NLS-2$
-    	        	if (c.getPhoneNumber() != null)
-    	        		nr1 = c.getPhoneNumber().getFullNumber();
-    	        	if (newCall.getPhoneNumber() != null)
-    	        		nr2 = newCall.getPhoneNumber().getFullNumber();
-    	        	String route1 = "", route2 = ""; //$NON-NLS-1$,  //$NON-NLS-2$
-    	        	if (c.getRoute() != null)
-    	        		route1 = c.getRoute();
-    	        	if (newCall.getRoute() != null)
-    	        		route2 = newCall.getRoute();
-    	        	
-    	        	if ((nr1).equals(nr2)
-                        && (c.getPort().equals(newCall.getPort()))
-                        && (c.getDuration() == newCall.getDuration())
-                        && (c.getCalltype().toInt() == newCall.getCalltype().toInt())
-                        && (route1.equals(route2))) {
+    	        	if(c.equals(newCall))
     	        		return true;
-    	        	}else{    	        		
+    	        	else{    	        		
     	        		//two calls, same date, different values...
     	        		//this is really a performance killer...
     	        		
@@ -470,26 +455,10 @@ public class CallerList extends AbstractTableModel {
     	        		
     	        		//search left as long as the dates still match
     	        		while(c.getCalldate().equals(newCall.getCalldate())){
-    	        			nr1 = "";	//$NON-NLS-1$
-    	        			nr2 = ""; //$NON-NLS-1$
-    	    	        	if (c.getPhoneNumber() != null)
-    	    	        		nr1 = c.getPhoneNumber().getFullNumber();
-    	    	        	if (newCall.getPhoneNumber() != null)
-    	    	        		nr2 = newCall.getPhoneNumber().getFullNumber();
-    	    	        	route1 = "";	//$NON-NLS-1$
-    	    	        	route2 = ""; //$NON-NLS-1$
-    	    	        	if (c.getRoute() != null)
-    	    	        		route1 = c.getRoute();
-    	    	        	if (newCall.getRoute() != null)
-    	    	        		route2 = newCall.getRoute();
-    	    	        	
-    	    	        	if ((nr1).equals(nr2)
-    	                        && (c.getPort().equals(newCall.getPort()))
-    	                        && (c.getDuration() == newCall.getDuration())
-    	                        && (c.getCalltype().toInt() == newCall.getCalltype().toInt())
-    	                        && (route1.equals(route2))) {
-    	    	        		return true;
-    	    	        	}
+    	        			
+    	        			//check if equal
+    	        			if(c.equals(newCall))
+    	        				return true;
     	    	        	
     	    	        	c = (Call) unfilteredCallerData.elementAt(--tmpMiddle);
     	        		}
@@ -497,28 +466,13 @@ public class CallerList extends AbstractTableModel {
     	        		c = (Call) unfilteredCallerData.elementAt(middle+1);
     	        		tmpMiddle = middle +1;
     	        		
-    	        		//search right of the middle as long as the dates still match
+    	        		//search right as long as the dates still match
     	        		while(c.getCalldate().equals(newCall.getCalldate())){
-    	        			nr1 = "";	//$NON-NLS-1$
-    	        			nr2 = ""; //$NON-NLS-1$
-    	    	        	if (c.getPhoneNumber() != null)
-    	    	        		nr1 = c.getPhoneNumber().getFullNumber();
-    	    	        	if (newCall.getPhoneNumber() != null)
-    	    	        		nr2 = newCall.getPhoneNumber().getFullNumber();
-    	    	        	route1 = "";	//$NON-NLS-1$
-    	    	        	route2 = ""; //$NON-NLS-1$
-    	    	        	if (c.getRoute() != null)
-    	    	        		route1 = c.getRoute();
-    	    	        	if (newCall.getRoute() != null)
-    	    	        		route2 = newCall.getRoute();
-    	    	        	
-    	    	        	if ((nr1).equals(nr2)
-    	                        && (c.getPort().equals(newCall.getPort()))
-    	                        && (c.getDuration() == newCall.getDuration())
-    	                        && (c.getCalltype().toInt() == newCall.getCalltype().toInt())
-    	                        && (route1.equals(route2))) {
+    	        			
+    	        			//check if equal
+    	        			if(c.equals(newCall))
     	    	        		return true;
-    	    	        	}
+    	    	        	
     	        		
     	    	        	c = (Call) unfilteredCallerData.elementAt(++tmpMiddle);
     	        		}

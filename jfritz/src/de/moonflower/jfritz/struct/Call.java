@@ -295,4 +295,42 @@ public class Call {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    /**
+     * This function compares the contents of the current call object
+     * with the contents of the parameter call object
+     * 
+     * @author Brian Jensen
+     * 
+     * @param call, the call value to be compared with
+     * @return a boolean value indicating if this call equals the call given as parameter
+     */
+    public boolean equals(Call call){
+    	
+    	//prepare the two objects for comparing
+    	String nr1 = "", nr2 = ""; //$NON-NLS-1$,  //$NON-NLS-2$
+    	if (this.getPhoneNumber() != null)
+    		nr1 = this.getPhoneNumber().getFullNumber();
+    	if (call.getPhoneNumber() != null)
+    		nr2 = call.getPhoneNumber().getFullNumber();
+    	String route1 = "", route2 = ""; //$NON-NLS-1$,  //$NON-NLS-2$
+    	if (this.getRoute() != null)
+    		route1 = this.getRoute();
+    	if (call.getRoute() != null)
+    		route2 = call.getRoute();
+    	
+    	if ((nr1).equals(nr2)
+            && (this.getPort().equals(call.getPort()))
+            && (this.getDuration() == call.getDuration())
+            && (this.getCalltype().toInt() == call.getCalltype().toInt())
+            && (route1.equals(route2)))
+    		return true;
+    	else
+    		return false;
+    	
+    }
+
+
+
+
 }
