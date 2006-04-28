@@ -43,6 +43,11 @@ public class Call {
         this.calltype = calltype;
         this.calldate = calldate;
         this.number = number;
+        
+        //fix so that an empty number doesnt get linked to an empty entry in the telephone book
+        if(this.number != null && this.number.equals("") )
+        	this.number = null;
+        
         this.route = route;
         this.port = port;
         this.duration = duration;
