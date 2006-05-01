@@ -818,7 +818,8 @@ public final class JFritz {
             Debug.err("Can't find i18n resource!");//$NON-NLS-1$
             JOptionPane.showMessageDialog(null, JFritz.PROGRAM_NAME + " v"//$NON-NLS-1$
                     + JFritz.PROGRAM_VERSION
-                    + "\n\nCannot start if there is an '!' in path!");//$NON-NLS-1$
+                    + "\n\nCannot find the language file \"jfritz_"+locale+".properties\"!"
+                    + "\nProgram will exit!");//$NON-NLS-1$
             System.exit(0);
         }
     }
