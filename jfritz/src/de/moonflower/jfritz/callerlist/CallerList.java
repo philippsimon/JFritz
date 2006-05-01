@@ -505,9 +505,8 @@ public class CallerList extends AbstractTableModel {
     	unfilteredCallerData.addAll(newCalls);
     	newCalls.clear();
     	sortAllUnfilteredRows();
+    	
     }
-     
-     
     
     /**
      * Retrieves data from FRITZ!Box
@@ -575,7 +574,7 @@ public class CallerList extends AbstractTableModel {
                 && JFritzUtils.parseBoolean(JFritz.getProperty("option.createBackupAfterFetch", "false"))) {
             doBackup();
         }
-        
+      
     }
 
     /**
@@ -736,7 +735,7 @@ public class CallerList extends AbstractTableModel {
         }
 
         public int compare(Object a, Object b) {
-            Object o1 = null, o2 = null;
+            Object o1 = null, o2 = null;fireTableDataChanged();
             Call v1 = (Call) a;
             Call v2 = (Call) b;
             String columnName = getRealColumnName(columnIndex);
@@ -868,7 +867,7 @@ public class CallerList extends AbstractTableModel {
         boolean filterCallByCall = JFritzUtils.parseBoolean(JFritz
                 .getProperty("filter.callbycall")); //$NON-NLS-1$
         boolean filterComment = JFritzUtils.parseBoolean(JFritz
-                .getProperty("filter.comment")); //$NON-NLS-1$
+                .getProperty("filter.comment")); //fireTableDataChanged();$NON-NLS-1$
         String filterSearch = JFritz.getProperty("filter.search", ""); //$NON-NLS-1$,  //$NON-NLS-2$
         String filterDateFrom = JFritz.getProperty("filter.date_from", ""); //$NON-NLS-1$,  //$NON-NLS-2$
         String filterDateTo = JFritz.getProperty("filter.date_to", ""); //$NON-NLS-1$,  //$NON-NLS-2$
@@ -1239,15 +1238,16 @@ public class CallerList extends AbstractTableModel {
 	        	  Debug.msg(linesRead+" Lines read from csv file ");
 	        	  Debug.msg(newEntries+" New entries processed");
 	                                 
-	        	  if (newEntries > 0) {
-	        		  
-	        		  fireUpdateCallVector();
+        		  fireUpdateCallVector();
 
+        		  	if (newEntries > 0) {
+	        		
 	        		  //uncomment these in case the import function is broken
 	        		  //for(int i=0; i < unfilteredCallerData.size(); i++)
 	        		  //	  System.out.println(unfilteredCallerData.elementAt(i).toString());
 	        		 
 	        		  saveToXMLFile(JFritz.CALLS_FILE, true);
+	        		  
 	        		  String msg;
 	              
 	        		  if (newEntries == 1) {
@@ -1259,7 +1259,7 @@ public class CallerList extends AbstractTableModel {
 	        		  JFritz.infoMsg(msg);
 	          
 	        	  }else{
-	        		  JFritz.infoMsg(JFritz.getMessage("no_imported_calls")); //$NON-NLS-1$
+	        		  //JFritz.infoMsg(JFritz.getMessage("no_imported_calls")); //$NON-NLS-1$
 	        	  }
 	                           
 	          }else{
@@ -1366,7 +1366,7 @@ public class CallerList extends AbstractTableModel {
       }
 	    
 	    //Phone number
-	    if(field[3] != null){
+	    if(!field[3].equals("")){
 	      number = new PhoneNumber(field[3]);
 	      number.setCallByCall(field[10]);
 	    }else
@@ -1442,7 +1442,7 @@ public class CallerList extends AbstractTableModel {
 		    }
 		    
 		    //Phone number
-		    if(field[2] != null)
+		    if(!field[2].equals(""))
 		      number = new PhoneNumber(field[2]);
 		    else
 		      number = null;
@@ -1538,7 +1538,7 @@ public class CallerList extends AbstractTableModel {
 		    }
 		    
 		    //Phone number
-		    if(field[3] != null)
+		    if(!field[3].equals(""))
 		      number = new PhoneNumber(field[3]);
 		    else
 		      number = null;
@@ -1609,7 +1609,7 @@ public class CallerList extends AbstractTableModel {
 		    
 		  //check if line has correct amount of entries
 		  if(field.length != 6){
-		    	Debug.err("Invalid CSV format - might be the beta firmware, then everything is OK. :-)");		//if you find an error here, its not because
+		    	Debug.err("Invalid CSV format");		//if you find an error here, its not because
 		    	return null;						//jfritz is broken, the fritz box exports things
 		    }								//with an extra empty line for whatever reason
 		    
@@ -1644,7 +1644,7 @@ public class CallerList extends AbstractTableModel {
 		    }
 		    
 		    //Phone number
-		    if(field[2] != null)
+		    if(!field[2].equals(""))
 		      number = new PhoneNumber(field[2]);
 		    else
 		      number = null;
