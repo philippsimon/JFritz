@@ -1400,7 +1400,7 @@ public class CallerList extends AbstractTableModel {
 		    
 		    //check if line has correct amount of entries
 		    if(field.length != 6){
-		    	Debug.err("Invalid CSV format - might be the beta firmware, then everything is OK. :-)");		//if you find an error here, its not because
+		    	Debug.err("Invalid CSV format.)");		//if you find an error here, its not because
 		    	return null;						//jfritz is broken, the fritz box exports things
 		    }								//with an extra empty line for whatever reason
 		    
