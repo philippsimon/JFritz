@@ -85,7 +85,7 @@ public class CallerList extends AbstractTableModel {
     //Is the type eyported from a 7170
     private final static String EXPORT_CSV_FORMAT_FRITZBOX_PUSHSERVICE = "Typ; Datum; Rufnummer; Nebenstelle; Eigene Rufnummer; Dauer"; //$NON-NLS-1$
     
-    //is the type exported from the new firmware, (don't tell no one yet)
+    //is the type exported from the new firmware
     private final static String EXPORT_CSV_FORMAT_FRITZBOX_NEWFIRMWARE = "Typ;Datum;Name;Rufnummer;Nebenstelle;Eigene Rufnummer;Dauer";
  
     //english firmware, unknown version
@@ -105,8 +105,6 @@ public class CallerList extends AbstractTableModel {
     private int sortColumn;
 
     private boolean sortDirection = false;
-	
-	private boolean tryBETAparser = true;
 
     /**      
      * CallerList Constructor
@@ -1187,8 +1185,6 @@ public class CallerList extends AbstractTableModel {
 	    boolean isNewFirmware = false;
 	    boolean isEnglishFirmware = false;
 	    int newEntries = 0;
-	    
-		tryBETAparser = true;
 		
 	    try {
 	          line = br.readLine();   
@@ -1223,9 +1219,6 @@ public class CallerList extends AbstractTableModel {
 	        			  c = parseCallFritzboxEnglishCSV(line);
 	        		  else
 	        			  c = parseCallFritzboxCSV(line, isPushFile);
-	        		  
-	        		  if(c == null && tryBETAparser)
-						  c = parseCallFritzboxNewCSV (line);
 
 					  if(c == null)
 	        			  Debug.msg("Error encountered processing the csv file, continuing");
@@ -1491,7 +1484,7 @@ public class CallerList extends AbstractTableModel {
 	   * @author KCh
 	   * function parses a line of a csv file, that was directly exported
 	   * from the Fritzbox web interface with BETA FW or with
-	   * a fritzbox with the new firmware XX.04.03
+	   * a fritzbox with the new firmware >= XX.04.05
 	   * 
 	   * 
 	   * @param line contains the line to be processed
@@ -1506,7 +1499,6 @@ public class CallerList extends AbstractTableModel {
 		    
 		    //check if line has correct amount of entries
 		    if(field.length != 7){
-			  tryBETAparser = false;
 		      Debug.err("Invalid CSV format!");
 		      return null;
 		    }
@@ -1688,10 +1680,4 @@ public class CallerList extends AbstractTableModel {
 		    return call;
 	  
 	  }
-
-
-
-
-
-
 }
