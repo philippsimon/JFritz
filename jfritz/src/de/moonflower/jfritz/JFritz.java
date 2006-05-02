@@ -54,6 +54,7 @@
  * 
  * JFritz 0.6.0
  * - Neue Strings:
+ * - Neuer Kommandozeilenparameter: -w, deaktiviert die Kontrolle von mehrfachen Instanzen
  * - Bugfix: Alle internationalen Gespräche werden jetzt erkannt.
  * - Neu: Sprache einstellbar ( <- Wahlhilfe im Telefonbuch funktioniert bei englischer Sprache nicht (Bastian)
  * 								<- TrayMenu angepasst (Benjamin)
