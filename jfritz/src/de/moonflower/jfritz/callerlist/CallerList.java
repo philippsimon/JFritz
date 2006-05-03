@@ -447,34 +447,47 @@ public class CallerList extends AbstractTableModel {
     	        	else{    	        		
     	        		//two calls, same date, different values...
     	        		//this is really a performance killer...
-    	        		
-    	        		c = (Call) unfilteredCallerData.elementAt(middle-1);
     	        		int tmpMiddle = middle -1;
     	        		
-    	        		//search left as long as the dates still match
-    	        		while(c.getCalldate().equals(newCall.getCalldate())){
+    	        		//Yikes! Don't forget to stay in the array bounds    	        		
+    	        		if(tmpMiddle >= 0){
+    	        		  		c = (Call) unfilteredCallerData.elementAt(tmpMiddle);
+    	        		
+    	        		  		//search left as long as the dates still match
+    	        		  		while(c.getCalldate().equals(newCall.getCalldate())){
     	        			
-    	        			//check if equal
-    	        			if(c.equals(newCall))
-    	        				return true;
-    	    	        	
-    	    	        	c = (Call) unfilteredCallerData.elementAt(--tmpMiddle);
+    	        		  			//check if equal
+    	        		  			if(c.equals(newCall))
+    	        		  				return true;
+    	        		  			
+    	        		  			//make sure we stay in the array bounds
+    	        		  			if(tmpMiddle > 0)
+    	        		  				c = (Call) unfilteredCallerData.elementAt(--tmpMiddle);
+    	        		  			else
+    	        		  				break;
+    	        		  		}
     	        		}
     	        		
-    	        		c = (Call) unfilteredCallerData.elementAt(middle+1);
-    	        		tmpMiddle = middle +1;
+    	        		if(tmpMiddle < unfilteredCallerData.size()){
+    	        			c = (Call) unfilteredCallerData.elementAt(middle+1);
+    	        			tmpMiddle = middle +1;
     	        		
-    	        		//search right as long as the dates still match
-    	        		while(c.getCalldate().equals(newCall.getCalldate())){
+    	        			//search right as long as the dates still match
+    	        			while(c.getCalldate().equals(newCall.getCalldate())){
     	        			
-    	        			//check if equal
-    	        			if(c.equals(newCall))
-    	    	        		return true;
-    	    	        	
-    	        		
-    	    	        	c = (Call) unfilteredCallerData.elementAt(++tmpMiddle);
-    	        		}
+    	        				//check if equal
+    	        				if(c.equals(newCall))
+    	        					return true;
+    	    	        	    
+    	        				//make sure to stay in the array bounds
+    	        				if(tmpMiddle < (unfilteredCallerData.size() -1))	        		
+    	        					c = (Call) unfilteredCallerData.elementAt(++tmpMiddle);
+    	        				else
+    	        					break;
+    	        			}
     	        	
+    	        		}
+    	        		
     	        		//No matching calls found with the same date
     	        		return false;
     	        	
