@@ -50,6 +50,10 @@
  * TODO: Internationalisierung abschließen
  * TODO: Language-Files checken, ob tatsächlich alle Werte benötigt werden
  * TODO: Sonderzeichen werden in den Balloontips unter Windows nicht korrekt angezeigt. Scheint ein Windowsproblem zu sein. Lösung/Workaround noch nicht gefunden.
+ *
+ * JFritz 0.6.1
+ * - Neue Strings:
+ * - Bugfix: Kurzwahlen werden weider korrekt abgeholt
  * 
  * JFritz 0.6.0
  * - Neue Strings:
