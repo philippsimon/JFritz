@@ -58,7 +58,7 @@ public class FritzBoxFirmware {
 
 	private final static String POSTDATA_DETECT_FIRMWARE = "&var%3Alang=en&var%3Amenu=home&var%3Apagename=home&login%3Acommand%2Fpassword="; //$NON-NLS-1$
 
-	private final static String PATTERN_DETECT_FIRMWARE = "Firmware-Version[^\\d]*(\\d\\d).(\\d\\d).(\\d\\d\\d*)([^<]*)"; //$NON-NLS-1$
+	private final static String PATTERN_DETECT_FIRMWARE = "Firmware[-| ]Version[^\\d]*(\\d\\d).(\\d\\d).(\\d\\d\\d*)([^<]*)"; //$NON-NLS-1$
 
 	/**
 	 * Firmware Constructor using Bytes
@@ -169,7 +169,7 @@ public class FritzBoxFirmware {
 		// Modded firmware: data = "> FRITZ!Box Fon WLAN, <span
 		// class=\"Dialoglabel\">Modified-Firmware </span>08.03.37mod-0.55
 		// \n</div>";
-		Pattern p = Pattern.compile(PATTERN_DETECT_FIRMWARE);
+		Pattern p = Pattern.compile(PATTERN_DETECT_FIRMWARE);	
 		Matcher m = p.matcher(data);
 		if (m.find()) {
 			String boxtypeString = m.group(1);

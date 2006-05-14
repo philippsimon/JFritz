@@ -51,7 +51,9 @@ import java.net.URLEncoder;
 public class JFritzUtils {
 
     private final static String POSTDATA_LIST = "&var%3Alang=en&var%3Amenu=fon&var%3Apagename=foncalls&login%3Acommand%2Fpassword="; //$NON-NLS-1$
-
+    
+    private static String POSTDATA_FETCH_CALLERLIST = "getpage=../html/de/FRITZ!Box_Calllist.csv&errorpage=..%2Fhtml%2Fen%2Fmenus%2Fmenu2.html&var%3Alang=en&var%3Apagename=foncalls&var%3Aerrorpagename=foncalls&var%3Amenu=fon&var%3Apagemaster=&time%3Asettings%2Ftime=1136559837%2C-60";
+    
     private final static String POSTDATA_QUICKDIAL = "&var%3Alang=en&var%3Amenu=fon&var%3Apagename=kurzwahlen&login%3Acommand%2Fpassword="; //$NON-NLS-1$
 
     private final static String POSTDATA_QUICKDIAL_NEW = "&var%3Alang=en&var%3Amenu=fon&var%3Apagename=fonbuch&login%3Acommand%2Fpassword="; //$NON-NLS-1$
@@ -104,6 +106,9 @@ public class JFritzUtils {
             + "\\s*<td class=\"c2\">([^<]*)</td>" //$NON-NLS-1$
             + "\\s*<td class=\"c3\"><script type=\"text/javascript\">document.write\\(ProviderDisplay\\(\"([^\"]*)\"\\)\\);</script></td>" //$NON-NLS-1$
             + "\\s*<td class=\"c6\"><script type=\"text/javascript\">document.write\\(AuswahlDisplay\\(\"([^\"]*)\"\\)\\);</script></td>"; //$NON-NLS-1$
+    
+    private final static String PATTERN_QUICKDIAL_BETA = "<script type=\"text/javascript\">document.write\\(TrFon\\(\"[^\"]*\", \"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\"\\)\\);</script>";
+
 
     private final static String PATTERN_SIPPROVIDER_ACTIVE = "<input type=\"hidden\" name=\"sip:settings/sip(\\d)/activated\" value=\"(\\d)\" id=\"uiPostActivsip"; //$NON-NLS-1$
 
@@ -391,21 +396,152 @@ public class JFritzUtils {
         fetchDataFromURL(urlstr, postdata, true);
     }
 
-    public static Vector retrieveCSVList(String box_address, String password,
+    /**
+     * This function fetches the call list from the box
+     * it first gets a connection to the fritz!Box
+     * opens the call list html page, then it sends a 
+     * request to the box for the  csv file 
+     * then passes a bufferedReader to CallerList.importFromCSV()
+     * it passes back to the caller if there were new callers or not
+     * NOTE: Function no longer checks for invalid passwords!
+     * 
+     * 
+     * LAST MODIFIED: 14.04.06 Brian Jensen
+     * 
+     * @author Brian Jensen
+     * 
+     * @param box_address
+     * @param password
+     * @param countryPrefix
+     * @param countryCode
+     * @param areaPrefix
+     * @param areaCode
+     * @param firmware
+     * @param jfritz
+     * @return if there were new calls or not
+     * @throws WrongPasswordException
+     * @throws IOException
+     */
+    
+    public static boolean retrieveCSVList(String box_address, String password,
             String countryPrefix, String countryCode, String areaPrefix,
             String areaCode, FritzBoxFirmware firmware, JFritz jfritz)
             throws WrongPasswordException, IOException {
 		
-		Debug.msg("Recieve HTML Callerlist"); //$NON-NLS-1$
-		retrieveHTMLCallerList(box_address, password, countryPrefix, countryCode,
-	            			   areaPrefix, areaCode, firmware, jfritz);
-		
-        Debug.msg("Recieve CSV List"); //$NON-NLS-1$
-        String urlstr = "http://" + box_address + "/cgi-bin/webcm"; //$NON-NLS-1$,  //$NON-NLS-2$
-        String postdata = "getpage=../html/en/FRITZ!Box_Calllist.csv&errorpage=..%2Fhtml%2Fen%2Fmenus%2Fmenu2.html&var%3Alang=en&var%3Apagename=foncalls&var%3Aerrorpagename=foncalls&var%3Amenu=fon&var%3Apagemaster=&time%3Asettings%2Ftime=1136559837%2C-60"; //$NON-NLS-1$
-        String data = fetchDataFromURL(urlstr, postdata, true);
-        return parseCallerData(data, firmware, countryPrefix, countryCode,
-                areaPrefix, areaCode, jfritz);
+    	URL url;
+    	URLConnection urlConn;
+    	DataOutputStream printout;
+        boolean wrong_pass = false;
+        boolean newEntries = false;
+        Debug.msg("Opening HTML Callerlist page");
+		//retrieveHTMLCallerList(box_address, password, countryPrefix, countryCode,
+	    //        			   areaPrefix, areaCode, firmware, jfritz);
+		        
+        //Attempting to fetch the html version of the call list
+        String postdata = firmware.getAccessMethod() + POSTDATA_LIST
+        + URLEncoder.encode(password, "ISO-8859-1");
+        String urlstr = "http://" + box_address + "/cgi-bin/webcm";
+        
+        try {
+            url = new URL(urlstr);
+        } catch (MalformedURLException e) {
+            Debug.err("URL invalid: " + urlstr);
+            throw new WrongPasswordException("URL invalid: " + urlstr);
+        }
+
+        if (url != null) {
+            urlConn = url.openConnection();
+            urlConn.setDoInput(true);
+            urlConn.setDoOutput(true);
+            urlConn.setUseCaches(false);
+            // Sending postdata
+            if (postdata != null) {
+                urlConn.setRequestProperty("Content-Type",
+                        "application/x-www-form-urlencoded");
+                printout = new DataOutputStream(urlConn.getOutputStream());
+                printout.writeBytes(postdata);
+                printout.flush();
+                printout.close();
+            }
+        
+            try {
+            	// Get response data from the box
+            	BufferedReader reader = new BufferedReader(new InputStreamReader(
+            			urlConn.getInputStream()));
+           		
+           		//read out the response data!
+           	   	while(reader.skip(100000) > 0){
+           	   		//kind of stupid, but it has to be
+           	   		//If you don't read the list, you may not get an
+           	   		//Updated list from the box
+           	   	}
+               	
+           	   	//close the streams
+           	   	reader.close();
+           		urlConn.getInputStream().close();
+           	   	
+            } catch (IOException e1) {
+            	throw new IOException("Network unavailable");
+            }
+            
+        }
+        
+        //The list should be updated now
+        //Get the csv file for processing
+        Debug.msg("Retrieving the CSV list from the box");
+        urlstr = "http://" + box_address + "/cgi-bin/webcm";
+                
+        try {
+            url = new URL(urlstr);
+        } catch (MalformedURLException e) {
+            Debug.err("URL invalid: " + urlstr);
+            throw new WrongPasswordException("URL invalid: " + urlstr);
+        }
+
+        //If the url is valid load the data
+        if (url != null) {
+            
+        	urlConn = url.openConnection();
+            urlConn.setDoInput(true);
+            urlConn.setDoOutput(true);
+            urlConn.setUseCaches(false);
+            // Sending postdata to the fritz box
+            urlConn.setRequestProperty("Content-Type",
+                        "application/x-www-form-urlencoded");
+            printout = new DataOutputStream(urlConn.getOutputStream());
+            printout.writeBytes(POSTDATA_FETCH_CALLERLIST);
+            printout.flush();
+            printout.close();
+            
+            BufferedReader reader;
+
+            try {
+            	// Get response data from the box
+            	reader = new BufferedReader(new InputStreamReader(urlConn
+            			.getInputStream()));
+           		
+           		//pass it on to the import function
+           	   	
+            	Debug.msg("Recieved response, begin processin call list");
+            	newEntries = jfritz.getCallerlist().importFromCSVFile(reader);
+            	Debug.msg("Finished processing response");
+            		
+            	//close the reader and the cocket connection
+           		reader.close();
+           		urlConn.getInputStream().close();
+            
+            } catch (IOException e1) {
+            	throw new IOException("Network unavailable");
+            }
+            
+            
+            
+            if (wrong_pass)
+            	throw new WrongPasswordException("Password invalid");
+        }
+        
+        //return if there were new entries or not
+        return newEntries;
     }
 
     /**
@@ -435,13 +571,22 @@ public class JFritzUtils {
         data = removeDuplicateWhitespace(data);
         Pattern p;
         if (firmware.getMajorFirmwareVersion() == 4
-                && firmware.getMinorFirmwareVersion() >= 3) {
+                && firmware.getMinorFirmwareVersion() >= 3 && firmware.getMinorFirmwareVersion() < 5) {
             p = Pattern.compile(PATTERN_QUICKDIAL_NEW);
-            quickdial_indizes[NAME] = 3;
+            quickdial_indizes[NAME] = 1;
             quickdial_indizes[QUICKDIAL] = 3;
             quickdial_indizes[VANITY] = 4;
             quickdial_indizes[NUMBER] = 2;
-        } else {
+        }
+        else if (firmware.getMajorFirmwareVersion() == 4
+                    && firmware.getMinorFirmwareVersion() >= 5) {
+        	p = Pattern.compile(PATTERN_QUICKDIAL_BETA);
+            quickdial_indizes[NAME] = 1;
+            quickdial_indizes[QUICKDIAL] = 3;
+            quickdial_indizes[VANITY] = 4;
+            quickdial_indizes[NUMBER] = 2;
+        }
+        else {
             p = Pattern.compile(PATTERN_QUICKDIAL);
             quickdial_indizes[QUICKDIAL] = 1;
             quickdial_indizes[VANITY] = 2;
