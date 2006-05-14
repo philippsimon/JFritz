@@ -53,6 +53,7 @@
  *
  * JFritz 0.6.1
  * - Neue Strings:
+ * - Neu: Logfiles werden jetzt mittels Stream redirection geschrieben (heiﬂt auch die Exceptions werden in den Logfiles aufgenommen :) )
  * - Bugfix: Kurzwahlen werden weider korrekt abgeholt
  * 
  * JFritz 0.6.0
@@ -498,7 +499,6 @@ public final class JFritz {
 
         options.addOption('h', "help", null, "This short description"); //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
         options.addOption('v', "verbose", null, "Turn on debug information"); //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
-        options.addOption('v', "debug", null, "Turn on debug information"); //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
         options.addOption('s', "systray", null, "Turn on systray support"); //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
         options.addOption('n', "nosystray", null, "Turn off systray support"); //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
         options.addOption('f', "fetch", null, "Fetch new calls and exit"); //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
@@ -515,7 +515,6 @@ public final class JFritz {
                 "Writes debug messages to logfile"); //$NON-NLS-1$,
         options.addOption('p', "priority", "level", //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
                 "Set program priority [1..10]"); //$NON-NLS-1$
-        options.addOption('i',"lang", "language","Set the display language, currently supported: german, english"); //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$, //$NON-NLS-4$
         options.addOption('w', "without-control", null, //$NON-NLS-1$,  //$NON-NLS-2$ 
         		"Turns off multiple instance control. DON'T USE, unless you know what your are doing"); //$NON-NLS-1$
         
@@ -526,7 +525,7 @@ public final class JFritz {
 
             switch (option.getShortOption()) {
             case 'h': //$NON-NLS-1$
-                System.out.println("Call: java -jar jfritz.jar [Options]"); //$NON-NLS-1$
+                System.out.println("Usage: java -jar jfritz.jar [Options]"); //$NON-NLS-1$
                 options.printOptions();
                 System.exit(0);
                 break;
@@ -577,24 +576,6 @@ public final class JFritz {
             case 'n': //$NON-NLS-1$
                 checkSystray = false;
                 break;
-            case 'i': //$NON-NLS-1$
-            	String language = option.getParameter();
-            	if(language == null){
-            		System.err.println(JFritz.getMessage("invalid_language")); //$NON-NLS-1$
-            		System.err.println("Deutsch: german"); //$NON-NLS-1$
-            		System.err.println("Englisch: english"); //$NON-NLS-1$
-            		System.exit(0);
-            	}else if(language.equals("english")){ //$NON-NLS-1$
-            		locale = new Locale("en", "US"); //$NON-NLS-1$,  //$NON-NLS-2$
-            	}else if(language.equals("german")){ //$NON-NLS-1$
-            		locale = new Locale("de", "DE"); //$NON-NLS-1$,  //$NON-NLS-2$
-            	}else{
-            		System.err.println(JFritz.getMessage("invalid_language")); //$NON-NLS-1$
-            		System.err.println("Deutsch: german"); //$NON-NLS-1$
-            		System.err.println("Englisch: english"); //$NON-NLS-1$
-            		System.exit(0);
-            	}
-            	break;
             case 'w': //$NON-NLS-1$
             	enableInstanceControl = false;
             	System.err.println("Turning off Multiple instance control!"); //$NON-NLS-1$
@@ -626,7 +607,9 @@ public final class JFritz {
                 break;
             }
         }
+
         new JFritz(fetchCalls, csvExport, csvFileName, clearList, enableInstanceControl, foreign);
+
     }
     
     /**
