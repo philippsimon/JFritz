@@ -53,6 +53,7 @@
  *
  * JFritz 0.6.1
  * - Neue Strings:
+ * - Bugfix: Standardtelefonnummern können wieder geändert werden
  * - Neu: Logfiles werden jetzt mittels Stream redirection geschrieben (heißt auch die Exceptions werden in den Logfiles aufgenommen :) )
  * - Bugfix: Kurzwahlen werden weider korrekt abgeholt
  * 
