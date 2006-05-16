@@ -184,9 +184,7 @@ public class Telnet {
 															.getMessage("password_wrong")); //$NON-NLS-1$
 									jfritz.getJframe().setBusy(false);
 
-									String newPassword = jfritz
-											.getJframe()
-											.showPasswordDialog(
+									String newPassword = jfritz.getJframe().showPasswordDialog(
 													Encryption
 															.decrypt(JFritz
 																	.getProperty(

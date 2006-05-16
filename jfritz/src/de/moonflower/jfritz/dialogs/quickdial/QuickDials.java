@@ -25,10 +25,10 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 import de.moonflower.jfritz.JFritz;
+import de.moonflower.jfritz.exceptions.InvalidFirmwareException;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
 import de.moonflower.jfritz.struct.QuickDial;
 import de.moonflower.jfritz.utils.Debug;
-import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzUtils;
 
 /**
@@ -38,24 +38,25 @@ import de.moonflower.jfritz.utils.JFritzUtils;
  */
 public class QuickDials extends AbstractTableModel {
 	private static final long serialVersionUID = 1;
-	private static final String QUICKDIALS_DTD_URI = "http://jfritz.moonflower.de/dtd/quickdials.dtd";  //$NON-NLS-1$
 
-	private static final String QUICKDIALS_DTD = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"  //$NON-NLS-1$
-			+ "<!-- DTD for JFritz quickdials -->"  //$NON-NLS-1$
-			+ "<!ELEMENT quickdials (commment?,entry*)>"  //$NON-NLS-1$
-			+ "<!ELEMENT comment (#PCDATA)>"  //$NON-NLS-1$
-			+ "<!ELEMENT entry (number?,vanity?,description?)>"  //$NON-NLS-1$
-			+ "<!ELEMENT number (#PCDATA)>"  //$NON-NLS-1$
-			+ "<!ELEMENT vanity (#PCDATA)>"  //$NON-NLS-1$
-			+ "<!ELEMENT description (#PCDATA)>"  //$NON-NLS-1$
-			+ "<!ATTLIST entry id CDATA #REQUIRED>";  //$NON-NLS-1$
+	private static final String QUICKDIALS_DTD_URI = "http://jfritz.moonflower.de/dtd/quickdials.dtd"; //$NON-NLS-1$
+
+	private static final String QUICKDIALS_DTD = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" //$NON-NLS-1$
+			+ "<!-- DTD for JFritz quickdials -->" //$NON-NLS-1$
+			+ "<!ELEMENT quickdials (commment?,entry*)>" //$NON-NLS-1$
+			+ "<!ELEMENT comment (#PCDATA)>" //$NON-NLS-1$
+			+ "<!ELEMENT entry (number?,vanity?,description?)>" //$NON-NLS-1$
+			+ "<!ELEMENT number (#PCDATA)>" //$NON-NLS-1$
+			+ "<!ELEMENT vanity (#PCDATA)>" //$NON-NLS-1$
+			+ "<!ELEMENT description (#PCDATA)>" //$NON-NLS-1$
+			+ "<!ATTLIST entry id CDATA #REQUIRED>"; //$NON-NLS-1$
 
 	JFritz jfritz;
 
 	Vector quickDials;
 
 	/**
-	 *  
+	 * 
 	 */
 	public QuickDials(JFritz jfritz) {
 		super();
@@ -124,29 +125,37 @@ public class QuickDials extends AbstractTableModel {
 	public String getColumnName(int column) {
 		switch (column) {
 		case 0:
-			return JFritz.getMessage("quickdial");  //$NON-NLS-1$
+			return JFritz.getMessage("quickdial"); //$NON-NLS-1$
 		case 1:
-			return JFritz.getMessage("vanity");  //$NON-NLS-1$
+			return JFritz.getMessage("vanity"); //$NON-NLS-1$
 		case 2:
-			return JFritz.getMessage("number");  //$NON-NLS-1$
+			return JFritz.getMessage("number"); //$NON-NLS-1$
 		case 3:
-			return JFritz.getMessage("description");  //$NON-NLS-1$
+			return JFritz.getMessage("description"); //$NON-NLS-1$
 		default:
 			return null;
 		}
 	}
 
 	public void getQuickDialDataFromFritzBox() {
+
+		if (JFritz.getFirmware() == null)
+			if (JFritzUtils.checkValidFirmware(jfritz) == false) {
+				return;
+			}
 		try {
 			quickDials = JFritzUtils.retrieveQuickDialsFromFritzBox(this,
-					JFritz.getFirmware());  //$NON-NLS-1$
+					JFritz.getFirmware()); //$NON-NLS-1$
 			fireTableDataChanged();
 		} catch (WrongPasswordException e) {
-			Debug.err("getQuickDialData: Wrong password");  //$NON-NLS-1$
+			Debug.err("getQuickDialData: Wrong password"); //$NON-NLS-1$
 			Debug.errDlg(JFritz.getMessage("wrong_password")); //$NON-NLS-1$
 		} catch (IOException e) {
-			Debug.err("getQuickDialData: Box not found");  //$NON-NLS-1$
-            Debug.errDlg(JFritz.getMessage("box_address_wrong")); //$NON-NLS-1$
+			Debug.err("getQuickDialData: Box not found"); //$NON-NLS-1$
+			Debug.errDlg(JFritz.getMessage("box_address_wrong")); //$NON-NLS-1$
+		} catch (InvalidFirmwareException e) {
+			Debug.err("getQuickDialData: Invalid firmware"); //$NON-NLS-1$
+			Debug.errDlg(JFritz.getMessage("box_address_wrong")); //$NON-NLS-1$
 		}
 	}
 
@@ -202,7 +211,7 @@ public class QuickDials extends AbstractTableModel {
 			Debug.err("Error with ParserConfiguration!"); //$NON-NLS-1$
 		} catch (SAXException e) {
 			Debug.err("Error on parsing " + filename + "!"); //$NON-NLS-1$,  //$NON-NLS-2$
-            Debug.err(e.toString());
+			Debug.err(e.toString());
 		} catch (IOException e) {
 			Debug.err("Could not read " + filename + "!"); //$NON-NLS-1$,  //$NON-NLS-2$
 		}
@@ -220,8 +229,8 @@ public class QuickDials extends AbstractTableModel {
 			fos = new FileOutputStream(filename);
 			PrintWriter pw = new PrintWriter(fos);
 			pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); //$NON-NLS-1$
-//			pw.println("<!DOCTYPE quickdials SYSTEM \"" + QUICKDIALS_DTD_URI
-//					+ "\">");
+			// pw.println("<!DOCTYPE quickdials SYSTEM \"" + QUICKDIALS_DTD_URI
+			// + "\">");
 			pw.println("<quickdials>"); //$NON-NLS-1$
 			pw.println("\t<comment>QuickDial list for " + JFritz.PROGRAM_NAME //$NON-NLS-1$
 					+ " v" + JFritz.PROGRAM_VERSION + "</comment>"); //$NON-NLS-1$,  //$NON-NLS-2$

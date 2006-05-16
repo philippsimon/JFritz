@@ -105,7 +105,7 @@ public class ConfigDialog extends JDialog {
 
 	private JLabel boxtypeLabel, macLabel, timerLabel;
 
-	private FritzBoxFirmware firmware;
+	private FritzBoxFirmware firmware = null;
 
 	private boolean pressed_OK = false;
 
@@ -338,9 +338,7 @@ public class ConfigDialog extends JDialog {
 		JFritz.setProperty("fetch.timer", Integer.toString(timerSlider //$NON-NLS-1$
 				.getValue()));
 
-		if (firmware != null) {
-			JFritz.setFirmware(firmware);
-		}
+		JFritz.setFirmware(firmware);
 
 		if (!JFritz.getProperty("locale", "de_DE").equals(localeList[languageCombo.getSelectedIndex()])) { //$NON-NLS-1$ //$NON-NLS-2$
 			JFritz.setProperty(
