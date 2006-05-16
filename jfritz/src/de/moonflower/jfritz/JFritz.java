@@ -54,6 +54,8 @@
  * JFritz 0.6.1
  * - Neue Strings:
  * - Neu: Logfiles werden jetzt mittels Stream redirection geschrieben (heißt auch die Exceptions werden in den Logfiles aufgenommen :) )
+ * - Neu: Englische Firmware wird unterstützt
+ * - Intern: Firmware wird beim Start erkannt und in JFritz.firmware gespeichert. Zugriff nicht mehr über JFritz.getProperties("box.firmware") sondern über JFritz.getFirmware()
  * - Bugfix: Kurzwahlen werden weider korrekt abgeholt
  * 
  * JFritz 0.6.0
