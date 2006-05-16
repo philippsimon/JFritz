@@ -143,8 +143,7 @@ public class CallDialog extends JDialog implements ActionListener {
 			int connectionFailures = 0;
 			while (!isdone) {
 				try {
-					firmware = JFritzUtils.detectBoxType(JFritz
-							.getProperty("box.firmware"), JFritz //$NON-NLS-1$
+					firmware = JFritzUtils.detectBoxType(JFritz //$NON-NLS-1$
 							.getProperty("box.address"), Encryption //$NON-NLS-1$
 							.decrypt(JFritz.getProperty("box.password"))); //$NON-NLS-1$
 					isdone = true;

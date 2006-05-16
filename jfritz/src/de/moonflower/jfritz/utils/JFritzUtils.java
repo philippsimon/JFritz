@@ -50,17 +50,17 @@ import java.net.URLEncoder;
  */
 public class JFritzUtils {
 
-    private final static String POSTDATA_LIST = "&var%3Alang=en&var%3Amenu=fon&var%3Apagename=foncalls&login%3Acommand%2Fpassword="; //$NON-NLS-1$
+    private final static String POSTDATA_LIST = "&var%3Alang=$LANG&var%3Amenu=fon&var%3Apagename=foncalls&login%3Acommand%2Fpassword="; //$NON-NLS-1$
     
-    private static String POSTDATA_FETCH_CALLERLIST = "getpage=../html/de/FRITZ!Box_Calllist.csv&errorpage=..%2Fhtml%2Fen%2Fmenus%2Fmenu2.html&var%3Alang=en&var%3Apagename=foncalls&var%3Aerrorpagename=foncalls&var%3Amenu=fon&var%3Apagemaster=&time%3Asettings%2Ftime=1136559837%2C-60";
+    private static String POSTDATA_FETCH_CALLERLIST = "getpage=../html/$LANG/$CSV_FILE&errorpage=..%2Fhtml%2F$LANG%2Fmenus%2Fmenu2.html&var%3Alang=$LANG&var%3Apagename=foncalls&var%3Aerrorpagename=foncalls&var%3Amenu=fon&var%3Apagemaster=&time%3Asettings%2Ftime=1136559837%2C-60";
     
-    private final static String POSTDATA_QUICKDIAL = "&var%3Alang=en&var%3Amenu=fon&var%3Apagename=kurzwahlen&login%3Acommand%2Fpassword="; //$NON-NLS-1$
+    private final static String POSTDATA_QUICKDIAL = "&var%3Alang=$LANG&var%3Amenu=fon&var%3Apagename=kurzwahlen&login%3Acommand%2Fpassword="; //$NON-NLS-1$
 
-    private final static String POSTDATA_QUICKDIAL_NEW = "&var%3Alang=en&var%3Amenu=fon&var%3Apagename=fonbuch&login%3Acommand%2Fpassword="; //$NON-NLS-1$
+    private final static String POSTDATA_QUICKDIAL_NEW = "&var%3Alang=$LANG&var%3Amenu=fon&var%3Apagename=fonbuch&login%3Acommand%2Fpassword="; //$NON-NLS-1$
 
-    private final static String POSTDATA_SIPPROVIDER = "&var%3Alang=en&var%3Amenu=fon&var%3Apagename=siplist&login%3Acommand%2Fpassword="; //$NON-NLS-1$
+    private final static String POSTDATA_SIPPROVIDER = "&var%3Alang=$LANG&var%3Amenu=fon&var%3Apagename=siplist&login%3Acommand%2Fpassword="; //$NON-NLS-1$
 
-    private final static String POSTDATA_CLEAR = "&var%3Alang=en&var%3Apagename=foncalls&var%3Amenu=fon&telcfg%3Asettings/ClearJournal=1"; //$NON-NLS-1$
+    private final static String POSTDATA_CLEAR = "&var%3Alang=$LANG&var%3Apagename=foncalls&var%3Amenu=fon&telcfg%3Asettings/ClearJournal=1"; //$NON-NLS-1$
 
     private final static String POSTDATA_CALL = "&login:command/password=$PASSWORT&telcfg:settings/UseClickToDial=1&telcfg:command/Dial=$NUMMER&telcfg:settings/DialPort=$NEBENSTELLE"; //$NON-NLS-1$
 
@@ -109,8 +109,11 @@ public class JFritzUtils {
     
     private final static String PATTERN_QUICKDIAL_BETA = "<script type=\"text/javascript\">document.write\\(TrFon\\(\"[^\"]*\", \"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\", \"([^\"]*)\"\\)\\);</script>";
 
-
     private final static String PATTERN_SIPPROVIDER_ACTIVE = "<input type=\"hidden\" name=\"sip:settings/sip(\\d)/activated\" value=\"(\\d)\" id=\"uiPostActivsip"; //$NON-NLS-1$
+    
+    private final static String CSV_FILE_EN = "FRITZ!Box_Calllist.csv";
+    
+    private final static String CSV_FILE_DE = "FRITZ!Box_Anrufliste.csv";
 
     private final static int CALLTYPE = 0;
 
@@ -138,28 +141,27 @@ public class JFritzUtils {
      * Detects type of fritz box by detecting the firmware version
      * 
      * @param box_address
+     * @param box_password
      * @return boxtype
      * @throws WrongPasswordException
      * @throws IOException
      */
-    public static FritzBoxFirmware detectBoxType(String firmware,
+    public static FritzBoxFirmware detectBoxType(
             String box_address, String box_password)
             throws WrongPasswordException, IOException {
-        FritzBoxFirmware fw;
+    	FritzBoxFirmware fw;
         try {
-            fw = new FritzBoxFirmware(firmware);
+            fw = FritzBoxFirmware.detectFirmwareVersion(box_address, box_password); 
             // FIXME: Debug
             // fw = new FritzBoxFirmware("14.03.88");
             Debug.msg("Using Firmware: " + fw + " (" + fw.getBoxName() + ")"); //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
+            return fw;
         } catch (InvalidFirmwareException e) {
-            fw = FritzBoxFirmware.detectFirmwareVersion(box_address,
-                    box_password);
-            Debug.msg("Found Firmware: " + fw + " (" + fw.getBoxName() + ")"); //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
-
+            Debug.msg("No valid firmware found"); //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
+            return null;
         }
-        return fw;
     }
-
+    
     /**
      * retrieves vector of caller data from the fritz box
      * 
@@ -177,7 +179,7 @@ public class JFritzUtils {
             String areaPrefix, String areaCode, FritzBoxFirmware firmware,
             JFritz jfritz) throws WrongPasswordException, IOException {
 
-        String postdata = firmware.getAccessMethod() + POSTDATA_LIST
+        String postdata = firmware.getAccessMethod() + POSTDATA_LIST.replaceAll("\\$LANG", firmware.getLanguage())
                 + URLEncoder.encode(password, "ISO-8859-1"); //$NON-NLS-1$
         String urlstr = "http://" + box_address + "/cgi-bin/webcm"; //$NON-NLS-1$,  //$NON-NLS-2$
         Debug.msg("Postdata: " + postdata); //$NON-NLS-1$
@@ -199,12 +201,12 @@ public class JFritzUtils {
         if (firmware.getMajorFirmwareVersion() == 4
                 && firmware.getMinorFirmwareVersion() >= 3) {
             postdata = firmware.getAccessMethod()
-                    + POSTDATA_QUICKDIAL_NEW
+                    + POSTDATA_QUICKDIAL_NEW.replaceAll("\\$LANG", firmware.getLanguage())
                     + URLEncoder.encode(Encryption.decrypt(JFritz
                             .getProperty("box.password")), "ISO-8859-1"); //$NON-NLS-1$,  //$NON-NLS-2$
         } else {
             postdata = firmware.getAccessMethod()
-                    + POSTDATA_QUICKDIAL
+                    + POSTDATA_QUICKDIAL.replaceAll("\\$LANG", firmware.getLanguage())
                     + URLEncoder.encode(Encryption.decrypt(JFritz
                             .getProperty("box.password")), "ISO-8859-1"); //$NON-NLS-1$,  //$NON-NLS-2$
         }
@@ -233,7 +235,7 @@ public class JFritzUtils {
             InvalidFirmwareException {
         if (firmware == null)
             throw new InvalidFirmwareException("No valid firmware"); //$NON-NLS-1$
-        String postdata = firmware.getAccessMethod() + POSTDATA_SIPPROVIDER
+        String postdata = firmware.getAccessMethod() + POSTDATA_SIPPROVIDER.replaceAll("\\$LANG", firmware.getLanguage())
                 + URLEncoder.encode(box_password, "ISO-8859-1"); //$NON-NLS-1$
         String urlstr = "http://" + box_address + "/cgi-bin/webcm"; //$NON-NLS-1$,  //$NON-NLS-2$
         Debug.msg("Postdata: " + postdata); //$NON-NLS-1$
@@ -392,7 +394,7 @@ public class JFritzUtils {
             IOException {
         Debug.msg("Clearing List"); //$NON-NLS-1$
         String urlstr = "http://" + box_address + "/cgi-bin/webcm"; //$NON-NLS-1$,  //$NON-NLS-2$
-        String postdata = firmware.getAccessMethod() + POSTDATA_CLEAR;
+        String postdata = firmware.getAccessMethod() + POSTDATA_CLEAR.replaceAll("\\$LANG", firmware.getLanguage());
         fetchDataFromURL(urlstr, postdata, true);
     }
 
@@ -438,7 +440,7 @@ public class JFritzUtils {
 	    //        			   areaPrefix, areaCode, firmware, jfritz);
 		        
         //Attempting to fetch the html version of the call list
-        String postdata = firmware.getAccessMethod() + POSTDATA_LIST
+        String postdata = firmware.getAccessMethod() + POSTDATA_LIST.replaceAll("\\$LANG", firmware.getLanguage())
         + URLEncoder.encode(password, "ISO-8859-1");
         String urlstr = "http://" + box_address + "/cgi-bin/webcm";
         
@@ -509,7 +511,13 @@ public class JFritzUtils {
             urlConn.setRequestProperty("Content-Type",
                         "application/x-www-form-urlencoded");
             printout = new DataOutputStream(urlConn.getOutputStream());
-            printout.writeBytes(POSTDATA_FETCH_CALLERLIST);
+            if ( firmware.getLanguage().equals("de") )
+            {           
+                printout.writeBytes(POSTDATA_FETCH_CALLERLIST.replaceAll("\\$LANG", firmware.getLanguage()).replaceAll("\\$CSV_FILE", CSV_FILE_DE));
+            } else if ( firmware.getLanguage().equals("en") )
+            {
+                printout.writeBytes(POSTDATA_FETCH_CALLERLIST.replaceAll("\\$LANG", firmware.getLanguage()).replaceAll("\\$CSV_FILE", CSV_FILE_EN));
+            }
             printout.flush();
             printout.close();
             

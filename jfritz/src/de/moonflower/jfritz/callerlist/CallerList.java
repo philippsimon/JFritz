@@ -547,7 +547,7 @@ public class CallerList extends AbstractTableModel {
 
         Debug.msg("box.address: " + JFritz.getProperty("box.address"));
         Debug.msg("box.password: " + JFritz.getProperty("box.password"));
-        Debug.msg("box.firmware: " + JFritz.getProperty("box.firmware"));
+        Debug.msg("box.firmware: " + JFritz.getFirmware().getFirmwareVersion() + " " + JFritz.getFirmware().getLanguage());
         
         boolean newEntries = JFritzUtils.retrieveCSVList(JFritz
                 .getProperty("box.address"), Encryption.decrypt(JFritz
@@ -555,10 +555,7 @@ public class CallerList extends AbstractTableModel {
                 .getProperty("country.prefix"), JFritz
                 .getProperty("country.code"),
                 JFritz.getProperty("area.prefix"), JFritz
-                        .getProperty("area.code"), JFritzUtils.detectBoxType(
-                        JFritz.getProperty("box.firmware"), JFritz
-                                .getProperty("box.address"), Encryption
-                                .decrypt(JFritz.getProperty("box.password"))), jfritz);
+                        .getProperty("area.code"), JFritz.getFirmware(), jfritz);
         
 
         // Notify user?
@@ -573,11 +570,7 @@ public class CallerList extends AbstractTableModel {
                         .equals("true")) 
            || deleteFritzBoxCallerList) {
             JFritzUtils.clearListOnFritzBox(JFritz.getProperty("box.address"), //$NON-NLS-1$
-                    JFritz.getProperty("box.password"), JFritzUtils //$NON-NLS-1$
-                            .detectBoxType(JFritz.getProperty("box.firmware"), //$NON-NLS-1$
-                                    JFritz.getProperty("box.address"), //$NON-NLS-1$
-                                    Encryption.decrypt(JFritz
-                                            .getProperty("box.password")))); //$NON-NLS-1$
+                    JFritz.getProperty("box.password"), JFritz.getFirmware()); //$NON-NLS-1$
         }
         
         //Make back-up after fetching the caller list?
@@ -1201,6 +1194,7 @@ public class CallerList extends AbstractTableModel {
 		
 	    try {
 	          line = br.readLine();   
+	          Debug.msg("CSV-Header: " + line);
 	          
 	          //check if we have a correct header
 	          if(line.equals(EXPORT_CSV_FORMAT_JFRITZ) || line.equals(EXPORT_CSV_FORMAT_FRITZBOX)

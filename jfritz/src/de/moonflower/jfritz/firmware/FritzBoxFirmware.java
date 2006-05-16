@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.exceptions.InvalidFirmwareException;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
+import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.JFritzUtils;
 
 /**
@@ -51,14 +52,23 @@ public class FritzBoxFirmware {
 	private byte minorFirmwareVersion;
 
 	private String modFirmwareVersion;
+	
+	private String language;
 
 	private final static String[] POSTDATA_ACCESS_METHOD = {
+			"getpage=../html/de/menus/menu2.html", //$NON-NLS-1$
 			"getpage=../html/en/menus/menu2.html", //$NON-NLS-1$
 			"getpage=../html/menus/menu2.html" }; //$NON-NLS-1$
 
-	private final static String POSTDATA_DETECT_FIRMWARE = "&var%3Alang=en&var%3Amenu=home&var%3Apagename=home&login%3Acommand%2Fpassword="; //$NON-NLS-1$
+	private final static String[] POSTDATA_DETECT_FIRMWARE = {
+			"&var%3Alang=de&var%3Amenu=home&var%3Apagename=home&login%3Acommand%2Fpassword=", //$NON-NLS-1$
+			"&var%3Alang=en&var%3Amenu=home&var%3Apagename=home&login%3Acommand%2Fpassword="}; //$NON-NLS-1$
 
 	private final static String PATTERN_DETECT_FIRMWARE = "Firmware[-| ]Version[^\\d]*(\\d\\d).(\\d\\d).(\\d\\d\\d*)([^<]*)"; //$NON-NLS-1$
+	
+	private final static String PATTERN_DETECT_LANGUAGE_DE = "Telefonie";
+
+	private final static String PATTERN_DETECT_LANGUAGE_EN = "Telephony";
 
 	/**
 	 * Firmware Constructor using Bytes
@@ -105,6 +115,24 @@ public class FritzBoxFirmware {
 		this.minorFirmwareVersion = Byte.parseByte(minorFirmwareVersion);
 		this.modFirmwareVersion = modFirmwareVersion;
 	}
+	
+	/**
+	 * Firmware Constructor using Strings
+	 * 
+	 * @param boxtype
+	 * @param majorFirmwareVersion
+	 * @param minorFirmwareVersion
+	 * @param modFirmwareVersion
+	 * @param language
+	 */
+	public FritzBoxFirmware(String boxtype, String majorFirmwareVersion,
+			String minorFirmwareVersion, String modFirmwareVersion, String language) {
+		this.boxtype = Byte.parseByte(boxtype);
+		this.majorFirmwareVersion = Byte.parseByte(majorFirmwareVersion);
+		this.minorFirmwareVersion = Byte.parseByte(minorFirmwareVersion);
+		this.modFirmwareVersion = modFirmwareVersion;
+		this.language = language;
+	}
 
 	/**
 	 * Firmware Constructor using a single String
@@ -112,7 +140,7 @@ public class FritzBoxFirmware {
 	 * @param firmware
 	 *            Firmware string like '14.06.37'
 	 */
-	public FritzBoxFirmware(String firmware) throws InvalidFirmwareException {
+/**	public FritzBoxFirmware(String firmware) throws InvalidFirmwareException {
 		String mod = ""; //$NON-NLS-1$
 		if (firmware == null)
 			throw new InvalidFirmwareException("No firmware found"); //$NON-NLS-1$
@@ -140,7 +168,7 @@ public class FritzBoxFirmware {
 		this.minorFirmwareVersion = Byte.parseByte(parts[2]);
 		this.modFirmwareVersion = mod;
 	}
-
+**/
 
 	/**
 	 * Static method for firmware detection
@@ -152,20 +180,46 @@ public class FritzBoxFirmware {
 	 * @throws IOException
 	 */
 	public static FritzBoxFirmware detectFirmwareVersion(String box_address,
-			String box_password) throws WrongPasswordException, IOException {
+			String box_password) throws WrongPasswordException, IOException, InvalidFirmwareException {
 		final String urlstr = "http://" + box_address + "/cgi-bin/webcm"; //$NON-NLS-1$, //$NON-NLS-2$
 
 		String data = ""; //$NON-NLS-1$
-		int i = 0;
-
-		// Try postdata's until code is found
-		while ((data.length() == 0) && (i < POSTDATA_ACCESS_METHOD.length)) {
-			data = JFritzUtils.fetchDataFromURL(
-					urlstr,
-					POSTDATA_ACCESS_METHOD[i] + POSTDATA_DETECT_FIRMWARE
+		String language = "de";
+		
+		boolean detected = false;
+		for (int i=0; i<(POSTDATA_ACCESS_METHOD).length; i++)
+		{
+			for (int j=0; j<(POSTDATA_DETECT_FIRMWARE).length; j++)
+			{
+				data = JFritzUtils.fetchDataFromURL(
+						urlstr,
+						POSTDATA_ACCESS_METHOD[i] + POSTDATA_DETECT_FIRMWARE[j]
 							+ URLEncoder.encode(box_password, "ISO-8859-1"), true).trim(); //$NON-NLS-1$
-			i++;
+			
+				Pattern p = Pattern.compile(PATTERN_DETECT_LANGUAGE_DE);
+				Matcher m = p.matcher(data);
+				if (m.find()) {
+					language = "de";
+					detected = true;
+					break;
+				}
+				
+				if (!detected)
+				{
+					p = Pattern.compile(PATTERN_DETECT_LANGUAGE_EN);
+					m = p.matcher(data);
+					if (m.find()) {
+						language = "en";
+						detected = true;
+						break;
+					}
+				}
+			}
+			if ( detected ) break;
 		}
+		
+		if (!detected ) throw new InvalidFirmwareException();
+				
 		// Modded firmware: data = "> FRITZ!Box Fon WLAN, <span
 		// class=\"Dialoglabel\">Modified-Firmware </span>08.03.37mod-0.55
 		// \n</div>";
@@ -176,13 +230,19 @@ public class FritzBoxFirmware {
 			String majorFirmwareVersion = m.group(2);
 			String minorFirmwareVersion = m.group(3);
 			String modFirmwareVersion = m.group(4).trim();
+			Debug.msg("Detected Firmware: " + 
+					boxtypeString + "." + 
+					majorFirmwareVersion + "." +
+					minorFirmwareVersion + 
+					modFirmwareVersion + " " +
+					language);
 			return new FritzBoxFirmware(boxtypeString, majorFirmwareVersion,
-					minorFirmwareVersion, modFirmwareVersion);
+					minorFirmwareVersion, modFirmwareVersion, language);
 		} else {
 			System.err.println("detectFirmwareVersion: Password wrong?"); //$NON-NLS-1$
 			throw new WrongPasswordException(
 					"Could not detect FRITZ!Box firmware version."); //$NON-NLS-1$
-		}
+		}		
 	}
 
 	/**
@@ -233,7 +293,7 @@ public class FritzBoxFirmware {
         if (boxtypeStr.length() == 1) { boxtypeStr = "0" + boxtypeStr; } //$NON-NLS-1$
         if (majorStr.length() == 1) { majorStr = "0" + majorStr; } //$NON-NLS-1$
         if (minorStr.length() == 1) { minorStr = "0" + minorStr; } //$NON-NLS-1$
-        return boxtypeStr + "." + majorStr + "." + minorStr + modFirmwareVersion; //$NON-NLS-1$,  //$NON-NLS-2$
+       	return boxtypeStr + "." + majorStr + "." + minorStr + modFirmwareVersion; //$NON-NLS-1$,  //$NON-NLS-2$
 	}
 
 	public String getBoxName() {
@@ -261,5 +321,9 @@ public class FritzBoxFirmware {
 
 	public final String toString() {
 		return getFirmwareVersion();
+	}
+	
+	public final String getLanguage() {
+		return language;
 	}
 }

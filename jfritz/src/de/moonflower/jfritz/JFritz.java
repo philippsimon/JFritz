@@ -470,6 +470,8 @@ public final class JFritz {
 
     private static Locale locale;
 
+    private static FritzBoxFirmware firmware = null;
+    
     /**
      * Main method for starting JFritz
      * 
@@ -878,7 +880,6 @@ public final class JFritz {
     }
 
     private void autodetectFirmware() {
-        FritzBoxFirmware firmware;
         try {
             firmware = FritzBoxFirmware.detectFirmwareVersion(JFritz
                     .getProperty("box.address", "192.168.178.1"), Encryption //$NON-NLS-1$,  //$NON-NLS-2$
@@ -890,14 +891,15 @@ public final class JFritz {
         } catch (IOException e1) {
             Debug.err("Address wrong!"); //$NON-NLS-1$
             firmware = null;
+        } catch (InvalidFirmwareException ife) {
+        	Debug.err("Invalid firmware");
+        	firmware = null;
         }
         if (firmware != null) {
             Debug.msg("Found FritzBox-Firmware: " //$NON-NLS-1$
                     + firmware.getFirmwareVersion());
-            JFritz.setProperty("box.firmware", firmware.getFirmwareVersion()); //$NON-NLS-1$
         } else {
             Debug.msg("Found no FritzBox-Firmware"); //$NON-NLS-1$
-            JFritz.removeProperty("box.firmware"); //$NON-NLS-1$
         }
     }
 
@@ -1022,14 +1024,13 @@ public final class JFritz {
 			Debug.err("Exception: " + e.toString()); //$NON-NLS-1$
         }
 		try {
-			JFritzUtils.clearListOnFritzBox(properties.getProperty("box.address"), Encryption.decrypt(properties.getProperty("box.password")), new FritzBoxFirmware(properties.getProperty("box.firmware")));  //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
+			JFritzUtils.clearListOnFritzBox(properties.getProperty("box.address"), Encryption.decrypt(properties.getProperty("box.password")), firmware);  //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
 			Debug.msg("Clearing done"); //$NON-NLS-1$
 		} catch (WrongPasswordException e) {
 			Debug.err("Wrong password, can not delete callerlist on Box."); //$NON-NLS-1$
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			Debug.err("IOException while deleting callerlist on box (wrong IP-address?)."); //$NON-NLS-1$
-		} catch (InvalidFirmwareException e) {
-			Debug.err("Invalid firmware, can not delete callerlist on Box."); //$NON-NLS-1$
 		}
     }	
 	 
@@ -1669,5 +1670,23 @@ public final class JFritz {
     		systray.removeTrayIcon(trayIcon);
     		this.createTrayMenu();
     	}
+    }
+    
+    /**
+     * Returns current firmware version
+     * @return firmware
+     */
+    public static FritzBoxFirmware getFirmware()
+    {
+    	return firmware;
+    }
+    
+    /**
+     * Set current firmware version
+     * @param fw
+     */
+    public static void setFirmware(FritzBoxFirmware fw) 
+    {
+    	firmware = fw;
     }
 }
