@@ -53,6 +53,7 @@
  *
  * JFritz 0.6.1
  * - Neue Strings:
+ * - Neu: Konfigurationswizard für Erstbenutzer
  * - Bugfix: Standardtelefonnummern können wieder geändert werden
  * - Neu: Logfiles werden jetzt mittels Stream redirection geschrieben (heißt auch die Exceptions werden in den Logfiles aufgenommen :) )
  * - Bugfix: Kurzwahlen werden weider korrekt abgeholt
@@ -369,6 +370,7 @@ import org.jdesktop.jdic.tray.SystemTray;
 import org.jdesktop.jdic.tray.TrayIcon;
 
 import de.moonflower.jfritz.callerlist.CallerList;
+import de.moonflower.jfritz.dialogs.configwizard.ConfigWizard;
 import de.moonflower.jfritz.dialogs.phonebook.PhoneBook;
 import de.moonflower.jfritz.dialogs.simple.MessageDlg;
 import de.moonflower.jfritz.dialogs.sip.SipProviderTableModel;
@@ -798,7 +800,7 @@ public final class JFritz {
      * 
      * @param locale
      */
-    private void loadMessages(Locale locale) {
+    public static void loadMessages(Locale locale) {
         try {
             messages = ResourceBundle.getBundle(
                     "jfritz", locale);//$NON-NLS-1$
@@ -1625,7 +1627,7 @@ public final class JFritz {
     /**
      * @Brian Jensen
      * This function changes the state of the ResourceBundle object
-     * currently available locales, ("de, "DE") and ("en", "US)
+     * currently available locales: see lang subdirectory
      * Then it destroys the old window and redraws a new one with new locale
      * 
      * @param l the locale to change the language to
@@ -1671,4 +1673,17 @@ public final class JFritz {
     		this.createTrayMenu();
     	}
     }
+    
+    /**
+     * @author Brian Jensen
+     * This creates and then display the config wizard 
+     *
+     */
+    public void showConfigWizard(){
+    	ConfigWizard wizard = new ConfigWizard(jfritz);
+    	wizard.showWizard();
+    
+    }
+
+
 }
