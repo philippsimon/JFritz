@@ -41,9 +41,11 @@ public class FritzBoxFirmware {
 
     public final static byte BOXTYPE_FRITZBOX_7170 = 29;
 
-	public final static byte ACCESS_METHOD_POST_0342 = 0;
+    public final static byte ACCESS_METHOD_POST_0342 = 0;
 
-	public final static byte ACCESS_METHOD_PRIOR_0342 = 1;
+	public final static byte ACCESS_METHOD_ENGLISH = 1;
+
+	public final static byte ACCESS_METHOD_PRIOR_0342 = 2;
 
 	private byte boxtype;
 
@@ -261,7 +263,9 @@ public class FritzBoxFirmware {
 	 */
 	public final String getAccessMethod() {
 		int accessMethod;
-		if (majorFirmwareVersion == 3 && minorFirmwareVersion < 42)
+		if ( language.equals("en"))
+			accessMethod = ACCESS_METHOD_ENGLISH;
+		else if (majorFirmwareVersion == 3 && minorFirmwareVersion < 42)
 			accessMethod = ACCESS_METHOD_PRIOR_0342;
 		else
 			accessMethod = ACCESS_METHOD_POST_0342;
