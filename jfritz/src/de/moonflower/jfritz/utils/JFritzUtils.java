@@ -62,7 +62,9 @@ public class JFritzUtils {
 
 	private final static String POSTDATA_CLEAR = "&var%3Alang=$LANG&var%3Apagename=foncalls&var%3Amenu=fon&telcfg%3Asettings/ClearJournal=1"; //$NON-NLS-1$
 
-	private final static String POSTDATA_CALL = "&login:command/password=$PASSWORT&telcfg:settings/UseClickToDial=1&telcfg:command/Dial=$NUMMER&telcfg:settings/DialPort=$NEBENSTELLE"; //$NON-NLS-1$
+	private final static String POSTDATA_LOGIN = "&login:command/password=$PASSWORT"; //$NON-NLS-1$
+
+	private final static String POSTDATA_CALL = "&login:command/password=$PASSWORT&telcfg:settings/UseClickToDial=1&telcfg:settings/DialPort=$NEBENSTELLE&telcfg:command/Dial=$NUMMER"; //$NON-NLS-1$
 
 	private final static String PATTERN_LIST_CSV_OLD = "(\\d);(\\d\\d.\\d\\d.\\d\\d \\d\\d:\\d\\d);([^;]*);([^;]*);([^;]*);(\\d:\\d\\d)"; //$NON-NLS-1$
 
@@ -822,11 +824,34 @@ public class JFritzUtils {
 		return out;
 	}
 
-	public static void doCall(String number, String port,
-			FritzBoxFirmware firmware) {
+	/**
+	 * Sends login data to FritzBox
+	 * @param firmware
+	 */
+	public static void login(FritzBoxFirmware firmware) {
 		try {
 			String passwort = Encryption.decrypt(JFritz.getProperty(
 					"box.password", Encryption.encrypt(""))); //$NON-NLS-1$,  //$NON-NLS-2$
+
+			String postdata = POSTDATA_LOGIN.replaceAll("\\$PASSWORT", //$NON-NLS-1$
+					URLEncoder.encode(passwort, "ISO-8859-1"));
+
+			postdata = firmware.getAccessMethod() + postdata;
+
+			String urlstr = "http://" //$NON-NLS-1$
+					+ JFritz.getProperty("box.address", "fritz.box") //$NON-NLS-1$, //$NON-NLS-2$
+					+ "/cgi-bin/webcm"; //$NON-NLS-1$
+			fetchDataFromURL(urlstr, postdata, true);
+		} catch (UnsupportedEncodingException uee) {
+		} catch (WrongPasswordException wpe) {
+		} catch (IOException ioe) {
+		}
+	}
+
+	public static void doCall(String number, String port,
+			FritzBoxFirmware firmware) {
+		try {
+			login(firmware);
 			number = number.replaceAll("\\+", "00"); //$NON-NLS-1$,  //$NON-NLS-2$
 
 			String portStr = ""; //$NON-NLS-1$
@@ -860,9 +885,7 @@ public class JFritzUtils {
 				portStr = "59"; //$NON-NLS-1$
 			}
 
-			String postdata = POSTDATA_CALL.replaceAll("\\$PASSWORT", //$NON-NLS-1$
-					URLEncoder.encode(passwort, "ISO-8859-1")); //$NON-NLS-1$
-			postdata = postdata.replaceAll("\\$NUMMER", number); //$NON-NLS-1$
+			String postdata = POSTDATA_CALL.replaceAll("\\$NUMMER", number); //$NON-NLS-1$
 			postdata = postdata.replaceAll("\\$NEBENSTELLE", portStr); //$NON-NLS-1$
 
 			postdata = firmware.getAccessMethod() + postdata;
@@ -897,8 +920,8 @@ public class JFritzUtils {
 							.encrypt(password));
 				}
 			} catch (InvalidFirmwareException e) {
-				String box_address = jfritz.getJframe().showAddressDialog(JFritz
-						.getProperty("box.address", "fritz.box")); //$NON-NLS-1$,  //$NON-NLS-2$
+				String box_address = jfritz.getJframe().showAddressDialog(
+						JFritz.getProperty("box.address", "fritz.box")); //$NON-NLS-1$,  //$NON-NLS-2$
 				if (box_address == null) { // Dialog canceled
 					return false;
 				} else {
@@ -906,8 +929,8 @@ public class JFritzUtils {
 							box_address);
 				}
 			} catch (IOException e) {
-				String box_address = jfritz.getJframe().showAddressDialog(JFritz
-						.getProperty("box.address", "fritz.box")); //$NON-NLS-1$,  //$NON-NLS-2$
+				String box_address = jfritz.getJframe().showAddressDialog(
+						JFritz.getProperty("box.address", "fritz.box")); //$NON-NLS-1$,  //$NON-NLS-2$
 				if (box_address == null) { // Dialog canceled
 					return false;
 				} else {
