@@ -53,6 +53,8 @@
  *
  * JFritz 0.6.1
  * - Neue Strings:
+ * - Bugfix: Problem mit dem Holen der Anrufliste behoben
+ * - Bugfix: Nebenstellenbezeichnungen und Route können jetzt Sonderzeichen enthalten
  * - Neu: Konfigurationswizard für Erstbenutzer
  * - Bugfix: Standardtelefonnummern können wieder geändert werden
  * - Neu: Logfiles werden jetzt mittels Stream redirection geschrieben (heißt auch die Exceptions werden in den Logfiles aufgenommen :) )
