@@ -414,6 +414,11 @@ public class JFritzWindow extends JFrame
 		item.addActionListener(this);
 		jfritzMenu.add(item);
 
+		item = new JMenuItem(JFritz.getMessage("delete_duplicate_phonebook_entries")); //$NON-NLS-1$
+		item.setActionCommand("delete_duplicate_phonebook_entries"); //$NON-NLS-1$
+		item.addActionListener(this);
+		jfritzMenu.add(item);
+
 		item = new JMenuItem(JFritz.getMessage("backup")); //$NON-NLS-1$
 		item.setActionCommand("backup"); //$NON-NLS-1$
 		item.addActionListener(this);
@@ -1021,6 +1026,8 @@ public class JFritzWindow extends JFrame
 			fetchList();
 		else if (e.getActionCommand().equals("delete_fritzbox_callerlist")) //$NON-NLS-1$
 			deleteFritzBoxCallerList();
+		else if (e.getActionCommand().equals("delete_duplicate_phonebook_entries")) //$NON-NLS-1$
+			deleteDuplicatePhoneBookEntries();
 		else if (e.getActionCommand().equals("backup")) //$NON-NLS-1$
 			backupToChoosenDirectory();
 		else if (e.getActionCommand().equals("fetchTask")) //$NON-NLS-1$
@@ -1372,6 +1379,28 @@ public class JFritzWindow extends JFrame
 		// is to be deleted
 	}
 
+	/**
+	 * Removes redundant entries from the phonebook.
+	 * 
+	 * @see de.moonflower.jfritz.dialogs.phonebook.PhoneBook#deleteDuplicateEntries()
+	 */
+	private void deleteDuplicatePhoneBookEntries() {
+		// TODO:Set focus to Cancel-Button
+		int answer = JOptionPane.showConfirmDialog(this, JFritz
+				.getMessage("delete_duplicate_phonebook_entries_confirm_msg"), JFritz //$NON-NLS-1$
+				.getMessage("delete_duplicate_phonebook_entries"), //$NON-NLS-1$
+				JOptionPane.YES_NO_OPTION);
+
+		if (answer == JOptionPane.YES_OPTION) {
+			int removedEntries = getJFritz().getPhonebook().deleteDuplicateEntries();
+			JOptionPane.showMessageDialog(this, JFritz
+					.getMessage("delete_duplicate_phonebook_entries_inform_msg") //$NON-NLS-1$
+						.replaceAll("%N", Integer.toString(removedEntries)), JFritz //$NON-NLS-1$
+					.getMessage("delete_duplicate_phonebook_entries"), //$NON-NLS-1$
+					JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	
 	/**
 	 * Creates a backup to a user selected directory
 	 * 

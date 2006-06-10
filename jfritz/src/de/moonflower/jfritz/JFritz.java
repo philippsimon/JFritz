@@ -52,7 +52,10 @@
  * TODO: Sonderzeichen werden in den Balloontips unter Windows nicht korrekt angezeigt. Scheint ein Windowsproblem zu sein. Lösung/Workaround noch nicht gefunden.
  *
  * JFritz 0.6.1
- * - Neue Strings:
+ * - Neue Strings: 
+ *		delete_duplicate_phonebook_entries
+ *		delete_duplicate_phonebook_entries_confirm_msg
+ *		delete_duplicate_phonebook_entries_inform_msg
  * - Bugfix: Problem mit dem Holen der Anrufliste behoben
  * - Bugfix: Nebenstellenbezeichnungen und Route können jetzt Sonderzeichen enthalten
  * - Neu: Konfigurationswizard für Erstbenutzer
