@@ -56,12 +56,15 @@
  *		delete_duplicate_phonebook_entries
  *		delete_duplicate_phonebook_entries_confirm_msg
  *		delete_duplicate_phonebook_entries_inform_msg
+ * - Neu: Konfigurationswizard für Erstbenutzer
+ * - Neu: Logfiles werden jetzt mittels Stream redirection geschrieben (heißt auch die Exceptions werden in den Logfiles aufgenommen :) )
+ * - Neu: Entfernen doppelter Einträge beim Telefonbuch
+ * - Neu: Automatisches Scrollen zum selektierten Telefonbucheintrag
+ * - Bugfix: Kurzwahlen werden weider korrekt abgeholt
+ * - Bugfix: Standardtelefonnummern können wieder geändert werden
  * - Bugfix: Problem mit dem Holen der Anrufliste behoben
  * - Bugfix: Nebenstellenbezeichnungen und Route können jetzt Sonderzeichen enthalten
- * - Neu: Konfigurationswizard für Erstbenutzer
- * - Bugfix: Standardtelefonnummern können wieder geändert werden
- * - Neu: Logfiles werden jetzt mittels Stream redirection geschrieben (heißt auch die Exceptions werden in den Logfiles aufgenommen :) )
- * - Bugfix: Kurzwahlen werden weider korrekt abgeholt
+ * - Bugfix: Anzeige eines analogen Anrufs beim Anrufmonitor 
  * 
  * JFritz 0.6.0
  * - Neue Strings:
