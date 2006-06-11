@@ -317,6 +317,8 @@ public class JFritzUtils {
 		DataOutputStream printout;
 		String data = ""; //$NON-NLS-1$
 		boolean wrong_pass = false;
+		Debug.msg("Url: " + urlstr);
+		Debug.msg("Post data: " + postdata);
 
 		try {
 			url = new URL(urlstr);
@@ -429,6 +431,9 @@ public class JFritzUtils {
 				+ URLEncoder.encode(password, "ISO-8859-1");
 		String urlstr = "http://" + box_address + "/cgi-bin/webcm";
 
+		Debug.msg("Urlstr: " + urlstr);
+		Debug.msg("Postdata: " + postdata);
+
 		try {
 			url = new URL(urlstr);
 		} catch (MalformedURLException e) {
@@ -507,6 +512,9 @@ public class JFritzUtils {
 			}
 			printout.flush();
 			printout.close();
+			
+			Debug.msg("Urlstr: " + urlstr);
+			Debug.msg("Postdata: " + postdata);
 
 			BufferedReader reader;
 
