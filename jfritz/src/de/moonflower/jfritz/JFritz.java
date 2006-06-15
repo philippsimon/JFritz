@@ -67,6 +67,7 @@
  * - Bugfix: Problem mit dem Holen der Anrufliste behoben
  * - Bugfix: Nebenstellenbezeichnungen und Route können jetzt Sonderzeichen enthalten
  * - Bugfix: Anzeige eines analogen Anrufs beim Anrufmonitor 
+ * - Bugfix: PersonDialog ("Person editieren")wird nun mittig zum JFritz.JFrame angezeigt - SF.net-Request:[1503523] Adress-/Telefonbuch 
  * 
  * JFritz 0.6.0
  * - Neue Strings:
