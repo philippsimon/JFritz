@@ -68,8 +68,10 @@
  * - Bugfix: Nebenstellenbezeichnungen und Route können jetzt Sonderzeichen enthalten
  * - Bugfix: Anzeige eines analogen Anrufs beim Anrufmonitor 
  * - Bugfix: PersonDialog ("Person editieren") wird nun mittig zum JFritz.JFrame angezeigt - SF.net-Request:[1503523] Adress-/Telefonbuch 
- * - Neu: Default- und Close-Button für PersonDialog ("Person editieren")
- * - Bugfix: Wahlhilfe: Anwahl aller analogen Telefone konnte nicht gehen -> Tippfehler in JFritzUtils: JFritz.getMessage("analoge_telephones_all") -> korrigiert in JFritz.getMessage("analog_telephones_all")  
+ * - Neu: Default- und Close-Button für PersonDialog ("Person editieren"), Icon (JFritz) gesetzt
+ * - Bugfix: Wahlhilfe: Anwahl aller analogen Telefone konnte nicht gehen -> Tippfehler in JFritzUtils: JFritz.getMessage("analoge_telephones_all") -> korrigiert in JFritz.getMessage("analog_telephones_all")
+ * - Neu: Default-Button bei Rückfrage 'Box-Anruferliste löschen' geändert auf 'Nein'  
+ * - Neu: Berücksichtigung der Metal-Decorations bei Dialogen
  * 
  * JFritz 0.6.0
  * - Neue Strings:
@@ -372,6 +374,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -771,6 +774,7 @@ public final class JFritz {
         
       if(JFritz.getProperty("lookandfeel",UIManager.getSystemLookAndFeelClassName()).endsWith("MetalLookAndFeel")){ //$NON-NLS-1$,  //$NON-NLS-2$
     	  JFrame.setDefaultLookAndFeelDecorated(true);
+    	  JDialog.setDefaultLookAndFeelDecorated(true); //uses L&F decorations for dialogs
       }
       
       Debug.msg("New instance of JFrame"); //$NON-NLS-1$
