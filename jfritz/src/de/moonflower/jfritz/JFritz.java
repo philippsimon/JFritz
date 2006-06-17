@@ -68,7 +68,8 @@
  * - Bugfix: Nebenstellenbezeichnungen und Route können jetzt Sonderzeichen enthalten
  * - Bugfix: Anzeige eines analogen Anrufs beim Anrufmonitor 
  * - Bugfix: PersonDialog ("Person editieren") wird nun mittig zum JFritz.JFrame angezeigt - SF.net-Request:[1503523] Adress-/Telefonbuch 
- * - Neu: Default- und Close-Button für PersonDialog ("Person editieren") 
+ * - Neu: Default- und Close-Button für PersonDialog ("Person editieren")
+ * - Bugfix: Wahlhilfe: Anwahl aller analogen Telefone konnte nicht gehen -> Tippfehler in JFritzUtils: JFritz.getMessage("analoge_telephones_all") -> korrigiert in JFritz.getMessage("analog_telephones_all")  
  * 
  * JFritz 0.6.0
  * - Neue Strings:
