@@ -494,10 +494,10 @@ public class JFritzWindow extends JFrame
 		}
 		optionsMenu.add(lnfMenu);
 
-		item = new JMenuItem("JFritz Configuration Wizard", null); //$NON-NLS-1$
-		item.setActionCommand("configwizard"); //$NON-NLS-1$
-		item.addActionListener(this);
-		optionsMenu.add(item);
+//		item = new JMenuItem("JFritz Configuration Wizard", null); //$NON-NLS-1$
+//		item.setActionCommand("configwizard"); //$NON-NLS-1$
+//		item.addActionListener(this);
+//		optionsMenu.add(item);
 
 		if (!JFritz.runsOn().equals("Mac")) { //$NON-NLS-1$
 			item = new JMenuItem(JFritz.getMessage("config"), 'e'); //$NON-NLS-1$,  //$NON-NLS-2$
@@ -738,6 +738,7 @@ public class JFritzWindow extends JFrame
 							.getProperty("box.address", "192.168.178.1"), //$NON-NLS-1$,  //$NON-NLS-2$
 							Encryption.decrypt(JFritz
 									.getProperty("box.password")), //$NON-NLS-1$
+							JFritz.getProperty("box.port", "80"),
 							JFritz.getFirmware()); //$NON-NLS-1$
 					jfritz.getSIPProviderTableModel().updateProviderList(data);
 					jfritz.getSIPProviderTableModel().fireTableDataChanged();
@@ -1172,11 +1173,11 @@ public class JFritzWindow extends JFrame
 						 JFritz.getMessage("dialog_title_overwrite_file"), //$NON-NLS-1$
 						JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 					jfritz.getPhonebook().saveToCSVFile(file.getAbsolutePath(),
-							false);
+							false, ';');
 				}
 			} else {
 				jfritz.getPhonebook().saveToCSVFile(file.getAbsolutePath(),
-						false);
+						false, ';');
 			}
 		}
 	}
