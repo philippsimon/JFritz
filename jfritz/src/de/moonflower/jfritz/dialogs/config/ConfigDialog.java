@@ -223,10 +223,10 @@ public class ConfigDialog extends JDialog {
 								""))); //$NON-NLS-1$
 		passwordAfterStartButton.setSelected(pwAfterStart);
 
-		pass.setText(Encryption.decrypt(JFritz.getProperty("box.password"))); //$NON-NLS-1$
-		password = Encryption.decrypt(JFritz.getProperty("box.password")); //$NON-NLS-1$
-		port.setText(JFritz.getProperty("box.port","80")); //$NON-NLS-1$,  //$NON-NLS-2$
-		address.setText(JFritz.getProperty("box.address", "192.168.178.1")); //$NON-NLS-1$,  //$NON-NLS-2$
+		pass.setText(jfritz.getFritzBox().getPassword()); //$NON-NLS-1$
+		password = jfritz.getFritzBox().getPassword(); 
+		address.setText(jfritz.getFritzBox().getAddress());
+		port.setText(jfritz.getFritzBox().getPort());
 		areaCode.setText(JFritz.getProperty("area.code")); //$NON-NLS-1$
 		countryCode.setText(JFritz.getProperty("country.code")); //$NON-NLS-1$
 		areaPrefix.setText(JFritz.getProperty("area.prefix")); //$NON-NLS-1$
@@ -245,7 +245,7 @@ public class ConfigDialog extends JDialog {
 				}
 			}
 		}
-		firmware = JFritz.getFirmware(); //$NON-NLS-1$
+		firmware = jfritz.getFritzBox().getFirmware(); //$NON-NLS-1$
 		setBoxTypeLabel();
 	}
 
@@ -340,7 +340,7 @@ public class ConfigDialog extends JDialog {
 		JFritz.setProperty("fetch.timer", Integer.toString(timerSlider //$NON-NLS-1$
 				.getValue()));
 
-		JFritz.setFirmware(firmware);
+		jfritz.getFritzBox().detectFirmware();
 
 		if (!JFritz.getProperty("locale", "de_DE").equals(localeList[languageCombo.getSelectedIndex()])) { //$NON-NLS-1$ //$NON-NLS-2$
 			JFritz.setProperty(
@@ -735,6 +735,7 @@ public class ConfigDialog extends JDialog {
 					JFritz.setProperty("box.password", Encryption //$NON-NLS-1$
 							.encrypt(password));
 					JFritz.setProperty("box.address", address.getText()); //$NON-NLS-1$
+					jfritz.getFritzBox().detectFirmware();
 					jfritz.getJframe().switchMonitorButton();
 					if (startCallMonitorButton.isSelected()) {
 						setCallMonitorButtons(JFritz.CALLMONITOR_STOP);
@@ -969,8 +970,11 @@ public class ConfigDialog extends JDialog {
 					}
 				} else if (e.getActionCommand().equals("fetchSIP")) { //$NON-NLS-1$
 					try {
-						Vector data = JFritzUtils.retrieveSipProvider(address
-								.getText(), password, port.getText(), firmware);
+						JFritz.setProperty("box.password", Encryption.encrypt(password)); //$NON-NLS-1$
+						JFritz.setProperty("box.address", address.getText()); //$NON-NLS-1$
+						JFritz.setProperty("box.port", port.getText()); //$NON-NLS-1$
+						jfritz.getFritzBox().detectFirmware();
+						Vector data = jfritz.getFritzBox().retrieveSipProvider();
 						jfritz.getSIPProviderTableModel().updateProviderList(
 								data);
 						jfritz.getSIPProviderTableModel()
