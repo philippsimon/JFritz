@@ -29,7 +29,7 @@ public class CallFileXMLHandler extends DefaultHandler {
 	String chars, caller, callbycall, port, route, comment;
 
 	CallerList callerlist;
-
+	
 	CallType calltype;
 
 	Date calldate;

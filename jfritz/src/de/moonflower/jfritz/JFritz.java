@@ -57,6 +57,7 @@
  *		delete_duplicate_phonebook_entries_confirm_msg
  *		delete_duplicate_phonebook_entries_inform_msg
  *		box.port
+ * - Bugfix: Kurzwahlen werden jetzt korrekt geparst beim Abholen der Anrufliste
  * - Neu: Port einstellbar
  * - Neu: Konfigurationswizard für Erstbenutzer
  * - Neu: Logfiles werden jetzt mittels Stream redirection geschrieben (heißt auch die Exceptions werden in den Logfiles aufgenommen :) )
