@@ -57,6 +57,7 @@
  *		delete_duplicate_phonebook_entries_confirm_msg
  *		delete_duplicate_phonebook_entries_inform_msg
  *		box.port
+ * - Neu: Wählhilfe merkt sich den zuletzt benutzen Port
  * - Neu: JFritz kann jetzt beliebige Nummer mit der Wahlhilfe wählen (noch nicht ausführlich getestet, z.B. funktionieren auch die Tastencode?)
  * - Bugfix: Kurzwahlen werden jetzt korrekt geparst beim Abholen der Anrufliste
  * - Neu: Port einstellbar
