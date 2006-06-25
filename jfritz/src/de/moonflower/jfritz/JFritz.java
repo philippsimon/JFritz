@@ -79,6 +79,8 @@
  * - Neu: Default-Button bei Rückfrage 'Box-Anruferliste löschen' geändert auf 'Nein'  
  * - Neu: Berücksichtigung der Metal-Decorations bei Dialogen
  * - Intern: Funktionen, die mit der Kommunikation mit der FritzBox zu tun hatten, in eine neue Klasse FritzBox exportiert.
+ * - Intern: CallDialog: Auswahl der Nummern wiederhergestellt, editierbare JComboBox/JTextField (je nach Anzahl vorhandener Nummern)
+ * - Neu: Default- und Close-Button für CallDialog ("Anrufen"), Icon (JFritz) gesetzt
  * 
  * JFritz 0.6.0
  * - Neue Strings:
