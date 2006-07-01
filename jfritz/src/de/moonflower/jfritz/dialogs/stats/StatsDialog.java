@@ -18,13 +18,17 @@ import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.io.StringReader;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -61,11 +65,15 @@ public class StatsDialog extends JDialog {
 	public StatsDialog(JFritzWindow owner) throws HeadlessException {
 		super(owner, true);
 		if (owner != null) {
-			setLocationRelativeTo(owner);
+			//setLocationRelativeTo(owner);
 			this.jfritz = owner.getJFritz();
 		}
 		drawDialog();
 		getStats();
+		
+		if (owner != null) {
+			setLocationRelativeTo(owner);
+		}
 	}
 
 	/**
@@ -153,8 +161,25 @@ public class StatsDialog extends JDialog {
 		cancelButton.addActionListener(actionListener);
 		cancelButton.addKeyListener(keyListener);
 		refreshButton.addActionListener(actionListener);
+        
+		//set default confirm button (Enter)
+        getRootPane().setDefaultButton(okButton);
+               
+        //set default close button (ESC)       
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
+        Action escapeAction = new AbstractAction()
+        {
+            private static final long serialVersionUID = 3L;
 
-		bottomPane.add(okButton);
+            public void actionPerformed(ActionEvent e)
+            {
+                 cancelButton.doClick();
+            }
+        };
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE"); //$NON-NLS-1$
+        getRootPane().getActionMap().put("ESCAPE", escapeAction); //$NON-NLS-1$
+		
+        bottomPane.add(okButton);
 		bottomPane.add(cancelButton);
 
 		byteSendRateLabel = new JLabel();

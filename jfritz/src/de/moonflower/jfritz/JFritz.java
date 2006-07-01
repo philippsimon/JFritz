@@ -87,6 +87,23 @@
  * - Intern: Funktionen, die mit der Kommunikation mit der FritzBox zu tun hatten, in eine neue Klasse FritzBox exportiert.
  * - Intern: CallDialog: Auswahl der Nummern wiederhergestellt, editierbare JComboBox/JTextField (je nach Anzahl vorhandener Nummern)
  * - Neu: Default- und Close-Button für CallDialog ("Anrufen"), Icon (JFritz) gesetzt
+ * - Neu: Überarbeitung der Dialoge bzgl. OK/Cancel, Icon, Position
+ *   jfritz.dialogs.config.CallmessageDialog, 
+ *   jfritz.dialogs.config.ConfigDialog, 
+ *   jfritz.dialogs.config.FRITZBOXConfigDialog, 
+ *   jfritz.dialogs.config.SipConfigDialog, 
+ *   jfritz.dialogs.config.SyslogConfigDialog, 
+ *   jfritz.dialogs.config.TelnetConfigDialog, 
+ *   dialogs.config.YacConfigDialog,
+ *   
+ *   jfritz.dialogs.simple.AddressPasswordDialog,
+ *   jfritz.dialogs.stats.StatsDialog,
+ *   
+ *   jfritz.callerlist.CallDialog, 
+ *   
+ *   jfritz.utils.ImportOutlookContacts, 
+ *   jfritz.utils.NoticeDialog
+ *   
  * 
  * JFritz 0.6.0
  * - Neue Strings:
