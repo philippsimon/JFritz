@@ -1726,7 +1726,7 @@ public final class JFritz {
      *
      */
     public void showConfigWizard(){
-    	ConfigWizard wizard = new ConfigWizard(jfritz);
+    	ConfigWizard wizard = new ConfigWizard(jfritz, jframe);
     	wizard.showWizard();
     
     }
