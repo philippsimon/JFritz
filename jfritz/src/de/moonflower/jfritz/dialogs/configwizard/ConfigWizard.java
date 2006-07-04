@@ -38,12 +38,11 @@ public class ConfigWizard {
 		askLanguage(parent);
 			
 		Debug.msg("Create JFritz config wizard");
-		wizard = new Wizard();
+		wizard = new Wizard(jfritz.getJframe());
         wizard.getDialog().setTitle(JFritz.getMessage("config_wizard"));
+       	wizard.getDialog().setLocationRelativeTo(jfritz.getJframe());
         
-        if(parent != null)
-        	wizard.getDialog().setLocationRelativeTo(jfritz.getJframe());
-                
+       	
         //initialize the wizard with the correct order of the panels
         WizardPanelDescriptor descriptor1 = new ConfigPanel1Descriptor();
         wizard.registerWizardPanel(ConfigPanel1Descriptor.IDENTIFIER, descriptor1);

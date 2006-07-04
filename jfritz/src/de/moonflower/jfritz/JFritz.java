@@ -63,6 +63,7 @@
  *		config_wizard_info4
  *		config_wizard
  *
+ * - Bugfix: JFritz kann jetzt von einem beliebigen Verzeichnis aus aufgerufen (bestätigt unter Linx. Windows?? Mac??)
  * - Neu: Rückwärtssuche auch für Handynummern
  * - Neu: Wählhilfe merkt sich den zuletzt benutzen Port
  * - Neu: JFritz kann jetzt beliebige Nummer mit der Wahlhilfe wählen (noch nicht ausführlich getestet, z.B. funktionieren auch die Tastencode?)
@@ -690,6 +691,7 @@ public final class JFritz {
     public JFritz(boolean fetchCalls, boolean csvExport, String csvFileName,
             boolean clearList, boolean enableInstanceControl, boolean writeForeignFormats) {
         jfritz = this;    
+       
         loadProperties();
         loadMessages(new Locale(JFritz.getProperty("locale","de_DE"))); //$NON-NLS-1$,  //$NON-NLS-2$
         loadLocaleMeanings(new Locale("int","INT"));
