@@ -1731,5 +1731,6 @@ public final class JFritz {
     	ConfigWizard wizard = new ConfigWizard(jfritz, jframe);
     	wizard.showWizard();
     
-    }
+    }  
+    
 }
