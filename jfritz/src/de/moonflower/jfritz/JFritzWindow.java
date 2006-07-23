@@ -691,7 +691,7 @@ public class JFritzWindow extends JFrame
 					}
 					if (j > 0)
 						jfritz.getPhonebook().saveToXMLFile(
-								JFritz.PHONEBOOK_FILE);
+								JFritz.SAVE_DIR + JFritz.PHONEBOOK_FILE);
 					return null;
 				}
 
@@ -736,7 +736,7 @@ public class JFritzWindow extends JFrame
 					jfritz.getSIPProviderTableModel().updateProviderList(data);
 					jfritz.getSIPProviderTableModel().fireTableDataChanged();
 					jfritz.getSIPProviderTableModel().saveToXMLFile(
-							JFritz.SIPPROVIDER_FILE);
+							JFritz.SAVE_DIR + JFritz.SIPPROVIDER_FILE);
 					jfritz.getCallerlist().fireTableDataChanged();
 				} catch (WrongPasswordException e1) {
                     jfritz.errorMsg(JFritz.getMessage("wrong_password")); //$NON-NLS-1$
@@ -1240,7 +1240,7 @@ public class JFritzWindow extends JFrame
 	}
 
 	public void saveQuickDials() {
-		quickDialPanel.getDataModel().saveToXMLFile(JFritz.QUICKDIALS_FILE);
+		quickDialPanel.getDataModel().saveToXMLFile(JFritz.SAVE_DIR + JFritz.QUICKDIALS_FILE);
 	}
 
 	public void switchMonitorButton() {
