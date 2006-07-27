@@ -64,7 +64,9 @@
  *		config_wizard_info4
  *		config_wizard
  *		popup_delay
- *
+ *      dial_prefix
+ * 
+ * - Neu: Dummy-Telefonbucheinträge werden gelöscht, falls ein Eintrag mit derselben Nummer existiert 
  * - Neu: Anrufe mit einer AKZ werden jetzt richtig verarbeitet.
  * - Neu: Der Speicherordner kann jetzt frei gewŠhlt werden, bleibt nach dem Beenden erhalten. SF-Tracker [1248965]
  * - Bugfix: Die Sprachauswahlbox zeigt jetzt auch unter Linux Flaggen-Icons an.
