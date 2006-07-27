@@ -65,6 +65,7 @@
  *		config_wizard
  *		popup_delay
  *
+ * - Neu: Anrufe mit einer AKZ werden jetzt richtig verarbeitet.
  * - Neu: Der Speicherordner kann jetzt frei gewählt werden, bleibt nach dem Beenden erhalten. SF-Tracker [1248965]
  * - Bugfix: Die Sprachauswahlbox zeigt jetzt auch unter Linux Flaggen-Icons an.
  * - Bugfix: Das Telefonbuch wird nach einem erfolgreichen Outlook-Import sofort gespeichert. SF-Tracker [ 1503185 ]
@@ -82,14 +83,14 @@
  * - Neu: Englische Firmware wird unterstützt
  * - Intern: Firmware wird beim Start erkannt und in JFritz.firmware gespeichert. Zugriff nicht mehr über JFritz.getProperties("box.firmware") sondern über JFritz.getFirmware()
  * - Bugfix: Kurzwahlen werden wieder korrekt abgeholt
- * - Bugfix: Standardtelefonnummern kˆnnen wieder geändert werden
+ * - Bugfix: Standardtelefonnummern können wieder geändert werden
  * - Bugfix: Problem mit dem Holen der Anrufliste behoben
- * - Bugfix: Nebenstellenbezeichnungen und Route kˆnnen jetzt Sonderzeichen enthalten
+ * - Bugfix: Nebenstellenbezeichnungen und Route können jetzt Sonderzeichen enthalten
  * - Bugfix: Anzeige eines analogen Anrufs beim Anrufmonitor 
  * - Bugfix: PersonDialog ("Person editieren") wird nun mittig zum JFritz.JFrame angezeigt - SF.net-Request:[1503523] Adress-/Telefonbuch 
  * - Neu: Default- und Close-Button für PersonDialog ("Person editieren"), Icon (JFritz) gesetzt
  * - Bugfix: Wahlhilfe: Anwahl aller analogen Telefone konnte nicht gehen -> Tippfehler in JFritzUtils: JFritz.getMessage("analoge_telephones_all") -> korrigiert in JFritz.getMessage("analog_telephones_all")
- * - Neu: Default-Button bei Rückfrage 'Box-Anruferliste lˆschen' geändert auf 'Nein'  
+ * - Neu: Default-Button bei Rückfrage 'Box-Anruferliste löschen' geändert auf 'Nein'  
  * - Neu: Berücksichtigung der Metal-Decorations bei Dialogen
  * - Intern: Funktionen, die mit der Kommunikation mit der FritzBox zu tun hatten, in eine neue Klasse FritzBox exportiert.
  * - Intern: CallDialog: Auswahl der Nummern wiederhergestellt, editierbare JComboBox/JTextField (je nach Anzahl vorhandener Nummern)

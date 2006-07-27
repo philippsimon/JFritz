@@ -5,7 +5,7 @@
  *
  */
 package de.moonflower.jfritz.struct;
-
+ 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
@@ -49,7 +49,7 @@ public class Call {
         	this.number = null;
         
         //check if the call is an incoming call with a dial out prefix
-        else if(calltype.toInt() == CallType.CALLIN && Boolean.parseBoolean(
+        else if(calltype.toInt() == CallType.CALLIN && Boolean.valueOf(
         		JFritz.getProperty("option.activateDialPrefix")) &&
         		this.number.toString().startsWith(JFritz.getProperty(
         		"dial.prefix", " ")) )
