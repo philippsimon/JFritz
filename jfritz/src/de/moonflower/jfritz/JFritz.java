@@ -438,6 +438,7 @@ import de.moonflower.jfritz.dialogs.phonebook.PhoneBook;
 import de.moonflower.jfritz.dialogs.simple.MessageDlg;
 import de.moonflower.jfritz.dialogs.sip.SipProviderTableModel;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
+import de.moonflower.jfritz.struct.CallType;
 import de.moonflower.jfritz.struct.FritzBox;
 import de.moonflower.jfritz.struct.Person;
 import de.moonflower.jfritz.struct.PhoneNumber;
@@ -1383,7 +1384,8 @@ public final class JFritz {
 		
 		calledstr = calledInput;
         if (!calledInput.startsWith("SIP")) { //$NON-NLS-1$
-            PhoneNumber called = new PhoneNumber(calledInput);
+            PhoneNumber called = new PhoneNumber(calledInput, jfritz,
+            		Boolean.valueOf(JFritz.getProperty("option.activateDialPrefix")));
             if (!called.getIntNumber().equals("")) //$NON-NLS-1$
 				calledstr = called.getIntNumber();     
         }

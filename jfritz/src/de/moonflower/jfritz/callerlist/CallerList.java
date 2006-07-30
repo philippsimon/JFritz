@@ -1378,7 +1378,9 @@ public class CallerList extends AbstractTableModel {
 
 		// Phone number
 		if (!field[3].equals("")) {
-			number = new PhoneNumber(field[3], jfritz);
+			number = new PhoneNumber(field[3], jfritz, 
+					Boolean.valueOf(JFritz.getProperty("option.activateDialPrefix"))
+					&& (calltype.toInt() == CallType.CALLOUT));
 			number.setCallByCall(field[10]);
 		} else
 			number = null;
@@ -1455,7 +1457,9 @@ public class CallerList extends AbstractTableModel {
 
 		// Phone number
 		if (!field[2].equals(""))
-			number = new PhoneNumber(field[2], jfritz);
+			number = new PhoneNumber(field[2], jfritz,
+					Boolean.valueOf(JFritz.getProperty("option.activateDialPrefix"))
+					&& (calltype.toInt() == CallType.CALLOUT));
 		else
 			number = null;
 
@@ -1550,7 +1554,9 @@ public class CallerList extends AbstractTableModel {
 
 		// Phone number
 		if (!field[3].equals(""))
-			number = new PhoneNumber(field[3], jfritz);
+			number = new PhoneNumber(field[3], jfritz, 
+					Boolean.valueOf(JFritz.getProperty("option.activateDialPrefix"))
+					&& (calltype.toInt() == CallType.CALLOUT));
 		else
 			number = null;
 
@@ -1659,7 +1665,9 @@ public class CallerList extends AbstractTableModel {
 
 		// Phone number
 		if (!field[2].equals(""))
-			number = new PhoneNumber(field[2], jfritz);
+			number = new PhoneNumber(field[2], jfritz,
+					Boolean.valueOf(JFritz.getProperty("option.activateDialPrefix"))
+					&& (calltype.toInt() == CallType.CALLOUT));
 		else
 			number = null;
 
