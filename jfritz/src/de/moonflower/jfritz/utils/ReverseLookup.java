@@ -15,9 +15,10 @@ import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.struct.Person;
 import de.moonflower.jfritz.struct.PhoneNumber;
-
+import de.moonflower.jfritz.utils.ReverseLookupSwitzerland;
 /**
  * Class for telephone number reverse lookup using "dasoertliche.de"
  * 
@@ -40,7 +41,10 @@ public class ReverseLookup {
 		    newPerson = new Person ();
 		    newPerson.addNumber(number);
 		} else {
-			newPerson = lookupDasOertliche(number.getAreaNumber());
+			if(number.convertToIntNumber().startsWith("+41"))
+				newPerson = ReverseLookupSwitzerland.lookup(number.getAreaNumber());
+			else
+				newPerson = lookupDasOertliche(number.getAreaNumber());
 		}
 		return newPerson;
 	}
