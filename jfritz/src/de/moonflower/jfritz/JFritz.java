@@ -1385,11 +1385,12 @@ public final class JFritz {
 		calledstr = calledInput;
         if (!calledInput.startsWith("SIP")) { //$NON-NLS-1$
             PhoneNumber called = new PhoneNumber(calledInput, jfritz,
-            		Boolean.valueOf(JFritz.getProperty("option.activateDialPrefix")));
+            		Boolean.valueOf(JFritz.getProperty("option.activateDialPrefix"))
+            		&& !providerInput.contains("@"));
             if (!called.getIntNumber().equals("")) //$NON-NLS-1$
 				calledstr = called.getIntNumber();     
         }
-
+        
 		providerstr = providerInput;
         if (providerInput.startsWith("SIP")) //$NON-NLS-1$
 			providerstr = getSIPProviderTableModel().getSipProvider(
