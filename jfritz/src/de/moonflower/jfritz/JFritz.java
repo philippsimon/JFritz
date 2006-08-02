@@ -33,11 +33,11 @@
  * 
  *
  * 
- * BUGS: bitte bei Sourceforge nachschauen und dort auch den Status Šndern
+ * BUGS: bitte bei Sourceforge nachschauen und dort auch den Status ändern
  * BUGS: http://sourceforge.net/tracker/?group_id=138196&atid=741413
- * BUG: die Autoerkennung, ob telefond fŸr Syslog richtig lŠuft hat ein Sicherheitsloch. Nun kann jede IP auf Port 1011 zugreifen. 
+ * BUG: die Autoerkennung, ob telefond für Syslog richtig läuft hat ein Sicherheitsloch. Nun kann jede IP auf Port 1011 zugreifen. 
  * 
- * FeatureRequests: bitte bei Sourceforge nachschauen und dort auch den Status Šndern
+ * FeatureRequests: bitte bei Sourceforge nachschauen und dort auch den Status ändern
  * FeatureRequests: http://sourceforge.net/tracker/?func=browse&group_id=138196&atid=741416
  
  * CHANGELOG:
@@ -45,9 +45,9 @@
  * (TODO: Checken, ob alle Bibliotheken vorhanden sind)
  * (TODO: Neue Kurzwahlen von der Beta-FW ins Telefonbuch aufnehmen)
  * (TODO: Import der Anrufliste im XML-Format beim Kontextmenü einbauen)
- * TODO: Filter fŸr Ports
+ * TODO: Filter für Ports
  * TODO: Internationalisierung abschließen
- * TODO: Language-Files checken, ob tatsŠchlich alle Werte benötigt werden
+ * TODO: Language-Files checken, ob tatsächlich alle Werte benötigt werden
  * TODO: Sonderzeichen werden in den Balloontips unter Windows nicht korrekt angezeigt. Scheint ein Windowsproblem zu sein. Lösung/Workaround noch nicht gefunden.
  *
  * JFritz 0.6.1
@@ -65,38 +65,39 @@
  *		config_wizard
  *		popup_delay
  *      dial_prefix
- * 
+ *      
+ * - Neu: Rückwärtssuche für die Schweiz über tel.search.ch, JFritz ruft automatisch die richtige Rückwärtssuche auf.
  * - Neu: Dummy-Telefonbucheinträge werden gelöscht, falls ein Eintrag mit derselben Nummer existiert 
  * - Neu: Anrufe mit einer AKZ werden jetzt richtig verarbeitet.
- * - Neu: Der Speicherordner kann jetzt frei gewŠhlt werden, bleibt nach dem Beenden erhalten. SF-Tracker [1248965]
+ * - Neu: Der Speicherordner kann jetzt frei gewählt werden, bleibt nach dem Beenden erhalten. SF-Tracker [1248965]
  * - Bugfix: Die Sprachauswahlbox zeigt jetzt auch unter Linux Flaggen-Icons an.
  * - Bugfix: Das Telefonbuch wird nach einem erfolgreichen Outlook-Import sofort gespeichert. SF-Tracker [ 1503185 ]
  * - Neu: Zeit, bis Popup-Nachrichten ausgeblendet sind, einstellbar gemacht (Zeit von 0 bedeutet nie schließen) SF-Request Nr: [1340678] [1518330]
- * - Bugfix: JFritz kann jetzt von einem beliebigen Verzeichnis aus aufgerufen (bestŠtigt unter Linux, Windows, Mac??)
- * - Neu: RŸckwŠrtssuche auch fŸr Handynummern
- * - Neu: WŠhlhilfe merkt sich den zuletzt benutzen Port
- * - Neu: JFritz kann jetzt beliebige Nummer mit der Wahlhilfe wŠhlen (noch nicht ausfŸhrlich getestet, z.B. funktionieren auch die Tastencode?)
+ * - Bugfix: JFritz kann jetzt von einem beliebigen Verzeichnis aus aufgerufen (bestätigt unter Linux, Windows, Mac??)
+ * - Neu: Rückwärtssuche auch für Handynummern
+ * - Neu: Wählhilfe merkt sich den zuletzt benutzen Port
+ * - Neu: JFritz kann jetzt beliebige Nummer mit der Wahlhilfe wählen (noch nicht ausführlich getestet, z.B. funktionieren auch die Tastencode?)
  * - Bugfix: Kurzwahlen werden jetzt korrekt geparst beim Abholen der Anrufliste
  * - Neu: Port einstellbar
- * - Neu: Konfigurationswizard fŸr Erstbenutzer
+ * - Neu: Konfigurationswizard für Erstbenutzer
  * - Neu: Logfiles werden jetzt mittels Stream redirection geschrieben (heißt auch die Exceptions werden in den Logfiles aufgenommen :) )
- * - Neu: Entfernen doppelter EintrŠge beim Telefonbuch
+ * - Neu: Entfernen doppelter Einträge beim Telefonbuch
  * - Neu: Automatisches Scrollen zum selektierten Telefonbucheintrag
- * - Neu: Englische Firmware wird unterstŸtzt
- * - Intern: Firmware wird beim Start erkannt und in JFritz.firmware gespeichert. Zugriff nicht mehr Ÿber JFritz.getProperties("box.firmware") sondern Ÿber JFritz.getFirmware()
+ * - Neu: Englische Firmware wird unterstützt
+ * - Intern: Firmware wird beim Start erkannt und in JFritz.firmware gespeichert. Zugriff nicht mehr über JFritz.getProperties("box.firmware") sondern über JFritz.getFirmware()
  * - Bugfix: Kurzwahlen werden wieder korrekt abgeholt
- * - Bugfix: Standardtelefonnummern kšnnen wieder geŠndert werden
+ * - Bugfix: Standardtelefonnummern können wieder geändert werden
  * - Bugfix: Problem mit dem Holen der Anrufliste behoben
- * - Bugfix: Nebenstellenbezeichnungen und Route kšnnen jetzt Sonderzeichen enthalten
+ * - Bugfix: Nebenstellenbezeichnungen und Route können jetzt Sonderzeichen enthalten
  * - Bugfix: Anzeige eines analogen Anrufs beim Anrufmonitor 
  * - Bugfix: PersonDialog ("Person editieren") wird nun mittig zum JFritz.JFrame angezeigt - SF.net-Request:[1503523] Adress-/Telefonbuch 
- * - Neu: Default- und Close-Button fŸr PersonDialog ("Person editieren"), Icon (JFritz) gesetzt
+ * - Neu: Default- und Close-Button für PersonDialog ("Person editieren"), Icon (JFritz) gesetzt
  * - Bugfix: Wahlhilfe: Anwahl aller analogen Telefone konnte nicht gehen -> Tippfehler in JFritzUtils: JFritz.getMessage("analoge_telephones_all") -> korrigiert in JFritz.getMessage("analog_telephones_all")
- * - Neu: Default-Button bei RŸckfrage 'Box-Anruferliste lšschen' geŠndert auf 'Nein'  
- * - Neu: BerŸcksichtigung der Metal-Decorations bei Dialogen
+ * - Neu: Default-Button bei Rückfrage 'Box-Anruferliste löschen' geändert auf 'Nein'  
+ * - Neu: Berücksichtigung der Metal-Decorations bei Dialogen
  * - Intern: Funktionen, die mit der Kommunikation mit der FritzBox zu tun hatten, in eine neue Klasse FritzBox exportiert.
  * - Intern: CallDialog: Auswahl der Nummern wiederhergestellt, editierbare JComboBox/JTextField (je nach Anzahl vorhandener Nummern)
- * - Neu: Default- und Close-Button fŸr CallDialog ("Anrufen"), Icon (JFritz) gesetzt
+ * - Neu: Default- und Close-Button für CallDialog ("Anrufen"), Icon (JFritz) gesetzt
  * - Neu: Überarbeitung der Dialoge bzgl. OK/Cancel, Icon, Position
  *   jfritz.dialogs.config.CallmessageDialog, 
  *   jfritz.dialogs.config.ConfigDialog, 
@@ -118,14 +119,14 @@
  * JFritz 0.6.0
  * - Neue Strings:
  * - Neuer Kommandozeilenparameter: -w, deaktiviert die Kontrolle von mehrfachen Instanzen
- * - Bugfix: Alle internationalen GesprŠche werden jetzt erkannt.
+ * - Bugfix: Alle internationalen Gespräche werden jetzt erkannt.
  * - Neu: Sprache einstellbar ( <- Wahlhilfe im Telefonbuch funktioniert bei englischer Sprache nicht (Bastian)
  * 								<- TrayMenu angepasst (Benjamin)
- * 								<- komplett geŠndert, Sprachfiles werden jetzt dynamisch erkannt und können in den Einstellungen ausgewŠhlt werden. (Bastian))
+ * 								<- komplett geändert, Sprachfiles werden jetzt dynamisch erkannt und können in den Einstellungen ausgewählt werden. (Bastian))
  * - Bugfix: Spracheinstellungen werden gespeichert.
  * - Neu: Verbesserte Anzeige des aus- und eingehenden Verbindungstyps bei verwendung des JFritz-Anrufmonitors im Format "interne MSN (Leitungsart)", z.B. "1234 (ISDN)" oder "1234 (SIP)" bei eingehenden Anrufen oder "56789 (88sdg4@dus.net)" bei ausgehenden
  * - Bugfix: Anrufmonitor zeigt ausgehende und eingehende Anrufe im gleichen Format an 
- * - Bugfix: Neues JFritz-Anrufmonitor-Format besser unterstŸtzt, jetzt wieder Anzeige von angerufener MSN
+ * - Bugfix: Neues JFritz-Anrufmonitor-Format besser unterstützt, jetzt wieder Anzeige von angerufener MSN
  * - Bugfix: MAC-Handling funktioniert wieder
  * - Bugfix: Wahlhilfe im Telefonbuch funktioniert jetzt bei englischer Sprache (Brian) 
  * - Bugfix: Beim Metal-LAF werden jetzt immer die Metal-Decorations verwendet.
@@ -137,24 +138,24 @@
  * - Neu: Wahlhilfe (<- funktioniert nicht richtig. Es wird immer der Port vom letzten Versuch benutzt
  *                      Beispiel: ich habe zuletzt ISDN 1 benutzt, will jetzt mit ISDN 2 anrufen, dann wird aber ISDN 1 benutzt.
  *                      Benutze ich dann die Wahlhilfe erneut, wird ISDN 2 benutzt - egal welchen Port ich einstelle. D.h., benutze
- *                      ich stŠndig die gleichen Ports, fŠllt es nicht weiter auf.
- *                      Ich denke, das hŠngt damit zusammen, dass man auf der WeboberflŠche erst den Port auswŠhlt, dann Ÿbernehmen
- *                      drŸckt und dann erst die Nummer anklickt. Diesen Vorgang mŸsste man in JFritz nachbilden.  (KCh)
+ *                      ich ständig die gleichen Ports, fŠllt es nicht weiter auf.
+ *                      Ich denke, das hängt damit zusammen, dass man auf der Weboberfläche erst den Port auswählt, dann übernehmen
+ *                      drückt und dann erst die Nummer anklickt. Diesen Vorgang müsste man in JFritz nachbilden.  (KCh)
  *                   <- Eigentlich sollte es auch mit einem direkten URL-Aufruf funktionieren. Machen andere Tools genau so. (Robert)
  *                   <- Kann denn keiner das Verhalten meiner Box nachvollziehen? Ist das evtl. ISDN-spezifisch? Ich kanns es 100%ig reproduzieren (KCh))
  * - Neu: (JFritz)Telefonbuch importieren (XML)
- * - Neu: Manuelle Backups erstellen (MenŸ und Toolbar)
+ * - Neu: Manuelle Backups erstellen (Menü und Toolbar)
  * - Neu: per Funktionstaste "F5" Anrufliste aktualisieren
- * - Neu: Suchfunktion fŸr Telefonbuch
+ * - Neu: Suchfunktion für Telefonbuch
  * - Neue Option: Nach Standby oder Ruhezustand die Anrufliste automatisch abholen
  * - Neue Option: Sicherungskopien bei jedem Laden der Anruferliste erstellen
  * - Änderung: Das Durchsuchen der Anruferliste muss nun per [ENTER] gestartet werden.
- * - Bugfix: "Übernehmen" Button im Telefonbuch wird nun anklickbar, wenn man eine Telefonnummer geŠndert hat.
+ * - Bugfix: "Übernehmen" Button im Telefonbuch wird nun anklickbar, wenn man eine Telefonnummer geändert hat.
  * - Bugfix: Sonderzeichen bei "Externes Programm starten" werden korrekt gespeichert 
- * - Bugfix: tritt der unwahrscheinliche Fall auf, dass kein Tray-Icon angezeigt wird, der User aber frŸher einmal
- * 			 (als das Tray-Icon noch verfŸgbar war) Tray-Messages zu Benachrichtigung ausgewŠhlt hatte, wurde gar kein
- * 			 Anruf mehr signalisiert. Jetzt wird in diesem Fall auf ein PopUp zurŸckgegriffen.
- * - Bugfix: unvollstŠndige Anzeige des Einstellungsdialoges -> Weiteres
+ * - Bugfix: tritt der unwahrscheinliche Fall auf, dass kein Tray-Icon angezeigt wird, der User aber früher einmal
+ * 			 (als das Tray-Icon noch verfügbar war) Tray-Messages zu Benachrichtigung ausgewählt hatte, wurde gar kein
+ * 			 Anruf mehr signalisiert. Jetzt wird in diesem Fall auf ein PopUp zurückgegriffen.
+ * - Bugfix: unvollständige Anzeige des Einstellungsdialoges -> Weiteres
  * - Bugfix: Speicherung der Kommentare
  * - Bugfix: Überschreiben der Rufnummer im Telefonbuch tritt nicht mehr auf
  * - INTERN: Bereitstellen von utils.JFritzClipboard und CallerList.getSelectedCall
@@ -162,26 +163,26 @@
  * 
  * JFritz 0.5.5
  * - Nummer und Anschrift können aus der Anrufliste heraus in die Zwischenablage kopiert werden
- * - Schutz vor mehrfachem Programmstart (<- was ist mit Kommandozeilenstart?, =>BS: werden berŸcksichtigt - enableInstanceControl=false)
- * - LöschfunktionalitŠt fŸr Anrufliste der FRITZ!Box (MenŸ und Toolbar)
+ * - Schutz vor mehrfachem Programmstart (<- was ist mit Kommandozeilenstart?, =>BS: werden berücksichtigt - enableInstanceControl=false)
+ * - Löschfunktionalität für Anrufliste der FRITZ!Box (Menü und Toolbar)
  * - Bugfix: Start auch bei fehlendem Tray
  * - Bugfix: Anrufmonitor arbeitete bei einem Reverselookup einer nicht im Telefonbuch 
  *           eingetragenen Person nicht mehr
- * - Bugfix: Eintragen einer Ÿber Reverse-Lookup gefundenen Person korrigiert
+ * - Bugfix: Eintragen einer über Reverse-Lookup gefundenen Person korrigiert
  * - Neuer Kommandozeilenparameter: -d, --delete_on_box, löscht Anrufliste auf der Box und beendet sich dann (kein GUI)
  * - Neuer Kommandozeilenparameter: -b, --backup, erstellt eine Sicherungskopie von allen XML-Dateien
  * - Neue Option: Sicherungskopien beim Start erstellen
- * - Bugfix: Bei der Suche nach einer Rufnummer werden vor der Zentrale ggf. vorhandene Durchwahlnummern berŸcksichtigt 
+ * - Bugfix: Bei der Suche nach einer Rufnummer werden vor der Zentrale ggf. vorhandene Durchwahlnummern berücksichtigt 
  *  
  * JFritz 0.5.4
  * - Beim neuen Anrufmonitor auf # achten.
- * - Callmonitor: Beim AusfŸhren eines externen Programmes werden %Firstname, %Surname, %Compnay ersetzt.
+ * - Callmonitor: Beim Ausführen eines externen Programmes werden %Firstname, %Surname, %Compnay ersetzt.
  * - Beim Beenden von JFritz keine Speicherung von Calls und Phonebook mehr
  * - Bei den Einstellungen die MAC weggenommen
  * - Bugfix: Sonderzeichen bei "Externes Programm starten" werden korrekt gespeichert 
  * - Watchdog: Anrufmonitor wird nach dem Ruhezustand neu gestartet
  * - Anrufliste wird per CSV und nicht mehr per Webinterface abgeholt
- * - Unterstützung fŸr Firmware xx.04.03
+ * - Unterstützung für Firmware xx.04.03
  * 
  * JFritz 0.5.3
  * - Bugfix-Anrufmonitor: Nummern werden internationalisiert
@@ -193,7 +194,7 @@
  * - FRITZ!Box-Anrufmonitor: Abholen der Anrufliste nach dem Auflegen
  * 
  * JFritz 0.5.1
- * - PrioritŠt auf 5 erhöht
+ * - Priorität auf 5 erhöht
  * - Kompatibel zur Firmware xx.03.101
  * - Datenverbindungen werden als solche angezeigt
  * - Outlookimport verbessert
@@ -201,13 +202,13 @@
  * JFritz 0.5.0
  * - Neuer Anrufmonitor: FRITZ!Box Anrufmonitor
  * - Kompatibel zur Firmware xx.03.99
- * - Einstelloption fŸr "minimieren statt schließen"
+ * - Einstelloption für "minimieren statt schließen"
  * 
  * JFritz 0.4.7
- * - New Feature: Variable ProgrammprioritŠt (1..10)
+ * - New Feature: Variable Programmpriorität (1..10)
  * - Neuer Kommandozeilenparameter -p5 --priority=5
  * - Kompatibel zur FRITZ!Box 7170
- * - Anzeige der GesamtgesprŠchsdauer in Stunden und Minuten
+ * - Anzeige der Gesamtgesprächsdauer in Stunden und Minuten
  * - Bugfix: Manche Spalten ließen sich nicht klein genug machen
  * - Bugfix: Kommandozeilenparameter -c funktionierte nicht mehr
  * - Bugfix: Outlook-Import
@@ -216,9 +217,9 @@
  * 
  * JFritz 0.4.6
  * - Reset-Button bei den Filtern deaktiviert alle Filter
- * - Neuer Filter: KontextmenŸ bei "Verpasste Anrufe"-Filter
+ * - Neuer Filter: Kontextmenü bei "Verpasste Anrufe"-Filter
  * - Neuer Filter: Kommentarfilter
- * - Neuer Befehl fŸr "Anrufmonitor - Externes Programm starten": %URLENCODE();
+ * - Neuer Befehl für "Anrufmonitor - Externes Programm starten": %URLENCODE();
  * - Kompatibel zu FritzBox 5010 und 5012
  * - Automatische Erkennung der Firmware
  * - Bugfix: Danisahne-Mod wird richtig erkannt
@@ -227,23 +228,23 @@
  * - Bugfix: Sortierfunktion beim Telefonbuch korrigiert
  * 
  * JFritz 0.4.5
- * - UnterstŸtzung fŸr FRITZ!Box Firmware .85
- * - UnterstŸtzung fŸr FRITZ!Box Firmware .87
- * - UnterstŸtzung fŸr FRITZ!Box Firmware .88
+ * - Unterstützung für FRITZ!Box Firmware .85
+ * - Unterstützung für FRITZ!Box Firmware .87
+ * - Unterstützung für FRITZ!Box Firmware .88
  * - Spalten sind jetzt frei verschiebbar
- * - Kommentarspalte hinzugefŸgt
+ * - Kommentarspalte hinzugefügt
  * - Kommentar- und Anschluß-Spalte können ausgeblendet werden
- * - Suche der FritzBox Ÿber UPNP/SSDP abschaltbar
+ * - Suche der FritzBox über UPNP/SSDP abschaltbar
  * - Telefonbuch nun nach allen Spalten sortierbar
  * - Beim Export merkt sich JFritz die Verzeichnisse
  * - Drucken der Anrufliste (und Export nach Excel, RTF, PDF, CSV, ...)
- * - Neue Kommandozeilenoption -n: Schaltet die Tray-UnterstŸtzung aus
+ * - Neue Kommandozeilenoption -n: Schaltet die Tray-Unterstützung aus
  * - Direkter Import von Outlook-Kontakten
- * - Datumsfilter unterstŸtzt nun "Gestern"
- * - UnterstŸtzung fŸr die neue Version des Callmessage-Anrufomitors (http://www.evil-dead.org/traymessage/index.php4)
+ * - Datumsfilter unterstützt nun "Gestern"
+ * - Unterstützung für die neue Version des Callmessage-Anrufomitors (http://www.evil-dead.org/traymessage/index.php4)
  * - Bugfix: Firmware konnte beim ersten Start nicht erkannt werden
  * - Bugfix: Spaltenbreite wurde nicht korrekt gespeichert
- * - Bugfix: Falsche SIP-ID bei gelöschten EintrŠgen
+ * - Bugfix: Falsche SIP-ID bei gelöschten Einträgen
  * - Bugfix: Wenn Kurzwahl unbekannt war, wurde eine falsche Rufnummer angezeigt
  * - Bugfix: Anrufliste wird nur gelöscht, wenn mind. 1 Eintrag abgeholt wurde
  * 
@@ -251,7 +252,7 @@
  * - SipProvider-Informationen werden nicht mehr in den 
  * 	 jfritz.properties.xml sondern in jfritz.sipprovider.xml
  *   gespeichert.
- * - Zugriff auf SipProvider Ÿber jfritz.getSIPProviderTableModel() 
+ * - Zugriff auf SipProvider über jfritz.getSIPProviderTableModel() 
  * 
  * JFritz 0.4.4
  * - CallByCall information is saved (only 010xy and 0100yy)
@@ -359,7 +360,7 @@
  * - Support for Fritz!Boxes with modified firmware
  * - Improved config dialog
  * - Improved firmware detection
- * - Initial support fŸr SIP-Provider
+ * - Initial support für SIP-Provider
  * - Firmware/SIP-Provider are saved in config file
  * 
  * JFritz 0.2.4:
@@ -438,7 +439,6 @@ import de.moonflower.jfritz.dialogs.phonebook.PhoneBook;
 import de.moonflower.jfritz.dialogs.simple.MessageDlg;
 import de.moonflower.jfritz.dialogs.sip.SipProviderTableModel;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
-import de.moonflower.jfritz.struct.CallType;
 import de.moonflower.jfritz.struct.FritzBox;
 import de.moonflower.jfritz.struct.Person;
 import de.moonflower.jfritz.struct.PhoneNumber;
@@ -634,7 +634,7 @@ public final class JFritz {
                 }
                 break;
             case 'd': //$NON-NLS-1$
-				// enableInstanceControl = false; // ungŸtig, GUI wird nicht gestartet
+				// enableInstanceControl = false; // ungütig, GUI wird nicht gestartet
 				Debug.on();
 				clearCallsOnBox();
                 System.exit(0);
