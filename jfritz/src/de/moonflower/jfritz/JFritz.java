@@ -66,6 +66,7 @@
  *		popup_delay
  *      dial_prefix
  *      
+ * - Neu: Rückwärtssuche für Italien über www.paginebianche.it, wird automatisch aufgerufen     
  * - Neu: Rückwärtssuche für die Schweiz über tel.search.ch, JFritz ruft automatisch die richtige Rückwärtssuche auf.
  * - Neu: Dummy-Telefonbucheinträge werden gelöscht, falls ein Eintrag mit derselben Nummer existiert 
  * - Neu: Anrufe mit einer AKZ werden jetzt richtig verarbeitet.
