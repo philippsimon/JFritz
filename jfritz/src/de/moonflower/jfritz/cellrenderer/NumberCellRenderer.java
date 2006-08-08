@@ -26,13 +26,15 @@ import de.moonflower.jfritz.struct.PhoneNumber;
 public class NumberCellRenderer extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = 1;
 	private final ImageIcon imagePhone, imageHandy, imageHome, imageWorld,
-			imageFreeCall;
+			imageFreeCall, imageCH, imageIT, imageDE, imageAT;
 
 	private final ImageIcon imageD1, imageD2, imageO2, imageEplus,
 			imageSipgate;
 
 	private final static boolean showHandyLogos = true;
 
+	 static final String FILESEP = System.getProperty("file.separator");			//$NON-NLS-1$
+	
 	/**
 	 * renders the number field in the CallerTable
 	 */
@@ -68,12 +70,21 @@ public class NumberCellRenderer extends DefaultTableCellRenderer {
 		imageFreeCall = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 				getClass().getResource(
 						"/de/moonflower/jfritz/resources/images/freecall.png"))); //$NON-NLS-1$
-
+		
+		imageCH = new ImageIcon("lang" + FILESEP + "flags" + FILESEP + "ch.gif");
+		
+		imageIT = new ImageIcon("lang" + FILESEP + "flags" + FILESEP + "it.gif");
+		
+		imageDE = new ImageIcon("lang" + FILESEP + "flags" + FILESEP + "de.gif");
+		
+		imageAT = new ImageIcon("lang" + FILESEP + "flags" + FILESEP + "at.gif");
 	}
 
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 
+		String countryCode = JFritz.getProperty("country.code", "49");
+		
 		JLabel label = (JLabel) super.getTableCellRendererComponent(table,
 				value, isSelected, hasFocus, row, column);
 
@@ -114,7 +125,23 @@ public class NumberCellRenderer extends DefaultTableCellRenderer {
 				} else if (number.isLocalCall()) {
 					label.setIcon(imageHome);
 					setToolTipText(JFritz.getMessage("local_call")); //$NON-NLS-1$
-				} else if (
+				} else if(number.getIntNumber().startsWith("+"+PhoneNumber.SWITZERLAND_CODE)
+							&& !countryCode.equals(PhoneNumber.SWITZERLAND_CODE)){
+					label.setIcon(imageCH);
+					setToolTipText(JFritz.getMessage("int_call")); //$NON-NLS-1$
+				} else if(number.getIntNumber().startsWith("+"+PhoneNumber.ITALY_CODE)
+							&& !countryCode.equals(PhoneNumber.ITALY_CODE)){
+					label.setIcon(imageIT);
+					setToolTipText(JFritz.getMessage("int_call")); //$NON-NLS-1$
+				} else if(number.getIntNumber().startsWith("+"+PhoneNumber.AUSTRIA_CODE)
+						&& !countryCode.equals(PhoneNumber.AUSTRIA_CODE)){
+					label.setIcon(imageAT);
+					setToolTipText(JFritz.getMessage("int_call")); //$NON-NLS-1$
+				} else if(number.getIntNumber().startsWith("+"+PhoneNumber.GERMANY_CODE)
+						&& !countryCode.equals(PhoneNumber.GERMANY_CODE)){
+					label.setIcon(imageDE);
+					setToolTipText(JFritz.getMessage("int_call")); //$NON-NLS-1$
+				}else if (
 						(number.getIntNumber().startsWith(JFritz.getProperty("country.prefix")) 
 							|| 
 							(number.getIntNumber().startsWith("+"))
