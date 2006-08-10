@@ -57,11 +57,11 @@ public class QuickDialPanel extends JPanel implements ActionListener,
 				updateButtons();
 			}
 		});
-		dataModel.loadFromXMLFile(JFritz.QUICKDIALS_FILE);
+		dataModel.loadFromXMLFile(JFritz.SAVE_DIR + JFritz.QUICKDIALS_FILE);
 		add(createQuickDialToolBar(), BorderLayout.NORTH);
 		add(createQuickDialTable(), BorderLayout.CENTER);
 	}
-
+ 
 	private JToolBar createQuickDialToolBar() {
 		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(true);

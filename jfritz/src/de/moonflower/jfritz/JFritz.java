@@ -799,7 +799,7 @@ public final class JFritz {
         phonebook.loadFromXMLFile(SAVE_DIR + PHONEBOOK_FILE);
 
         sipprovider = new SipProviderTableModel();
-        sipprovider.loadFromXMLFile(SIPPROVIDER_FILE);
+        sipprovider.loadFromXMLFile(SAVE_DIR+SIPPROVIDER_FILE);
 
         callerlist = new CallerList(this);
         callerlist.loadFromXMLFile(SAVE_DIR + CALLS_FILE);

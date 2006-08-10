@@ -178,7 +178,7 @@ public class Call {
         		while (en.hasMoreElements()) {
         			SipProvider sipProvider = (SipProvider) en.nextElement();
         			if (route.substring(3).equals(String.valueOf(sipProvider.getProviderID()))) {
-        				convertedRoute = "Internet: " + sipProvider.getNumber();
+        				convertedRoute = sipProvider.toString();
         				break;
         			}
         		}
@@ -297,7 +297,7 @@ public class Call {
         		while (en.hasMoreElements()) {
         			SipProvider sipProvider = (SipProvider) en.nextElement();
         			if (route.substring(3).equals(String.valueOf(sipProvider.getProviderID()))) {
-        				convertedRoute = "Internet: " + sipProvider.getNumber();
+        				convertedRoute = sipProvider.toString();
         				break;
         			}
         		}
