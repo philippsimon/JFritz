@@ -67,7 +67,8 @@
  *      dial_prefix
  * 
  * _ Bugfix: SIP-Routen behalten ihre historische Zuordnung      
- * - Neu: Neuer Kommandozeilenparameter: -r, führt eine Rückwärtssuche aus und beendet sich  
+ * - Neu: Neuer Kommandozeilenparameter: -r, führt eine Rückwärtssuche aus und beendet sich
+ * - Neu: Rückwärtssuche für Frankreich über http://www.annuaireinverse.com, wird automatisch aufgerufen
  * - Neu: Rückwärtssuche für die Niederlande über http://www.gebeld.nl/content.asp?zoek=numm, wird automatisch aufgerufen
  * - Neu: Rückwärtssuche für Italien über www.paginebianche.it, wird automatisch aufgerufen     
  * - Neu: Rückwärtssuche für die Schweiz über tel.search.ch, JFritz ruft automatisch die richtige Rückwärtssuche auf.
