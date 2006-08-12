@@ -429,9 +429,6 @@ public class CallerList extends AbstractTableModel {
 			Call c = (Call) unfilteredCallerData.elementAt(middle);
 			int Compare = newCall.getCalldate().compareTo(c.getCalldate());
 			
-			//Debug.msg("New Number: "+newCall.getPhoneNumber().getFullNumber());
-			
-			
 			// check if the date is before or after the current element in the
 			// vector
 			// Note: change the values here to fit the current sorting method
@@ -448,7 +445,7 @@ public class CallerList extends AbstractTableModel {
 					// two calls, same date, different values...
 					// this is really a performance killer...
 					int tmpMiddle = middle - 1;
-
+					
 					// Yikes! Don't forget to stay in the array bounds
 					if (tmpMiddle >= 0) {
 						c = (Call) unfilteredCallerData.elementAt(tmpMiddle);
