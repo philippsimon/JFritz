@@ -196,7 +196,7 @@ public class JFritzUtils {
 		}
 
 		if (langDir == null) {
-			langDir = (binDir != null) ? binDir + subDir : userDir + subDir;
+			langDir = (binDir != null) ? binDir + subDir : userDir + FILESEP + subDir;
 		}
 
 		Debug.msg("full path: " + langDir);											//$NON-NLS-1$
