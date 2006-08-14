@@ -106,7 +106,7 @@ public class ConfigDialog extends JDialog {
 			externProgramCheckBox, searchWithSSDP, showCallByCallColumnButton,
 			showCommentColumnButton, showPortColumnButton,
 			minimizeInsteadOfClose, createBackup, createBackupAfterFetch,
-			fetchAfterStandby, activateDialPrefix;
+			fetchAfterStandby, activateDialPrefix, checkNewVersionAfterStart;
 
 	private JPanel callMonitorPane;
 
@@ -149,6 +149,7 @@ public class ConfigDialog extends JDialog {
 	public void setValues() {
 		notifyOnCallsButton.setSelected(JFritzUtils.parseBoolean(JFritz
 				.getProperty("option.notifyOnCalls"))); //$NON-NLS-1$
+		checkNewVersionAfterStart.setSelected(JFritzUtils.parseBoolean(JFritz.getProperty("option.checkNewVersionAfterStart" , "true")));//$NON-NLS-1$, //§NON-NLS-2$
 		fetchAfterStartButton.setSelected(JFritzUtils.parseBoolean(JFritz
 				.getProperty("option.fetchAfterStart"))); //$NON-NLS-1$
 		timerAfterStartButton.setSelected(JFritzUtils.parseBoolean(JFritz
@@ -324,6 +325,9 @@ public class ConfigDialog extends JDialog {
         JFritz
         .setProperty(
                 "option.activateDialPrefix", Boolean.toString(activateDialPrefix.isSelected())); //$NON-NLS-1$
+		JFritz.setProperty("option.checkNewVersionAfterStart", String //$NON-NLS-1$
+				.valueOf(callMonitorCombo.getSelectedIndex()));
+        
 
 
 		// Set Popup Messages Type
@@ -575,6 +579,10 @@ public class ConfigDialog extends JDialog {
 		timerLabel = new JLabel(JFritz.getMessage("timer_in") + ": "); //$NON-NLS-1$,  //$NON-NLS-2$
 		otherpane.add(timerLabel);
 		otherpane.add(timerSlider);
+		
+		checkNewVersionAfterStart = new JCheckBox(JFritz
+				.getMessage("check_for_new_version_after_start")); //$NON-NLS-1$
+		otherpane.add(checkNewVersionAfterStart);
 
 		passwordAfterStartButton = new JCheckBox(JFritz
 				.getMessage("ask_for_password_before_start")); //$NON-NLS-1$
