@@ -939,7 +939,7 @@ public final class JFritz {
 		if (!showConfWizard
 				&& JFritzUtils.parseBoolean(JFritz.getProperty(
 						"option.checkNewVersionAfterStart",//$NON-NLS-1$
-						"true"))) {//$NON-NLS-1$
+						"false"))) {//$NON-NLS-1$
 			if (JFritzUtils.checkForNewVersion()) {
 				Object[] options = {getMessage("yes"), getMessage("no")};
 				int ok = JOptionPane.showOptionDialog(this.getJframe(),
