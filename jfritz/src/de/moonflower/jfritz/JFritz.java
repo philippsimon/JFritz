@@ -72,6 +72,7 @@
  *		popup_delay
  *      dial_prefix
  *      
+ * - Neu: Meldung bei neuer JFritz-Version     
  * - Neu: Flaggen werden bei bekannten Ländervorwählen angezeigt anstelle vom Weltkugel, für bekannte Länder siehe PhoneNumber.java
  * _ Bugfix: SIP-Routen behalten ihre historische Zuordnung      
  * - Neu: Neuer Kommandozeilenparameter: -r, führt eine Rückwärtssuche aus und beendet sich
