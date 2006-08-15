@@ -213,7 +213,7 @@ public class JFritzUtils {
 			else if (classPath[i].endsWith(subDir))
 				langDir = classPath[i];
 		}
-
+		
 		if (langDir == null) {
 			langDir = (binDir != null) ? binDir + subDir : userDir + subDir;
 		}
