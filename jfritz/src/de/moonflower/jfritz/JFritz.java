@@ -50,6 +50,12 @@
  * TODO: Language-Files checken, ob tatsächlich alle Werte benötigt werden
  * TODO: Sonderzeichen werden in den Balloontips unter Windows nicht korrekt angezeigt. Scheint ein Windowsproblem zu sein. Lösung/Workaround noch nicht gefunden.
  *
+ * Jfritz 0.6.2
+ * - Neue Strings:
+ * 	new_version
+ * 	new_version_text
+ *  check_for_new_version_after_start
+ *
  * JFritz 0.6.1
  * - Neue Strings: 
  *		browse
@@ -449,6 +455,7 @@ import de.moonflower.jfritz.struct.Call;
 import de.moonflower.jfritz.struct.FritzBox;
 import de.moonflower.jfritz.struct.Person;
 import de.moonflower.jfritz.struct.PhoneNumber;
+import de.moonflower.jfritz.utils.BrowserLaunch;
 import de.moonflower.jfritz.utils.CLIOption;
 import de.moonflower.jfritz.utils.CLIOptions;
 import de.moonflower.jfritz.utils.CopyFile;
@@ -456,6 +463,7 @@ import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.JFritzUtils;
+import de.moonflower.jfritz.utils.NoticeDialog;
 import de.moonflower.jfritz.utils.ReverseLookup;
 import de.moonflower.jfritz.utils.network.CallMonitor;
 import de.moonflower.jfritz.utils.network.SSDPdiscoverThread;
@@ -933,7 +941,8 @@ public final class JFritz {
 						"option.checkNewVersionAfterStart",//$NON-NLS-1$
 						"true"))) {//$NON-NLS-1$
 			if (JFritzUtils.checkForNewVersion()) {
-				JOptionPane.showMessageDialog(this.getJframe(),getMessage("new_version_text"), getMessage("new_version"), JOptionPane.INFORMATION_MESSAGE);
+		        int ok = JOptionPane.showConfirmDialog(this.getJframe(),getMessage("new_version_text"), getMessage("new_version"),JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+		        if (ok == JOptionPane.YES_OPTION) BrowserLaunch.openURL(JFritz.PROGRAM_URL+"#download");
 			}
 		}
 		jframe.checkStartOptions();
