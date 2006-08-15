@@ -464,7 +464,6 @@ import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.JFritzUtils;
-import de.moonflower.jfritz.utils.NoticeDialog;
 import de.moonflower.jfritz.utils.ReverseLookup;
 import de.moonflower.jfritz.utils.network.CallMonitor;
 import de.moonflower.jfritz.utils.network.SSDPdiscoverThread;
@@ -942,8 +941,16 @@ public final class JFritz {
 						"option.checkNewVersionAfterStart",//$NON-NLS-1$
 						"true"))) {//$NON-NLS-1$
 			if (JFritzUtils.checkForNewVersion()) {
-		        int ok = JOptionPane.showConfirmDialog(this.getJframe(),getMessage("new_version_text"), getMessage("new_version"),JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
-		        if (ok == JOptionPane.YES_OPTION) BrowserLaunch.openURL(JFritz.PROGRAM_URL+"#download");
+				Object[] options = {getMessage("yes"), getMessage("no")};
+				int ok = JOptionPane.showOptionDialog(this.getJframe(),
+						getMessage("new_version_text"),
+						getMessage("new_version"), JOptionPane.YES_NO_OPTION,
+						JOptionPane.INFORMATION_MESSAGE, null, // don't use a
+																// custom Icon
+						options, // the titles of buttons
+						options[0]); // default button title
+				if (ok == JOptionPane.YES_OPTION)
+					BrowserLaunch.openURL(JFritz.PROGRAM_URL + "#download");
 			}
 		}
 		jframe.checkStartOptions();
