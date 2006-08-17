@@ -810,7 +810,7 @@ public final class JFritz {
 			// dimensions) is not yet initilized.
 			try {
 				Debug.msg("Save other properties"); //$NON-NLS-1$
-				properties.storeToXML(JFritz.PROPERTIES_FILE);
+				properties.storeToXML(JFritz.SAVE_DIR + JFritz.PROPERTIES_FILE);
 			} catch (IOException e) {
 				Debug.err("Couldn't save Properties"); //$NON-NLS-1$
 			}
