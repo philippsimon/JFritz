@@ -56,11 +56,10 @@
  * 	new_version_text
  *  check_for_new_version_after_start
  *  no_new_version_found
+ *  update_JFritz
  *  
  * - Neu: Rückwärtssuche für die USA über www.whitepages.com, danke an Reiner Gebhardt
- *  
- * -TODO:
- * 	-Menüeintrag ->Versioncheck
+ * - Neu: Menüeintrag ->JFritz aktualisieren
  *
  * JFritz 0.6.1
  * - Neue Strings: 
