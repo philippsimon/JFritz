@@ -54,6 +54,7 @@
  * Roadmap:
  * JFritz 1.0
  * 
+ * - umstieg auf Mustang, damit verbunden jdic rauswerfen und nur noch Java-interne Bibliotheken nutzen
  * - CSV-Export anpassbar machen (wie bei Thunderbird).
  * - Internationalisierung abschlieﬂen, drunter Flaggencode optimieren (Nummer <-> flaggenfile Zuordnung in einer Hashmap ablegen).
  * - SQL-Anbindung (SF [ 1515305 ])
