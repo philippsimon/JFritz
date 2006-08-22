@@ -993,7 +993,7 @@ public final class JFritz {
 		if (!showConfWizard
 				&& JFritzUtils.parseBoolean(JFritz.getProperty(
 						"option.checkNewVersionAfterStart",//$NON-NLS-1$
-						"true"))) {//$NON-NLS-1$
+						"false"))) {//$NON-NLS-1$
 			VersionCheckThread vct = new VersionCheckThread(this,false);
 			vct.run();
 		}
