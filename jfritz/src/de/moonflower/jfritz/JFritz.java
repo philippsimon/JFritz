@@ -53,7 +53,9 @@
  * 
  * Roadmap:
  * JFritz 1.0
- * 
+ * - Einstellungen-Seiten überarbeiten.
+ * - Einige Icons auslagern - unterschiedliche Icon-Packs
+ * - Sounddateien auslagern - unterschiedliche Sound-Packs
  * - umstieg auf Mustang, damit verbunden jdic rauswerfen und nur noch Java-interne Bibliotheken nutzen
  * - CSV-Export anpassbar machen (wie bei Thunderbird).
  * - Internationalisierung abschließen, drunter Flaggencode optimieren (Nummer <-> flaggenfile Zuordnung in einer Hashmap ablegen).
@@ -98,6 +100,7 @@
  * - Filter für Nebenstelle (Port) kombiniert mit eingetragenem Namen in der Weboberfläche
  * - Copy & Paste für Spalteneinträge (in Anrufliste, Telefonbuch und Kurzwahlliste)
  * - Importierte Rufnummern auf Sonderzeichen ( -, /, (, ) ) überprüfen
+ * - Durchwahlnummern vor Zentrale-Nummern bei der Anzeige bevorzugen (sollte eigentlich gehen, aber scheint einen Bug zu haben)
  * TODO-ENDE
  * 
  * - Neue Strings:
