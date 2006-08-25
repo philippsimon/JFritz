@@ -50,9 +50,12 @@
  * TODO: Sonderzeichen werden in den Balloontips unter Windows nicht korrekt angezeigt. Scheint ein Windowsproblem zu sein. Lösung/Workaround noch nicht gefunden.
  * TODO: Wenn Box unerreichbar, dann x mal versuchen, sie zu erreichen. X konfigurierbar machen.
  * TODO: Bibliotheken auch für 64-Bit kompilieren
+ * TODO: JFritz.ico mitliefern
+ * TODO: Linux-Startscript mitliefern
  * 
  * Roadmap:
  * JFritz 1.0
+ * - Plugins (Mögliche Plugins: Drucken, Anrufmonitor)
  * - Einstellungen-Seiten überarbeiten.
  * - Einige Icons auslagern - unterschiedliche Icon-Packs
  * - Sounddateien auslagern - unterschiedliche Sound-Packs
