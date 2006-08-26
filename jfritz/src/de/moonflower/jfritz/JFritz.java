@@ -55,11 +55,14 @@
  * 
  * Roadmap:
  * JFritz 1.0
+ * 
+ * - Einige ausgew‰hlte Statisken ¸ber die DSL benutzung, damit JFritz eine komplette Lˆsung f¸r die Fritz!Box anbietet.
  * - Plugins (Mˆgliche Plugins: Drucken, Anrufmonitor)
- * - Einstellungen-Seiten ¸berarbeiten.
+ * - Einstellungen-Seiten ¸berarbeiten.		Grˆﬂe ver‰nderbar machen!
  * - Einige Icons auslagern - unterschiedliche Icon-Packs
- * - Sounddateien auslagern - unterschiedliche Sound-Packs
+ * - Sounddateien auslagern - unterschiedliche Sound-Packs (gute Ideen, Brian)
  * - umstieg auf Mustang, damit verbunden jdic rauswerfen und nur noch Java-interne Bibliotheken nutzen
+ * 					Gut, dann kˆnnen wir endlich diese ganze String.indexOf('@') > 0 rausschmeiﬂen :)
  * - CSV-Export anpassbar machen (wie bei Thunderbird).
  * - Internationalisierung abschlieﬂen, drunter Flaggencode optimieren (Nummer <-> flaggenfile Zuordnung in einer Hashmap ablegen).
  * - SQL-Anbindung (SF [ 1515305 ])
