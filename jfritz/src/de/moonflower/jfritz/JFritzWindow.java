@@ -375,7 +375,7 @@ public class JFritzWindow extends JFrame
 	public JMenuBar createMenu() {
 		String menu_text = JFritz.PROGRAM_NAME;
 		if (JFritz.runsOn().equals("Mac")) //$NON-NLS-1$
-			menu_text = "Ablage"; //$NON-NLS-1$
+			menu_text = "File"; //$NON-NLS-1$
 
 		JMenu jfritzMenu = new JMenu(menu_text);
 		// JMenu editMenu = new JMenu(JFritz.getMessage("edit_menu"));
