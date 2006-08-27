@@ -256,14 +256,23 @@ public class ConfigDialog extends JDialog {
 		searchWithSSDP.setSelected(JFritzUtils.parseBoolean(JFritz.getProperty(
 				"option.useSSDP", "true"))); //$NON-NLS-1$,  //$NON-NLS-2$
 
-		if (devices != null) {
+		//Buggy code
+		/*if (devices != null) {
 			for (int i = 0; i < devices.size(); i++) {
 				SSDPPacket p = (SSDPPacket) devices.get(i);
 				if (p.getIP().getHostAddress().equals(address.getText())) {
 					addressCombo.setSelectedIndex(i);
 				}
 			}
+		}*/
+		
+		for(int i=0; i < addressCombo.getItemCount() - 1; i++){
+			if(addressCombo.getItemAt(i).equals(address.getText())){
+				addressCombo.setSelectedIndex(i);
+				break;
+			}
 		}
+		
 		firmware = jfritz.getFritzBox().getFirmware(); //$NON-NLS-1$
 		setBoxTypeLabel();
 	}
@@ -428,14 +437,23 @@ public class ConfigDialog extends JDialog {
 
 		addressCombo = new JComboBox();
 		c.fill = GridBagConstraints.HORIZONTAL;
+		boolean boxAddressAdded = false;
+		
 		if (devices != null) {
 			Enumeration en = devices.elements();
 			while (en.hasMoreElements()) {
 				SSDPPacket p = (SSDPPacket) en.nextElement();
-				addressCombo.addItem(p.getShortName());
+				//addressCombo.addItem(p.getShortName());
+				addressCombo.addItem(p.getIP().getHostAddress());
+				if(p.getIP().getHostAddress().equals(jfritz.getFritzBox().getAddress()))
+					boxAddressAdded = true;
 			}
 		}
-
+		
+		//make sure the stored address is listed
+		if(!boxAddressAdded)
+			addressCombo.addItem(jfritz.getFritzBox().getAddress());
+		
 		addressCombo.setActionCommand("addresscombo"); //$NON-NLS-1$
 		addressCombo.addActionListener(actionListener);
 		boxpane.add(addressCombo, c);
@@ -1056,6 +1074,7 @@ public class ConfigDialog extends JDialog {
 					ConfigDialog.this.setVisible(false);
 				} else if (e.getActionCommand().equals("addresscombo")) { //$NON-NLS-1$
 					int i = addressCombo.getSelectedIndex();
+					
 					SSDPPacket dev = (SSDPPacket) devices.get(i);
 					address.setText(dev.getIP().getHostAddress());
 					firmware = dev.getFirmware();
