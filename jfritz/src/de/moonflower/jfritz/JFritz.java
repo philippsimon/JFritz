@@ -122,6 +122,7 @@
  *  no_new_version_found
  *  update_JFritz
  *  
+ * _ Bugfix: Jetzt werden IP-Addressen von den Boxen in der Einstellungen angezeigt. Man kann jetzt Fehlerfrei zwei boxes im gleichen Netz haben. 
  * - Neu: Rückwärtssuche für die USA über www.whitepages.com, danke an Reiner Gebhardt
  * - Neu: Menüeintrag ->JFritz aktualisieren
  *
@@ -534,7 +535,7 @@ import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.JFritzUtils;
-import de.moonflower.jfritz.utils.ReverseLookup;
+import de.moonflower.jfritz.utils.reverselookup.ReverseLookup;
 import de.moonflower.jfritz.utils.network.CallMonitor;
 import de.moonflower.jfritz.utils.network.VersionCheckThread;
 import de.moonflower.jfritz.utils.network.SSDPdiscoverThread;

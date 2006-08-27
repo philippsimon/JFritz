@@ -1,4 +1,4 @@
-package de.moonflower.jfritz.utils;
+package de.moonflower.jfritz.utils.reverselookup;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,40 +10,40 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.moonflower.jfritz.struct.Person;
-import de.moonflower.jfritz.struct.PhoneNumber;
 import de.moonflower.jfritz.utils.Debug;
-
 /**
- * This class is responsible for doing reverse lookups for dutch numbers
+ * Class for looking up Italian phone numbers
+ * Search engine used is www.paginebianche.it
  * 
- * The search engine used is: http://www.gebeld.nl/content.asp?zoek=numm
- * A big thanks to them for creating an easy to parse web page
+ * Created: 03.08.06
  * 
- * @author Bastian Schaefer
+ * @author Brian Jensen
  *
  */
-public final class ReverseLookupNetherlands {
+public class ReverseLookupItaly {
 
-	public final static String SEARCH_URL="http://www.gebeld.nl/content.asp?zapp=zapp&land=Nederland&zoek=numm&searchfield1=fullnumber&searchfield2=&queryfield1=";
-
+public final static String SEARCH_URL="http://www.paginebianche.it/execute.cgi?btt=1&tl=2&tr=106&tc=&cb=&x=0&y=0&qs=";
+	
 	/**
 	 * This function performs the reverse lookup
 	 * 
-	 * @author Bastian Schaefer
-	 * @param number in area format to be looked up
+	 * @author Brian Jensen
+	 * @param number in area format to be looked
 	 * 
-	 * @return a person object created using the data from the site
+	 * @return a Person object created using the data collected from the site
 	 */
 	public static Person lookup(String number){
-		boolean intNumber = false;
+		String searchNumber = number;
 		
 		if(number.startsWith("+")){
-			number = "0"+number.substring(3);
-			intNumber = true;
+			searchNumber = number.substring(3);
+			if(!searchNumber.startsWith("0"))
+				searchNumber = "0" + searchNumber;
 		}
-		Debug.msg("Netherland reverselookup number: "+number);
+		Debug.msg("Italy reverselookup number: "+searchNumber);
 		
-		String urlstr = SEARCH_URL + number;
+		String urlstr = SEARCH_URL + searchNumber;
+		Debug.msg("URL: "+urlstr);
 		Person newPerson;
 		
 		String firstname = "",
@@ -84,7 +84,7 @@ public final class ReverseLookupNetherlands {
 						}
 						header += headerName + ": " + headerValue + " | "; //$NON-NLS-1$,  //$NON-NLS-2$
 					}
-					Debug.msg("Header of http://www.gebeld.nl/content.asp?zoek=numm: " + header); //$NON-NLS-1$
+					Debug.msg("Header of www.paginebianche.it: " + header); //$NON-NLS-1$
 					Debug.msg("CHARSET : " + charSet); //$NON-NLS-1$
 
 					// Get used Charset
@@ -106,35 +106,37 @@ public final class ReverseLookupNetherlands {
 						i++;
 					}
 					d.close();
-					Debug.msg("Begin processing responce from http://www.gebeld.nl/content.asp?zoek=numm");
-
-					Pattern pName = Pattern
-							.compile("<td><font size=\"2\" face=\"Verdana, Arial, Helvetica, sans-serif\">([^<]*)</font></td></tr>"); //$NON-NLS-1$
-					Pattern pAddress = Pattern
-						.compile("<tr><td></td><td><font size=\"2\" face=\"Verdana, Arial, Helvetica, sans-serif\">([^<]*)</font></td></tr><tr><td></td><td>([^<]*)</td></tr>"); //$NON-NLS-1$
-					//parse Name
-					Matcher mName = pName.matcher(data);
-					if (mName.find()) {
-						String[] results = mName.group(1).trim().split(",");
-						
-						lastname = results[0];
-						Debug.msg("Last name: " + lastname);
-						if(results.length > 1)
-							firstname = results[1].substring(results[1].indexOf(";")+1);
-						Debug.msg("First name: " + firstname);
-					}
+					Debug.msg("Begin processing responce from www.paginebianche.it");
+					Pattern pMain = Pattern
+							.compile("<td class=\"dati\"><span [^>]*>([^<]*)</span><br>([0-9]*)&nbsp;([^&]*)[^-]*-([^<]*)<"); //$NON-NLS-1$
+					Pattern pSecondary = Pattern
+							.compile("<td class=\"dati\"><!--LOGO--><a [^>]*><img [^>]*></a><a class=\"AInserzionista\"[^>]*>([^<]*) </a><br><font [^>]*>([0-9]*)&nbsp;([^&]*)[^-]*-([^<]*)<");
 					
-					//parse Street, zip code and city
-					Matcher mAddress = pAddress.matcher(data);
-					if(mAddress.find()){
-						street = mAddress.group(1).trim().replaceAll("&nbsp;"," ");
-						Debug.msg("Street: "+street);
-						zipCode  = mAddress.group(2).trim().substring(mAddress.group(2).indexOf(";")+1);
-						Debug.msg("Zip Code: "+ zipCode);
-						city = mAddress.group(2).trim().substring(0,mAddress.group(2).indexOf(";")).replaceAll("&nbsp","");
-						Debug.msg("City: "+city);
+					//parse Data
+					Matcher mData = pMain.matcher(data);
+					if (mData.find()) {
+						lastname = mData.group(1).trim();
+						Debug.msg("Last name: " + lastname);
+						zipCode = mData.group(2).trim();
+						Debug.msg("Zip code: "+ zipCode);
+						city = mData.group(3).trim();
+						Debug.msg("City: "+ city);
+						street = mData.group(4).trim();
+						Debug.msg("Street: "+ street);
+						
+						//don't run the reg ex unless necessary
+					}else if((mData = pSecondary.matcher(data)).find()){
+						Debug.msg("Found secondary match");
+						lastname = mData.group(1).trim();
+						Debug.msg("Last name: " + lastname);
+						zipCode = mData.group(2).trim();
+						Debug.msg("Zip code: "+ zipCode);
+						city = mData.group(3).trim();
+						Debug.msg("City: "+ city);
+						street = mData.group(4).trim();
+						Debug.msg("Street: "+ street);
 					}
-
+				
 				} catch (IOException e1) {
 					Debug.err("Error while retrieving " + urlstr); //$NON-NLS-1$
 				}
@@ -144,8 +146,6 @@ public final class ReverseLookupNetherlands {
 		}
 		
 		newPerson = new Person(firstname, "", lastname, street, zipCode, city, "");
-		if(intNumber)
-			number = "+31" + number.substring(1);
 		
 		newPerson.addNumber(number, "home"); //$NON-NLS-1$
 		
@@ -153,5 +153,4 @@ public final class ReverseLookupNetherlands {
 		return newPerson;
 		
 	}
-	
 }
