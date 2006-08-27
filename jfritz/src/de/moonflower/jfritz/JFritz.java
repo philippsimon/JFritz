@@ -80,7 +80,6 @@
  * - Datumsfilter konfigurierbar gestalten (SF [ 1498488 ])
  * - Vollständiger Outlook-Support (SF [ 1498489 ])
  * - Visualisierung der aktuellen Gespräche (Frei, Nummer, Name, Dauer des Gesprächs ...)
- * - Falls Ort per ReverseLookup nicht gefunden wird, soll anhand einer Tabelle der passende Ort zu einer Vorwahl eingetragen werden (SF [ 1315144 ])
  * - Mehrere FritzBoxen abfragen (SF [ 1515855 ]) Dafür sollten wir alle zugriffe auf die Box in eigene Threads unterbringen. 
  * 						Dann würde JFritz sich beim Hochfahren nicht so lange verzögern, wenn die Box nicht erreichbar ist.  
  * - WAN IP beim Tray-Icon anzeigen lassen ?
@@ -122,6 +121,7 @@
  *  no_new_version_found
  *  update_JFritz
  *  
+ * - Neu: Falls Ort per ReverseLookup nicht gefunden wird, wird anhand einer Tabelle der passende Ort zu einer Vorwahl eingetragen werden (SF [ 1315144 ]) 
  * _ Bugfix: Jetzt werden IP-Addressen von den Boxen in der Einstellungen angezeigt. Man kann jetzt Fehlerfrei zwei boxes im gleichen Netz haben. 
  * - Neu: Rückwärtssuche für die USA über www.whitepages.com, danke an Reiner Gebhardt
  * - Neu: Menüeintrag ->JFritz aktualisieren
@@ -536,13 +536,14 @@ import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.JFritzUtils;
 import de.moonflower.jfritz.utils.reverselookup.ReverseLookup;
+import de.moonflower.jfritz.utils.reverselookup.ReverseLookupGermany;
 import de.moonflower.jfritz.utils.network.CallMonitor;
 import de.moonflower.jfritz.utils.network.VersionCheckThread;
 import de.moonflower.jfritz.utils.network.SSDPdiscoverThread;
 
 /**
  * @author Arno Willig
- * 
+ *  
  */
 public final class JFritz {
 
@@ -891,6 +892,9 @@ public final class JFritz {
 			new MacHandler(this);
 		}
 
+		//loads the area code city mapping from number/Vorwahlen.csv
+		ReverseLookupGermany.loadAreaCodes();
+		
 		fritzBox = new FritzBox(
 				JFritz.getProperty("box.address", "192.168.178.1"), Encryption //$NON-NLS-1$,  //$NON-NLS-2$
 						.decrypt(JFritz.getProperty("box.password", Encryption //$NON-NLS-1$
