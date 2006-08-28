@@ -892,7 +892,7 @@ public final class JFritz {
 			new MacHandler(this);
 		}
 
-		//loads the area code city mapping from number/Vorwahlen.csv
+		//loads the area code city mapping from number/germany/Vorwahlen.csv
 		ReverseLookupGermany.loadAreaCodes();
 		
 		fritzBox = new FritzBox(

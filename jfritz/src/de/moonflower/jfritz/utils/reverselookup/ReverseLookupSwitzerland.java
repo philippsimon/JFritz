@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +23,7 @@ import de.moonflower.jfritz.utils.Debug;
  *
  */
 public final class ReverseLookupSwitzerland {
-
+	
 	public final static String SEARCH_URL="http://tel.search.ch/result.html?tel=";
 
 	/**
