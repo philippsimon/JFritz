@@ -99,6 +99,7 @@
  * 						nur ich schätze es gibt gar keins => wir müssten eine schreiben.
  * - Bild / Rufton / Farbe eines bestimmten Anrufers
  * 
+ * 
  * CHANGELOG:
  *
  * Jfritz 0.6.2
