@@ -56,6 +56,7 @@
  * Roadmap:
  * JFritz 1.0
  *
+ * - Tastaturkürzel für Aktionen sollen editierbar sein
  * - Style-Sheet für die Anzeige der Anrufliste als HTML
  * - Import vom Tool Fritzinfo (http://www.ip-phone-forum.de/showthread.php?t=101090)
  * - Button zum Löschen der Anrufliste
