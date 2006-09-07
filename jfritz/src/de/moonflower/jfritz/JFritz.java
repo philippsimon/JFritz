@@ -52,7 +52,6 @@
  * JFritz 1.0
  * Bewertung - Feature
  * rob
- * 10 - JFritz-Fenster maximiert wiederherstellen
  * 10 - Fehlermeldung an den Benutzer, wenn Daten nicht auf Festplatte gespeichert werden können. (Vielleicht schon implementiert -- Rob)
  * 10 - "Verbindungsgerät" in "MSN/Rufnummer" ändern
  * 10 - Kommentarspalte im Telefonbuch
@@ -131,8 +130,9 @@
  *  check_for_new_version_after_start
  *  no_new_version_found
  *  update_JFritz
- * 
- * - New: Falls Ort per ReverseLookup nicht gefunden wird, wird anhand einer Tabelle der passende Ort zu einer Vorwahl eingetragen werden (Österreich) 
+ *
+ * - Neu: JFritz-Fenster wird nun korrekt wiederhergestellt (maximiert...)
+ * - Neu: Falls Ort per ReverseLookup nicht gefunden wird, wird anhand einer Tabelle der passende Ort zu einer Vorwahl eingetragen werden (Österreich) 
  * - Bugfix: Rückwärtssuche für Österreich über dasoertliche.de wieder eingebaut 
  * - Neu: Falls Ort per ReverseLookup nicht gefunden wird, wird anhand einer Tabelle der passende Ort zu einer Vorwahl eingetragen werden Deutschland (SF [ 1315144 ]) 
  * - Bugfix: Jetzt werden IP-Addressen von den Boxen in der Einstellungen angezeigt. Man kann jetzt Fehlerfrei zwei boxes im gleichen Netz haben. 
@@ -658,6 +658,8 @@ public final class JFritz {
 	private static FritzBox fritzBox;
     
     private static boolean enableInstanceControl = true;
+    
+    private static int oldFrameState; // saves old frame state to restore old state
 
 	/**
 	 * Main method for starting JFritz
@@ -1258,6 +1260,7 @@ public final class JFritz {
 	public void saveProperties() {
 
 		Debug.msg("Save window position"); //$NON-NLS-1$
+		
 		properties.setProperty("position.left", Integer.toString(jframe //$NON-NLS-1$
 				.getLocation().x));
 		properties.setProperty("position.top", Integer.toString(jframe //$NON-NLS-1$
@@ -1266,7 +1269,7 @@ public final class JFritz {
 				.getSize().width));
 		properties.setProperty("position.height", Integer.toString(jframe //$NON-NLS-1$
 				.getSize().height));
-
+        
 		Debug.msg("Save column widths"); //$NON-NLS-1$
 		Enumeration en = jframe.getCallerTable().getColumnModel().getColumns();
 		int i = 0;
@@ -1809,15 +1812,17 @@ public final class JFritz {
 	}
 
 	public void hideShowJFritz() {
+        System.err.println("Old frame state: " + oldFrameState);
 		if (jframe.isVisible()) {
+            oldFrameState = jframe.getExtendedState();
 			Debug.msg("Hide JFritz-Window"); //$NON-NLS-1$
-			jframe.setState(JFrame.ICONIFIED);
+			jframe.setExtendedState(JFrame.ICONIFIED);
 			jframe.setVisible(false);
 		} else {
 			Debug.msg("Show JFritz-Window"); //$NON-NLS-1$
-			jframe.setState(JFrame.NORMAL);
 			jframe.setVisible(true);
 			jframe.toFront();
+            jframe.setExtendedState(oldFrameState);
 		}
 	}
 
