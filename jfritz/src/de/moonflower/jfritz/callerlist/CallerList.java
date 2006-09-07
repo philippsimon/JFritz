@@ -41,6 +41,7 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 import de.moonflower.jfritz.JFritz;
+import de.moonflower.jfritz.callerlist.filter.CallByCallFilter;
 import de.moonflower.jfritz.callerlist.filter.DateFilter;
 import de.moonflower.jfritz.callerlist.filter.SipFilter;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
@@ -113,6 +114,8 @@ public class CallerList extends AbstractTableModel {
     private DateFilter dateFilter; 
     
     private SipFilter sipFilter;
+    
+    private CallByCallFilter callByCallFilter;
 
 	/**
 	 * CallerList Constructor new contrustor, using binary sizes
@@ -136,6 +139,7 @@ public class CallerList extends AbstractTableModel {
 		sortColumn = 1;
         dateFilter = new DateFilter(jfritz);
         sipFilter = new SipFilter(jfritz);
+        callByCallFilter = new CallByCallFilter(jfritz);
 	}
 
 	/**
@@ -899,30 +903,6 @@ public class CallerList extends AbstractTableModel {
 			sortAllFilteredRowsBy(sortColumn, sortDirection);
 		} else { // Data got to be filtered
 
-			Vector filteredCallByCallProviders = new Vector();
-			if (filterCallByCall) {
-				String providers = JFritz.getProperty(
-						"filter.callbycallProvider", "[]"); //$NON-NLS-1$,  //$NON-NLS-2$
-
-				// No entries selected
-				if (providers.equals("[]")) { //$NON-NLS-1$
-					filterCallByCall = false;
-				}
-				providers = providers.replaceAll("\\[", ""); //$NON-NLS-1$,  //$NON-NLS-2$
-				providers = providers.replaceAll("\\]", ""); //$NON-NLS-1$,  //$NON-NLS-2$
-				String[] providerEntries = providers.split(","); //$NON-NLS-1$
-				for (int i = 0; i < providerEntries.length; i++) {
-					if (providerEntries[i].length() > 0) {
-						if (providerEntries[i].charAt(0) == 32) { // delete
-							// first SPACE
-							providerEntries[i] = providerEntries[i]
-									.substring(1);
-						}
-					}
-					filteredCallByCallProviders.add(providerEntries[i]);
-				}
-			}
-
 			Vector filteredcallerdata;
 			filteredcallerdata = new Vector();
 			Enumeration en = unfilteredCallerData.elements();
@@ -956,25 +936,11 @@ public class CallerList extends AbstractTableModel {
 				}
 
 				if (filterCallByCall) {
-					if (call.getPhoneNumber() != null) {
-						String callbycallprovider = call.getPhoneNumber()
-								.getCallByCall();
-						if (callbycallprovider.equals("")) { //$NON-NLS-1$
-							callbycallprovider = "NONE"; //$NON-NLS-1$
-						}
-						if (!filteredCallByCallProviders
-								.contains(callbycallprovider)) {
-							searchFilterPassed = false;
-						}
-					} else { // Hide calls without number
-						if (!filteredCallByCallProviders.contains("NONE")) { //$NON-NLS-1$
-							searchFilterPassed = false;
-						}
-					}
+                    searchFilterPassed = callByCallFilter.filterPassed(call);
 				}
 
 				if (filterDate) {
-                       dateFilterPassed = jfritz.getCallerlist().getDateFilter().filterPassed(call);						
+                       dateFilterPassed = dateFilter.filterPassed(call);						
 				}                                          
 
 				if (filterFixed && call.getPhoneNumber() != null
@@ -1637,5 +1603,9 @@ public class CallerList extends AbstractTableModel {
 
     public SipFilter getSipFilter() {
         return sipFilter;
+    }
+    
+    public CallByCallFilter getCallByCallFilter() {
+        return callByCallFilter;
     }
 }
