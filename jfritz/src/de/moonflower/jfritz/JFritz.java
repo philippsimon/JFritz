@@ -131,7 +131,7 @@
  *  no_new_version_found
  *  update_JFritz
  *
- * - Neu: JFritz-Fenster wird nun korrekt wiederhergestellt (maximiert...)
+ * - Neu: JFritz-Fenster wird nun korrekt wiederhergestellt (maximiert...). Neues Property: window.state
  * - Neu: Falls Ort per ReverseLookup nicht gefunden wird, wird anhand einer Tabelle der passende Ort zu einer Vorwahl eingetragen werden (Österreich) 
  * - Bugfix: Rückwärtssuche für Österreich über dasoertliche.de wieder eingebaut 
  * - Neu: Falls Ort per ReverseLookup nicht gefunden wird, wird anhand einer Tabelle der passende Ort zu einer Vorwahl eingetragen werden Deutschland (SF [ 1315144 ]) 
