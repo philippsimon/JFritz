@@ -718,7 +718,7 @@ public class PhoneBook extends AbstractTableModel {
 				.getProperty("filter_private")); //$NON-NLS-1$
    
 		String filterSearch = JFritz.getProperty("filter.Phonebook.search", ""); //$NON-NLS-1$,  //$NON-NLS-2$
-		String keywords[] = filterSearch.split(" "); //$NON-NLS-1$
+		String keywords[] = filterSearch.split(" "); //$NON-NLS-1$        
 		
 		if ((!filter_private) && (keywords.length == 0)) {
             // Use unfiltered data

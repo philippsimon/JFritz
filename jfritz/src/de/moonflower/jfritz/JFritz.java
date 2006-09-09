@@ -111,8 +111,6 @@
  * TODO:
  * - Alle Zugriffe auf FritzBox in eigenen Threads
  * - Bug: Eingabe der IP-Nummer nach Ruhezustand
- * - Suche im Telefonbuch auch nach 00Landeskennzahl (00 durch + ersetzen)
- * - Deutsche Rufnummern per Suche finden (+49 und 49 klappt nicht)
  * - Markieren der Zeilen per STRG auch in der "Teilnehmer"-Spalte
  * - Ändern der Standardrufnummer per Häckchen führt nicht zur Speicherung, erst wenn man noch ein Datum ändert
  * - Filter für Nebenstelle (Port) kombiniert mit eingetragenem Namen in der Weboberfläche
@@ -131,6 +129,8 @@
  *  no_new_version_found
  *  update_JFritz
  *
+ * - Suchfeld in Anrufliste umfasst nun auch die Call-By-Call vorwahlen
+ * - Bugfix: Suche nach Rufnummern im internationalen Format
  * - Neu: JFritz-Fenster wird nun korrekt wiederhergestellt (maximiert...). Neues Property: window.state
  * - Neu: Falls Ort per ReverseLookup nicht gefunden wird, wird anhand einer Tabelle der passende Ort zu einer Vorwahl eingetragen werden (Österreich) 
  * - Bugfix: Rückwärtssuche für Österreich über dasoertliche.de wieder eingebaut 
