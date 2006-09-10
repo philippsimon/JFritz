@@ -1043,6 +1043,49 @@ public final class JFritz {
 	}
 
 	/**
+	 * This constructor is used for JUnit based testing suites
+	 * Only the default settings are loaded for this jfritz object
+	 * 
+	 * @author brian jensen
+	 */
+	public JFritz(){
+		jfritz = this;
+
+		loadProperties();
+		loadMessages(new Locale(JFritz.getProperty("locale", "de_DE"))); //$NON-NLS-1$,  //$NON-NLS-2$
+		loadLocaleMeanings(new Locale("int", "INT"));
+
+
+		// make sure there is a plus on the country code, or else the number
+		// scheme won't work
+		if (!JFritz.getProperty("country.code").startsWith("+"))
+			JFritz.setProperty("country.code", "+"
+					+ JFritz.getProperty("country.code"));
+
+		
+		//loadSounds();
+
+		//loads various country specific number settings and tables
+		loadNumberSettings();
+		
+		//fritzBox = new FritzBox(
+		//		JFritz.getProperty("box.address", "192.168.178.1"), Encryption //$NON-NLS-1$,  //$NON-NLS-2$
+		//				.decrypt(JFritz.getProperty("box.password", Encryption //$NON-NLS-1$
+		//						.encrypt(""))), JFritz.getProperty("box.port", "80"), this); //$NON-NLS-1$
+
+		phonebook = new PhoneBook(this);
+		//phonebook.loadFromXMLFile(SAVE_DIR + PHONEBOOK_FILE);
+
+		sipprovider = new SipProviderTableModel();
+		//sipprovider.loadFromXMLFile(SAVE_DIR + SIPPROVIDER_FILE);
+
+		callerlist = new CallerList(this);
+		//callerlist.loadFromXMLFile(SAVE_DIR + CALLS_FILE);
+
+	}
+	
+	
+	/**
 	 * Loads resource messages
 	 * 
 	 * @param locale
