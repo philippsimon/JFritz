@@ -93,8 +93,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 
     private static final long serialVersionUID = 1;
 
-    private JFritz jfritz;
-
     private Timer timer;
 
     private JMenuBar menu;
@@ -126,8 +124,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
      * 
      * @param jfritz
      */
-    public JFritzWindow(JFritz jfritz) {
-        this.jfritz = jfritz;
+    public JFritzWindow() {
         Debug.msg("Create JFritz-GUI"); //$NON-NLS-1$
         maxBounds = null;
         createGUI();
@@ -928,7 +925,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
                 UIManager.setLookAndFeel(info.getClassName());
                 SwingUtilities.updateComponentTreeUI(this);
                 JFritz.setProperty("lookandfeel", info.getClassName()); //$NON-NLS-1$
-                jfritz.refreshWindow();
+                JFritz.refreshWindow();
             } catch (Exception e) {
                 Debug.err("Unable to set UI " + e.getMessage()); //$NON-NLS-1$
             }
@@ -1195,13 +1192,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
     }
 
     /**
-     * @return Returns the JFritz object.
-     */
-    public final JFritz getJFritz() {
-        return jfritz;
-    }
-
-    /**
      * @return Returns the callertable.
      */
     public final CallerTable getCallerTable() {
@@ -1314,9 +1304,9 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
                 } else {
                     if (currentFirm.getMajorFirmwareVersion() >= 4
                             && currentFirm.getMinorFirmwareVersion() >= 3) {
-                        JFritz.setCallMonitor(new FBoxListenerV3(jfritz));
+                        JFritz.setCallMonitor(new FBoxListenerV3());
                     } else {
-                        JFritz.setCallMonitor(new FBoxListenerV1(jfritz));
+                        JFritz.setCallMonitor(new FBoxListenerV1());
                     }
                     this.setCallMonitorButtons(JFritz.CALLMONITOR_STOP);
                 }
@@ -1554,7 +1544,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
      *            to switch the language to
      */
     public void setLanguage(Locale locale) {
-        jfritz.createNewWindow(locale);
+        JFritz.createNewWindow(locale);
         // current window will be destroyed and a new one created
 
         JFritz.refreshTrayMenu();
