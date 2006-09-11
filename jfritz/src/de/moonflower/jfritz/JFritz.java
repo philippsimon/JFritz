@@ -901,7 +901,7 @@ public final class JFritz {
         Debug.msg("JFritz runs on " + HostOS); //$NON-NLS-1$
 
         if (HostOS.equals("Mac")) { //$NON-NLS-1$
-            new MacHandler(this);
+            new MacHandler();
         }
 
         // loads various country specific number settings and tables
@@ -1006,7 +1006,7 @@ public final class JFritz {
                 "true"))) {//$NON-NLS-1$
             Debug.msg("Searching for  FritzBox per UPnP / SSDP");//$NON-NLS-1$
 
-            ssdpthread = new SSDPdiscoverThread(this, SSDP_TIMEOUT);
+            ssdpthread = new SSDPdiscoverThread(SSDP_TIMEOUT);
             ssdpthread.start();
             try {
                 ssdpthread.join();
