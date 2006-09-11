@@ -1551,7 +1551,6 @@ public final class JFritz {
 	}
 
 	public static void hideShowJFritz() {
-        System.err.println("Old frame state: " + oldFrameState);
 		if (jframe.isVisible()) {
             oldFrameState = jframe.getExtendedState();
 			Debug.msg("Hide JFritz-Window"); //$NON-NLS-1$
