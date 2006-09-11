@@ -15,6 +15,8 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import de.moonflower.jfritz.JFritz;
+
 /**
  * Listener for clicks on the caller table header columns.
  * 
@@ -61,7 +63,7 @@ public class ColumnHeaderListener extends MouseAdapter {
 		} else {
 			// Disable editing
 			try {
-				list.getJfritz().getJframe().getCallerTable().getCellEditor()
+				JFritz.getJframe().getCallerTable().getCellEditor()
 						.cancelCellEditing();
 			} catch (NullPointerException e) {
 			}

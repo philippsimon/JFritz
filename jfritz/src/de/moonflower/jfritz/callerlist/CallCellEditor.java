@@ -12,7 +12,6 @@ import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
-import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.struct.PhoneNumber;
 
 
@@ -33,9 +32,9 @@ public class CallCellEditor extends AbstractCellEditor implements
 	private static final long serialVersionUID = 1;
 	JComponent component;
 	
-	public CallCellEditor(JFritz jfritz) {
+	public CallCellEditor() {
 		super();
-		component = new CallPanel(this, jfritz);
+		component = new CallPanel(this);
 	}
 
 	/**

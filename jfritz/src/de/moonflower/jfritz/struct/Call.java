@@ -19,8 +19,6 @@ import de.moonflower.jfritz.utils.JFritzUtils;
  */
 public class Call {
 
-    private JFritz jfritz;
-
     private CallType calltype;
 
     private Date calldate;
@@ -37,9 +35,8 @@ public class Call {
     
     private String comment = ""; //$NON-NLS-1$
 
-    public Call(JFritz jfritz, CallType calltype, Date calldate,
+    public Call(CallType calltype, Date calldate,
             PhoneNumber number, String port, String route, int duration) {
-        this.jfritz = jfritz;
         this.calltype = calltype;
         this.calldate = calldate;
         this.number = number;
@@ -51,7 +48,7 @@ public class Call {
         this.route = route;
 //      Parse the SIP Provider and save it correctly
 		if (this.route.startsWith("Internet: ")) {
-			Enumeration en = jfritz.getSIPProviderTableModel()
+			Enumeration en = JFritz.getSIPProviderTableModel()
 					.getProviderList().elements();
 			while (en.hasMoreElements()) {
 				SipProvider sipProvider = (SipProvider) en.nextElement();
@@ -105,7 +102,7 @@ public class Call {
         if ((number == null) || (number.equals(new PhoneNumber("")))) //$NON-NLS-1$
             return null;
         else
-        	return jfritz.getPhonebook().findPerson(number,considerMain);
+        	return JFritz.getPhonebook().findPerson(number,considerMain);
     }
 
     /**
@@ -172,7 +169,7 @@ public class Call {
             //String sipRoute = ""; //$NON-NLS-1$
             String convertedRoute = route;
         	if(route.startsWith("SIP")){
-        			Enumeration en = jfritz.getSIPProviderTableModel()
+        			Enumeration en = JFritz.getSIPProviderTableModel()
         			.getProviderList().elements();
         		while (en.hasMoreElements()) {
         			SipProvider sipProvider = (SipProvider) en.nextElement();
@@ -233,6 +230,8 @@ public class Call {
         // duration
         outString = outString.concat(";\"" + duration + "\""); //$NON-NLS-1$, //$NON-NLS-2$
 
+        System.err.println("Hallo");
+
         // address
         if (getPerson() != null) {
             outString = outString.concat(";\"" + getPerson().getFullname() //$NON-NLS-1$
@@ -291,7 +290,7 @@ public class Call {
         if (!route.equals("")){ //$NON-NLS-1$
             String convertedRoute = route;
         	if(route.startsWith("SIP")){
-        			Enumeration en = jfritz.getSIPProviderTableModel()
+        			Enumeration en = JFritz.getSIPProviderTableModel()
         			.getProviderList().elements();
         		while (en.hasMoreElements()) {
         			SipProvider sipProvider = (SipProvider) en.nextElement();

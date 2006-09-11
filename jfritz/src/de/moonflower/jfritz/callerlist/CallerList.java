@@ -95,8 +95,6 @@ public class CallerList extends AbstractTableModel {
 	// english firmware, unknown version
 	private final static String EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH = "Typ;Date;Number;Extension;Outgoing Caller ID;Duration";
 
-	private JFritz jfritz;
-
 	// call list used to display entries in the table, can be sorted by other
 	// criteria
 	private Vector filteredCallerData;
@@ -134,12 +132,10 @@ public class CallerList extends AbstractTableModel {
 		// lets see if my new method works better
 		newCalls = new Vector(32);
 
-		this.jfritz = jfritz;
-
 		sortColumn = 1;
-        dateFilter = new DateFilter(jfritz);
-        sipFilter = new SipFilter(jfritz);
-        callByCallFilter = new CallByCallFilter(jfritz);
+        dateFilter = new DateFilter();
+        sipFilter = new SipFilter();
+        callByCallFilter = new CallByCallFilter();
 	}
 
 	/**
@@ -211,8 +207,8 @@ public class CallerList extends AbstractTableModel {
 			pw.newLine();
 
 			int rows[] = null;
-			if (jfritz != null && jfritz.getJframe() != null) {
-				rows = jfritz.getJframe().getCallerTable().getSelectedRows();
+			if ( JFritz.getJframe() != null) {
+				rows = JFritz.getJframe().getCallerTable().getSelectedRows();
 			}
 			if (!wholeCallerList && rows != null && rows.length > 0) {
 				for (int i = 0; i < rows.length; i++) {
@@ -265,8 +261,8 @@ public class CallerList extends AbstractTableModel {
 			pw
 					.println("\"CallType\";\"Date\";\"Time\";\"Number\";\"Route\";\"Port\";\"Duration\";\"Name\";\"Address\";\"City\";\"CallByCall\";\"Comment\""); //$NON-NLS-1$
 			int rows[] = null;
-			if (jfritz != null && jfritz.getJframe() != null) {
-				rows = jfritz.getJframe().getCallerTable().getSelectedRows();
+			if (JFritz.getJframe() != null) {
+				rows = JFritz.getJframe().getCallerTable().getSelectedRows();
 			}
 			if (!wholeCallerList && rows != null && rows.length > 0) {
 				for (int i = 0; i < rows.length; i++) {
@@ -392,7 +388,7 @@ public class CallerList extends AbstractTableModel {
 	 */
 	public boolean addEntry(CallType symbol, Date datum, PhoneNumber number,
 			String port, String route, int duration, String comment) {
-		Call call = new Call(jfritz, symbol, datum, number, port, route,
+		Call call = new Call(symbol, datum, number, port, route,
 				duration);
 		call.setComment(comment);
 		return addEntry(call);
@@ -559,29 +555,29 @@ public class CallerList extends AbstractTableModel {
 	public void getNewCalls(boolean deleteFritzBoxCallerList)
 			throws WrongPasswordException, IOException {
 
-		if (jfritz.getFritzBox().checkValidFirmware()) {
+		if (JFritz.getFritzBox().checkValidFirmware()) {
 
-			Debug.msg("box.address: " + jfritz.getFritzBox().getAddress());
-			Debug.msg("box.port: " + jfritz.getFritzBox().getPort());
-			Debug.msg("box.password: " + jfritz.getFritzBox().getPassword());
+			Debug.msg("box.address: " + JFritz.getFritzBox().getAddress());
+			Debug.msg("box.port: " + JFritz.getFritzBox().getPort());
+			Debug.msg("box.password: " + JFritz.getFritzBox().getPassword());
 			Debug.msg("box.firmware: "
-					+ jfritz.getFritzBox().getFirmware().getFirmwareVersion() + " "
-					+ jfritz.getFritzBox().getFirmware().getLanguage());
+					+ JFritz.getFritzBox().getFirmware().getFirmwareVersion() + " "
+					+ JFritz.getFritzBox().getFirmware().getLanguage());
 
-			boolean newEntries = jfritz.getFritzBox().retrieveCSVList();
+			boolean newEntries = JFritz.getFritzBox().retrieveCSVList();
 			
 			// Notify user?
 			if ((JFritz.getProperty("option.notifyOnCalls", "true")
 					.equals("true"))
 					&& newEntries) {
-				jfritz.getJframe().setVisible(true);
-				jfritz.getJframe().toFront();
+				JFritz.getJframe().setVisible(true);
+				JFritz.getJframe().toFront();
 			}
 
 			if ((newEntries && JFritz.getProperty("option.deleteAfterFetch",
 					"false").equals("true"))
 					|| deleteFritzBoxCallerList) {
-				jfritz.getFritzBox().clearListOnFritzBox(); 
+				JFritz.getFritzBox().clearListOnFritzBox(); 
 			}
 
 			// Make back-up after fetching the caller list?
@@ -637,7 +633,7 @@ public class CallerList extends AbstractTableModel {
 			return call.getPort();
 		} else if (columnName.equals("route")) { //$NON-NLS-1$
 			if (call.getRoute().startsWith("SIP")) //$NON-NLS-1$
-				return jfritz.getSIPProviderTableModel().getSipProvider(
+				return JFritz.getSIPProviderTableModel().getSipProvider(
 						call.getRoute(), call.getRoute());
 			return call.getRoute();
 		} else if (columnName.equals("duration")) { //$NON-NLS-1$
@@ -683,7 +679,7 @@ public class CallerList extends AbstractTableModel {
 			} else {
 				if (call.getPerson() == null) {
 					if (!person.isEmpty())
-						jfritz.getPhonebook().addEntry(person);
+						JFritz.getPhonebook().addEntry(person);
 				} else if (!call.getPerson().equals(person)) {
 					call.getPerson().copyFrom(person);
 				}
@@ -888,7 +884,7 @@ public class CallerList extends AbstractTableModel {
 		String filterSearch = JFritz.getProperty("filter.search", ""); //$NON-NLS-1$,  //$NON-NLS-2$
 
 		try {
-			jfritz.getJframe().getCallerTable().getCellEditor()
+			JFritz.getJframe().getCallerTable().getCellEditor()
 					.cancelCellEditing();
 		} catch (NullPointerException e) {
 		}
@@ -977,8 +973,8 @@ public class CallerList extends AbstractTableModel {
 			filteredCallerData = filteredcallerdata;
 			sortAllFilteredRowsBy(sortColumn, sortDirection);
 		}
-		if (jfritz.getJframe() != null)
-			jfritz.getJframe().setStatus();
+		if (JFritz.getJframe() != null)
+			JFritz.getJframe().setStatus();
 	}
 
 	/**
@@ -1009,13 +1005,6 @@ public class CallerList extends AbstractTableModel {
 	}
 
 	/**
-	 * @return Returns the jfritz.
-	 */
-	public final JFritz getJfritz() {
-		return jfritz;
-	}
-
-	/**
 	 * @param person
 	 * @return Returns last call of person
 	 */
@@ -1037,19 +1026,19 @@ public class CallerList extends AbstractTableModel {
 	public void clearList() {
 		Debug.msg("Clearing caller Table"); //$NON-NLS-1$
 		unfilteredCallerData.clear();
-		if ((jfritz.getJframe() != null)
-				&& jfritz.getJframe().getCallerTable() != null)
-			jfritz.getJframe().getCallerTable().clearSelection();
+		if ((JFritz.getJframe() != null)
+				&& JFritz.getJframe().getCallerTable() != null)
+			JFritz.getJframe().getCallerTable().clearSelection();
 		saveToXMLFile(JFritz.SAVE_DIR + JFritz.CALLS_FILE, true);
 		fireTableDataChanged();
 	}
 
 	public void removeEntries() {
-		if (JOptionPane.showConfirmDialog(jfritz.getJframe(), JFritz
+		if (JOptionPane.showConfirmDialog(JFritz.getJframe(), JFritz
 				.getMessage("really_delete_entries"), //$NON-NLS-1$
 				JFritz.PROGRAM_NAME, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 			Debug.msg("Removing entries"); //$NON-NLS-1$
-			int row[] = jfritz.getJframe().getCallerTable().getSelectedRows();
+			int row[] = JFritz.getJframe().getCallerTable().getSelectedRows();
 			if (row.length > 0) {
 				Vector personsToDelete = new Vector();
 				for (int i = 0; i < row.length; i++) {
@@ -1072,8 +1061,8 @@ public class CallerList extends AbstractTableModel {
 
 	public String getRealColumnName(int columnIndex) {
 		String columnName = ""; //$NON-NLS-1$
-		if (jfritz != null && jfritz.getJframe() != null) {
-			Enumeration en = jfritz.getJframe().getCallerTable()
+		if (JFritz.getJframe() != null) {
+			Enumeration en = JFritz.getJframe().getCallerTable()
 					.getTableHeader().getColumnModel().getColumns();
 			while (en.hasMoreElements()) {
 				TableColumn col = (TableColumn) en.nextElement();
@@ -1091,8 +1080,8 @@ public class CallerList extends AbstractTableModel {
 
 	public Call getSelectedCall() {
 		int rows[] = null;
-		if ((jfritz != null) && (jfritz.getJframe() != null))
-			rows = jfritz.getJframe().getCallerTable().getSelectedRows();
+		if (JFritz.getJframe() != null)
+			rows = JFritz.getJframe().getCallerTable().getSelectedRows();
 
 		if (rows != null && rows.length == 1)
 			return (Call) this.filteredCallerData.elementAt(rows[0]);
@@ -1312,7 +1301,7 @@ public class CallerList extends AbstractTableModel {
 		// now make the call object
 		// TODO: change the order of the Call constructor to fit
 		// the oder of the csv export function or vice versa!!!
-		call = new Call(jfritz, calltype, calldate, number, field[5], field[4],
+		call = new Call(calltype, calldate, number, field[5], field[4],
 				Integer.parseInt(field[6]));
 
 		// TODO: perhaps split export function into two functions
@@ -1381,7 +1370,7 @@ public class CallerList extends AbstractTableModel {
 
 		// Phone number
 		if (!field[2].equals(""))
-			number = new PhoneNumber(field[2], jfritz,
+			number = new PhoneNumber(field[2],
 					JFritz.getProperty("option.activateDialPrefix").toLowerCase().equals("true")
 					&& (calltype.toInt() == CallType.CALLOUT)
 					&& !field[4].startsWith("Internet"));
@@ -1407,7 +1396,7 @@ public class CallerList extends AbstractTableModel {
 		}
 
 		// make the call object and exit
-		call = new Call(jfritz, calltype, calldate, number, field[3], field[4],
+		call = new Call(calltype, calldate, number, field[3], field[4],
 				Integer.parseInt(time[0]) * 3600 + Integer.parseInt(time[1])
 						* 60);
 
@@ -1466,7 +1455,7 @@ public class CallerList extends AbstractTableModel {
 
 		// Phone number
 		if (!field[3].equals(""))
-			number = new PhoneNumber(field[3], jfritz, 
+			number = new PhoneNumber(field[3], 
 					JFritz.getProperty("option.activateDialPrefix").toLowerCase().equals("true")
 					&& (calltype.toInt() == CallType.CALLOUT)
 					&& !field[5].startsWith("Internet"));
@@ -1493,7 +1482,7 @@ public class CallerList extends AbstractTableModel {
 		}
 
 		// make the call object and exit
-		call = new Call(jfritz, calltype, calldate, number, field[4], field[5],
+		call = new Call(calltype, calldate, number, field[4], field[5],
 				Integer.parseInt(time[0]) * 3600 + Integer.parseInt(time[1])
 						* 60);
 
@@ -1565,7 +1554,7 @@ public class CallerList extends AbstractTableModel {
 
 		// Phone number
 		if (!field[2].equals(""))
-			number = new PhoneNumber(field[2], jfritz,
+			number = new PhoneNumber(field[2],
 					JFritz.getProperty("option.activateDialPrefix").toLowerCase().equals("true")
 					&& (calltype.toInt() == CallType.CALLOUT)
 					&& !field[4].startsWith("Internet"));
@@ -1591,7 +1580,7 @@ public class CallerList extends AbstractTableModel {
 		}
 
 		// make the call object and exit
-		call = new Call(jfritz, calltype, calldate, number, field[3], field[4],
+		call = new Call(calltype, calldate, number, field[3], field[4],
 				Integer.parseInt(time[0]) * 3600 + Integer.parseInt(time[1])
 						* 60);
 
