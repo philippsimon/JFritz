@@ -1032,7 +1032,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
             boolean active = ((JToggleButton) e.getSource()).isSelected();
             if (active) {
                 Debug.msg("Start callMonitor"); //$NON-NLS-1$
-                startChosenCallMonitor();
+                startChosenCallMonitor();                
             } else {
                 Debug.msg("Stop callMonitor"); //$NON-NLS-1$
                 JFritz.stopCallMonitor();
