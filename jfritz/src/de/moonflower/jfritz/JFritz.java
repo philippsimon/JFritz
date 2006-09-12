@@ -534,6 +534,7 @@ import org.jdesktop.jdic.tray.SystemTray;
 import org.jdesktop.jdic.tray.TrayIcon;
 
 import de.moonflower.jfritz.callerlist.CallerList;
+import de.moonflower.jfritz.callmonitor.CallMonitorInterface;
 import de.moonflower.jfritz.dialogs.configwizard.ConfigWizard;
 import de.moonflower.jfritz.dialogs.phonebook.PhoneBook;
 import de.moonflower.jfritz.dialogs.simple.MessageDlg;
@@ -551,7 +552,6 @@ import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.JFritzUtils;
 import de.moonflower.jfritz.utils.reverselookup.ReverseLookup;
-import de.moonflower.jfritz.utils.network.CallMonitor;
 import de.moonflower.jfritz.utils.network.VersionCheckThread;
 import de.moonflower.jfritz.utils.network.SSDPdiscoverThread;
 
@@ -634,7 +634,7 @@ public final class JFritz {
 
     private static URL ringSound, callSound;
 
-    private static CallMonitor callMonitor = null;
+    private static CallMonitorInterface callMonitor = null;
 
     private static String HostOS = "other"; //$NON-NLS-1$
 
@@ -1529,11 +1529,11 @@ public final class JFritz {
         }
     }
 
-    public static CallMonitor getCallMonitor() {
+    public static CallMonitorInterface getCallMonitor() {
         return callMonitor;
     }
 
-    public static void setCallMonitor(CallMonitor cm) {
+    public static void setCallMonitor(CallMonitorInterface cm) {
         callMonitor = cm;
     }
 
