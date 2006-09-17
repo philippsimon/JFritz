@@ -61,7 +61,6 @@
  * 9 -  9 - Name für die Nebenstellen aus der Weboberfläche auslesen und zuweisen (SF [ 1498487 ])
  * 9 -  7 - Vollständiger Outlook-Support (SF [ 1498489 ])
  * 8 -  8 - Analoge Rufnummer aus der FritzBox auslesen
- * 8 -  9 - Automatisches Update auf neue Version
  * 7 -  7 - Einige Icons auslagern - unterschiedliche Icon-Packs
  * 7 -  7 - Sounddateien auslagern - unterschiedliche Sound-Packs (gute Ideen, Brian)
  * 7 -  7 - Popup und Tray-Message für Anrufmonitor anpassbar machen (Name, Nummer, Adresse, Nebenstelle, Stadt, "von Arbeit", "von SIP", anderer Text, Größe des Popups)
@@ -131,6 +130,7 @@
  * - Neue Strings:
  * 	new_version
  * 	new_version_text
+ *  new_version_quit
  *  check_for_new_version_after_start
  *  no_new_version_found
  *  update_JFritz
@@ -153,6 +153,7 @@
  * - INTERN: Anrufmonitore in neues Package callmonitor gepackt und umbenannt
  * - INTERN: Anzeige der Anrufe, die vom Anrufmonitor erkannt werden, über Listener. Abholen der Anrufliste nach dem Gesprächsende nun über den DisconnectMonitor
  * - Neu: Unterstützung für die "Labor-Firmware"
+ * - Neu: Automatisches Update von JFritz auf neue Version. TODO: Am Ende der Update-Prozedur JFritz nicht beenden, sondern neu starten. Blos wie?
  *
  * JFritz 0.6.1
  * - Neue Strings: 
