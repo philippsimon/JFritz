@@ -121,6 +121,11 @@
  * - Bug: Neue Telefonnummern in PersonDialog der Anrufliste werden nicht gespeichert
  * - Bug: Importieren von Thunderbird-Einträgen (es werden nur die ersten 5 Felder der CSV-Datei erkannt)
  * - Andere Anrufmonitore noch an die neuen Listener anpassen und TestCases schreiben
+ * - Kurzwahlliste sortierbar und Spaltenreihenfolge änderbar
+ * - Wahlhilfe: Immer mit Ortsvorwahl wählen (vor allem bei der Schweiz)
+ * - Bug "Doppelt erfasste Anrufe" behoben?
+ * - http://www.ip-phone-forum.de/showthread.php?t=112348
+ * - 0900 Nummern werden nicht korrekt erkannt http://www.ip-phone-forum.de/showthread.php?t=114325
  * TODO-ENDE
  * 
  * - Neue Strings:
