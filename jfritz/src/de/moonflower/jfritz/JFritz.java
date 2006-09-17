@@ -121,10 +121,9 @@
  * - Bug: Importieren von Thunderbird-Einträgen (es werden nur die ersten 5 Felder der CSV-Datei erkannt)
  * - Andere Anrufmonitore noch an die neuen Listener anpassen und TestCases schreiben
  * - Kurzwahlliste sortierbar und Spaltenreihenfolge änderbar
- * - Wahlhilfe: Immer mit Ortsvorwahl wählen (vor allem bei der Schweiz)
  * - Bug "Doppelt erfasste Anrufe" behoben?
  * - http://www.ip-phone-forum.de/showthread.php?t=112348
- * - 0900 Nummern werden nicht korrekt erkannt http://www.ip-phone-forum.de/showthread.php?t=114325
+ * - 0900 Nummern werden nicht korrekt erkannt http://www.ip-phone-forum.de/showthread.php?t=114325 => Liste mit Call-By-Call Vorwahlen
  * TODO-ENDE
  * 
  * - Neue Strings:
@@ -153,8 +152,9 @@
  * - INTERN: Anrufmonitore in neues Package callmonitor gepackt und umbenannt
  * - INTERN: Anzeige der Anrufe, die vom Anrufmonitor erkannt werden, über Listener. Abholen der Anrufliste nach dem Gesprächsende nun über den DisconnectMonitor
  * - Neu: Unterstützung für die "Labor-Firmware"
- * - Neu: Automatisches Update von JFritz auf neue Version. TODO: Am Ende der Update-Prozedur JFritz nicht beenden, sondern neu starten. Blos wie?
- *
+ * - Neu: Automatisches Update von JFritz auf neue Version. TODO: Checken, ob es auch mit .so und .dll funktioniert TODO: Am Ende der Update-Prozedur JFritz nicht beenden, sondern neu starten. Blos wie?
+ * - Wahlhilfe: Immer mit Ortsvorwahl wählen (getShortNumber in getAreaNumber verändert)
+ * 
  * JFritz 0.6.1
  * - Neue Strings: 
  *		browse
