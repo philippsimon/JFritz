@@ -1149,7 +1149,8 @@ public final class JFritz {
                     + " not readable => showing config wizard"); //$NON-NLS-1$
             showConfWizard = true;
         } catch (Exception e) {
-        }
+			//TODO handle Exceptions
+       }
     }
 
     /**
