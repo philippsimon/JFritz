@@ -1126,11 +1126,17 @@ public class CallerList extends AbstractTableModel {
         int newEntries = 0;
 
         try {
+        	String separator = PATTERN_CSV;
             line = br.readLine();
             Debug.msg("CSV-Header: " + line);
             if(line == null){
                 Debug.err("File empty"); //$NON-NLS-1$
                 return false;
+            } else if ( line.startsWith("sep=")) {
+            	separator = line.substring(4);
+            	Debug.msg("Separator: " + separator);
+            	line = br.readLine();
+                Debug.msg("CSV-Header: " + line);
             }
             // check if we have a correct header
             if (line.equals(EXPORT_CSV_FORMAT_JFRITZ)
@@ -1158,13 +1164,13 @@ public class CallerList extends AbstractTableModel {
 
                     // call the appropriate parse function
                     if (isJFritzExport)
-                        c = parseCallJFritzCSV(line);
+                        c = parseCallJFritzCSV(line, separator);
                     else if (isNewFirmware)
-                        c = parseCallFritzboxNewCSV(line);
+                        c = parseCallFritzboxNewCSV(line, separator);
                     else if (isEnglishFirmware)
-                        c = parseCallFritzboxEnglishCSV(line);
+                        c = parseCallFritzboxEnglishCSV(line, separator);
                     else
-                        c = parseCallFritzboxCSV(line, isPushFile);
+                        c = parseCallFritzboxCSV(line, isPushFile, separator);
 
                     if (c == null) {
                         if (!line.equals(""))
@@ -1236,8 +1242,8 @@ public class CallerList extends AbstractTableModel {
      *            contains the line to be processed from a csv file
      * @return returns a call object, or null if the csv line is invalid
      */
-    public Call parseCallJFritzCSV(String line) {
-        String[] field = line.split(PATTERN_CSV);
+    public Call parseCallJFritzCSV(String line, String separator) {
+        String[] field = line.split(separator);
         Call call;
         CallType calltype;
         Date calldate;
@@ -1331,8 +1337,8 @@ public class CallerList extends AbstractTableModel {
      *            contains the line to be processed
      * @return is call object, or null if the csv was invalid
      */
-    public Call parseCallFritzboxCSV(String line, boolean isPushFile) {
-        String[] field = line.split(PATTERN_CSV);
+    public Call parseCallFritzboxCSV(String line, boolean isPushFile, String separator) {
+        String[] field = line.split(separator);
         Call call;
         CallType calltype;
         Date calldate;
@@ -1428,8 +1434,8 @@ public class CallerList extends AbstractTableModel {
      *            contains the line to be processed
      * @return is call object, or null if the csv was invalid
      */
-    public Call parseCallFritzboxNewCSV(String line) {
-        String[] field = line.split(PATTERN_CSV);
+    public Call parseCallFritzboxNewCSV(String line, String separator) {
+        String[] field = line.split(separator);
         Call call;
         CallType calltype;
         Date calldate;
@@ -1520,8 +1526,8 @@ public class CallerList extends AbstractTableModel {
      * @return is call object, or null if the csv was invalid
      * 
      */
-    public Call parseCallFritzboxEnglishCSV(String line) {
-        String[] field = line.split(PATTERN_CSV);
+    public Call parseCallFritzboxEnglishCSV(String line, String separator) {
+        String[] field = line.split(separator);
         // leave this in here in case the push file is different, like with the
         // german firmware
         boolean isPushFile = false;
