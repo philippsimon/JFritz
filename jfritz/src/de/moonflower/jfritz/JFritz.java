@@ -1147,10 +1147,12 @@ public final class JFritz {
             replaceOldProperties();
         } catch (FileNotFoundException e) {
             Debug.err("File " + SAVE_DIR + JFritz.PROPERTIES_FILE //$NON-NLS-1$
+                    + " not found => showing config wizard"); //$NON-NLS-1$
+            showConfWizard = true;
+        } catch (IOException ioe) {
+            Debug.err("File " + SAVE_DIR + JFritz.PROPERTIES_FILE //$NON-NLS-1$
                     + " not readable => showing config wizard"); //$NON-NLS-1$
             showConfWizard = true;
-        } catch (Exception e) {
-			//TODO handle Exceptions
        }
     }
 

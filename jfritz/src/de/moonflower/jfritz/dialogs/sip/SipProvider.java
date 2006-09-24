@@ -7,6 +7,7 @@
 package de.moonflower.jfritz.dialogs.sip;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Vector;
 
 import de.moonflower.jfritz.struct.Call;
@@ -440,7 +441,7 @@ public class SipProvider {
     public class ColumnSorter implements Comparator {
 
         public int compare(Object a, Object b) {
-            Object o1, o2;
+            Date o1, o2;
             Call v1 = (Call) a;
             Call v2 = (Call) b;
 
@@ -455,11 +456,10 @@ public class SipProvider {
                 return 1;
             } else if (o2 == null) {
                 return -1;
-            } else if (o1 instanceof Comparable) {
-                return ((Comparable) o1).compareTo(o2);
             } else {
-                return o1.toString().compareTo(o2.toString());
+            	return 	o1.compareTo(o2);
             }
+            
         }
     }
 
