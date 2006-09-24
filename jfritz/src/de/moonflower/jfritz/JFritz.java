@@ -1691,7 +1691,7 @@ public final class JFritz {
                 else if (!SAVE_DIR.endsWith(File.separator))
                     SAVE_DIR = SAVE_DIR + File.separator;
             }
-
+            Debug.msg("Save directory: " + SAVE_DIR);
         } catch (FileNotFoundException e) {
             Debug
                     .msg("Error processing the user save location(File not found), using defaults");
@@ -1700,7 +1700,8 @@ public final class JFritz {
             Debug.msg("Error processing the user save location, using defaults");
         }finally{
         	try{
-        		br.close();
+        		if ( br != null )
+        			br.close();
         	}catch(IOException ioe){
                 Debug.msg("Error closing stream");
         	}
