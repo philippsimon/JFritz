@@ -57,7 +57,7 @@
  * 10 - 7 - Webverkehr über Proxy (Was für Proxys sind gemeint: Socks 4 /5, oder HTTP(S)?)
  * 10 - 10 - Einstellen der Landes- und Ortsvorwahlen pro SIP-Account und nicht nur global (SF [ 1438932 ])
  * 9 -  8 - Export des gesamten Adressbuchs als VCard (http://www.ip-phone-forum.de/showthread.php?t=106758)
- * 9 -  9 - Einstellungen-Seiten überarbeiten.       Größe veränderbar machen!
+ * 9 -  9 - Einstellungen-Seiten überarbeiten.       Größe veränderbar machen!(bei modalen Dialoge geht das nicht)  
  * 9 -  9 - Name für die Nebenstellen aus der Weboberfläche auslesen und zuweisen (SF [ 1498487 ])
  * 9 -  7 - Vollständiger Outlook-Support (SF [ 1498489 ])
  * 8 -  8 - Analoge Rufnummer aus der FritzBox auslesen
@@ -895,7 +895,7 @@ public final class JFritz {
                 if (answer == JOptionPane.YES_OPTION) {
                     Debug
                             .msg("Multiple instance lock: User decided to shut down this instance."); //$NON-NLS-1$
-                    System.exit(0);
+                    exit(0);
                 } else {
                     Debug
                             .msg("Multiple instance lock: User decided NOT to shut down this instance."); //$NON-NLS-1$
@@ -1005,8 +1005,11 @@ public final class JFritz {
         }
 
         Debug.msg("New instance of JFrame"); //$NON-NLS-1$
-        jframe = new JFritzWindow();
-
+        try{
+        	jframe = new JFritzWindow();
+        }catch(WrongPasswordException wpe){
+        	exit(0);
+        }
         if (checkForSystraySupport()) {
             Debug.msg("Check Systray-Support"); //$NON-NLS-1$
             try {
@@ -1590,7 +1593,7 @@ public final class JFritz {
         watchdog = new WatchdogThread(1);
         timer.schedule(new TimerTask() {
             public void run() {
-                watchdog.run();
+                watchdog.start();
             }
         }, 5000, 1 * 60000);
         Debug.msg("Watchdog enabled"); //$NON-NLS-1$
@@ -1630,7 +1633,11 @@ public final class JFritz {
         saveProperties();
         jframe.dispose();
         javax.swing.SwingUtilities.invokeLater(jframe);
-        jframe = new JFritzWindow();
+        try{
+        	jframe = new JFritzWindow();
+        }catch(WrongPasswordException wpe){
+        	exit(0);
+        }
         javax.swing.SwingUtilities.invokeLater(jframe);
         jframe.checkOptions();
         javax.swing.SwingUtilities.invokeLater(jframe);
@@ -1638,7 +1645,12 @@ public final class JFritz {
 
     }
 
-    /**
+    private static void exit(int i) {
+    	//TODO maybe some cleanup is needed
+		System.exit(i);
+	}
+
+	/**
      * Deletes actual systemtray and creates a new one.
      * 
      * @author Benjamin Schmitt
@@ -1682,7 +1694,12 @@ public final class JFritz {
     	try {
             br = new BufferedReader(new FileReader(USER_DIR
                     + File.separator + USER_JFRITZ_FILE));
-            String[] entries = br.readLine().split("=");
+            String line = br.readLine();
+            if(line == null){
+            	br.close();
+            	Debug.msg("File"+USER_DIR+ File.separator + USER_JFRITZ_FILE+"empty");
+            }
+            String[] entries = line.split("=");
             if (!entries[1].equals("")) {
                 SAVE_DIR = entries[1];
                 File file = new File(SAVE_DIR);
@@ -1799,5 +1816,4 @@ public final class JFritz {
     public static CallMonitorList getCallMonitorList() {
         return callMonitorList;
     }
-    
 }
