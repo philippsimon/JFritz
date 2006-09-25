@@ -1593,7 +1593,7 @@ public final class JFritz {
         watchdog = new WatchdogThread(1);
         timer.schedule(new TimerTask() {
             public void run() {
-                watchdog.start();
+                watchdog.run();
             }
         }, 5000, 1 * 60000);
         Debug.msg("Watchdog enabled"); //$NON-NLS-1$
