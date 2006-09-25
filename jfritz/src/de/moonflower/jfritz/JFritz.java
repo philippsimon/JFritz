@@ -154,7 +154,7 @@
  * - Neu: Unterstützung für die "Labor-Firmware" (Firmwareerkennung und CSV-Import)
  * - Neu: Automatisches Update von JFritz auf neue Version. TODO: Checken, ob es auch mit .so und .dll funktioniert TODO: Am Ende der Update-Prozedur JFritz nicht beenden, sondern neu starten. Blos wie?
  * - Wahlhilfe: Immer mit Ortsvorwahl wählen (getShortNumber in getAreaNumber verändert)
- * 
+ * - Neu: Unterstützung für neue englische Firmware xx.04.20
  * 
  * JFritz 0.6.1
  * - Neue Strings: 
