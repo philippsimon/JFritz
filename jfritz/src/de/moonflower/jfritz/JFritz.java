@@ -124,6 +124,7 @@
  * - Bug "Doppelt erfasste Anrufe" behoben?
  * - http://www.ip-phone-forum.de/showthread.php?t=112348
  * - 0900 Nummern werden nicht korrekt erkannt http://www.ip-phone-forum.de/showthread.php?t=114325 => Liste mit Call-By-Call Vorwahlen
+ * - Rückwärtssuche über DasÖrtliche funktioniert nicht mehr => Mögliche Lösung: http://sourceforge.net/tracker/index.php?func=detail&aid=1565887&group_id=138196&atid=741413
  * TODO-ENDE
  * 
  * - Neue Strings:
@@ -155,6 +156,7 @@
  * - Neu: Automatisches Update von JFritz auf neue Version. TODO: Checken, ob es auch mit .so und .dll funktioniert TODO: Am Ende der Update-Prozedur JFritz nicht beenden, sondern neu starten. Blos wie?
  * - Wahlhilfe: Immer mit Ortsvorwahl wählen (getShortNumber in getAreaNumber verändert)
  * - Neu: Unterstützung für neue englische Firmware xx.04.20
+ * - INTERN: Buildfile überarbeitet. TODO: release und junit anpassen
  * 
  * JFritz 0.6.1
  * - Neue Strings: 
