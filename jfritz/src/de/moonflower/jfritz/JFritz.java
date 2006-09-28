@@ -124,7 +124,7 @@
  * - Bug "Doppelt erfasste Anrufe" behoben?
  * - http://www.ip-phone-forum.de/showthread.php?t=112348
  * - 0900 Nummern werden nicht korrekt erkannt http://www.ip-phone-forum.de/showthread.php?t=114325 => Liste mit Call-By-Call Vorwahlen
- * - Rückwärtssuche über DasÖrtliche funktioniert nicht mehr => Mögliche Lösung: http://sourceforge.net/tracker/index.php?func=detail&aid=1565887&group_id=138196&atid=741413
+ * - Überprüfen, geht wohl nicht mehr: Rückwärtssuche für Österreich über dasoertliche.de wieder eingebaut 
  * TODO-ENDE
  * 
  * - Neue Strings:
@@ -139,7 +139,6 @@
  * - Bugfix: Suche nach Rufnummern im internationalen Format
  * - Neu: JFritz-Fenster wird nun korrekt wiederhergestellt (maximiert...). Neues Property: window.state
  * - Neu: Falls Ort per ReverseLookup nicht gefunden wird, wird anhand einer Tabelle der passende Ort zu einer Vorwahl eingetragen werden (Österreich) 
- * - Bugfix: Rückwärtssuche für Österreich über dasoertliche.de wieder eingebaut 
  * - Neu: Falls Ort per ReverseLookup nicht gefunden wird, wird anhand einer Tabelle der passende Ort zu einer Vorwahl eingetragen werden Deutschland (SF [ 1315144 ]) 
  * - Bugfix: Jetzt werden IP-Addressen von den Boxen in der Einstellungen angezeigt. Man kann jetzt Fehlerfrei zwei boxes im gleichen Netz haben. 
  * - Neu: Rückwärtssuche für die USA über www.whitepages.com, danke an Reiner Gebhardt
@@ -157,6 +156,7 @@
  * - Wahlhilfe: Immer mit Ortsvorwahl wählen (getShortNumber in getAreaNumber verändert)
  * - Neu: Unterstützung für neue englische Firmware xx.04.20
  * - INTERN: Buildfile überarbeitet. TODO: release und junit anpassen
+ * - Neu: Rückwärtssuche nicht mehr über DasOertliche.de sondern über dastelefonbuch.de
  * 
  * JFritz 0.6.1
  * - Neue Strings: 

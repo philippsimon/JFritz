@@ -17,32 +17,32 @@ import de.moonflower.jfritz.utils.JFritzUtils;
 
 /**
  * This class is responsible for doing reverse lookups for german numbers
- * 
- * The search engine used is: http://www.dasoertliche.de
+ *
+ * The search engine used is: http://dastelefonbuch.de
  * A big thanks to them for creating an easy to parse web page
- * 
- * 
+ *
+ *
  *
  */
 public final class ReverseLookupGermany {
 
-	public final static String SEARCH_URL="http://tel.search.ch/result.html?tel=";
+	public final static String SEARCH_URL="http://www.tao.dastelefonbuch.de/?sourceid=Mozilla-search&cmd=search&kw=";
 
 	public final static String FILE_HEADER = "Vorwahl;Ortsnetz";
-	
+
 	private static HashMap numberMap;
-	
+
 	/**
 	 * This function performs the reverse lookup
-	 * 
+	 *
 	 * @author Brian Jensen
 	 * @param number in area format to be looked up
-	 * 
+	 *
 	 * @return a person object created using the data from the site
 	 */
 	/**
-	 * Static method for looking up entries from "dasoertliche"
-	 * 
+	 * Static method for looking up entries from "dastelefonbuch.de"
+	 *
 	 * @param number
 	 * @return name
 	 */
@@ -55,8 +55,8 @@ public final class ReverseLookupGermany {
 		String data = ""; //$NON-NLS-1$
 		Person newPerson;
 
-		String urlstr = "http://www.dasoertliche.de/DB4Web/es/oetb2suche/home.htm?main=Antwort&s=2&kw_invers=" //$NON-NLS-1$
-				+ number;
+		String urlstr = SEARCH_URL + number;
+
 		try {
 			url = new URL(urlstr);
 			if (url != null) {
@@ -88,7 +88,7 @@ public final class ReverseLookupGermany {
 						}
 						header += headerName + ": " + headerValue + " | "; //$NON-NLS-1$,  //$NON-NLS-2$
 					}
-					Debug.msg("Header of dasoertliche.de: " + header); //$NON-NLS-1$
+					Debug.msg("Header of dastelefonbuch.de: " + header); //$NON-NLS-1$
 					Debug.msg("CHARSET : " + charSet); //$NON-NLS-1$
 
 					// Get used Charset
@@ -100,21 +100,32 @@ public final class ReverseLookupGermany {
 						d = new BufferedReader(new InputStreamReader(con
 								.getInputStream(), charSet));
 					}
-					int i = 0;
-					String str = ""; //$NON-NLS-1$
 
 					// Get response data
-					while ((i < 700) && (null != ((str = d.readLine())))) {
-						data += str;
-						i++;
+					boolean flg_found_start = false;
+					boolean flg_found_end   = false;
+					String str = ""; //$NON-NLS-1$
+
+					while ((flg_found_end == false) && (null != ((str = d.readLine())))) {
+						// Search for starttag
+						if (flg_found_start == false
+								&& str.contains("<!-- ****** Treffer Einträge ****** -->"))
+							flg_found_start = true;
+
+						if (flg_found_start == true) {
+							data += str;
+							// Seach for endtag
+							if (str.contains("<!-- ****** Ende Treffer Einträge ****** -->"))
+								flg_found_end = true;
+						}
 					}
 					d.close();
-					Debug.msg("Begin processing responce from dasoertliche.de");
+					Debug.msg("Begin processing responce from dastelefonbuch.de");
 					//This just makes the debug output unreadable!
-					//Debug.msg("DasOertliche Webpage: " + data); //$NON-NLS-1$
+					//Debug.msg("dastelefonbuch.de Webpage: " + data); //$NON-NLS-1$
 					Pattern p = Pattern
-							.compile("<a\\s*class=\"blb\" href=\"[^\"]*\">([^<]*)</a>(?:<br>([^<]*))?</td>"); //$NON-NLS-1$
-                      
+							.compile("title=\\\"([^<]*)\\\">[^\"]*[^>]*>([^<]*)?[^\"]*.*title=\\\"([^<]*)\\\">([^-*]*)"); //$NON-NLS-1$
+
 					Matcher m = p.matcher(data);
 					// Get name and address
 					if (m.find()) {
@@ -122,10 +133,10 @@ public final class ReverseLookupGermany {
 						Debug.msg(3, "Pattern1: " + line1); //$NON-NLS-1$
 
 						String[] split = line1.split(" ", 2); //$NON-NLS-1$
-						String firstname = "", //$NON-NLS-1$ 
-								lastname = "", //$NON-NLS-1$ 
-								company = "", //$NON-NLS-1$ 
-								address = "", //$NON-NLS-1$ 
+						String firstname = "", //$NON-NLS-1$
+								lastname = "", //$NON-NLS-1$
+								company = "", //$NON-NLS-1$
+								address = "", //$NON-NLS-1$
 								zipcode = "", //$NON-NLS-1$
 								city = ""; 	  //$NON-NLS-1$
 						lastname = split[0];
@@ -148,15 +159,12 @@ public final class ReverseLookupGermany {
 						if (m.group(2) != null) { // there is an address
 							String line2 = m.group(2).trim();
 							Debug.msg(3, "Pattern2: " + line2); //$NON-NLS-1$
-							split = line2.split(", ", 2); //$NON-NLS-1$
-							String zipcity = ""; //$NON-NLS-1$
-							if (split.length > 1) {
-								address = split[0].trim();
-								zipcity = split[1].trim();
-							} else {
-								zipcity = split[0].trim();
-								address = ""; //$NON-NLS-1$
-							}
+							address = line2.trim();
+						}
+						if (m.group(3) != null) { // there is a zipcity
+							String line3 = m.group(3).trim();
+							Debug.msg(3, "Pattern3: " + line3); //$NON-NLS-1$
+							String zipcity = line3.replace("\t", ""); //$NON-NLS-1$
 							split = zipcity.split(" ", 2); //$NON-NLS-1$
 							if (split.length > 1) {
 								zipcode = split[0].trim();
@@ -165,11 +173,11 @@ public final class ReverseLookupGermany {
 								city = split[0].trim();
 							}
 						}
-						
+
 						//use the area code table if city isnt found
 						if(city.equals(""))
 							city = getCity(number);
-						
+
 						Debug.msg("Firstname: " + firstname); //$NON-NLS-1$
 						Debug.msg("Lastname: " + lastname); //$NON-NLS-1$
 						Debug.msg("Company: " + company); //$NON-NLS-1$
@@ -193,21 +201,21 @@ public final class ReverseLookupGermany {
 		} catch (MalformedURLException e) {
 			Debug.err("URL invalid: " + urlstr); //$NON-NLS-1$
 		}
-		
+
 		//try to lookup the city in the area code table
 		String city = getCity(number);
 		newPerson = new Person("", "", "", "", "", city, "");
-		
+
 		newPerson.addNumber(number, "home"); //$NON-NLS-1$
 		return newPerson;
 	}
-	
+
 	/**
 	 * This function attemps to fill the hashmap numberMap up with the data found
 	 * in number/Vorwahlen.csv
 	 * The funtion uses the area codes listed in the file as keys and the cities as values
-	 * 
-	 * 
+	 *
+	 *
 	 * @author Brian Jensen
 	 *
 	 */
@@ -234,13 +242,13 @@ public final class ReverseLookupGermany {
 					if(entries.length == 2)
 						//number is the key, city is the value
 						numberMap.put(entries[0], entries[1]);
-					
+
 				}
 			}
-			
+
 			Debug.msg(lines + " Lines read from areacodes_germany.csv");
 			Debug.msg("numberMap size: "+numberMap.size());
-			
+
 		}catch(Exception e){
 			Debug.msg(e.toString());
 		}finally{
@@ -254,20 +262,20 @@ public final class ReverseLookupGermany {
 			}
 		}
 
-		
+
 	}
-	
+
 	/**
 	 * This function determines the city to a particular number
 	 * The hashmap does not have to initialised in order to call this function
-	 * 
-	 * 
+	 *
+	 *
 	 * @param number in area format e.g. starting with "0"
 	 * @return the city found or "" if nothing was found
 	 */
-	
+
 	public static String getCity(String number){
-		
+
 		Debug.msg("Looking up city in numberMap: "+number);
 		String city = "";
 		if(number.startsWith("0") && numberMap != null){
@@ -278,7 +286,7 @@ public final class ReverseLookupGermany {
 			else if(numberMap.containsKey(number.substring(0,5)))
 				city = (String) numberMap.get(number.substring(0,5));
 		}
-		
+
 		return city;
 	}
 }
