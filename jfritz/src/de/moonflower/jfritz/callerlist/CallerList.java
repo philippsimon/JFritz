@@ -1722,18 +1722,6 @@ public class CallerList extends AbstractTableModel {
 
 	}
 
-	public DateFilter getDateFilter() {
-		return dateFilter;
-	}
-
-	public SipFilter getSipFilter() {
-		return sipFilter;
-	}
-
-	public CallByCallFilter getCallByCallFilter() {
-		return callByCallFilter;
-	}
-
 	/**
 	 * adds a Filter to sort out some calls
 	 * 
@@ -1744,7 +1732,8 @@ public class CallerList extends AbstractTableModel {
 	 */
 	public void addFilter(CallFilter cf) {
 		filters.add(cf);
-		updateFilteredData();
+//		filteredCallerData = filterData(filteredCallerData);
+		//maybe we can save some time and not recalculate the old filters
 	}
 
 	/**
@@ -1756,7 +1745,6 @@ public class CallerList extends AbstractTableModel {
 	 */
 	public boolean removeFilter(CallFilter cf) {
 		boolean o = filters.remove(cf);
-		updateFilteredData();
 		return o;
 	}
 
@@ -1764,7 +1752,8 @@ public class CallerList extends AbstractTableModel {
 	 * Filters the unfilteredData and writes it to filtered Data all added
 	 * Filters are used
 	 */
-	public void updateFilteredData() {
+	public Vector filterData(Vector src) {
+		Vector result = new Vector();
 		try {// FIXME callerlist ->callertable
 			JFritz.getJframe().getCallerTable().getCellEditor()
 					.cancelCellEditing();
@@ -1772,9 +1761,7 @@ public class CallerList extends AbstractTableModel {
 		}
 
 		Debug.msg("updating filtered Data");
-		Vector filteredData;
-		filteredData = new Vector();
-		Enumeration en = unfilteredCallerData.elements();
+		Enumeration en = src.elements();
 		Call call;
 		CallFilter f;
 		int i;
@@ -1786,12 +1773,11 @@ public class CallerList extends AbstractTableModel {
 					break;
 			}// only add if we passed all filters
 			if (i == filters.size())
-				filteredData.add(call);
+				result.add(call);
 		}
-		filteredCallerData = filteredData;
-		sortAllFilteredRowsBy(sortColumn, sortDirection);
 		if (JFritz.getJframe() != null)
 			JFritz.getJframe().setStatus();
+		return result;
 	}
 
 	/**
@@ -1884,5 +1870,11 @@ public class CallerList extends AbstractTableModel {
 			}
 		}
 		return sipProviders;
+	}
+	
+	public void update(){
+		filteredCallerData = filterData(unfilteredCallerData);
+		sortAllFilteredRowsBy(sortColumn, sortDirection);
+		fireTableDataChanged();
 	}
 }
