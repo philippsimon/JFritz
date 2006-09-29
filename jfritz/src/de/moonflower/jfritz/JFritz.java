@@ -1430,7 +1430,7 @@ public final class JFritz {
     /**
      * @return Returns the callerlist.
      */
-    public static final CallerList getCallerlist() {
+    public static final CallerList getCallerList() {
         return callerlist;
     }
 
@@ -1772,8 +1772,8 @@ public final class JFritz {
     private static void reverseLookup() {
         Debug.msg("Doing reverse Lookup");
         int j = 0;
-        for (int i = 0; i < getCallerlist().getRowCount(); i++) {
-            Vector data = getCallerlist().getFilteredCallVector();
+        for (int i = 0; i < getCallerList().getRowCount(); i++) {
+            Vector data = getCallerList().getFilteredCallVector();
             Call call = (Call) data.get(i);
             PhoneNumber number = call.getPhoneNumber();
             if (number != null && (call.getPerson() == null)) {
@@ -1786,7 +1786,7 @@ public final class JFritz {
                 if (newPerson != null) {
                     getPhonebook().addEntry(newPerson);
                     getPhonebook().fireTableDataChanged();
-                    getCallerlist().fireTableDataChanged();
+                    getCallerList().fireTableDataChanged();
                 }
 
             }

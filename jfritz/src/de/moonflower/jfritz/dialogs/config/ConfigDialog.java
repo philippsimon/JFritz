@@ -400,7 +400,7 @@ public class ConfigDialog extends JDialog {
 		Debug.msg("Saved config"); //$NON-NLS-1$
 		JFritz.getSIPProviderTableModel()
 				.saveToXMLFile(JFritz.SAVE_DIR + JFritz.SIPPROVIDER_FILE);
-		JFritz.getCallerlist().saveToXMLFile(JFritz.SAVE_DIR+JFritz.CALLS_FILE, true);
+		JFritz.getCallerList().saveToXMLFile(JFritz.SAVE_DIR+JFritz.CALLS_FILE, true);
 		JFritz.getPhonebook().saveToXMLFile(JFritz.SAVE_DIR+JFritz.PHONEBOOK_FILE);
 	}
 
@@ -1109,7 +1109,7 @@ public class ConfigDialog extends JDialog {
 								data);
 						JFritz.getSIPProviderTableModel()
 								.fireTableDataChanged();
-						JFritz.getCallerlist().fireTableDataChanged();
+						JFritz.getCallerList().fireTableDataChanged();
 
 					} catch (WrongPasswordException e1) {
 						JFritz.errorMsg(JFritz.getMessage("wrong_password")); //$NON-NLS-1$

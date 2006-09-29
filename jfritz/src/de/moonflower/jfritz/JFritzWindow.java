@@ -195,7 +195,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
         setLocation(x, y);
         setSize(w, h);
         setExtendedState(windowState);
-        callerListPanel = new CallerListPanel();
+        callerListPanel = new CallerListPanel(JFritz.getCallerList());
         phoneBookPanel = new PhoneBookPanel();
         quickDialPanel = new QuickDialPanel();
 
@@ -225,8 +225,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
         getContentPane().add(tabber, BorderLayout.CENTER);
         getContentPane().add(createStatusBar(), BorderLayout.SOUTH);
 
-        JFritz.getCallerlist().fireTableDataChanged();
-        JFritz.getCallerlist().fireTableStructureChanged();
+        JFritz.getCallerList().fireTableDataChanged();
+        JFritz.getCallerList().fireTableStructureChanged();
         String ask = JFritz.getProperty("jfritz.password", Encryption //$NON-NLS-1$
                 .encrypt(JFritz.PROGRAM_SECRET + "")); //$NON-NLS-1$
         String pass = JFritz.getFritzBox().getPassword();
@@ -593,7 +593,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
                         try {
                             setBusy(true);
                             setStatus(JFritz.getMessage("fetchdata")); //$NON-NLS-1$
-                            JFritz.getCallerlist().getNewCalls(
+                            JFritz.getCallerList().getNewCalls(
                                     deleteFritzBoxCallerList);
                             isdone = true;
                         } catch (WrongPasswordException e) {
@@ -636,7 +636,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
                 public void finished() {
                     setBusy(false);
                     setStatus();
-                    JFritz.getCallerlist().fireTableStructureChanged();
+                    JFritz.getCallerList().fireTableStructureChanged();
                     isretrieving = false;
                     if (JFritz.getProperty("option.lookupAfterFetch", "false") //$NON-NLS-1$,  //$NON-NLS-2$
                             .equals("true")) { //$NON-NLS-1$
@@ -662,9 +662,9 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
                     while (!isdone) {
                         setBusy(true);
                         setStatus(JFritz.getMessage("reverse_lookup")); //$NON-NLS-1$
-                        for (int i = 0; i < JFritz.getCallerlist()
+                        for (int i = 0; i < JFritz.getCallerList()
                                 .getRowCount(); i++) {
-                            Vector data = JFritz.getCallerlist()
+                            Vector data = JFritz.getCallerList()
                                     .getFilteredCallVector();
                             Call call = (Call) data.get(i);
                             PhoneNumber number = call.getPhoneNumber();
@@ -681,7 +681,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
                                     JFritz.getPhonebook().addEntry(newPerson);
                                     JFritz.getPhonebook()
                                             .fireTableDataChanged();
-                                    JFritz.getCallerlist()
+                                    JFritz.getCallerList()
                                             .fireTableDataChanged();
                                 }
 
@@ -737,7 +737,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
                     JFritz.getSIPProviderTableModel().fireTableDataChanged();
                     JFritz.getSIPProviderTableModel().saveToXMLFile(
                             JFritz.SAVE_DIR + JFritz.SIPPROVIDER_FILE);
-                    JFritz.getCallerlist().fireTableDataChanged();
+                    JFritz.getCallerList().fireTableDataChanged();
                 } catch (WrongPasswordException e1) {
                     JFritz.errorMsg(JFritz.getMessage("wrong_password")); //$NON-NLS-1$
                     Debug.errDlg(JFritz.getMessage("wrong_password")); //$NON-NLS-1$
@@ -938,11 +938,11 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
      * 
      */
     public void setStatus() {
-        int duration = JFritz.getCallerlist().getTotalDuration();
+        int duration = JFritz.getCallerList().getTotalDuration();
         int hours = duration / 3600;
         int mins = duration % 3600 / 60;
         String status = JFritz
-                .getMessage("telephone_entries").replaceAll("%N", Integer.toString(JFritz.getCallerlist().getRowCount())) + ", " //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
+                .getMessage("telephone_entries").replaceAll("%N", Integer.toString(JFritz.getCallerList().getRowCount())) + ", " //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
                 + JFritz.getMessage("total_duration") + ": " + hours + "h " //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
                 + mins + " min " + " (" + duration / 60 + " min)"; //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
         ;
@@ -1087,11 +1087,11 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
                         "overwrite_file").replaceAll("%F", file.getName()), //$NON-NLS-1$, //$NON-NLS-2$ 
                         JFritz.getMessage("dialog_title_overwrite_file"), //$NON-NLS-1$
                         JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
-                    JFritz.getCallerlist().saveToCSVFile(
+                    JFritz.getCallerList().saveToCSVFile(
                             file.getAbsolutePath(), false);
                 }
             } else {
-                JFritz.getCallerlist().saveToCSVFile(file.getAbsolutePath(),
+                JFritz.getCallerList().saveToCSVFile(file.getAbsolutePath(),
                         false);
             }
         }
@@ -1128,11 +1128,11 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
                         "overwrite_file").replaceAll("%F", file.getName()), //$NON-NLS-1$, //$NON-NLS-2$ 
                         JFritz.getMessage("dialog_title_overwrite_file"), //$NON-NLS-1$
                         JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
-                    JFritz.getCallerlist().saveToXMLFile(
+                    JFritz.getCallerList().saveToXMLFile(
                             file.getAbsolutePath(), false);
                 }
             } else {
-                JFritz.getCallerlist().saveToXMLFile(file.getAbsolutePath(),
+                JFritz.getCallerList().saveToXMLFile(file.getAbsolutePath(),
                         false);
             }
         }
@@ -1467,7 +1467,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
                 try {
                     FileReader fr = new FileReader(file.getAbsolutePath());
                     BufferedReader br = new BufferedReader(fr);
-                    JFritz.getCallerlist().importFromCSVFile(br);
+                    JFritz.getCallerList().importFromCSVFile(br);
 
                     br.close();
 

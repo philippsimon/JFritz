@@ -48,7 +48,7 @@ public class CallerTable extends JTable {
 	 * 
 	 */
 	public CallerTable() {
-		super(JFritz.getCallerlist());
+		super(JFritz.getCallerList());
 		setTableProperties();
 		createColumns();
 	}
