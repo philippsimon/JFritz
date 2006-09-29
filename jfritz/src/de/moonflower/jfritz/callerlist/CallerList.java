@@ -1869,9 +1869,11 @@ public class CallerList extends AbstractTableModel {
 				if (route.equals("")) { //$NON-NLS-1$
 					route = "FIXEDLINE"; //$NON-NLS-1$
 				}
-				// Debug.msg("route:"+route);
-				// Debug.msg("callrouteType:"+call.getRouteType());
-				if (call.getRouteType() == Call.ROUTE_SIP) {
+//				 Debug.msg("route:"+route);
+//				 Debug.msg("callrouteType:"+call.getRouteType());
+//				if (call.getRouteType() == Call.ROUTE_SIP) {
+				if (route.contains("@")) {
+					
 					// TODO check this after Robert fixed the getRouteType
 					// method
 					if (!sipProviders.contains(route)) {
