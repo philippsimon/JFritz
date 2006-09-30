@@ -157,6 +157,7 @@
  * - Neu: Unterstützung für neue englische Firmware xx.04.20
  * - INTERN: Buildfile überarbeitet. TODO: release und junit anpassen
  * - Neu: Rückwärtssuche nicht mehr über DasOertliche.de sondern über dastelefonbuch.de
+ * - Bugifx: Französische Rückwärtssuche funktioniert wieder
  * 
  * JFritz 0.6.1
  * - Neue Strings: 
