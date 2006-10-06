@@ -16,6 +16,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import de.moonflower.jfritz.JFritz;
+import de.moonflower.jfritz.Main;
 import de.moonflower.jfritz.dialogs.phonebook.PhoneBookTable;
 import de.moonflower.jfritz.struct.Call;
 import de.moonflower.jfritz.struct.Person;
@@ -85,9 +86,9 @@ public class SelectionListener implements ListSelectionListener {
 				JFritz.getJframe().setStatus();
 			} else if (rows.length > 0) {
 				// Setze Statusbar mit Infos über selektierte Anrufe
-				JFritz.getJframe().setStatus(JFritz.getMessage("entries").replaceAll( //$NON-NLS-1$
+				JFritz.getJframe().setStatus(Main.getMessage("entries").replaceAll( //$NON-NLS-1$
 						"%N", Integer.toString(selectedCalls)) + ", "  //$NON-NLS-1$,  //$NON-NLS-2$
-                        + JFritz.getMessage("total_duration") + ": " + (selectedCallsTotalMinutes / 60) + " min"); //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
+                        + Main.getMessage("total_duration") + ": " + (selectedCallsTotalMinutes / 60) + " min"); //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
 				if (rows.length == table.getRowCount())
 					JFritz.getJframe().getCallerListPanel()
 							.setDeleteListButton();

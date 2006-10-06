@@ -32,7 +32,11 @@ public class CLIOptions {
 		CLIOptions.add(new CLIOption(shortOption, longOption, parameter,
 				description));
 	}
-
+	
+	public void addOption(CLIOption opt) {
+		CLIOptions.add(opt);
+	}
+	
 	public boolean hasParameter(String optstr) {
 		Enumeration en = CLIOptions.elements();
 		while (en.hasMoreElements()) {
