@@ -128,7 +128,7 @@ public class CallerList extends AbstractTableModel {
 	 * 
 	 * @author Brian Jensen
 	 * 
-	 */
+	 */ 
 	public CallerList() {
 		// Powers of 2 always have better performance
 		unfilteredCallerData = new Vector(256);
