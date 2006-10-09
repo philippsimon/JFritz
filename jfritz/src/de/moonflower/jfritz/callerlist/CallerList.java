@@ -42,10 +42,7 @@ import org.xml.sax.XMLReader;
 
 import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.Main;
-import de.moonflower.jfritz.callerlist.filter.CallByCallFilter;
 import de.moonflower.jfritz.callerlist.filter.CallFilter;
-import de.moonflower.jfritz.callerlist.filter.DateFilter;
-import de.moonflower.jfritz.callerlist.filter.SipFilter;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
 import de.moonflower.jfritz.struct.Call;
 import de.moonflower.jfritz.struct.CallType;
@@ -733,7 +730,7 @@ public class CallerList extends AbstractTableModel {
 		// Resort filtered data
 		Collections.sort(filteredCallerData, new ColumnSorter(sortColumn,
 				sortDirection));
-		updateFilter();
+//		updateFilter(); //TODO überlegen ob man das noch braucht
 		fireTableStructureChanged();
 	}
 
@@ -862,6 +859,7 @@ public class CallerList extends AbstractTableModel {
     /**
      * Updates the call filter.
      */
+	/*
     public void updateFilter() {
         Debug.msg("updating the filter");
 
@@ -973,7 +971,7 @@ public class CallerList extends AbstractTableModel {
         if (JFritz.getJframe() != null)
             JFritz.getJframe().setStatus();
     }
-
+*/
 	/**
 	 * @return Total duration of all (filtered) calls
 	 */
@@ -1048,7 +1046,8 @@ public class CallerList extends AbstractTableModel {
 					unfilteredCallerData.remove(en.nextElement());
 				}
 				saveToXMLFile(Main.SAVE_DIR + JFritz.CALLS_FILE, true);
-				updateFilter();
+				//updateFilter();
+				update();
 				fireTableDataChanged();
 			}
 		}
@@ -1730,13 +1729,21 @@ public class CallerList extends AbstractTableModel {
 	 * 
 	 * @param name
 	 *            the name of the Filter
-	 * @return the Filter
+	 * @return true if the filter was removed
 	 */
 	public boolean removeFilter(CallFilter cf) {
 		boolean o = filters.remove(cf);
 		return o;
 	}
 
+	/**
+	 * removes a Filter
+	 * 
+	 */
+	public void removeAllFilter() {
+		filters.removeAllElements();
+	}
+	
 	/**
 	 * Filters the unfilteredData and writes it to filtered Data all added
 	 * Filters are used

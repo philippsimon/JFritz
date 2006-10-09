@@ -27,6 +27,7 @@ import de.moonflower.jfritz.struct.Person;
  * @author Arno Willig
  *  
  */
+//FIXME den listener da implementieren, wo man ihn braucht
 public class SelectionListener implements ListSelectionListener {
 
 	private CallerTable table;
@@ -83,7 +84,6 @@ public class SelectionListener implements ListSelectionListener {
 				}
 				JFritz.getJframe().getCallerListPanel()
 						.setDeleteEntryButton();
-				JFritz.getJframe().setStatus();
 			} else if (rows.length > 0) {
 				// Setze Statusbar mit Infos über selektierte Anrufe
 				JFritz.getJframe().setStatus(Main.getMessage("entries").replaceAll( //$NON-NLS-1$
@@ -99,6 +99,7 @@ public class SelectionListener implements ListSelectionListener {
 				JFritz.getJframe().getCallerListPanel()
 						.disableDeleteEntriesButton();
 			}
+			JFritz.getJframe().setStatus();
 		}
 	}
 }
