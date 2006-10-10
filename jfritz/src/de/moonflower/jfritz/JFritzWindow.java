@@ -52,6 +52,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.TableColumnModel;
 
+import de.moonflower.jfritz.autoupdate.VersionCheckThread;
 import de.moonflower.jfritz.callerlist.CallerListPanel;
 import de.moonflower.jfritz.callerlist.CallerTable;
 import de.moonflower.jfritz.callmonitor.CallmessageCallMonitor;
@@ -83,7 +84,6 @@ import de.moonflower.jfritz.utils.JFritzUtils;
 import de.moonflower.jfritz.utils.PrintCallerList;
 import de.moonflower.jfritz.utils.reverselookup.ReverseLookup;
 import de.moonflower.jfritz.utils.SwingWorker;
-import de.moonflower.jfritz.utils.network.VersionCheckThread;
 
 /**
  * This is main window class of JFritz, which creates the GUI.

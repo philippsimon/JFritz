@@ -867,7 +867,7 @@ public class PhoneBook extends AbstractTableModel {
 	    
 	    //Work number
 	    if(!field[6].equals("")) //$NON-NLS-1$
-	    	person.addNumber(field[6], "business"); //$NON-NLS-1$
+	    	person.addNumber(field[6], "business"); //$NON-NLS-1$	    	
 	 
 	    //home number
 	    if(!field[7].equals("")) //$NON-NLS-1$
