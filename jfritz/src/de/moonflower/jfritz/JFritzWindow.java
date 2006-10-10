@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.io.BufferedReader;
@@ -173,7 +174,17 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 
     private void createGUI() throws WrongPasswordException {
         setTitle(Main.PROGRAM_NAME);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       ///////////////////////////////  test code
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        WindowAdapter wl = new WindowAdapter() {
+			public void windowClosing(WindowEvent evt) {
+				Debug.msg("adsasdfasdfsadffasdfasdf");
+			}
+		};
+       addWindowListener(wl);
+       ////////////////////////////////////////////
         setDefaultLookAndFeel();
         ShutdownThread shutdownThread = new ShutdownThread();
         Runtime.getRuntime().addShutdownHook(shutdownThread);
@@ -199,7 +210,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
         setLocation(x, y);
         setSize(w, h);
         setExtendedState(windowState);
-        callerListPanel = new CallerListPanel(JFritz.getCallerList());
+        callerListPanel = new CallerListPanel(JFritz.getCallerList(), this);
         phoneBookPanel = new PhoneBookPanel();
         quickDialPanel = new QuickDialPanel();
         //New code here, remove if problematic
