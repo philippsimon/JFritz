@@ -15,7 +15,7 @@ import de.moonflower.jfritz.Main;
  * 
  * @author Arno Willig
  */
-public class CallType {
+public class CallType { 
 	public static final byte CALLIN = 1;
 	public static final byte CALLIN_FAILED = 2;
 	public static final byte CALLOUT = 3;
@@ -39,6 +39,10 @@ public class CallType {
 	}
 
 	public int toInt() {
+		return calltype;
+	}
+
+	public int getCallType(){
 		return calltype;
 	}
 
