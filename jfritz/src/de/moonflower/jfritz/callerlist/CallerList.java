@@ -63,22 +63,22 @@ public class CallerList extends AbstractTableModel {
 	private static final String CALLS_DTD_URI = "http://jfritz.moonflower.de/dtd/calls.dtd"; //$NON-NLS-1$
 
 	private static final String CALLS_DTD = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" //$NON-NLS-1$
-			+ "<!-- DTD for JFritz calls -->" //$NON-NLS-1$
-			+ "<!ELEMENT calls (comment?,entry*)>" //$NON-NLS-1$
-			+ "<!ELEMENT comment (#PCDATA)>" //$NON-NLS-1$
-			+ "<!ELEMENT date (#PCDATA)>" //$NON-NLS-1$
-			+ "<!ELEMENT caller (#PCDATA)>" //$NON-NLS-1$
-			+ "<!ELEMENT port (#PCDATA)>" //$NON-NLS-1$
-			+ "<!ELEMENT route (#PCDATA)>" //$NON-NLS-1$
-			+ "<!ELEMENT duration (#PCDATA)>" //$NON-NLS-1$
-			+ "<!ELEMENT comment (#PCDATA)>" //$NON-NLS-1$
-			+ "<!ELEMENT entry (date,caller?,port?,route?,duration?,comment?)>" //$NON-NLS-1$
-			+ "<!ATTLIST entry calltype (call_in|call_in_failed|call_out) #REQUIRED>"; //$NON-NLS-1$
+		+ "<!-- DTD for JFritz calls -->" //$NON-NLS-1$
+		+ "<!ELEMENT calls (comment?,entry*)>" //$NON-NLS-1$
+		+ "<!ELEMENT comment (#PCDATA)>" //$NON-NLS-1$
+		+ "<!ELEMENT date (#PCDATA)>" //$NON-NLS-1$
+		+ "<!ELEMENT caller (#PCDATA)>" //$NON-NLS-1$
+		+ "<!ELEMENT port (#PCDATA)>" //$NON-NLS-1$
+		+ "<!ELEMENT route (#PCDATA)>" //$NON-NLS-1$
+		+ "<!ELEMENT duration (#PCDATA)>" //$NON-NLS-1$
+		+ "<!ELEMENT comment (#PCDATA)>" //$NON-NLS-1$
+		+ "<!ELEMENT entry (date,caller?,port?,route?,duration?,comment?)>" //$NON-NLS-1$
+		+ "<!ATTLIST entry calltype (call_in|call_in_failed|call_out) #REQUIRED>"; //$NON-NLS-1$
 
 	private final static String PATTERN_CSV = "(\\||;)"; //$NON-NLS-1$
 
 	private final static String EXPORT_CSV_FORMAT_JFRITZ = "\"CallType\";\"Date\";\"Time\";\"Number\";\"Route\";\"" + //$NON-NLS-1$
-			"Port\";\"Duration\";\"Name\";\"Address\";\"City\";\"CallByCall\";\"Comment\""; //$NON-NLS-1$
+	"Port\";\"Duration\";\"Name\";\"Address\";\"City\";\"CallByCall\";\"Comment\""; //$NON-NLS-1$
 
 	private final static String EXPORT_CSV_FORMAT_FRITZBOX = "Typ;Datum;Rufnummer;Nebenstelle;Eigene Rufnummer;Dauer"; //$NON-NLS-1$
 
@@ -125,7 +125,7 @@ public class CallerList extends AbstractTableModel {
 	 * 
 	 * @author Brian Jensen
 	 * 
-	 */ 
+	 */
 	public CallerList() {
 		// Powers of 2 always have better performance
 		unfilteredCallerData = new Vector(256);
@@ -215,7 +215,7 @@ public class CallerList extends AbstractTableModel {
 			if (!wholeCallerList && rows != null && rows.length > 0) {
 				for (int i = 0; i < rows.length; i++) {
 					Call currentCall = (Call) filteredCallerData
-							.elementAt(rows[i]);
+					.elementAt(rows[i]);
 					pw.write(currentCall.toXML());
 					pw.newLine();
 				}
@@ -261,7 +261,7 @@ public class CallerList extends AbstractTableModel {
 			fos = new FileOutputStream(filename);
 			PrintWriter pw = new PrintWriter(fos);
 			pw
-					.println("\"CallType\";\"Date\";\"Time\";\"Number\";\"Route\";\"Port\";\"Duration\";\"Name\";\"Address\";\"City\";\"CallByCall\";\"Comment\""); //$NON-NLS-1$
+			.println("\"CallType\";\"Date\";\"Time\";\"Number\";\"Route\";\"Port\";\"Duration\";\"Name\";\"Address\";\"City\";\"CallByCall\";\"Comment\""); //$NON-NLS-1$
 			int rows[] = null;
 			if (JFritz.getJframe() != null) {
 				rows = JFritz.getJframe().getCallerTable().getSelectedRows();
@@ -269,7 +269,7 @@ public class CallerList extends AbstractTableModel {
 			if (!wholeCallerList && rows != null && rows.length > 0) {
 				for (int i = 0; i < rows.length; i++) {
 					Call currentCall = (Call) filteredCallerData
-							.elementAt(rows[i]);
+					.elementAt(rows[i]);
 					pw.println(currentCall.toCSV());
 				}
 			} else if (wholeCallerList) { // Export ALL UNFILTERED Calls
@@ -353,12 +353,12 @@ public class CallerList extends AbstractTableModel {
 			Debug.err("Error on parsing " + filename + "!"); //$NON-NLS-1$,  //$NON-NLS-2$
 			if (e.getLocalizedMessage().startsWith("Relative URI") //$NON-NLS-1$
 					|| e.getLocalizedMessage().startsWith(
-							"Invalid system identifier")) { //$NON-NLS-1$
+					"Invalid system identifier")) { //$NON-NLS-1$
 				Debug.err(e.getLocalizedMessage());
 				Debug
-						.errDlg("STRUKTURÄNDERUNG!\n\nBitte in der Datei jfritz.calls.xml\n " //$NON-NLS-1$
-								+ "die Zeichenkette \"calls.dtd\" durch\n \"" //$NON-NLS-1$
-								+ CALLS_DTD_URI + "\"\n ersetzen!"); //$NON-NLS-1$
+				.errDlg("STRUKTURÄNDERUNG!\n\nBitte in der Datei jfritz.calls.xml\n " //$NON-NLS-1$
+						+ "die Zeichenkette \"calls.dtd\" durch\n \"" //$NON-NLS-1$
+						+ CALLS_DTD_URI + "\"\n ersetzen!"); //$NON-NLS-1$
 				// System.exit(0);
 			}
 		} catch (IOException e) {
@@ -471,7 +471,7 @@ public class CallerList extends AbstractTableModel {
 							// make sure we stay in the array bounds
 							if (tmpMiddle > 0)
 								c = (Call) unfilteredCallerData
-										.elementAt(--tmpMiddle);
+								.elementAt(--tmpMiddle);
 							else
 								break;
 						}
@@ -491,7 +491,7 @@ public class CallerList extends AbstractTableModel {
 							// make sure to stay in the array bounds
 							if (tmpMiddle < (unfilteredCallerData.size() - 1))
 								c = (Call) unfilteredCallerData
-										.elementAt(++tmpMiddle);
+								.elementAt(++tmpMiddle);
 							else
 								break;
 						}
@@ -554,7 +554,7 @@ public class CallerList extends AbstractTableModel {
 	 * @throws IOException
 	 */
 	public void getNewCalls(boolean deleteFritzBoxCallerList)
-			throws WrongPasswordException, IOException {
+	throws WrongPasswordException, IOException {
 
 		if (JFritz.getFritzBox().checkValidFirmware()) {
 
@@ -576,8 +576,8 @@ public class CallerList extends AbstractTableModel {
 			}
 
 			if ((newEntries && Main.getProperty("option.deleteAfterFetch",
-					"false").equals("true"))
-					|| deleteFritzBoxCallerList) {
+			"false").equals("true"))
+			|| deleteFritzBoxCallerList) {
 				JFritz.getFritzBox().clearListOnFritzBox();
 			}
 
@@ -676,7 +676,7 @@ public class CallerList extends AbstractTableModel {
 		if (call.getPhoneNumber() != null) { // no empty numbers
 			if (person == null) {
 				Debug
-						.err("Callerlist.setPerson():  IMPLEMENT ME (remove person)"); //$NON-NLS-1$
+				.err("Callerlist.setPerson():  IMPLEMENT ME (remove person)"); //$NON-NLS-1$
 			} else {
 				if (call.getPerson() == null) {
 					if (!person.isEmpty())
@@ -730,7 +730,7 @@ public class CallerList extends AbstractTableModel {
 		// Resort filtered data
 		Collections.sort(filteredCallerData, new ColumnSorter(sortColumn,
 				sortDirection));
-//		updateFilter(); //TODO überlegen ob man das noch braucht
+		//		updateFilter(); //TODO überlegen ob man das noch braucht
 		fireTableStructureChanged();
 	}
 
@@ -856,122 +856,122 @@ public class CallerList extends AbstractTableModel {
 	}
 
 	// ************************************************************************************************************
-    /**
-     * Updates the call filter.
-     */
+	/**
+	 * Updates the call filter.
+	 */
 	/*
-    public void updateFilter() {
-        Debug.msg("updating the filter");
+	 public void updateFilter() {
+	 Debug.msg("updating the filter");
 
-        boolean filterCallIn = JFritzUtils.parseBoolean(Main.getProperty("filter.callin")); //$NON-NLS-1$
-        boolean filterCallInFailed = JFritzUtils.parseBoolean(Main.getProperty("filter.callinfailed")); //$NON-NLS-1$
-        boolean filterCallOut = JFritzUtils.parseBoolean(Main.getProperty("filter.callout")); //$NON-NLS-1$
-        boolean filterNumber = JFritzUtils.parseBoolean(Main.getProperty("filter.number")); //$NON-NLS-1$
-        boolean filterFixed = JFritzUtils.parseBoolean(Main.getProperty("filter.fixed")); //$NON-NLS-1$
-        boolean filterHandy = JFritzUtils.parseBoolean(Main.getProperty("filter.handy")); //$NON-NLS-1$
-        boolean filterDate = JFritzUtils.parseBoolean(Main.getProperty("filter.date")); //$NON-NLS-1$
-        boolean filterSip = JFritzUtils.parseBoolean(Main.getProperty("filter.sip")); //$NON-NLS-1$
-        boolean filterCallByCall = JFritzUtils.parseBoolean(Main.getProperty("filter.callbycall")); //$NON-NLS-1$
-        boolean filterComment = JFritzUtils.parseBoolean(Main.getProperty("filter.comment")); // fireTableDataChanged();$NON-NLS-1$
-        String filterSearch = Main.getProperty("filter.search", ""); //$NON-NLS-1$,  //$NON-NLS-2$
+	 boolean filterCallIn = JFritzUtils.parseBoolean(Main.getProperty("filter.callin")); //$NON-NLS-1$
+	 boolean filterCallInFailed = JFritzUtils.parseBoolean(Main.getProperty("filter.callinfailed")); //$NON-NLS-1$
+	 boolean filterCallOut = JFritzUtils.parseBoolean(Main.getProperty("filter.callout")); //$NON-NLS-1$
+	 boolean filterNumber = JFritzUtils.parseBoolean(Main.getProperty("filter.number")); //$NON-NLS-1$
+	 boolean filterFixed = JFritzUtils.parseBoolean(Main.getProperty("filter.fixed")); //$NON-NLS-1$
+	 boolean filterHandy = JFritzUtils.parseBoolean(Main.getProperty("filter.handy")); //$NON-NLS-1$
+	 boolean filterDate = JFritzUtils.parseBoolean(Main.getProperty("filter.date")); //$NON-NLS-1$
+	 boolean filterSip = JFritzUtils.parseBoolean(Main.getProperty("filter.sip")); //$NON-NLS-1$
+	 boolean filterCallByCall = JFritzUtils.parseBoolean(Main.getProperty("filter.callbycall")); //$NON-NLS-1$
+	 boolean filterComment = JFritzUtils.parseBoolean(Main.getProperty("filter.comment")); // fireTableDataChanged();$NON-NLS-1$
+	 String filterSearch = Main.getProperty("filter.search", ""); //$NON-NLS-1$,  //$NON-NLS-2$
 
-        try {
-            JFritz.getJframe().getCallerTable().getCellEditor()
-                    .cancelCellEditing();
-        } catch (NullPointerException e) {
-        }
+	 try {
+	 JFritz.getJframe().getCallerTable().getCellEditor()
+	 .cancelCellEditing();
+	 } catch (NullPointerException e) {
+	 }
 
-        if ((!filterCallIn) && (!filterCallInFailed) && (!filterCallOut)
-                && (!filterNumber) && (!filterDate) && (!filterHandy)
-                && (!filterFixed) && (!filterSip) && (!filterCallByCall)
-                && (!filterComment) && (filterSearch.length() == 0)) {
+	 if ((!filterCallIn) && (!filterCallInFailed) && (!filterCallOut)
+	 && (!filterNumber) && (!filterDate) && (!filterHandy)
+	 && (!filterFixed) && (!filterSip) && (!filterCallByCall)
+	 && (!filterComment) && (filterSearch.length() == 0)) {
 
-            // Use unfiltered data
-            filteredCallerData = (Vector) unfilteredCallerData.clone();
-            sortAllFilteredRowsBy(sortColumn, sortDirection);
-        } else { // Data got to be filtered
+	 // Use unfiltered data
+	 filteredCallerData = (Vector) unfilteredCallerData.clone();
+	 sortAllFilteredRowsBy(sortColumn, sortDirection);
+	 } else { // Data got to be filtered
 
-            Vector filteredcallerdata;
-            filteredcallerdata = new Vector();
-            Enumeration en = unfilteredCallerData.elements();
-            while (en.hasMoreElements()) {
-                Call call = (Call) en.nextElement();
-                boolean dateFilterPassed = true;
-                boolean searchFilterPassed = true;
-                boolean handyFilterPassed = true;
-                boolean fixedFilterPassed = true;
-                boolean sipFilterPassed = true;
-                boolean commentFilterPassed = true;
-                boolean callByCallFilterPassed = true;
+	 Vector filteredcallerdata;
+	 filteredcallerdata = new Vector();
+	 Enumeration en = unfilteredCallerData.elements();
+	 while (en.hasMoreElements()) {
+	 Call call = (Call) en.nextElement();
+	 boolean dateFilterPassed = true;
+	 boolean searchFilterPassed = true;
+	 boolean handyFilterPassed = true;
+	 boolean fixedFilterPassed = true;
+	 boolean sipFilterPassed = true;
+	 boolean commentFilterPassed = true;
+	 boolean callByCallFilterPassed = true;
 
-                // SearchFilter: Number, Participant, Date
-                String parts[] = filterSearch.split(" "); //$NON-NLS-1$
-                for (int i = 0; i < parts.length; i++) {
-                    String part = parts[i];
+	 // SearchFilter: Number, Participant, Date
+	 String parts[] = filterSearch.split(" "); //$NON-NLS-1$
+	 for (int i = 0; i < parts.length; i++) {
+	 String part = parts[i];
 
-                    if (part.length() > 0
-                            && (call.getPhoneNumber() == null || call
-                                    .getPhoneNumber().getIntNumber().indexOf(
-                                            parts[i]) == -1)
-                            && (call.getPhoneNumber() == null || call
-                                    .getPhoneNumber().getCallByCall().indexOf(
-                                            parts[i]) == -1)
-                            && (call.getPerson() == null || call.getPerson()
-                                    .getFullname().toLowerCase().indexOf(
-                                            part.toLowerCase()) == -1)) {
-                        searchFilterPassed = false;
-                        break;
-                    }
-                }
+	 if (part.length() > 0
+	 && (call.getPhoneNumber() == null || call
+	 .getPhoneNumber().getIntNumber().indexOf(
+	 parts[i]) == -1)
+	 && (call.getPhoneNumber() == null || call
+	 .getPhoneNumber().getCallByCall().indexOf(
+	 parts[i]) == -1)
+	 && (call.getPerson() == null || call.getPerson()
+	 .getFullname().toLowerCase().indexOf(
+	 part.toLowerCase()) == -1)) {
+	 searchFilterPassed = false;
+	 break;
+	 }
+	 }
 
-                if (filterSip) {
-  //                  sipFilterPassed = sipFilter.passFilter(call);
-                }
+	 if (filterSip) {
+	 //                  sipFilterPassed = sipFilter.passFilter(call);
+	 }
 
-                if (filterCallByCall) {
- //                   callByCallFilterPassed = callByCallFilter.passFilter(call);
-                }
+	 if (filterCallByCall) {
+	 //                   callByCallFilterPassed = callByCallFilter.passFilter(call);
+	 }
 
-                if (filterDate) {
- //                   dateFilterPassed = dateFilter.passFilter(call);
-                }
+	 if (filterDate) {
+	 //                   dateFilterPassed = dateFilter.passFilter(call);
+	 }
 
-                if (filterFixed && call.getPhoneNumber() != null
-                        && !call.getPhoneNumber().isMobile())
-                    fixedFilterPassed = false;
+	 if (filterFixed && call.getPhoneNumber() != null
+	 && !call.getPhoneNumber().isMobile())
+	 fixedFilterPassed = false;
 
-                if (filterHandy && call.getPhoneNumber() != null
-                        && call.getPhoneNumber().isMobile())
-                    handyFilterPassed = false;
+	 if (filterHandy && call.getPhoneNumber() != null
+	 && call.getPhoneNumber().isMobile())
+	 handyFilterPassed = false;
 
-                if (filterComment
-                        && !call.getComment().equals(
-                                Main.getProperty("filter.comment.text", ""))) { //$NON-NLS-1$,  //$NON-NLS-2$
-                    commentFilterPassed = false;
-                }
+	 if (filterComment
+	 && !call.getComment().equals(
+	 Main.getProperty("filter.comment.text", ""))) { //$NON-NLS-1$,  //$NON-NLS-2$
+	 commentFilterPassed = false;
+	 }
 
-                if (searchFilterPassed && dateFilterPassed && handyFilterPassed
-                        && fixedFilterPassed && sipFilterPassed
-                        && commentFilterPassed && callByCallFilterPassed)
-                    if (!(filterNumber && call.getPhoneNumber() == null)) {
-                        if ((!filterCallIn)
-                                && (call.getCalltype().toInt() == CallType.CALLIN))
-                            filteredcallerdata.add(call);
-                        else if ((!filterCallInFailed)
-                                && (call.getCalltype().toInt() == CallType.CALLIN_FAILED))
-                            filteredcallerdata.add(call);
-                        else if ((!filterCallOut)
-                                && (call.getCalltype().toInt() == CallType.CALLOUT))
-                            filteredcallerdata.add(call);
-                    }
-            }
-            filteredCallerData = filteredcallerdata;
-            sortAllFilteredRowsBy(sortColumn, sortDirection);
-        }
-        if (JFritz.getJframe() != null)
-            JFritz.getJframe().setStatus();
-    }
-*/
+	 if (searchFilterPassed && dateFilterPassed && handyFilterPassed
+	 && fixedFilterPassed && sipFilterPassed
+	 && commentFilterPassed && callByCallFilterPassed)
+	 if (!(filterNumber && call.getPhoneNumber() == null)) {
+	 if ((!filterCallIn)
+	 && (call.getCalltype().toInt() == CallType.CALLIN))
+	 filteredcallerdata.add(call);
+	 else if ((!filterCallInFailed)
+	 && (call.getCalltype().toInt() == CallType.CALLIN_FAILED))
+	 filteredcallerdata.add(call);
+	 else if ((!filterCallOut)
+	 && (call.getCalltype().toInt() == CallType.CALLOUT))
+	 filteredcallerdata.add(call);
+	 }
+	 }
+	 filteredCallerData = filteredcallerdata;
+	 sortAllFilteredRowsBy(sortColumn, sortDirection);
+	 }
+	 if (JFritz.getJframe() != null)
+	 JFritz.getJframe().setStatus();
+	 }
+	 */
 	/**
 	 * @return Total duration of all (filtered) calls
 	 */
@@ -1032,7 +1032,8 @@ public class CallerList extends AbstractTableModel {
 	}
 
 	public void removeEntries() {
-		if (JOptionPane.showConfirmDialog(JFritz.getJframe(), Main.getMessage("really_delete_entries"), //$NON-NLS-1$
+		if (JOptionPane.showConfirmDialog(JFritz.getJframe(), Main
+				.getMessage("really_delete_entries"), //$NON-NLS-1$
 				Main.PROGRAM_NAME, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 			Debug.msg("Removing entries"); //$NON-NLS-1$
 			int row[] = JFritz.getJframe().getCallerTable().getSelectedRows();
@@ -1061,7 +1062,7 @@ public class CallerList extends AbstractTableModel {
 		String columnName = ""; //$NON-NLS-1$
 		if (JFritz.getJframe() != null) {
 			Enumeration en = JFritz.getJframe().getCallerTable()
-					.getTableHeader().getColumnModel().getColumns();
+			.getTableHeader().getColumnModel().getColumns();
 			while (en.hasMoreElements()) {
 				TableColumn col = (TableColumn) en.nextElement();
 				if (col.getModelIndex() == columnIndex)
@@ -1200,7 +1201,8 @@ public class CallerList extends AbstractTableModel {
 					if (newEntries == 1) {
 						msg = Main.getMessage("imported_call"); //$NON-NLS-1$
 					} else {
-						msg = Main.getMessage("imported_calls").replaceAll("%N", Integer.toString(newEntries)); //$NON-NLS-1$, //$NON-NLS-2$ 
+						msg = Main
+						.getMessage("imported_calls").replaceAll("%N", Integer.toString(newEntries)); //$NON-NLS-1$, //$NON-NLS-2$ 
 					}
 
 					JFritz.infoMsg(msg);
@@ -1392,9 +1394,9 @@ public class CallerList extends AbstractTableModel {
 		// Phone number
 		if (!field[2].equals(""))
 			number = new PhoneNumber(field[2], Main.getProperty(
-					"option.activateDialPrefix").toLowerCase().equals("true")
-					&& (calltype.toInt() == CallType.CALLOUT)
-					&& !field[4].startsWith("Internet"));
+			"option.activateDialPrefix").toLowerCase().equals("true")
+			&& (calltype.toInt() == CallType.CALLOUT)
+			&& !field[4].startsWith("Internet"));
 		else
 			number = null;
 
@@ -1477,9 +1479,9 @@ public class CallerList extends AbstractTableModel {
 		// Phone number
 		if (!field[3].equals(""))
 			number = new PhoneNumber(field[3], Main.getProperty(
-					"option.activateDialPrefix").toLowerCase().equals("true")
-					&& (calltype.toInt() == CallType.CALLOUT)
-					&& !field[5].startsWith("Internet"));
+			"option.activateDialPrefix").toLowerCase().equals("true")
+			&& (calltype.toInt() == CallType.CALLOUT)
+			&& !field[5].startsWith("Internet"));
 		else
 			number = null;
 
@@ -1576,9 +1578,9 @@ public class CallerList extends AbstractTableModel {
 		// Phone number
 		if (!field[2].equals(""))
 			number = new PhoneNumber(field[2], Main.getProperty(
-					"option.activateDialPrefix").toLowerCase().equals("true")
-					&& (calltype.toInt() == CallType.CALLOUT)
-					&& !field[4].startsWith("Internet"));
+			"option.activateDialPrefix").toLowerCase().equals("true")
+			&& (calltype.toInt() == CallType.CALLOUT)
+			&& !field[4].startsWith("Internet"));
 		else
 			number = null;
 
@@ -1677,9 +1679,9 @@ public class CallerList extends AbstractTableModel {
 		// Phone number
 		if (!field[3].equals(""))
 			number = new PhoneNumber(field[3], Main.getProperty(
-					"option.activateDialPrefix").toLowerCase().equals("true")
-					&& (calltype.toInt() == CallType.CALLOUT)
-					&& !field[5].startsWith("Internet"));
+			"option.activateDialPrefix").toLowerCase().equals("true")
+			&& (calltype.toInt() == CallType.CALLOUT)
+			&& !field[5].startsWith("Internet"));
 		else
 			number = null;
 
@@ -1720,7 +1722,7 @@ public class CallerList extends AbstractTableModel {
 	 */
 	public void addFilter(CallFilter cf) {
 		filters.add(cf);
-//		filteredCallerData = filterData(filteredCallerData);
+		//		filteredCallerData = filterData(filteredCallerData);
 		//maybe we can save some time and not recalculate the old filters
 	}
 
@@ -1743,7 +1745,7 @@ public class CallerList extends AbstractTableModel {
 	public void removeAllFilter() {
 		filters.removeAllElements();
 	}
-	
+
 	/**
 	 * Filters the unfilteredData and writes it to filtered Data all added
 	 * Filters are used
@@ -1752,7 +1754,7 @@ public class CallerList extends AbstractTableModel {
 		Vector result = new Vector();
 		try {// FIXME callerlist ->callertable
 			JFritz.getJframe().getCallerTable().getCellEditor()
-					.cancelCellEditing();
+			.cancelCellEditing();
 		} catch (NullPointerException e) {
 		}
 
@@ -1782,43 +1784,84 @@ public class CallerList extends AbstractTableModel {
 	 * 
 	 * @return the providers
 	 */
-	public Vector getSelectedCbCProviders() {
-		Vector filteredCallByCallProviders = new Vector();
-		int rows[] = new int[0];
-
+	public Vector getCbCProviders(int[] rows) {
+		Vector callByCallProviders = new Vector();
 		String provider = ""; //$NON-NLS-1$
-		if (JFritz.getJframe() != null)
-			rows = JFritz.getJframe().getCallerTable().getSelectedRows();
-		if (rows.length != 0) { // Filter only selected rows
-			for (int i = 0; i < rows.length; i++) {
-				Call call = (Call) getFilteredCallVector().get(rows[i]);
-				if (call.getPhoneNumber() != null) {
-					provider = call.getPhoneNumber().getCallByCall();
-					if (provider.equals("")) { //$NON-NLS-1$
-						provider = "NONE"; //$NON-NLS-1$
-					}
-				} else {
+		for (int i = 0; i < rows.length; i++) {
+			Call call = (Call) getFilteredCallVector().get(rows[i]);
+			if (call.getPhoneNumber() != null) {
+				provider = call.getPhoneNumber().getCallByCall();
+				if (provider.equals("")) { //$NON-NLS-1$
 					provider = "NONE"; //$NON-NLS-1$
 				}
-				if (!filteredCallByCallProviders.contains(provider)) {
-					filteredCallByCallProviders.add(provider);
-				}
+			} else {
+				provider = "NONE"; //$NON-NLS-1$
 			}
-		} else { // filter only calls with callbycall predial
-			for (int i = 0; i < getUnfilteredCallVector().size(); i++) {
-				Call call = (Call) getUnfilteredCallVector().get(i);
-				if (call.getPhoneNumber() != null) {
-					provider = call.getPhoneNumber().getCallByCall();
-				}
-				if (!provider.equals("")) { //$NON-NLS-1$
-					if (!filteredCallByCallProviders.contains(provider)) {
-						filteredCallByCallProviders.add(provider);
-					}
-				}
+			if (!callByCallProviders.contains(provider)) {
+				callByCallProviders.add(provider);
 			}
 		}
-		return filteredCallByCallProviders;
+		return callByCallProviders;
 	}
+
+	public Vector getCbCProviders(int length) {
+		Vector callByCallProviders = new Vector();
+		String provider = ""; //$NON-NLS-1$
+		for (int i = 0; i < length; i++) {
+			Call call = (Call) getFilteredCallVector().get(i);
+			if (call.getPhoneNumber() != null) {
+				provider = call.getPhoneNumber().getCallByCall();
+				if (provider.equals("")) { //$NON-NLS-1$
+					provider = "NONE"; //$NON-NLS-1$
+				}
+			} else {
+				provider = "NONE"; //$NON-NLS-1$
+			}
+			if (!callByCallProviders.contains(provider)) {
+				callByCallProviders.add(provider);
+			}
+		}
+		return callByCallProviders;
+	}
+
+	/*
+	 * 	public Vector getSelectedCbCProviders(int[] rows) {
+	 Vector filteredCallByCallProviders = new Vector();
+	 String provider = ""; //$NON-NLS-1$
+	 if (JFritz.getJframe() != null)
+	 rows = JFritz.getJframe().getCallerTable().getSelectedRows();
+	 if (rows.length != 0) { // Filter only selected rows
+	 for (int i = 0; i < rows.length; i++) {
+	 Call call = (Call) getFilteredCallVector().get(rows[i]);
+	 if (call.getPhoneNumber() != null) {
+	 provider = call.getPhoneNumber().getCallByCall();
+	 if (provider.equals("")) { //$NON-NLS-1$
+	 provider = "NONE"; //$NON-NLS-1$
+	 }
+	 } else {
+	 provider = "NONE"; //$NON-NLS-1$
+	 }
+	 if (!filteredCallByCallProviders.contains(provider)) {
+	 filteredCallByCallProviders.add(provider);
+	 }
+	 }
+	 } else { // filter only calls with callbycall predial
+	 for (int i = 0; i < getUnfilteredCallVector().size(); i++) {
+	 Call call = (Call) getUnfilteredCallVector().get(i);
+	 if (call.getPhoneNumber() != null) {
+	 provider = call.getPhoneNumber().getCallByCall();
+	 }
+	 if (!provider.equals("")) { //$NON-NLS-1$
+	 if (!filteredCallByCallProviders.contains(provider)) {
+	 filteredCallByCallProviders.add(provider);
+	 }
+	 }
+	 }
+	 }
+	 return filteredCallByCallProviders;
+	 }
+
+	 */
 
 	/**
 	 * returns all selected Providers if no rows are selected return all SIP
@@ -1826,49 +1869,48 @@ public class CallerList extends AbstractTableModel {
 	 * 
 	 * @return the providers
 	 */
-	public Vector getSelectedOrSipProviders() {
+	public Vector getSelectedOrSipProviders(int[] rows) {
 		Vector sipProviders = new Vector();
-		sipProviders.clear();
-		int rows[] = new int[0];
-		if (JFritz.getJframe() != null)
-			rows = JFritz.getJframe().getCallerTable().getSelectedRows();
-		if (rows.length != 0) { // Filter only selected rows
-			for (int i = 0; i < rows.length; i++) {
-				Call call = (Call) this.getFilteredCallVector().get(rows[i]);
-				String route = call.getRoute();
-				if (route.equals("")) { //$NON-NLS-1$
-					route = "FIXEDLINE"; //$NON-NLS-1$
-				}
-				if (!sipProviders.contains(route)) {
-					sipProviders.add(route);
-				}
+		for (int i = 0; i < rows.length; i++) {
+			Call call = (Call) this.getFilteredCallVector().get(rows[i]);
+			String route = call.getRoute();
+			if (route.equals("")) { //$NON-NLS-1$
+				route = "FIXEDLINE"; //$NON-NLS-1$
 			}
-		} else {
-			for (int i = 0; i < getUnfilteredCallVector().size(); i++) {
-				Call call = (Call) this.getUnfilteredCallVector().get(i);
-				String route = call.getRoute();
+			if (!sipProviders.contains(route)) {
+				sipProviders.add(route);
+			}
+		}
+		return sipProviders;
+	}
 
-				if (route.equals("")) { //$NON-NLS-1$
-					route = "FIXEDLINE"; //$NON-NLS-1$
-				}
-//				 Debug.msg("route:"+route);
-//				 Debug.msg("callrouteType:"+call.getRouteType());
-//				if (call.getRouteType() == Call.ROUTE_SIP) {
-				if (route.indexOf("@")!=-1) {
-					
-					// TODO check this after Robert fixed the getRouteType
-					// method
-					if (!sipProviders.contains(route)) {
-						// Debug.msg(route);
-						sipProviders.add(route);
-					}
+	public Vector getSelectedOrSipProviders(int length) {
+		Vector sipProviders = new Vector();
+
+		for (int i = 0; i < getUnfilteredCallVector().size(); i++) {
+			Call call = (Call) this.getUnfilteredCallVector().get(i);
+			String route = call.getRoute();
+
+			if (route.equals("")) { //$NON-NLS-1$
+				route = "FIXEDLINE"; //$NON-NLS-1$
+			}
+			//		 Debug.msg("route:"+route);
+			//		 Debug.msg("callrouteType:"+call.getRouteType());
+			//		if (call.getRouteType() == Call.ROUTE_SIP) {
+			if (route.indexOf("@") != -1) {
+
+				// TODO check this after Robert fixed the getRouteType
+				// method
+				if (!sipProviders.contains(route)) {
+					// Debug.msg(route);
+					sipProviders.add(route);
 				}
 			}
 		}
 		return sipProviders;
 	}
-	
-	public void update(){
+
+	public void update() {
 		filteredCallerData = filterData(unfilteredCallerData);
 		sortAllFilteredRowsBy(sortColumn, sortDirection);
 		fireTableDataChanged();
