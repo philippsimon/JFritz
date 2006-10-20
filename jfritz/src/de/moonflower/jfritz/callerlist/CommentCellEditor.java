@@ -26,7 +26,8 @@ public class CommentCellEditor extends AbstractCellEditor implements
 		TableCellEditor {
 	private static final long serialVersionUID = 1;
     private JTextField textField = new JTextField();
-
+    private String oldText;
+	private String newText;
 	/**
 	 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable,
 	 *      java.lang.Object, boolean, int, int)
@@ -41,6 +42,7 @@ public class CommentCellEditor extends AbstractCellEditor implements
 		String strval = ""; //$NON-NLS-1$
 		if (value != null)
 			strval = value.toString();
+		oldText = strval;
 		textField.setText(strval);
 		// Return the configured component
 		return textField;
@@ -58,6 +60,7 @@ public class CommentCellEditor extends AbstractCellEditor implements
 		if (!isValid(s)) { // Should display an error message at this point
 			return false;
 		}
+		newText = s;
 		return super.stopCellEditing();
 	}
 
@@ -77,7 +80,9 @@ public class CommentCellEditor extends AbstractCellEditor implements
 	 */
 	protected void fireEditingStopped() {
 		super.fireEditingStopped();
-        JFritz.getCallerList().saveToXMLFile(Main.SAVE_DIR + JFritz.CALLS_FILE, true);
+		if(!oldText.equals(newText)){
+			JFritz.getCallerList().saveToXMLFile(Main.SAVE_DIR + JFritz.CALLS_FILE, true);
+		}
 	}
 
 }
