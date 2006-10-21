@@ -175,8 +175,8 @@ public final class JFritz {
 		
 
 		callMonitorList = new CallMonitorList();
-		callMonitorList.addEventListener(new DisplayCallsMonitor());
-		callMonitorList.addEventListener(new DisconnectMonitor());
+		callMonitorList.addCallMonitorListener(new DisplayCallsMonitor());
+		callMonitorList.addCallMonitorListener(new DisconnectMonitor());
 
 		if (Main
 				.getProperty(

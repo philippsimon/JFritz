@@ -116,7 +116,10 @@ public class Call {
         if ((number == null) || (number.equals(new PhoneNumber("")))) //$NON-NLS-1$
             return null;
         else
-        	return JFritz.getPhonebook().findPerson(number,considerMain);
+        	if (JFritz.getPhonebook()!=null){ //FIXME das die klasse call von Jfritz.phonbook anhängt isr nicht gut
+        		return JFritz.getPhonebook().findPerson(number,considerMain);
+        	}
+        return null;
     }
 
     /**
