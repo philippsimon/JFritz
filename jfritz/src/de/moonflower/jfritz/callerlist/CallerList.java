@@ -595,6 +595,7 @@ public class CallerList extends AbstractTableModel {
 				doBackup();
 			}
 		}
+		update();
 	}
 
 	/**
