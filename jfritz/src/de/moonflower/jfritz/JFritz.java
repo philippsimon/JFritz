@@ -172,7 +172,11 @@ public final class JFritz {
 
 		phonebook = new PhoneBook();
 		phonebook.loadFromXMLFile(Main.SAVE_DIR + PHONEBOOK_FILE);
+
+		callerlist.setPhoneBook(phonebook);
+		phonebook.setCallerList(callerlist);
 		
+
 
 		callMonitorList = new CallMonitorList();
 		callMonitorList.addCallMonitorListener(new DisplayCallsMonitor());
@@ -259,14 +263,17 @@ public final class JFritz {
 						.encrypt(""))), Main.getProperty("box.port", "80")); // //$NON-NLS-1$
 		// $NON-NLS-2$
 
-		phonebook = new PhoneBook();
-		// phonebook.loadFromXMLFile(SAVE_DIR + PHONEBOOK_FILE);
-
 		sipprovider = new SipProviderTableModel();
 		// sipprovider.loadFromXMLFile(SAVE_DIR + SIPPROVIDER_FILE);
 
 		callerlist = new CallerList();
 		// callerlist.loadFromXMLFile(SAVE_DIR + CALLS_FILE);
+
+		phonebook = new PhoneBook();
+		// phonebook.loadFromXMLFile(SAVE_DIR + PHONEBOOK_FILE);
+		phonebook.setCallerList(callerlist);
+		callerlist.setPhoneBook(phonebook);
+
 	}
 
 	/**
