@@ -168,7 +168,7 @@ public final class JFritz {
 		sipprovider.loadFromXMLFile(Main.SAVE_DIR + SIPPROVIDER_FILE);
 
 		callerlist = new CallerList();
-		phonebook = new PhoneBook();
+		phonebook = new PhoneBook(PHONEBOOK_FILE);
 		callerlist.setPhoneBook(phonebook);
 		phonebook.setCallerList(callerlist);
 
@@ -269,7 +269,7 @@ public final class JFritz {
 		callerlist = new CallerList();
 		// callerlist.loadFromXMLFile(SAVE_DIR + CALLS_FILE);
 
-		phonebook = new PhoneBook();
+		phonebook = new PhoneBook(PHONEBOOK_FILE);
 		// phonebook.loadFromXMLFile(SAVE_DIR + PHONEBOOK_FILE);
 		phonebook.setCallerList(callerlist);
 		callerlist.setPhoneBook(phonebook);
