@@ -168,13 +168,12 @@ public final class JFritz {
 		sipprovider.loadFromXMLFile(Main.SAVE_DIR + SIPPROVIDER_FILE);
 
 		callerlist = new CallerList();
-		callerlist.loadFromXMLFile(Main.SAVE_DIR + CALLS_FILE);
-
 		phonebook = new PhoneBook();
-		phonebook.loadFromXMLFile(Main.SAVE_DIR + PHONEBOOK_FILE);
-
 		callerlist.setPhoneBook(phonebook);
 		phonebook.setCallerList(callerlist);
+
+		phonebook.loadFromXMLFile(Main.SAVE_DIR + PHONEBOOK_FILE);
+		callerlist.loadFromXMLFile(Main.SAVE_DIR + CALLS_FILE);
 		phonebook.findAllLastCalls();
 		callerlist.findAllPersons();
 
