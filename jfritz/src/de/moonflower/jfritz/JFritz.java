@@ -175,7 +175,8 @@ public final class JFritz {
 
 		callerlist.setPhoneBook(phonebook);
 		phonebook.setCallerList(callerlist);
-		
+		phonebook.findAllLastCalls();
+		callerlist.findAllPersons();
 
 
 		callMonitorList = new CallMonitorList();
@@ -273,7 +274,8 @@ public final class JFritz {
 		// phonebook.loadFromXMLFile(SAVE_DIR + PHONEBOOK_FILE);
 		phonebook.setCallerList(callerlist);
 		callerlist.setPhoneBook(phonebook);
-
+		phonebook.findAllLastCalls();
+		callerlist.findAllPersons();
 	}
 
 	/**
