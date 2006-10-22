@@ -4,7 +4,7 @@
  * Created on 05.05.2005
  *
  */
-package de.moonflower.jfritz.dialogs.phonebook;
+package de.moonflower.jfritz.phonebook;
 
 import java.util.Date;
 import java.util.Vector;

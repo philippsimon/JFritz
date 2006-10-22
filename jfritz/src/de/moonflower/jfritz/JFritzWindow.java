@@ -63,7 +63,6 @@ import de.moonflower.jfritz.callmonitor.SyslogCallMonitor;
 import de.moonflower.jfritz.callmonitor.TelnetCallMonitor;
 import de.moonflower.jfritz.callmonitor.YACCallMonitor;
 import de.moonflower.jfritz.dialogs.config.ConfigDialog;
-import de.moonflower.jfritz.dialogs.phonebook.PhoneBookPanel;
 import de.moonflower.jfritz.dialogs.quickdial.QuickDialPanel;
 import de.moonflower.jfritz.dialogs.simple.AddressPasswordDialog;
 import de.moonflower.jfritz.dialogs.stats.StatsDialog;
@@ -71,6 +70,7 @@ import de.moonflower.jfritz.exceptions.InvalidFirmwareException;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
 import de.moonflower.jfritz.firmware.FritzBoxFirmware;
 import de.moonflower.jfritz.monitoring.MonitoringPanel;
+import de.moonflower.jfritz.phonebook.PhoneBookPanel;
 
 import de.moonflower.jfritz.struct.Call;
 import de.moonflower.jfritz.struct.Person;
@@ -1402,7 +1402,7 @@ ItemListener {
 	/**
 	 * Removes redundant entries from the phonebook.
 	 * 
-	 * @see de.moonflower.jfritz.dialogs.phonebook.PhoneBook#deleteDuplicateEntries()
+	 * @see de.moonflower.jfritz.phonebook.PhoneBook#deleteDuplicateEntries()
 	 */
 	private void deleteDuplicatePhoneBookEntries() {
 		// TODO:Set focus to Cancel-Button

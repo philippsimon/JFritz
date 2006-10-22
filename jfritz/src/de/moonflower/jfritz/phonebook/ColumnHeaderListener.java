@@ -4,7 +4,7 @@
  * Created on 16.04.2005
  *
  */
-package de.moonflower.jfritz.dialogs.phonebook;
+package de.moonflower.jfritz.phonebook;
 
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
