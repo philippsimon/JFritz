@@ -119,7 +119,7 @@ public class PhoneBookPanel extends JPanel implements ListSelectionListener,
 		setLayout(new BorderLayout());
 
 		JPanel editPanel = createEditPanel();
-
+		
 		add(createPhoneBookToolBar(), BorderLayout.NORTH);
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		splitPane.setLeftComponent(editPanel);

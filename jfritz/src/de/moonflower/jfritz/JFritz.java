@@ -573,7 +573,7 @@ public final class JFritz {
 		}
 	}
 
-	private static void exit(int i) {
+	public static void exit(int i) {
 		// TODO maybe some cleanup is needed
 		System.exit(i);
 	}
