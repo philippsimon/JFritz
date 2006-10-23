@@ -71,15 +71,16 @@ public class CurrentCallsTable extends AbstractTableModel implements
     public void pendingCallIn(Call call){
     	Debug.msg("pendingCallIn was called");
     	//Nothing here for now
+    	currentCalls.add(call);
+    	fireTableDataChanged();
+    	
     }
     
     /**
      * Method part of the interface CallMonitorListener
      */
     public void establishedCallIn(Call call){
-    	Debug.msg("establishedCallIn was called");
-    	currentCalls.add(call);
-    	fireTableDataChanged();
+    	Debug.msg("establishedCallIn was called");	
     	
     }
     
@@ -89,6 +90,9 @@ public class CurrentCallsTable extends AbstractTableModel implements
     public void pendingCallOut(Call call){
     	Debug.msg("pendingCallOut was called");
     	//Nothing here for now
+    	currentCalls.add(call);
+    	fireTableDataChanged();
+    
     }
     
     /**
@@ -96,10 +100,9 @@ public class CurrentCallsTable extends AbstractTableModel implements
      */
     public void establishedCallOut(Call call){
     	Debug.msg("establishedCallOut was called");
-    	currentCalls.add(call);
-    	fireTableDataChanged();
+
     }
-   
+    
     /**
      * Method part of the interface CallMonitorListener
      */
@@ -108,7 +111,8 @@ public class CurrentCallsTable extends AbstractTableModel implements
     	for(int i=0; i < currentCalls.size(); i++){
     		if(((Call)currentCalls.get(i)).equals(call)){
     			currentCalls.remove(i);
-    			fireTableRowsDeleted(i,i);
+    			fireTableDataChanged();
+    			//fireTableRowsDeleted(i,i);
     			break;
     		}
     	}	
