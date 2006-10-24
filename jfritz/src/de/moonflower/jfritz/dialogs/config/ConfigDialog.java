@@ -693,10 +693,10 @@ public class ConfigDialog extends JDialog {
 		c.gridy = 2;
 		label = new JLabel(Main.getMessage("language") + ": "); //$NON-NLS-1$,  //$NON-NLS-2$
 		localePane.add(label, c);
-		
+				
 		String lang = JFritzUtils.getFullPath(langID);
 		File file = new File(lang);
-		FilenameFilter props = new StartEndFilenameFilter("jfritz","properties");//$NON-NLS-1$,  //$NON-NLS-2$
+		FilenameFilter props = new StartEndFilenameFilter("jfritz_","properties");//$NON-NLS-1$,  //$NON-NLS-2$
 		String[] list = file.list(props);
 		localeList= new String[list.length];
 		
