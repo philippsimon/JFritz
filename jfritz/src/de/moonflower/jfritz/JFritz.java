@@ -350,6 +350,7 @@ public final class JFritz {
 			MessageDlg msgDialog = new MessageDlg();
 			msgDialog.showMessage(msg, Long.parseLong(Main.getProperty(
 					"option.popupDelay", "10")) * 1000);
+			msgDialog.toFront();
 			break;
 		}
 		case 2: {
@@ -360,6 +361,7 @@ public final class JFritz {
 				MessageDlg msgDialog = new MessageDlg();
 				msgDialog.showMessage(msg, Long.parseLong(Main.getProperty(
 						"option.popupDelay", "10")) * 1000);
+				msgDialog.toFront();
 			}
 			break;
 		}
@@ -636,49 +638,7 @@ public final class JFritz {
 		wizard.showWizard();
 
 	}
-
-	/**
-	 * This function writes a file $HOME/.jfritz/jfritz.txt, which contains the
-	 * location of the folder containing jfritz's data If the dir $HOME/.jfritz
-	 * does not exist, it is created if the save location isnt a directory, then
-	 * the default save directory is used
-	 * 
-	 * @author Brian Jensen
-	 * 
-	 */
-	public static void writeSaveDir() {
-		try {
-
-			// if $HOME/.jfritz doesn't exist create it
-			File file = new File(Main.USER_DIR);
-			if (!file.isDirectory() && !file.isFile())
-				file.mkdir();
-
-			BufferedWriter bw = new BufferedWriter(new FileWriter(Main.USER_DIR
-					+ File.separator + Main.USER_JFRITZ_FILE, false));
-
-			// make sure the user didn't screw something up
-			if (!Main.SAVE_DIR.endsWith(File.separator))
-				Main.SAVE_DIR = Main.SAVE_DIR + File.separator;
-
-			file = new File(Main.SAVE_DIR);
-			if (!file.isDirectory())
-				Main.SAVE_DIR = System.getProperty("user.dir") + File.separator;
-
-			bw.write(Main.SAVE_DIR_TEXT + Main.SAVE_DIR);
-			bw.newLine();
-			bw.close();
-			Debug.msg("Successfully wrote save dir to disk");
-
-		} catch (Exception e) {
-			Debug
-					.err("Error writing save dir to disk, reverting back to default save dir");
-			Main.SAVE_DIR = System.getProperty("user.dir") + File.separator;
-			// if there was an error, bail out and revert to the default save
-			// location
-		}
-	}
-
+	
 	public static void reverseLookup() {
 		Debug.msg("Doing reverse Lookup");
 		int j = 0;
