@@ -7,6 +7,7 @@ package de.moonflower.jfritz;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -596,6 +597,7 @@ public final class JFritz {
 	 * @param i exit status.
 	 */
 	private void exit(int i) {
+		
 		// TODO maybe some more cleanup is needed
 		jframe.dispose();
 		main.exit(i);
