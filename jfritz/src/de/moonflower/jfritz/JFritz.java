@@ -599,6 +599,7 @@ public final class JFritz {
 	private void exit(int i) {
 		
 		// TODO maybe some more cleanup is needed
+		Debug.msg("disposing jframe");
 		jframe.dispose();
 		main.exit(i);
 	}

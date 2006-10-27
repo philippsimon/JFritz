@@ -844,6 +844,7 @@ public class ConfigDialog extends JDialog {
 					}
 					if (callMonitorConfigDialog != null) {
 						callMonitorConfigDialog.showConfigDialog();
+						callMonitorConfigDialog.dispose();
 					}
 
 				}

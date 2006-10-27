@@ -52,6 +52,7 @@ public class AddressPasswordDialog extends JDialog {
 	private boolean isPasswordDlg;
 
 	public AddressPasswordDialog(Frame parent, String title) {
+		super(parent, title);
 	}
 
 	public AddressPasswordDialog(Frame parent, boolean isPasswordDlg) {
