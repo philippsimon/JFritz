@@ -53,7 +53,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.TableColumnModel;
 
-import de.moonflower.jfritz.autoupdate.VersionCheckThread;
+import de.moonflower.jfritz.autoupdate.CheckVersionThread;
 import de.moonflower.jfritz.callerlist.CallerListPanel;
 import de.moonflower.jfritz.callerlist.CallerTable;
 import de.moonflower.jfritz.callmonitor.CallmessageCallMonitor;
@@ -1021,8 +1021,8 @@ ItemListener {
 		} else if (e.getActionCommand().equals("export_csv")) {
 			exportCallerListToCSV();
 		} else if (e.getActionCommand().equals("update")) { //$NON-NLS-1$
-			VersionCheckThread vct = new VersionCheckThread(true);
-			vct.run();
+//			CheckVersionThread vct = new CheckVersionThread(true, true);
+//			vct.start();
 		} else if (e.getActionCommand().equals("export_phonebook")) {
 			exportPhoneBookToCSV();
 		} else if (e.getActionCommand().equals("print_callerlist")) {
@@ -1314,6 +1314,13 @@ ItemListener {
 		Debug.msg("Starte Import von Outlook"); //$NON-NLS-1$
 		Thread thread = new Thread(new ImportOutlookContactsDialog(this));
 		thread.start();
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			// TODO: Fehlermeldung für den User
+			e.printStackTrace();
+		}
+		thread = null;
 	}
 
 	public void startChosenCallMonitor() {

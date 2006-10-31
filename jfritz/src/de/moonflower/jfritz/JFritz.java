@@ -7,10 +7,7 @@ package de.moonflower.jfritz;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -36,7 +33,6 @@ import javax.swing.table.TableColumn;
 
 import org.jdesktop.jdic.tray.SystemTray;
 import org.jdesktop.jdic.tray.TrayIcon;
-import org.jfree.report.function.ShowElementByNameFunction;
 
 import de.moonflower.jfritz.callerlist.CallerList;
 import de.moonflower.jfritz.callmonitor.CallMonitorInterface;
@@ -597,8 +593,12 @@ public final class JFritz {
 	 * @param i exit status.
 	 */
 	private void exit(int i) {
+		Debug.msg("Shut down JFritz");
 		
 		// TODO maybe some more cleanup is needed
+		if ( callMonitor != null)
+			stopCallMonitor();
+		
 		Debug.msg("disposing jframe");
 		jframe.dispose();
 		main.exit(i);
