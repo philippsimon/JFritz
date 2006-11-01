@@ -41,6 +41,22 @@ public class Update {
 	}
 
 	/**
+	 * Setzt die Programmversion
+	 * @param version
+	 */
+	public void setProgramVersion(String version) {
+		programVersion = version;
+	}
+	
+	/**
+	 * Setzt die gewünschte Sprache
+	 * @param locale
+	 */
+	public void setLocale(String locale) {
+		this.locale = new Locale(locale);
+	}
+	
+	/**
 	 * Liest den Parameter für das automatische Updaten beim Start aus
 	 * 
 	 * @return updateOnStart
@@ -124,14 +140,6 @@ public class Update {
 		System.out.println(className + "Locale: " + locale.toString());
 		System.out.println(className + "Update on start: " + updateOnStart);
 		UpdateLocale.loadMessages(locale);
-	}
-
-	/**
-	 * Liefert True zurück, wenn ein Update automatisch beim Start ausgeführt werden soll
-	 * @return Automatisches Update beim Start?
-	 */
-	public boolean doUpdateOnStart() {
-		return updateOnStart;
 	}
 	
 	/**

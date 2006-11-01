@@ -310,8 +310,6 @@ public class ConfigDialog extends JDialog {
                 "option.activateDialPrefix", Boolean.toString(activateDialPrefix.isSelected())); //$NON-NLS-1$
 		Main.setProperty(
 				"option.checkNewVersionAfterStart", Boolean.toString(checkNewVersionAfterStart.isSelected())); //$NON-NLS-1$
-        
-
 
 		// Set Popup Messages Type
 		if (popupNoButton.isSelected()) {
@@ -382,6 +380,7 @@ public class ConfigDialog extends JDialog {
 				.saveToXMLFile(Main.SAVE_DIR + JFritz.SIPPROVIDER_FILE);
 		JFritz.getCallerList().saveToXMLFile(Main.SAVE_DIR+JFritz.CALLS_FILE, true);
 		JFritz.getPhonebook().saveToXMLFile(Main.SAVE_DIR+JFritz.PHONEBOOK_FILE);
+        Main.saveUpdateProperties();
 	}
 
 	protected JPanel createBoxPane(ActionListener actionListener) {
