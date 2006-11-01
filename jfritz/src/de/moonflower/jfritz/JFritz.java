@@ -579,7 +579,7 @@ public final class JFritz {
  * shows the exit Dialog and either returns or exits
  * @param i exit status.
  */
-	public void maybeExit(int i) {
+/*	public void maybeExit(int i) {
 		if (!JFritzUtils.parseBoolean(Main.getProperty("option.confirmOnExit", //$NON-NLS-1$
 		"false"))) { //$NON-NLS-1$
 			exit(0);
@@ -588,17 +588,18 @@ public final class JFritz {
 		if(exit){exit(0);}
 		
 	}
+*/
 	/**
 	 * clean up and exit
 	 * @param i exit status.
 	 */
-	private void exit(int i) {
+	void exit(int i) {
 		Debug.msg("Shut down JFritz");
 		
 		// TODO maybe some more cleanup is needed
-		if ( callMonitor != null)
-			stopCallMonitor();
-		
+		if(callMonitor!=null){
+			callMonitor.stopCallMonitor();
+		}
 		Debug.msg("disposing jframe");
 		jframe.dispose();
 		main.exit(i);
@@ -606,7 +607,7 @@ public final class JFritz {
 	/**
 	 * Shows the exit dialog
 	 */
-	private static boolean showExitDialog() {
+	boolean showExitDialog() {
 		boolean exit = true;
 			exit = JOptionPane.showConfirmDialog(jframe, Main
 					.getMessage("really_quit"), Main.PROGRAM_NAME, //$NON-NLS-1$
