@@ -1300,8 +1300,11 @@ ItemListener {
 	 */
 
 	public void setCallMonitorButtons(int option) {
-		switch (option) {
+		Main.setProperty("option.callmonitorStarted", Integer.toString(option));
+
+/**		switch (option) {
 		case JFritz.CALLMONITOR_START: {
+			
 			if (configDialog != null) {
 				configDialog.setCallMonitorButtons(option);
 			} else {
@@ -1318,7 +1321,7 @@ ItemListener {
 			break;
 		}
 		}
-
+**/
 	}
 
 	private void importOutlook() {
