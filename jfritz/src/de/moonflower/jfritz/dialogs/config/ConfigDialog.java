@@ -71,14 +71,8 @@ public class ConfigDialog extends JDialog {
 
 	private static final long serialVersionUID = 1;
 
-	private JComboBox languageCombo;
-
 	private JTextField save_location;
-
-	private String loc; //$NON-NLS-1$
 	
-	String localeList[];
-
 	private JSlider timerSlider;
 
 	private JButton okButton, cancelButton;
@@ -92,11 +86,12 @@ public class ConfigDialog extends JDialog {
 			minimizeInsteadOfClose, createBackup, createBackupAfterFetch,
 			fetchAfterStandby, checkNewVersionAfterStart;
 
-	private PhonePanel phonePanel;
-	private FritzBoxPanel fritzBoxPanel;
-	private MessagePanel messagePanel;
-	private CallMonitorPanel callMonitorPanel;
-
+	private ConfigPanelPhone phonePanel;
+	private ConfigPanelFritzBox fritzBoxPanel;
+	private ConfigPanelMessage messagePanel;
+	private ConfigPanelCallMonitor callMonitorPanel;
+	private ConfigPanelLang languagePanel;
+	
 	private JLabel timerLabel;
 
 	private boolean pressed_OK = false;
@@ -108,10 +103,11 @@ public class ConfigDialog extends JDialog {
 		super(parent, true);
 		setTitle(Main.getMessage("config")); //$NON-NLS-1$
 		
-		phonePanel = new PhonePanel();
-		fritzBoxPanel = new FritzBoxPanel();
-		messagePanel = new MessagePanel();
-		callMonitorPanel = new CallMonitorPanel(this, true);
+		phonePanel = new ConfigPanelPhone();
+		fritzBoxPanel = new ConfigPanelFritzBox();
+		messagePanel = new ConfigPanelMessage();
+		callMonitorPanel = new ConfigPanelCallMonitor(this, true);
+		languagePanel = new ConfigPanelLang();
 		
 		drawDialog();
 		setValues();
@@ -133,6 +129,7 @@ public class ConfigDialog extends JDialog {
 		phonePanel.loadSettings();
 		messagePanel.loadSettings();
 		callMonitorPanel.loadSettings();
+		languagePanel.loadSettings();
 		
 		notifyOnCallsButton.setSelected(JFritzUtils.parseBoolean(Main.getProperty("option.notifyOnCalls"))); //$NON-NLS-1$
 		checkNewVersionAfterStart.setSelected(JFritzUtils.parseBoolean(Main.getProperty("option.checkNewVersionAfterStart" , "false")));//$NON-NLS-1$, //§NON-NLS-2$
@@ -145,13 +142,6 @@ public class ConfigDialog extends JDialog {
 		createBackup.setSelected(JFritzUtils.parseBoolean(Main.getProperty(
 				"option.createBackup", "false"))); //$NON-NLS-1$,  //$NON-NLS-2$
 		createBackupAfterFetch.setSelected(JFritzUtils.parseBoolean(Main.getProperty("option.createBackupAfterFetch", "false"))); //$NON-NLS-1$,  //$NON-NLS-2$
-
-		int index = 0;
-		String loc = Main.getProperty("locale", "de_DE");
-		for (int a = 0; a < localeList.length; a++) {
-			if (localeList[a].equals(loc)) index = a;
-		}
-		languageCombo.setSelectedIndex(index);
 
 		lookupAfterFetchButton.setSelected(JFritzUtils.parseBoolean(Main.getProperty("option.lookupAfterFetch", "false"))); //$NON-NLS-1$,  //$NON-NLS-2$
 
@@ -194,6 +184,7 @@ public class ConfigDialog extends JDialog {
 		phonePanel.saveSettings();
 		fritzBoxPanel.saveSettings();
 		messagePanel.saveSettings();
+		languagePanel.saveSettings();
 		
 		//only write the save dir to disk if the user changed something
 		if(!save_location.getText().equals(Main.SAVE_DIR)){
@@ -252,15 +243,6 @@ public class ConfigDialog extends JDialog {
 				.getValue()));
 
 		JFritz.getFritzBox().detectFirmware();
-
-		if (!Main.getProperty("locale", "de_DE").equals(localeList[languageCombo.getSelectedIndex()])) { //$NON-NLS-1$ //$NON-NLS-2$
-			Main.setProperty(
-					"locale", localeList[languageCombo.getSelectedIndex()]); //$NON-NLS-1$
-			loc = localeList[languageCombo.getSelectedIndex()];
-			JFritz.getJframe().setLanguage(	
-					new Locale(loc.substring(0, loc.indexOf("_")), loc.substring(loc.indexOf("_")+1, loc.length())));
-		}		
-
 		
 		Debug.msg("Saved config"); //$NON-NLS-1$
 		JFritz.getSIPProviderTableModel()
@@ -438,58 +420,6 @@ public class ConfigDialog extends JDialog {
 
 		return cPanel;
 	}
-
-	protected JPanel createLocalePane(ActionListener actionListener) {
-		JPanel localePane = new JPanel();
-		localePane.setLayout(new GridBagLayout());
-		localePane.setBorder(BorderFactory.createEmptyBorder(10, 20, 5, 20));
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets.top = 5;
-		c.insets.bottom = 5;
-		c.insets.left = 5;
-		c.anchor = GridBagConstraints.WEST;
-
-		JLabel label;
-		c.gridy = 2;
-		label = new JLabel(Main.getMessage("language") + ": "); //$NON-NLS-1$,  //$NON-NLS-2$
-		localePane.add(label, c);
-				
-		String lang = JFritzUtils.getFullPath(langID);
-		File file = new File(lang);
-		FilenameFilter props = new StartEndFilenameFilter("jfritz_","properties");//$NON-NLS-1$,  //$NON-NLS-2$
-		String[] list = file.list(props);
-		localeList= new String[list.length];
-		
-		ImageIcon[]  images = new ImageIcon[list.length];
-		
-		for (int i = 0; i < list.length; i++) {
-			localeList[i] = list[i].substring(list[i].indexOf("_") + 1,list[i].indexOf("."));//$NON-NLS-1$,  //$NON-NLS-2$
-			String imagePath =
-			     lang + FILESEP + "flags" + FILESEP +						//$NON-NLS-1$,  //$NON-NLS-2$
-			     localeList[i].substring(localeList[i].indexOf("_")+1,
-			         localeList[i].length()).toLowerCase() + ".gif";		//$NON-NLS-1$
-			Debug.msg("Found resources for locale '" + localeList[i] +		//$NON-NLS-1$
-			     "', loading flag image '" + imagePath + "'");				//$NON-NLS-1$,  //$NON-NLS-2$
-			images[i] = new ImageIcon(imagePath);
-			images[i].setDescription(Main.getLocaleMeaning(localeList[i]));
-		}
-		
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		
-		languageCombo = new JComboBox(images);
-		LanguageComboBoxRenderer renderer = new LanguageComboBoxRenderer();
-		renderer.setPreferredSize(new Dimension(180, 15));
-
-		languageCombo.setRenderer(renderer);
-		languageCombo.setActionCommand("languageCombo"); //$NON-NLS-1$
-		languageCombo.setMaximumRowCount(8);
-		languageCombo.addActionListener(actionListener);
-
-		localePane.add(languageCombo, c);
-
-		return localePane;
-	}
 	
 	protected void drawDialog() {
 
@@ -610,8 +540,7 @@ public class ConfigDialog extends JDialog {
 		tpane.addTab(Main.getMessage("messages"), messagePanel); //$NON-NLS-1$
 		JScrollPane otherPaneScrollable = new JScrollPane(createOtherPane()); //$NON-NLS-1$
 		tpane.addTab(Main.getMessage("other"), otherPaneScrollable); //$NON-NLS-1$
-		tpane.addTab(Main.getMessage("language"),
-				createLocalePane(actionListener));
+		tpane.addTab(Main.getMessage("language"),languagePanel);
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(tpane, BorderLayout.CENTER);
