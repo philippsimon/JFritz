@@ -51,7 +51,6 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.table.TableColumnModel;
 
 import de.moonflower.jfritz.autoupdate.JFritzUpdate;
 import de.moonflower.jfritz.autoupdate.Update;
@@ -82,6 +81,7 @@ import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.DirectoryChooser;
 import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.ImportOutlookContactsDialog;
+import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.JFritzUtils;
 import de.moonflower.jfritz.utils.PrintCallerList;
 import de.moonflower.jfritz.utils.reverselookup.ReverseLookup;
@@ -93,7 +93,7 @@ import de.moonflower.jfritz.utils.SwingWorker;
  * @author akw
  */
 public class JFritzWindow extends JFrame implements Runnable, ActionListener,
-ItemListener {
+		ItemListener {
 
 	private static final long serialVersionUID = 1;
 
@@ -127,22 +127,28 @@ ItemListener {
 
 	private JFritz jFritz;
 
+	private JFritzProperties windowProperties;
+
+	public final String WINDOW_PROPERTIES_FILE = "jfritz.window.properties.xml"; //$NON-NLS-1$
+
 	/**
 	 * Constructs JFritzWindow
 	 * 
 	 * @param jfritz
-	 * @throws WrongPasswordException 
+	 * @throws WrongPasswordException
 	 */
 	public JFritzWindow(JFritz jfritz) throws WrongPasswordException {
 		this.jFritz = jfritz;
 		Debug.msg("Create JFritz-GUI"); //$NON-NLS-1$
 		maxBounds = null;
+		windowProperties = new JFritzProperties();
+		loadProperties();
 		createGUI();
 		addWindowStateListener(new WindowStateListener() {
 
 			public void windowStateChanged(WindowEvent arg0) {
-				Main.setProperty("window.state", Integer.toString(arg0
-						.getNewState()));
+				windowProperties.setProperty("window.state", Integer
+						.toString(arg0.getNewState()));
 			}
 
 		});
@@ -171,7 +177,7 @@ ItemListener {
 			fetchButton.doClick();
 		}
 		if (Main.getProperty("option.autostartcallmonitor", "false").equals( //$NON-NLS-1$,  //$NON-NLS-2$
-		"true")) { //$NON-NLS-1$
+				"true")) { //$NON-NLS-1$
 			startChosenCallMonitor();
 		}
 		setStatus();
@@ -180,18 +186,6 @@ ItemListener {
 	private void createGUI() throws WrongPasswordException {
 		setTitle(Main.PROGRAM_NAME);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		// we want to react on closing
-		///////////////////////////////  test code
-		/*
-		 setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
-		 WindowAdapter wl = new WindowAdapter() {
-		 public void windowClosing(WindowEvent evt) {
-		 Debug.msg("adsasdfasdfsadffasdfasdf");
-		 }
-		 };
-		 addWindowListener(wl);
-		 */////////////////////////////////////////////
 		setDefaultLookAndFeel();
 		ShutdownThread shutdownThread = new ShutdownThread();
 		Runtime.getRuntime().addShutdownHook(shutdownThread);
@@ -199,28 +193,18 @@ ItemListener {
 		addKeyListener(KeyEvent.VK_F5, "F5"); //$NON-NLS-1$
 
 		this
-		.setIconImage(Toolkit
-				.getDefaultToolkit()
-				.getImage(
-						getClass()
-						.getResource(
-								"/de/moonflower/jfritz/resources/images/trayicon.png"))); //$NON-NLS-1$
-
-		// Setting size and position
-		int x = Integer.parseInt(Main.getProperty("position.left", "10")); //$NON-NLS-1$,  //$NON-NLS-2$
-		int y = Integer.parseInt(Main.getProperty("position.top", "10")); //$NON-NLS-1$,  //$NON-NLS-2$
-		int w = Integer.parseInt(Main.getProperty("position.width", "640")); //$NON-NLS-1$,  //$NON-NLS-2$
-		int h = Integer.parseInt(Main.getProperty("position.height", "400")); //$NON-NLS-1$,  //$NON-NLS-2$
-
-		int windowState = Integer.parseInt(Main.getProperty("window.state",
-				Integer.toString(Frame.NORMAL)));
-		setLocation(x, y);
-		setSize(w, h);
-		setExtendedState(windowState);
+				.setIconImage(Toolkit
+						.getDefaultToolkit()
+						.getImage(
+								getClass()
+										.getResource(
+												"/de/moonflower/jfritz/resources/images/trayicon.png"))); //$NON-NLS-1$
+		
 		callerListPanel = new CallerListPanel(JFritz.getCallerList(), this);
-		phoneBookPanel = new PhoneBookPanel(JFritz.getPhonebook(), this,Main.SAVE_DIR, new Locale(Main.getProperty("locale", "de_DE")));
+		phoneBookPanel = new PhoneBookPanel(JFritz.getPhonebook(), this,
+				Main.SAVE_DIR, new Locale(Main.getProperty("locale", "de_DE")));
 		quickDialPanel = new QuickDialPanel();
-		//New code here, remove if problematic
+		// New code here, remove if problematic
 		monitoringPanel = new MonitoringPanel();
 
 		tabber = new JTabbedPane(SwingConstants.BOTTOM);
@@ -248,12 +232,11 @@ ItemListener {
 
 		// Adding gui components
 		setJMenuBar(createMenu());
-		
+
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(createMainToolBar(), BorderLayout.NORTH);
 		getContentPane().add(tabber, BorderLayout.CENTER);
 		getContentPane().add(createStatusBar(), BorderLayout.SOUTH);
-		pack();
 		JFritz.getCallerList().fireTableDataChanged();
 		JFritz.getCallerList().fireTableStructureChanged();
 		String ask = Main.getProperty("jfritz.password", Encryption //$NON-NLS-1$
@@ -272,6 +255,22 @@ ItemListener {
 			}
 		}
 
+		// Setting size and position
+		int x = Integer.parseInt(windowProperties.getProperty(
+				"position.left", "10")); //$NON-NLS-1$,  //$NON-NLS-2$
+		int y = Integer.parseInt(windowProperties.getProperty(
+				"position.top", "10")); //$NON-NLS-1$,  //$NON-NLS-2$
+		int w = Integer.parseInt(windowProperties.getProperty(
+				"position.width", "640")); //$NON-NLS-1$,  //$NON-NLS-2$
+		int h = Integer.parseInt(windowProperties.getProperty(
+				"position.height", "400")); //$NON-NLS-1$,  //$NON-NLS-2$
+
+		int windowState = Integer.parseInt(windowProperties.getProperty(
+				"window.state", Integer.toString(Frame.NORMAL)));
+
+		setLocation(x, y);
+		setSize(w, h);
+		setExtendedState(windowState);		
 	}
 
 	/**
@@ -507,7 +506,7 @@ ItemListener {
 		ButtonGroup lnfgroup = new ButtonGroup();
 		for (int i = 0; i < lnfs.length; i++) {
 			JRadioButtonMenuItem rbmi = new JRadioButtonMenuItem(lnfs[i]
-			                                                          .getName());
+					.getName());
 			lnfMenu.add(rbmi);
 			rbmi.setSelected(UIManager.getLookAndFeel().getClass().getName()
 					.equals(lnfs[i].getClassName()));
@@ -593,7 +592,7 @@ ItemListener {
 				}
 
 			}, 5000, Integer.parseInt(Main.getProperty("fetch.timer", //$NON-NLS-1$
-			"3")) * 60000); //$NON-NLS-1$
+					"3")) * 60000); //$NON-NLS-1$
 			Debug.msg("Timer enabled"); //$NON-NLS-1$
 		} else {
 			timer.cancel();
@@ -693,9 +692,9 @@ ItemListener {
 						setBusy(true);
 						setStatus(Main.getMessage("reverse_lookup")); //$NON-NLS-1$
 						for (int i = 0; i < JFritz.getCallerList()
-						.getRowCount(); i++) {
+								.getRowCount(); i++) {
 							Vector data = JFritz.getCallerList()
-							.getFilteredCallVector();
+									.getFilteredCallVector();
 							Call call = (Call) data.get(i);
 							PhoneNumber number = call.getPhoneNumber();
 							if ((number != null) && (call.getPerson() == null)) {
@@ -707,11 +706,20 @@ ItemListener {
 
 								Person newPerson = ReverseLookup.lookup(number);
 								if (newPerson != null) {
-									JFritz.getPhonebook().addEntry(newPerson); //FIXME assure only one Thread at a time accesses the phonebook
+									JFritz.getPhonebook().addEntry(newPerson); // FIXME
+									// assure
+									// only
+									// one
+									// Thread
+									// at a
+									// time
+									// accesses
+									// the
+									// phonebook
 									JFritz.getPhonebook()
-									.fireTableDataChanged();
+											.fireTableDataChanged();
 									JFritz.getCallerList()
-									.fireTableDataChanged();
+											.fireTableDataChanged();
 								}
 
 							}
@@ -782,69 +790,7 @@ ItemListener {
 			monitorButton.setEnabled((Integer.parseInt(Main.getProperty(
 					"option.callMonitorType", "0")) > 0)); //$NON-NLS-1$,  //$NON-NLS-2$
 
-			TableColumnModel colModel = JFritz.getJframe().getCallerTable()
-			.getColumnModel();
-
-			// Show / hide CallByCall column
-			if (JFritzUtils.parseBoolean(Main.getProperty(
-					"option.showCallByCallColumn", "true"))) { //$NON-NLS-1$,  //$NON-NLS-2$
-
-				// No Call-by-call column found. Add one
-				if (getCallerTable().getColumnIndex("callbycall") == -1) { //$NON-NLS-1$
-					colModel.addColumn(JFritz.getJframe().getCallerTable()
-							.getCallByCallColumn());
-					colModel.getColumn(colModel.getColumnCount() - 1)
-					.setPreferredWidth(
-							Integer.parseInt(Main.getProperty(
-									"column.callbycall.width", "50"))); //$NON-NLS-1$, //$NON-NLS-2$
-				}
-			} else {
-				// Try to remove Call-By-Call Column
-				int columnIndex = getCallerTable().getColumnIndex("callbycall"); //$NON-NLS-1$
-				if (columnIndex != -1) {
-					colModel.removeColumn(colModel.getColumn(columnIndex));
-				}
-			}
-			// Show / hide comment column
-			if (JFritzUtils.parseBoolean(Main.getProperty(
-					"option.showCommentColumn", "true"))) { //$NON-NLS-1$, //$NON-NLS-2$
-
-				// No comment column found. Add one
-				if (getCallerTable().getColumnIndex("comment") == -1) { //$NON-NLS-1$
-					colModel.addColumn(JFritz.getJframe().getCallerTable()
-							.getCommentColumn());
-					colModel.getColumn(colModel.getColumnCount() - 1)
-					.setPreferredWidth(
-							Integer.parseInt(Main.getProperty(
-									"column.comment.width", "50")));//$NON-NLS-1$, //$NON-NLS-2$
-				}
-			} else {
-				// Try to remove comment column
-				int columnIndex = getCallerTable().getColumnIndex("comment");//$NON-NLS-1$
-				if (columnIndex != -1) {
-					colModel.removeColumn(colModel.getColumn(columnIndex));
-				}
-			}
-			// Show / hide port column
-			if (JFritzUtils.parseBoolean(Main.getProperty(
-					"option.showPortColumn", "true"))) {//$NON-NLS-1$, //$NON-NLS-2$
-
-				// No port column found. Add one
-				if (getCallerTable().getColumnIndex("port") == -1) { //$NON-NLS-1$
-					colModel.addColumn(JFritz.getJframe().getCallerTable()
-							.getPortColumn());
-					colModel.getColumn(colModel.getColumnCount() - 1)
-					.setPreferredWidth(
-							Integer.parseInt(Main.getProperty(
-									"column.port.width", "50")));//$NON-NLS-1$, //$NON-NLS-2$
-				}
-			} else {
-				// Try to remove port column
-				int columnIndex = getCallerTable().getColumnIndex("port");//$NON-NLS-1$
-				if (columnIndex != -1) {
-					colModel.removeColumn(colModel.getColumn(columnIndex));
-				}
-			}
+			callerListPanel.showHideColumns();
 		}
 		configDialog.dispose();
 	}
@@ -908,21 +854,17 @@ ItemListener {
 				+ "Long live Free Software!"); //$NON-NLS-1$
 	}
 
-
 	/**
 	 * Listener for window events
 	 */
 	protected void processWindowEvent(WindowEvent e) {
-		
+
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			if (JFritzUtils.parseBoolean(Main.getProperty("option.minimize", //$NON-NLS-1$
-			"false"))) { //$NON-NLS-1$
+					"false"))) { //$NON-NLS-1$
 				setExtendedState(Frame.ICONIFIED);
-			} else{ 
-				if(jFritz.showExitDialog()){
-					super.processWindowEvent(e);
-					jFritz.exit(0);
-				}
+			} else {
+				jFritz.maybeExit(0);
 			}
 		} else if (e.getID() == WindowEvent.WINDOW_ICONIFIED) {
 			setExtendedState(Frame.ICONIFIED);
@@ -943,7 +885,7 @@ ItemListener {
 		JRadioButtonMenuItem rbmi = (JRadioButtonMenuItem) ie.getSource();
 		if (rbmi.isSelected()) {
 			UIManager.LookAndFeelInfo info = (UIManager.LookAndFeelInfo) rbmi
-			.getClientProperty("lnf name"); //$NON-NLS-1$
+					.getClientProperty("lnf name"); //$NON-NLS-1$
 			try {
 				UIManager.setLookAndFeel(info.getClassName());
 				SwingUtilities.updateComponentTreeUI(this);
@@ -964,9 +906,9 @@ ItemListener {
 		int hours = duration / 3600;
 		int mins = duration % 3600 / 60;
 		String status = Main
-		.getMessage("telephone_entries").replaceAll("%N", Integer.toString(JFritz.getCallerList().getRowCount())) + ", " //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
-		+ Main.getMessage("total_duration") + ": " + hours + "h " //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
-		+ mins + " min " + " (" + duration / 60 + " min)"; //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
+				.getMessage("telephone_entries").replaceAll("%N", Integer.toString(JFritz.getCallerList().getRowCount())) + ", " //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
+				+ Main.getMessage("total_duration") + ": " + hours + "h " //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
+				+ mins + " min " + " (" + duration / 60 + " min)"; //$NON-NLS-1$,  //$NON-NLS-2$,  //$NON-NLS-3$
 		;
 		if (progressbar != null) {
 			progressbar.setString(status);
@@ -1014,11 +956,8 @@ ItemListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		Debug.msg("Action " + e.getActionCommand()); //$NON-NLS-1$
-		if (e.getActionCommand().equals("exit")) {
-			if(jFritz.showExitDialog()){
-				super.processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-			jFritz.exit(0);
-			}
+		if (e.getActionCommand().equals("exit")) { //$NON-NLS-1$
+			jFritz.maybeExit(0);
 		} else if (e.getActionCommand().equals("about")) {
 			showAboutDialog();
 		} else if (e.getActionCommand().equals("help")) { //$NON-NLS-1$
@@ -1055,7 +994,7 @@ ItemListener {
 		} else if (e.getActionCommand().equals("delete_fritzbox_callerlist")) {
 			deleteFritzBoxCallerList();
 		} else if (e.getActionCommand().equals(
-		"delete_duplicate_phonebook_entries")) {
+				"delete_duplicate_phonebook_entries")) {
 			deleteDuplicatePhoneBookEntries();
 		} else if (e.getActionCommand().equals("backup")) {
 			backupToChoosenDirectory();
@@ -1080,7 +1019,7 @@ ItemListener {
 		} else if (e.getActionCommand().equals("phonebook_import")) {
 			phoneBookPanel.importFromXML();
 		} else if (e.getActionCommand().equals(
-		"import_contacts_thunderbird_csv")) {
+				"import_contacts_thunderbird_csv")) {
 			importContactsThunderbirdCSV();
 		} else if (e.getActionCommand().equals("showhide")) {
 			JFritz.hideShowJFritz();
@@ -1103,7 +1042,7 @@ ItemListener {
 		fc.setFileFilter(new FileFilter() {
 			public boolean accept(File f) {
 				return f.isDirectory()
-				|| f.getName().toLowerCase().endsWith(".csv"); //$NON-NLS-1$
+						|| f.getName().toLowerCase().endsWith(".csv"); //$NON-NLS-1$
 			}
 
 			public String getDescription() {
@@ -1118,9 +1057,9 @@ ItemListener {
 			File file = fc.getSelectedFile();
 			if (file.exists()) {
 				if (JOptionPane.showConfirmDialog(this, Main.getMessage(
-				"overwrite_file").replaceAll("%F", file.getName()), //$NON-NLS-1$, //$NON-NLS-2$ 
-				Main.getMessage("dialog_title_overwrite_file"), //$NON-NLS-1$
-				JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+						"overwrite_file").replaceAll("%F", file.getName()), //$NON-NLS-1$, //$NON-NLS-2$ 
+						Main.getMessage("dialog_title_overwrite_file"), //$NON-NLS-1$
+						JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 					JFritz.getCallerList().saveToCSVFile(
 							file.getAbsolutePath(), false);
 				}
@@ -1138,14 +1077,14 @@ ItemListener {
 		JFileChooser fc = new JFileChooser(Main.getProperty(
 				"options.exportXMLpath", null)); //$NON-NLS-1$
 		fc
-		.setDialogTitle(Main
-				.getMessage("dialog_title_export_callerlist_xml")); //$NON-NLS-1$
+				.setDialogTitle(Main
+						.getMessage("dialog_title_export_callerlist_xml")); //$NON-NLS-1$
 		fc.setDialogType(JFileChooser.SAVE_DIALOG);
 		fc.setSelectedFile(new File(JFritz.CALLS_FILE));
 		fc.setFileFilter(new FileFilter() {
 			public boolean accept(File f) {
 				return f.isDirectory()
-				|| f.getName().toLowerCase().endsWith(".xml"); //$NON-NLS-1$
+						|| f.getName().toLowerCase().endsWith(".xml"); //$NON-NLS-1$
 			}
 
 			public String getDescription() {
@@ -1160,9 +1099,9 @@ ItemListener {
 			File file = fc.getSelectedFile();
 			if (file.exists()) {
 				if (JOptionPane.showConfirmDialog(this, Main.getMessage(
-				"overwrite_file").replaceAll("%F", file.getName()), //$NON-NLS-1$, //$NON-NLS-2$ 
-				Main.getMessage("dialog_title_overwrite_file"), //$NON-NLS-1$
-				JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+						"overwrite_file").replaceAll("%F", file.getName()), //$NON-NLS-1$, //$NON-NLS-2$ 
+						Main.getMessage("dialog_title_overwrite_file"), //$NON-NLS-1$
+						JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 					JFritz.getCallerList().saveToXMLFile(
 							file.getAbsolutePath(), false);
 				}
@@ -1179,8 +1118,8 @@ ItemListener {
 	 * @author Bastian Schaefer
 	 */
 	public void exportPhoneBookToCSV() {
-		//FIXME selbst wenn die callerlist aktiviert ist können im
-		// phonebook einträge ausgewählt sein, dann werden nur diese 
+		// FIXME selbst wenn die callerlist aktiviert ist können im
+		// phonebook einträge ausgewählt sein, dann werden nur diese
 		// exportiert, das kann für verwirrung sorgen.
 		JFileChooser fc = new JFileChooser(Main.getProperty(
 				"options.exportCSVpathOfPhoneBook", null)); //$NON-NLS-1$
@@ -1190,7 +1129,7 @@ ItemListener {
 		fc.setFileFilter(new FileFilter() {
 			public boolean accept(File f) {
 				return f.isDirectory()
-				|| f.getName().toLowerCase().endsWith(".csv"); //$NON-NLS-1$
+						|| f.getName().toLowerCase().endsWith(".csv"); //$NON-NLS-1$
 			}
 
 			public String getDescription() {
@@ -1205,15 +1144,18 @@ ItemListener {
 			File file = fc.getSelectedFile();
 			if (file.exists()) {
 				if (JOptionPane.showConfirmDialog(this, Main.getMessage(
-				"overwrite_file").replaceAll("%F", file.getName()), //$NON-NLS-1$, //$NON-NLS-2$ 
-				Main.getMessage("dialog_title_overwrite_file"), //$NON-NLS-1$
-				JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
-					JFritz.getPhonebook().saveToCSVFile(file.getAbsolutePath(),
-							phoneBookPanel.getPhoneBookTable().getSelectedRows(), ';');
+						"overwrite_file").replaceAll("%F", file.getName()), //$NON-NLS-1$, //$NON-NLS-2$ 
+						Main.getMessage("dialog_title_overwrite_file"), //$NON-NLS-1$
+						JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+					JFritz.getPhonebook().saveToCSVFile(
+							file.getAbsolutePath(),
+							phoneBookPanel.getPhoneBookTable()
+									.getSelectedRows(), ';');
 				}
 			} else {
 				JFritz.getPhonebook().saveToCSVFile(file.getAbsolutePath(),
-						phoneBookPanel.getPhoneBookTable().getSelectedRows(), ';');
+						phoneBookPanel.getPhoneBookTable().getSelectedRows(),
+						';');
 			}
 		}
 	}
@@ -1302,26 +1244,16 @@ ItemListener {
 	public void setCallMonitorButtons(int option) {
 		Main.setProperty("option.callmonitorStarted", Integer.toString(option));
 
-/**		switch (option) {
-		case JFritz.CALLMONITOR_START: {
-			
-			if (configDialog != null) {
-				configDialog.setCallMonitorButtons(option);
-			} else {
-				JFritz.getJframe().getMonitorButton().setSelected(false);
-			}
-			break;
-		}
-		case JFritz.CALLMONITOR_STOP: {
-			if (configDialog != null) {
-				configDialog.setCallMonitorButtons(option);
-			} else {
-				JFritz.getJframe().getMonitorButton().setSelected(true);
-			}
-			break;
-		}
-		}
-**/
+		/**
+		 * switch (option) { case JFritz.CALLMONITOR_START: {
+		 * 
+		 * if (configDialog != null) {
+		 * configDialog.setCallMonitorButtons(option); } else {
+		 * JFritz.getJframe().getMonitorButton().setSelected(false); } break; }
+		 * case JFritz.CALLMONITOR_STOP: { if (configDialog != null) {
+		 * configDialog.setCallMonitorButtons(option); } else {
+		 * JFritz.getJframe().getMonitorButton().setSelected(true); } break; } }
+		 */
 	}
 
 	private void importOutlook() {
@@ -1339,11 +1271,11 @@ ItemListener {
 
 	public void startChosenCallMonitor() {
 		switch (Integer.parseInt(Main.getProperty("option.callMonitorType", //$NON-NLS-1$
-		"0"))) { //$NON-NLS-1$
+				"0"))) { //$NON-NLS-1$
 		case 1: {
 			if (JFritz.getFritzBox().checkValidFirmware()) {
 				FritzBoxFirmware currentFirm = JFritz.getFritzBox()
-				.getFirmware();
+						.getFirmware();
 				if ((currentFirm.getMajorFirmwareVersion() == 3)
 						&& (currentFirm.getMinorFirmwareVersion() < 96)) {
 					Debug.errDlg(Main
@@ -1375,14 +1307,14 @@ ItemListener {
 		case 4: {
 			JFritz.setCallMonitor(new YACCallMonitor(Integer.parseInt(Main
 					.getProperty("option.yacport", //$NON-NLS-1$
-					"10629")))); //$NON-NLS-1$
+							"10629")))); //$NON-NLS-1$
 			this.setCallMonitorButtons(JFritz.CALLMONITOR_STOP);
 			break;
 		}
 		case 5: {
 			JFritz.setCallMonitor(new CallmessageCallMonitor(Integer
 					.parseInt(Main.getProperty("option.callmessageport", //$NON-NLS-1$
-					"23232")))); //$NON-NLS-1$
+							"23232")))); //$NON-NLS-1$
 			this.setCallMonitorButtons(JFritz.CALLMONITOR_STOP);
 			break;
 		}
@@ -1401,8 +1333,8 @@ ItemListener {
 		// options-object needed to set focus to no-button
 		Object[] options = { Main.getMessage("yes"), //$NON-NLS-1$
 				Main.getMessage("no") }; //$NON-NLS-1$
-		int answer = JOptionPane.showOptionDialog(this,
-				Main.getMessage("delete_fritzbox_callerlist_confirm_msg"), //$NON-NLS-1$
+		int answer = JOptionPane.showOptionDialog(this, Main
+				.getMessage("delete_fritzbox_callerlist_confirm_msg"), //$NON-NLS-1$
 				Main.getMessage("delete_fritzbox_callerlist"), //$NON-NLS-1$
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
 				options, options[1]);
@@ -1421,20 +1353,20 @@ ItemListener {
 	private void deleteDuplicatePhoneBookEntries() {
 		// TODO:Set focus to Cancel-Button
 		int answer = JOptionPane
-		.showConfirmDialog(
-				this,
-				Main
-				.getMessage("delete_duplicate_phonebook_entries_confirm_msg"), Main //$NON-NLS-1$
-				.getMessage("delete_duplicate_phonebook_entries"), //$NON-NLS-1$
-				JOptionPane.YES_NO_OPTION);
+				.showConfirmDialog(
+						this,
+						Main
+								.getMessage("delete_duplicate_phonebook_entries_confirm_msg"), Main //$NON-NLS-1$
+								.getMessage("delete_duplicate_phonebook_entries"), //$NON-NLS-1$
+						JOptionPane.YES_NO_OPTION);
 
 		if (answer == JOptionPane.YES_OPTION) {
 			int removedEntries = JFritz.getPhonebook().deleteDuplicateEntries();
 			JOptionPane.showMessageDialog(this, Main.getMessage(
-			"delete_duplicate_phonebook_entries_inform_msg") //$NON-NLS-1$
-			.replaceAll("%N", Integer.toString(removedEntries)), Main //$NON-NLS-1$
-			.getMessage("delete_duplicate_phonebook_entries"), //$NON-NLS-1$
-			JOptionPane.INFORMATION_MESSAGE);
+					"delete_duplicate_phonebook_entries_inform_msg") //$NON-NLS-1$
+					.replaceAll("%N", Integer.toString(removedEntries)), Main //$NON-NLS-1$
+					.getMessage("delete_duplicate_phonebook_entries"), //$NON-NLS-1$
+					JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 
@@ -1489,7 +1421,7 @@ ItemListener {
 		fc.setFileFilter(new FileFilter() {
 			public boolean accept(File f) {
 				return f.isDirectory()
-				|| f.getName().toLowerCase().endsWith(".csv"); //$NON-NLS-1$
+						|| f.getName().toLowerCase().endsWith(".csv"); //$NON-NLS-1$
 			}
 
 			public String getDescription() {
@@ -1504,10 +1436,10 @@ ItemListener {
 			File file = fc.getSelectedFile();
 			if (!file.exists()) {
 				JOptionPane
-				.showMessageDialog(
-						this,
-						Main.getMessage("file_not_found"), //$NON-NLS-1$
-						Main.getMessage("dialog_title_file_not_found"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
+						.showMessageDialog(
+								this,
+								Main.getMessage("file_not_found"), //$NON-NLS-1$
+								Main.getMessage("dialog_title_file_not_found"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
 
 			} else {
 
@@ -1548,7 +1480,7 @@ ItemListener {
 		fc.setFileFilter(new FileFilter() {
 			public boolean accept(File f) {
 				return f.isDirectory()
-				|| f.getName().toLowerCase().endsWith(".csv"); //$NON-NLS-1$
+						|| f.getName().toLowerCase().endsWith(".csv"); //$NON-NLS-1$
 			}
 
 			public String getDescription() {
@@ -1556,22 +1488,22 @@ ItemListener {
 			}
 		});
 		if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-			//FIXME 
-			//           String path = fc.getSelectedFile().getPath();
-			//           path = path.substring(0, path.length()
-			//                   - fc.getSelectedFile().getName().length());
+			// FIXME
+			// String path = fc.getSelectedFile().getPath();
+			// path = path.substring(0, path.length()
+			// - fc.getSelectedFile().getName().length());
 			// options.import_contacts_thunderbird_CSVpath ???
 			// Main.setProperty("options.exportCSVpath", path);
 			File file = fc.getSelectedFile();
 			if (!file.exists()) {
 				JOptionPane
-				.showMessageDialog(
-						this,
-						Main.getMessage("file_not_found"), //$NON-NLS-1$
-						Main.getMessage("dialog_title_file_not_found"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
+						.showMessageDialog(
+								this,
+								Main.getMessage("file_not_found"), //$NON-NLS-1$
+								Main.getMessage("dialog_title_file_not_found"), JOptionPane.ERROR_MESSAGE); //$NON-NLS-1$
 			} else {
-				String msg = JFritz.getPhonebook().importFromThunderbirdCSVfile(
-						file.getAbsolutePath());
+				String msg = JFritz.getPhonebook()
+						.importFromThunderbirdCSVfile(file.getAbsolutePath());
 				JFritz.infoMsg(msg);
 
 				if (Main.getProperty("option.lookupAfterFetch", "false") //$NON-NLS-1$,  //$NON-NLS-2$
@@ -1656,9 +1588,9 @@ ItemListener {
 			Rectangle maxBounds = new Rectangle(screenInsets.left
 					+ screenSize.x, screenInsets.top + screenSize.y,
 					screenSize.x + screenSize.width - screenInsets.right
-					- screenInsets.left, screenSize.y
-					+ screenSize.height - screenInsets.bottom
-					- screenInsets.top);
+							- screenInsets.left, screenSize.y
+							+ screenSize.height - screenInsets.bottom
+							- screenInsets.top);
 			super.setMaximizedBounds(maxBounds);
 		}
 
@@ -1667,6 +1599,54 @@ ItemListener {
 
 	public JProgressBar getProgressbar() {
 		return progressbar;
+	}
+
+	public void loadWindowProperties() {
+		try {
+			windowProperties.loadFromXML(Main.SAVE_DIR + WINDOW_PROPERTIES_FILE);
+		} catch (FileNotFoundException e) {
+			Debug.err("File " + Main.SAVE_DIR + WINDOW_PROPERTIES_FILE //$NON-NLS-1$
+					+ " not found, using default values"); //$NON-NLS-1$
+		} catch (IOException e) {
+			Debug.err("IO-Exception: " + e.toString()); //$NON-NLS-1$
+		}
+	}
+
+	public void saveWindowProperties() {
+		Debug.msg("Save window position"); //$NON-NLS-1$
+
+		windowProperties.setProperty(
+				"position.left", Integer.toString(getLocation().x)); //$NON-NLS-1$
+		windowProperties.setProperty(
+				"position.top", Integer.toString(getLocation().y));//$NON-NLS-1$
+		windowProperties.setProperty(
+				"position.width", Integer.toString(this.getWidth()));//$NON-NLS-1$
+		windowProperties.setProperty(
+				"position.height", Integer.toString(this.getHeight()));//$NON-NLS-1$
+
+		windowProperties.setProperty("window.state", Integer
+				.toString(this.getExtendedState()));
+
+		try {
+			Debug.msg("Save window properties"); //$NON-NLS-1$
+			windowProperties.storeToXML(Main.SAVE_DIR + WINDOW_PROPERTIES_FILE);
+		} catch (IOException e) {
+			Debug.err("Couldn't save Window-Properties"); //$NON-NLS-1$
+		}
+	}
+
+	public void loadProperties() {
+		loadWindowProperties();
+	}
+
+	public void saveProperties() {
+		saveWindowProperties();
+		callerListPanel.saveProperties();
+
+		// TODO: möglicherweise speichern der Einstellungen für
+		// phoneBookPanel
+		// quickDialPanel
+		// monitoringPanel
 	}
 
 }
