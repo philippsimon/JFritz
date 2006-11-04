@@ -682,6 +682,7 @@ public class CallerList extends AbstractTableModel {
 	 * Sets a value to a specific position
 	 */
 	public void setValueAt(Object object, int rowIndex, int columnIndex) {
+
 		String columnName = getRealColumnName(columnIndex);
 		if (columnName.equals("participant")) { //$NON-NLS-1$
 			setPerson((Person) object, rowIndex);
