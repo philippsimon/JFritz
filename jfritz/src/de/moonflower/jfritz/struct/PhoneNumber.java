@@ -517,5 +517,13 @@ public class PhoneNumber implements Comparable {
         
         }
 	}
-	
+
+	public boolean equals(Object number) {
+		if (!(number instanceof PhoneNumber)) {
+			return false;
+		}
+		if ( this.getIntNumber().equals(((PhoneNumber)number).getIntNumber()))
+			return true;
+		else return false;
+	}
 }
