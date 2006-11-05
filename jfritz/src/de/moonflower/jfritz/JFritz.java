@@ -42,10 +42,7 @@ import de.moonflower.jfritz.dialogs.simple.MessageDlg;
 import de.moonflower.jfritz.dialogs.sip.SipProviderTableModel;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
 import de.moonflower.jfritz.phonebook.PhoneBook;
-import de.moonflower.jfritz.struct.Call;
 import de.moonflower.jfritz.struct.FritzBox;
-import de.moonflower.jfritz.struct.Person;
-import de.moonflower.jfritz.struct.PhoneNumber;
 import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzUtils;
@@ -606,34 +603,6 @@ public final class JFritz {
 	public static void showConfigWizard() {
 		ConfigWizard wizard = new ConfigWizard(jframe);
 		wizard.showWizard();
-
-	}
-
-	public static void reverseLookup() {
-		Debug.msg("Doing reverse Lookup");
-		int j = 0;
-		for (int i = 0; i < getCallerList().getRowCount(); i++) {
-			Vector data = getCallerList().getFilteredCallVector();
-			Call call = (Call) data.get(i);
-			PhoneNumber number = call.getPhoneNumber();
-			if (number != null && (call.getPerson() == null)) {
-				j++;
-
-				Debug.msg("Reverse lookup for " //$NON-NLS-1$
-						+ number.getIntNumber());
-
-				Person newPerson = ReverseLookup.lookup(number);
-				if (newPerson != null) {
-					getPhonebook().addEntry(newPerson);
-					getPhonebook().fireTableDataChanged();
-					getCallerList().fireTableDataChanged();
-				}
-
-			}
-		}
-
-		if (j > 0)
-			getPhonebook().saveToXMLFile(Main.SAVE_DIR + JFritz.PHONEBOOK_FILE);
 
 	}
 
