@@ -136,6 +136,15 @@ public class CallerList extends AbstractTableModel {
 
 	/**
 	 * 
+	 * @return Unfiltered Vector of Calls
+	 */
+	public Vector getUnfilteredCallVector() {
+		return unfilteredCallerData;
+	}
+
+	
+	/**
+	 * 
 	 * @return Filtered Vector of Calls
 	 */
 	public Vector getFilteredCallVector() {
@@ -201,8 +210,7 @@ public class CallerList extends AbstractTableModel {
 			}
 			if (!wholeCallerList && rows != null && rows.length > 0) {
 				for (int i = 0; i < rows.length; i++) {
-					Call currentCall = filteredCallerData
-							.elementAt(rows[i]);
+					Call currentCall = filteredCallerData.elementAt(rows[i]);
 					pw.write(currentCall.toXML());
 					pw.newLine();
 				}
@@ -255,8 +263,7 @@ public class CallerList extends AbstractTableModel {
 			}
 			if (!wholeCallerList && rows != null && rows.length > 0) {
 				for (int i = 0; i < rows.length; i++) {
-					Call currentCall = filteredCallerData
-							.elementAt(rows[i]);
+					Call currentCall = filteredCallerData.elementAt(rows[i]);
 					pw.println(currentCall.toCSV());
 				}
 			} else if (wholeCallerList) { // Export ALL UNFILTERED Calls
@@ -392,7 +399,7 @@ public class CallerList extends AbstractTableModel {
 	 * 
 	 * @author Brian Jensen
 	 */
-	public boolean addEntry(Call call) {
+	public boolean addEntry(Call call) {		
 		// if( unfilteredCallerData.contains(call))return false;
 		if (contains(call)) {
 			return false;
@@ -408,6 +415,7 @@ public class CallerList extends AbstractTableModel {
 			}
 		}
 		newCalls.add(call);
+		
 		return true;
 
 	}
@@ -425,27 +433,8 @@ public class CallerList extends AbstractTableModel {
 	 */
 	public boolean contains(Call newCall) {
 		Vector<Call> unfilteredCallerData = (Vector) this.unfilteredCallerData
-				.clone();
-		// find index for date collumn
-		int indexOfDate = -1;
-		for (int i = 0; i < getColumnCount(); i++) {
-			String columnName = getRealColumnName(i);
-			if (columnName.equals("date")) {
-				indexOfDate = i;
-			}
-		}
+		.clone();
 
-		if (sortColumn != indexOfDate && indexOfDate != -1) {
-			Debug
-					.err("unfilteredCallerData not sorted sorting! (will be slow)");
-			// This new method is using a binary search algorithm, that means
-			// unfilteredCallerData has to be sorted ascending by date or it
-			// won't work
-
-			Collections.sort(unfilteredCallerData, new ColumnSorter(
-					indexOfDate, true));
-		}
-		// Debug.msg("contains!");
 		int left, right, middle;
 		left = 0;
 		right = unfilteredCallerData.size() - 1;
@@ -489,8 +478,7 @@ public class CallerList extends AbstractTableModel {
 
 							// make sure we stay in the array bounds
 							if (tmpMiddle > 0)
-								c = unfilteredCallerData
-										.elementAt(--tmpMiddle);
+								c = unfilteredCallerData.elementAt(--tmpMiddle);
 							else
 								break;
 						}
@@ -509,8 +497,7 @@ public class CallerList extends AbstractTableModel {
 
 							// make sure to stay in the array bounds
 							if (tmpMiddle < (unfilteredCallerData.size() - 1))
-								c = unfilteredCallerData
-										.elementAt(++tmpMiddle);
+								c = unfilteredCallerData.elementAt(++tmpMiddle);
 							else
 								break;
 						}
@@ -732,7 +719,15 @@ public class CallerList extends AbstractTableModel {
 
 	public void sortAllUnfilteredRows() {
 		Debug.msg("Sorting unfiltered data"); //$NON-NLS-1$
-		Collections.sort(unfilteredCallerData, new ColumnSorter(1, false));
+		int indexOfDate = -1;
+		for (int i = 0; i < getColumnCount(); i++) {
+			String columnName = getRealColumnName(i);
+			if (columnName.equals("date")) {
+				indexOfDate = i;
+			}
+		}
+		
+		Collections.sort(unfilteredCallerData, new ColumnSorter(indexOfDate, false));
 		// Resort filtered data
 		Collections.sort(filteredCallerData, new ColumnSorter(sortColumn,
 				sortDirection));
@@ -1008,7 +1003,7 @@ public class CallerList extends AbstractTableModel {
 	 * @param filename
 	 *            of the csv file to import from
 	 */
-	public boolean importFromCSVFile(BufferedReader br) {
+	public boolean importFromCSVFile(BufferedReader br) {		
 		long t1, t2;
 		t1 = System.currentTimeMillis();
 		String line = "";
@@ -1032,6 +1027,7 @@ public class CallerList extends AbstractTableModel {
 				line = br.readLine();
 				Debug.msg("CSV-Header: " + line);
 			}
+
 			// check if we have a correct header
 			if (line.equals(EXPORT_CSV_FORMAT_JFRITZ)
 					|| line.equals(EXPORT_CSV_FORMAT_FRITZBOX)
@@ -1122,6 +1118,7 @@ public class CallerList extends AbstractTableModel {
 		}
 		t2 = System.currentTimeMillis();
 		Debug.msg("Time used to import CSV-File: " + (t2 - t1) + "ms");
+
 		if (newEntries > 0)
 			return true;
 		else
@@ -1706,7 +1703,8 @@ public class CallerList extends AbstractTableModel {
 		String provider = "";
 		if (call.getPhoneNumber() != null) {
 			provider = call.getPhoneNumber().getCallByCall();
-//			Debug.msg("call.getPhoneNumber().getCallByCall(): "+ call.getPhoneNumber().getCallByCall());
+			// Debug.msg("call.getPhoneNumber().getCallByCall(): "+
+			// call.getPhoneNumber().getCallByCall());
 			if (!provider.equals("")) { //$NON-NLS-1$
 				if (!callByCallProviders.contains(provider)) {
 					callByCallProviders.add(provider);
@@ -1756,7 +1754,7 @@ public class CallerList extends AbstractTableModel {
 			Call call = filteredCallerData.get(i);
 			// Debug.msg("route:"+route);
 			// Debug.msg("callrouteType:"+call.getRouteType());
-			if (!call.getRoute().equals("")) {				
+			if (!call.getRoute().equals("")) {
 				if (call.getRouteType() == Call.ROUTE_SIP) {
 					if (!sipProviders.contains(call.getRoute())) {
 						sipProviders.add(call.getRoute());
@@ -1790,6 +1788,7 @@ public class CallerList extends AbstractTableModel {
 		sortAllFilteredRowsBy(sortColumn, sortDirection);
 		fireTableDataChanged();
 	}
+
 	/**
 	 * does reverse lookup (find the name and address for a given phone number
 	 * 
@@ -1799,25 +1798,59 @@ public class CallerList extends AbstractTableModel {
 	public void doReverseLookup(int[] rows) {
 		if (rows.length > 0) { // nur für markierte Einträge ReverseLookup
 			// durchführen
+			Vector<PhoneNumber> numbers = new Vector<PhoneNumber>();
 			for (int i = 0; i < rows.length; i++) {
-				Call call = filteredCallerData.get(
-						rows[i]);
+				Call call = filteredCallerData.get(rows[i]);
 				Person newPerson = null;
-				if(call.getPhoneNumber()!=null){ //We have a Number
-					if(call.getPerson().getFullname().equals("")){	//and we have no name for this number
-						//TODO maybe add Person.isDummy()
-						newPerson = ReverseLookup.lookup(call.getPhoneNumber());
+				if (call.getPhoneNumber() != null) {
+					numbers.add(call.getPhoneNumber());
 					}
 				}
-				if (newPerson != null) {
-					phonebook.addEntry(newPerson);
-					phonebook.fireTableDataChanged();
-					fireTableDataChanged();
-				}
-			}
-		} else { // Für alle Einträge ReverseLookup durchführen
-			JFritz.getJframe().reverseLookup();
+			reverseLookup(numbers);
+		} else { // Für alle gefilterten Einträge ReverseLookup durchführen
+			reverseLookupCalls(filteredCallerData);
 		}
+	}
+	
+	/**
+	 * Does a reverse lookup for all numbers in vector "numbers"
+	 * @param numbers, a vector of numbers to do reverse lookup on
+	 */
+	public void reverseLookup(Vector<PhoneNumber> numbers) {
+		int j = 0;
+		Enumeration<PhoneNumber> en = numbers.elements();
+		while ( en.hasMoreElements() ) {
+			PhoneNumber number = en.nextElement();
+			Debug.msg("Reverse lookup for " //$NON-NLS-1$
+					+ number.getIntNumber());
+			Person newPerson = ReverseLookup.lookup(number);
+			if (newPerson != null) {
+				j++;
+				phonebook.addEntry(newPerson);
+				phonebook.fireTableDataChanged();
+				this.fireTableDataChanged();
+			}
+		}
+		
+		if (j > 0)
+			phonebook.saveToXMLFile(Main.SAVE_DIR + JFritz.PHONEBOOK_FILE);
+	}
+	
+	/**
+	 * Does a reverse lookup on all calls
+	 * @param calls, calls to do reverse lookup on
+	 */
+	public void reverseLookupCalls(Vector<Call> calls) {
+		Debug.msg("Doing reverse Lookup");
+		Vector<PhoneNumber> numbers = new Vector<PhoneNumber>();
+		for (int i = 0; i < calls.size(); i++) {
+			Call call = calls.get(i);
+			PhoneNumber number = call.getPhoneNumber();
+			if ((number != null) && (!numbers.contains(number)) && (call.getPerson() == null)) {
+				numbers.add(number);
+			}
+		}
+		reverseLookup(numbers);
 	}
 
 	public void setPhoneBook(PhoneBook phonebook) {
@@ -1840,6 +1873,22 @@ public class CallerList extends AbstractTableModel {
 			}
 			fireTableDataChanged();
 		}
+	}
 
+	/**
+	 * Aktualisiert diejenigen Anrufe mit den Nummern aus dem Vector phoneNumbers
+	 * @param person, die neuen Personendaten
+	 * @param phoneNumbers, die zu aktualisierenden Rufnummern
+	 */
+	public void updatePersonInCalls(Person person,
+			Vector<PhoneNumber> phoneNumbers) {
+		Enumeration<Call> en = unfilteredCallerData.elements();
+		while (en.hasMoreElements()) {
+			Call call = en.nextElement();
+			if (phoneNumbers.contains(call.getPhoneNumber())) {
+				call.setPerson(person);
+			}
+		}
+		update();
 	}
 }
