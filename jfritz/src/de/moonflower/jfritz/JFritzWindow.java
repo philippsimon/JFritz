@@ -72,8 +72,6 @@ import de.moonflower.jfritz.firmware.FritzBoxFirmware;
 import de.moonflower.jfritz.monitoring.MonitoringPanel;
 import de.moonflower.jfritz.phonebook.PhoneBookPanel;
 
-import de.moonflower.jfritz.struct.Call;
-import de.moonflower.jfritz.struct.PhoneNumber;
 import de.moonflower.jfritz.utils.BrowserLaunch;
 import de.moonflower.jfritz.utils.CopyFile;
 import de.moonflower.jfritz.utils.Debug;
@@ -199,10 +197,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 												"/de/moonflower/jfritz/resources/images/trayicon.png"))); //$NON-NLS-1$
 
 		callerListPanel = new CallerListPanel(JFritz.getCallerList(), this);
-		phoneBookPanel = new PhoneBookPanel(JFritz.getPhonebook(), this,
-				Main.SAVE_DIR, new Locale(Main.getProperty("locale", "de_DE")));
+		phoneBookPanel = new PhoneBookPanel(JFritz.getPhonebook(), this, new Locale(Main.getProperty("locale", "de_DE")));
 		callerListPanel.setPhoneBookPanel(phoneBookPanel);
-		phoneBookPanel.setCallerListPanel(callerListPanel);
 		quickDialPanel = new QuickDialPanel();
 		// New code here, remove if problematic
 		monitoringPanel = new MonitoringPanel();
@@ -1612,10 +1608,4 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		// quickDialPanel
 		// monitoringPanel
 	}
-
-	public PhoneBookPanel getPhonebookPanel() {
-
-		return phoneBookPanel;
-	}
-
 }

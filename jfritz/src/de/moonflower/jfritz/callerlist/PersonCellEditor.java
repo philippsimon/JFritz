@@ -13,7 +13,6 @@ import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
-import de.moonflower.jfritz.phonebook.PersonEditorPanel;
 import de.moonflower.jfritz.struct.Call;
 import de.moonflower.jfritz.struct.Person;
 
@@ -26,13 +25,13 @@ public class PersonCellEditor extends AbstractCellEditor implements
 		TableCellEditor {
 	private static final long serialVersionUID = 1;
 	
-	CallerList callerlist;
+	CallerList callerList;
 	JComponent component;
 
 	public PersonCellEditor(CallerList callerlist) {
 		super();
-		this.callerlist = callerlist;
-		component = new PersonEditorPanel(this);
+		this.callerList = callerlist;
+		component = new PersonEditorPanel(this, callerlist);
 	}
 
 	/**
@@ -44,8 +43,11 @@ public class PersonCellEditor extends AbstractCellEditor implements
 		if (isSelected) {
 			// cell (and perhaps other cells) are selected
 		}
+		
 		PersonEditorPanel panel = (PersonEditorPanel) component;
 		Person person = (Person) value;
+		
+		
 		// panel.repaint();
 		// Configure the component with the specified value
 		String strval = ""; //$NON-NLS-1$
@@ -53,7 +55,7 @@ public class PersonCellEditor extends AbstractCellEditor implements
 			strval = person.getFullname();
 		} else {
 			person = new Person();
-			Call c = (Call) callerlist.getFilteredCallVector().get(row);
+			Call c = (Call) callerList.getFilteredCallVector().get(row);
 			c.getPhoneNumber().setType();
 			person.addNumber(c.getPhoneNumber());
 		}
