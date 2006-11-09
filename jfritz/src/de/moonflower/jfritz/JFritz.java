@@ -99,10 +99,6 @@ public final class JFritz {
 
 	private static String HostOS = "other"; //$NON-NLS-1$
 
-	public static final int CALLMONITOR_START = 0;
-
-	public static final int CALLMONITOR_STOP = 1;
-
 	private static WatchdogThread watchdog;
 
 	private static FritzBox fritzBox;
@@ -442,7 +438,7 @@ public final class JFritz {
 		if (callMonitor != null) {
 			callMonitor.stopCallMonitor();
 			// Let buttons enable start of callMonitor
-			getJframe().setCallMonitorButtons(CALLMONITOR_START);
+			getJframe().setCallMonitorButtonPushed(false);
 			callMonitor = null;
 		}
 	}
