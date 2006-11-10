@@ -20,6 +20,11 @@ import de.moonflower.jfritz.utils.reverselookup.ReverseLookupNetherlands;
 import de.moonflower.jfritz.utils.reverselookup.ReverseLookupUnitedStates;
 import de.moonflower.jfritz.utils.reverselookup.ReverseLookupAustria;
 
+/**
+ * 
+ * @author marc
+ *
+ */
 class LookupThread extends Thread {
 	LookupRequest currentRequest;
 
@@ -49,12 +54,12 @@ class LookupThread extends Thread {
 			currentRequest.observer.personsFound(result);
 		}
 	}
-
-	public void notifyRequest() {
-		notifyAll();
-	}
 }
-
+/**
+ * 
+ * @author marc
+ *
+ */
 class LookupRequest implements Comparable<LookupRequest> {
 	final Vector<PhoneNumber> numbers;
 
@@ -86,16 +91,13 @@ public class ReverseLookup {
 	static volatile PriorityBlockingQueue<LookupRequest> requests = new PriorityBlockingQueue<LookupRequest>();
 
 	/**
-	 * This Function does a lookup for a Vector of PhoneNumbers, only if the
-	 * LookupThread is not busy the caller must give an observer, his method
+	 * This Function does a lookup for a Vector of PhoneNumbers, the caller must give an observer, his method
 	 * personsFound(Vector<Person>) will be called
 	 * 
 	 * @param number
 	 *            the number wich will be looked up
 	 * @param obs
 	 *            the observer wich will be will receive the Persons
-	 * @return true if the Thread is free and we can start lookup, false if the
-	 *         Thread is already busy
 	 */
 	public static synchronized void lookup(PhoneNumber number,
 			LookupObserver obs) {
@@ -105,16 +107,13 @@ public class ReverseLookup {
 	}
 
 	/**
-	 * This Function does a lookup for a Vector of PhoneNumbers, only if the
-	 * LookupThread is not busy the caller must give an observer, his method
+	 * This Function does a lookup for a Vector of PhoneNumbers the caller must give an observer, his method
 	 * personsFound(Vector<Person>) will be called
 	 * 
 	 * @param number
 	 *            the numbers wich will be looked up
 	 * @param obs
 	 *            the observer wich will be will receive the Persons
-	 * @return true if the Thread is free and we can start lookup, false if the
-	 *         Thread is already busy
 	 */
 	public static synchronized void lookup(Vector<PhoneNumber> number,
 			LookupObserver obs) {
@@ -133,7 +132,7 @@ public class ReverseLookup {
 
 	/**
 	 * @deprecated better use boolean lookup(Vector<PhoneNumber> number,
-	 *             LookupObserver obs) {
+	 *             LookupObserver obs)  or busyLookup for one single lookup
 	 * @param number
 	 * @return the Person
 	 */
@@ -192,7 +191,13 @@ public class ReverseLookup {
 		// ReverseLookupNetherlands.loadAreaCodes();
 
 	}
-
+/**
+ * This function does one lookup for a PhoneNumber. Good if you want a single lookup,
+ * id you need more numbers looked up better use  
+ * <code>lookup(Vector<PhoneNumber> number, LookupObserver obs)</code> this will start an extra Thread
+ * @param callerPhoneNumber the number wich will be looked up
+ * @return the Person this method found
+ */
 	public static Person busyLookup(PhoneNumber callerPhoneNumber) {
 		return lookup(callerPhoneNumber);
 	}
