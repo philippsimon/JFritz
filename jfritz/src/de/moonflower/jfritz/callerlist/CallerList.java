@@ -757,7 +757,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 			return compare(call1, call2);
 		}
 
-		//FIXME 
+		// FIXME
 		public int compare(Call call1, Call call2) {
 			Object o1 = null, o2 = null;
 			String columnName = getRealColumnName(columnIndex);
@@ -1662,7 +1662,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 */
 	public Vector<Call> filterData(Vector<Call> src) {
 		Vector<Call> result = new Vector<Call>();
-		//		Debug.msg("updating filtered Data");
+		// Debug.msg("updating filtered Data");
 		Enumeration<Call> en = src.elements();
 		Call call;
 		CallFilter f;
@@ -1796,31 +1796,41 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		sortAllFilteredRowsBy(sortColumn, sortDirection);
 		fireTableDataChanged();
 	}
-/**
- * looks up either all filtered/displayed calls or all calls
- * @param filteredOnly if false it will lookup all calls
- * @return 
- */
+
+	/**
+	 * looks up either all filtered/displayed calls or all calls
+	 * 
+	 * @param filteredOnly
+	 *            if false it will lookup all calls
+	 * @return
+	 */
 	public void reverseLookup(boolean filteredOnly) {
 		Vector<PhoneNumber> numbers = new Vector<PhoneNumber>();
 		if (filteredOnly) {
 			for (int i = 0; i < filteredCallerData.size(); i++) {
 				Call call = filteredCallerData.get(i);
 				if (call.getPhoneNumber() != null) {
-					numbers.add(call.getPhoneNumber());
+					Person foundPerson = phonebook.findPerson(call);
+					if (foundPerson == null
+							&& !numbers.contains(call.getPhoneNumber()))
+						numbers.add(call.getPhoneNumber());
 				}
 			}
 		} else {
 			for (int i = 0; i < unfilteredCallerData.size(); i++) {
 				Call call = unfilteredCallerData.get(i);
 				if (call.getPhoneNumber() != null) {
-					numbers.add(call.getPhoneNumber());
+					Person foundPerson = phonebook.findPerson(call);
+					if (foundPerson == null
+							&& !numbers.contains(call.getPhoneNumber()))
+						numbers.add(call.getPhoneNumber());
 				}
 			}
 		}
 		reverseLookup(numbers);
 
 	}
+
 	/**
 	 * does reverse lookup (find the name and address for a given phone number
 	 * 
@@ -1843,11 +1853,13 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 
 	/**
 	 * Does a reverse lookup for all numbers in vector "numbers"
-	 * @param numbers, a vector of numbers to do reverse lookup on
+	 * 
+	 * @param numbers,
+	 *            a vector of numbers to do reverse lookup on
 	 */
 	public void reverseLookup(Vector<PhoneNumber> numbers) {
 		Debug.msg("Reverse lookup for " //$NON-NLS-1$
-				+ numbers.size() + "numbers");
+				+ numbers.size() + " numbers");
 
 		ReverseLookup.lookup(numbers, this);
 	}
@@ -1857,16 +1869,14 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 */
 	public void personsFound(Vector persons) {
 		if (persons != null) {
-			phonebook.addEntrys(persons);
-			phonebook.fireTableDataChanged();
-			phonebook.saveToXMLFile(Main.SAVE_DIR + JFritz.PHONEBOOK_FILE);
+			phonebook.addEntries(persons);
 			this.fireTableDataChanged();
 		}
 	}
-	
+
 	public void percentOfLookupDone(float f) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void setPhoneBook(PhoneBook phonebook) {
@@ -1877,14 +1887,13 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	public void setPerson(Person person, Call call) {
 		if (call.getPhoneNumber() != null) { // no empty numbers
 			if (person == null) {
-				Debug
-						.err("Callerlist.setPerson():  IMPLEMENT ME (remove person)"); //$NON-NLS-1$
+				call.setPerson(null);
 			} else {
-				if (call.getPerson() == null) {
-					if (!person.isEmpty())
-						phonebook.addEntry(person);
+				if (call.getPerson() == null) {					
+					if ( !person.isEmpty() ) 
+						call.setPerson(person.clone());				
 				} else if (!call.getPerson().equals(person)) {
-					call.getPerson().copyFrom(person);
+					call.setPerson(person.clone());
 				}
 			}
 			fireTableDataChanged();
@@ -1892,9 +1901,13 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	}
 
 	/**
-	 * Aktualisiert diejenigen Anrufe mit den Nummern aus dem Vector phoneNumbers
-	 * @param person, die neuen Personendaten
-	 * @param phoneNumbers, die zu aktualisierenden Rufnummern
+	 * Aktualisiert diejenigen Anrufe mit den Nummern aus dem Vector
+	 * phoneNumbers
+	 * 
+	 * @param person,
+	 *            die neuen Personendaten
+	 * @param phoneNumbers,
+	 *            die zu aktualisierenden Rufnummern
 	 */
 	public void updatePersonInCalls(Person person,
 			Vector<PhoneNumber> phoneNumbers) {

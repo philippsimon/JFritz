@@ -669,7 +669,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 					isretrieving = false;
 					if (Main.getProperty("option.lookupAfterFetch", "false") //$NON-NLS-1$,  //$NON-NLS-2$
 							.equals("true")) { //$NON-NLS-1$
-						lookupButton.doClick();
+						reverseLookup();
 					}
 				}
 			};
@@ -683,7 +683,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	public void reverseLookup() {
 		if (!isretrieving) { // Prevent multiple clicking
 			isretrieving = true;
-			tabber.setSelectedComponent(callerListPanel);
+
 			final SwingWorker worker = new SwingWorker() {
 				public Object construct() {
 					boolean isdone = false;
