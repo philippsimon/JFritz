@@ -635,6 +635,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 							} else {
 								Main.setProperty("box.password", Encryption //$NON-NLS-1$
 										.encrypt(password));
+								JFritz.getFritzBox().setPassword(password);
 								JFritz.getFritzBox().detectFirmware();
 							}
 						} catch (IOException e) {
@@ -654,6 +655,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 								} else {
 									Main.setProperty("box.address", //$NON-NLS-1$
 											box_address);
+									JFritz.getFritzBox().setAddress(box_address);
 									JFritz.getFritzBox().detectFirmware();
 								}
 							}

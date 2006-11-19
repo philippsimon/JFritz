@@ -40,10 +40,13 @@ public class ConfigPanelCallMonitor extends JPanel implements ActionListener,
 	private JDialog parent;
 
 	private boolean showButtons;
+	
+	private ConfigPanelFritzBox fritzBoxPanel;
 
-	public ConfigPanelCallMonitor(JDialog parent, boolean showButtons) {
+	public ConfigPanelCallMonitor(JDialog parent, boolean showButtons, ConfigPanelFritzBox fritzBoxPanel) {
 		this.parent = parent;
 		this.showButtons = showButtons;
+		this.fritzBoxPanel = fritzBoxPanel;
 
 		setLayout(new BorderLayout());
 		setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -172,8 +175,8 @@ public class ConfigPanelCallMonitor extends JPanel implements ActionListener,
 	}
 
 	private void hideCallMonitorPanel() {
-		startCallMonitorButton.setVisible(showButtons);
-		callMonitorOptionsButton.setVisible(showButtons);
+		startCallMonitorButton.setVisible(false);
+		callMonitorOptionsButton.setVisible(false);
 		callMonitorAfterStartButton.setVisible(false);
 		soundButton.setVisible(false);
 		externProgramCheckBox.setVisible(false);
@@ -244,6 +247,10 @@ public class ConfigPanelCallMonitor extends JPanel implements ActionListener,
 			// Aktion des StartCallMonitorButtons
 			Main.setProperty("option.callMonitorType", String //$NON-NLS-1$
 					.valueOf(callMonitorCombo.getSelectedIndex()));
+			
+			JFritz.getFritzBox().setAddress(fritzBoxPanel.getAddress());
+			JFritz.getFritzBox().setPassword(fritzBoxPanel.getPassword());
+			JFritz.getFritzBox().setPort(fritzBoxPanel.getPort());
 			JFritz.getFritzBox().detectFirmware();
 			JFritz.getJframe().switchMonitorButton();
 
