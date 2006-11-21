@@ -96,6 +96,8 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	// english firmware, unknown version
 	private final static String EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH = "Typ;Date;Number;Extension;Outgoing Caller ID;Duration";
 
+	private final static String EXPORT_CSV_FORMAT_PUSHSERVICE_ENGLISH = "Type; Date; Number; Extension; Local Number; Duration";
+
 	private final static String EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH_NEW = "Typ;Date;Name;Number;Extension;Outgoing Caller ID;Duration";
 
 	// call list used to display entries in the table, can be sorted by other
@@ -1011,7 +1013,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * @param filename
 	 *            of the csv file to import from
 	 */
-	public boolean importFromCSVFile(BufferedReader br) {
+public boolean importFromCSVFile(BufferedReader br) {
 		long t1, t2;
 		t1 = System.currentTimeMillis();
 		String line = "";
@@ -1042,6 +1044,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 					|| line.equals(EXPORT_CSV_FORMAT_FRITZBOX_PUSHSERVICE)
 					|| line.equals(EXPORT_CSV_FORMAT_FRITZBOX_NEWFIRMWARE)
 					|| line.equals(EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH)
+					|| line.equals(EXPORT_CSV_FORMAT_PUSHSERVICE_ENGLISH)
 					|| line.equals(EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH_NEW)
 					|| line.equals(EXPORT_CSV_FORMAT_PUSHSERVICE_NEW)) {
 
@@ -1053,7 +1056,8 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 				else if (line.equals(EXPORT_CSV_FORMAT_FRITZBOX_NEWFIRMWARE)
 						|| line.equals(EXPORT_CSV_FORMAT_PUSHSERVICE_NEW))
 					isNewFirmware = true;
-				else if (line.equals(EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH))
+				else if (line.equals(EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH) 
+						|| line.equals(EXPORT_CSV_FORMAT_PUSHSERVICE_ENGLISH))
 					isEnglishFirmware = true;
 				else if (line.equals(EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH_NEW))
 					isNewEnglishFirmware = true;
@@ -1133,7 +1137,6 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 			return false;
 
 	}
-
 	/**
 	 * @author Brian Jensen
 	 * 
@@ -1889,9 +1892,9 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 			if (person == null) {
 				call.setPerson(null);
 			} else {
-				if (call.getPerson() == null) {					
-					if ( !person.isEmpty() ) 
-						call.setPerson(person.clone());				
+				if (call.getPerson() == null) {
+					if (!person.isEmpty())
+						call.setPerson(person.clone());
 				} else if (!call.getPerson().equals(person)) {
 					call.setPerson(person.clone());
 				}

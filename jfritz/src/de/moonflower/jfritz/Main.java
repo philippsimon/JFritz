@@ -107,7 +107,8 @@
  * CHANGELOG:
  *
  * JFritz 0.6.2.01
- *  * TODO:
+ * TODO:
+ * - Lautstärke der Sounds halbieren 
  * - Alle Zugriffe auf FritzBox in eigenen Threads
  * - Bug: Eingabe der IP-Nummer nach Ruhezustand
  * - Markieren der Zeilen per STRG auch in der "Teilnehmer"-Spalte
@@ -126,7 +127,9 @@
  * - Connection-Timeout für ReverseLookup setzen
  * TODO-END 
  * - Neu: Italienische Sprachdateien aktualisiert
- * - Bugfix: Neuer Eintrag im Telefonbuch nun wieder möglich  
+ * - New: Import english push-service-csv-file
+ * - Bugfix: Neuer Eintrag im Telefonbuch nun wieder möglich
+ *   
  * 
  * Jfritz 0.6.2
  * - Neue Strings:
