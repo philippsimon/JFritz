@@ -129,7 +129,7 @@
  * - Neu: Italienische Sprachdateien aktualisiert
  * - New: Import english push-service-csv-file
  * - Bugfix: Neuer Eintrag im Telefonbuch nun wieder möglich
- *   
+ * - Bugfix: JFritz-Menü wird nun korrekt dargestellt
  * 
  * Jfritz 0.6.2
  * - Neue Strings:

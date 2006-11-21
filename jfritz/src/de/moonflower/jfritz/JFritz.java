@@ -461,9 +461,10 @@ public final class JFritz {
 			jframe.setVisible(false);
 		} else {
 			Debug.msg("Show JFritz-Window"); //$NON-NLS-1$
+			jframe.setExtendedState(oldFrameState);
 			jframe.setVisible(true);
 			jframe.toFront();
-			jframe.setExtendedState(oldFrameState);
+			jframe.repaint();
 		}
 	}
 
