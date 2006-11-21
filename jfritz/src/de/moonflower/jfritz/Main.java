@@ -130,6 +130,8 @@
  * - New: Import english push-service-csv-file
  * - Bugfix: Neuer Eintrag im Telefonbuch nun wieder möglich
  * - Bugfix: JFritz-Menü wird nun korrekt dargestellt
+ * - Bugfix: number-Ordner nun mitgeliefert
+ * - Bugfix: Autoupdate in richtigen Ordner
  * 
  * Jfritz 0.6.2
  * - Neue Strings:
