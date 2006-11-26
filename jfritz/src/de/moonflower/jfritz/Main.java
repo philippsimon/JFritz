@@ -126,6 +126,7 @@
  * - Überprüfen, geht wohl nicht mehr: Rückwärtssuche für Österreich über dasoertliche.de wieder eingebaut
  * - Connection-Timeout für ReverseLookup setzen
  * TODO-END 
+ * - Neu: Polnische Sprachdateien aktualisiert
  * - Neu: Italienische Sprachdateien aktualisiert
  * - New: Import english push-service-csv-file
  * - Bugfix: Neuer Eintrag im Telefonbuch nun wieder möglich
