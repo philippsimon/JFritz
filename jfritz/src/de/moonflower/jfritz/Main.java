@@ -133,6 +133,8 @@
  * - Bugfix: JFritz-Menü wird nun korrekt dargestellt
  * - Bugfix: number-Ordner nun mitgeliefert
  * - Bugfix: Autoupdate in richtigen Ordner
+ * - Bugfix: Firmwareerkennung korrigiert
+ * - Bugfix: HTML-Sonderzeichen beim ReverseLookup
  * 
  * Jfritz 0.6.2
  * - Neue Strings:
