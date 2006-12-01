@@ -135,6 +135,7 @@
  * - Bugfix: Autoupdate in richtigen Ordner
  * - Bugfix: Firmwareerkennung korrigiert
  * - Bugfix: HTML-Sonderzeichen beim ReverseLookup
+ * - Bugfix: ReverseLookup für ausländische Nummern
  * 
  * Jfritz 0.6.2
  * - Neue Strings:
