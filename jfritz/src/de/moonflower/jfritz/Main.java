@@ -136,6 +136,7 @@
  * - Bugfix: Firmwareerkennung korrigiert
  * - Bugfix: HTML-Sonderzeichen beim ReverseLookup
  * - Bugfix: ReverseLookup für ausländische Nummern
+ * - Bugfix: Löschen einer Nummer im Telefonbuch
  * 
  * Jfritz 0.6.2
  * - Neue Strings:
