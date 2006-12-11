@@ -106,8 +106,7 @@
  * 
  * CHANGELOG:
  *
- * JFritz 0.6.2.01
- * TODO:
+ * * TODO:
  * - Lautstärke der Sounds halbieren 
  * - Alle Zugriffe auf FritzBox in eigenen Threads
  * - Bug: Eingabe der IP-Nummer nach Ruhezustand
@@ -126,6 +125,12 @@
  * - Überprüfen, geht wohl nicht mehr: Rückwärtssuche für Österreich über dasoertliche.de wieder eingebaut
  * - Connection-Timeout für ReverseLookup setzen
  * TODO-END 
+ *
+ * JFritz 0.6.2.02
+ * - Bugfix: Kurzwahlen
+ * 
+ *
+ * JFritz 0.6.2.01
  * - Neu: Polnische Sprachdateien aktualisiert
  * - Neu: Italienische Sprachdateien aktualisiert
  * - New: Import english push-service-csv-file
