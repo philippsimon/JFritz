@@ -128,6 +128,8 @@
  *
  * JFritz 0.6.2.02
  * - Bugfix: Kurzwahlen
+ * - Bugfix: Österreichischer Reverselookup
+ * - Bugfix: CallMonitor outgoing calls
  * 
  *
  * JFritz 0.6.2.01
@@ -575,7 +577,7 @@ public class Main {
 
 	public final static String PROGRAM_NAME = "JFritz"; //$NON-NLS-1$
 
-	public final static String PROGRAM_VERSION = "0.6.2.01"; //$NON-NLS-1$
+	public final static String PROGRAM_VERSION = "0.6.2.02"; //$NON-NLS-1$
 	
 	public final static String CVS_TAG = "$Id$"; //$NON-NLS-1$
 
