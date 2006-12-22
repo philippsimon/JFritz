@@ -130,7 +130,7 @@
  * - Bugfix: Kurzwahlen
  * - Bugfix: Österreichischer Reverselookup
  * - Bugfix: CallMonitor outgoing calls
- * 
+ * - Bugfix: Reverselookup on mac now run with correct character encoding
  *
  * JFritz 0.6.2.01
  * - Neu: Polnische Sprachdateien aktualisiert
