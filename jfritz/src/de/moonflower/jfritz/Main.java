@@ -665,7 +665,7 @@ public class Main {
 		jfritz.createJFrame(showConfWizard);
 		// TODO sollten wir das programm nicht hier beenden?
 		// while(!shutdown){sleep oder sowas
-		// Debug.msg("ENDEN---main.java---DNEND");
+		Debug.msg("Main thread shut down");
 	}
 
 	/**

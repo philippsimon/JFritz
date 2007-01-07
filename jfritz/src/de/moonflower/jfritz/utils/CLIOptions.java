@@ -10,7 +10,7 @@ import java.util.Vector;
 /**
  * @author Arno Willig
  *  
- */
+ */ 
 public class CLIOptions {
 
 	Vector<CLIOption> CLIOptions;
