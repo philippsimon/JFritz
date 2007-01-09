@@ -614,6 +614,7 @@ public final class JFritz implements  StatusListener{
 		// load the different area code -> city mappings
 		ReverseLookup.loadAreaCodes();
 		PhoneNumber.loadFlagMap();
+		PhoneNumber.loadCallbyCallMap();
 	}
 
 	public static URL getRingSound() {
