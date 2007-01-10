@@ -127,6 +127,7 @@
  * TODO-END 
  *
  * JFritz 0.6.2.02
+ * - Neu: CallbyCall-Vorwahlen jetzt in einer xml-datei ausgelagert.
  * - Neu: CallbyCall-Vorwahlen jetzt in einer Datei einstellbar, für jedes Land möglich
  * - Neu: Unterteilung in Handy/Festnetz jetzt in einer Datei einstellbar, für jedes Land möglich
  * - Neu: Eigene Icons für Handybetreiber
