@@ -125,7 +125,7 @@
  * - Überprüfen, geht wohl nicht mehr: Rückwärtssuche für Österreich über dasoertliche.de wieder eingebaut
  * - Connection-Timeout für ReverseLookup setzen
  * TODO-END 
- *
+ * 
  * JFritz 0.6.2.02
  * - Bugfix: Problem mit der schweizer Rückwärtssuche behoben
  * - Bugfix: Probleme mit der deutschen Rückwärtssuche behoben
@@ -140,7 +140,6 @@
  * - Bugfix: CallMonitor outgoing calls
  * - Bugfix: Reverselookup on mac now run with correct character encoding
  * - Bugfix: Französischer Reverselookup
- * - Bugfix: JFritz verhindert das Herunterfahren auf OSX nicht mehr
  * - Bugfix: Rückwärtssuche funktioniert jetzt mit beliebigem Host-Zeichensatz
  * - Bugfix: Rückwärtssuche nach Ort zeigt jetzt Stadtnamen mit Umlauts
  *
