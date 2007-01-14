@@ -36,7 +36,7 @@ public class ThreeStateButton extends JButton implements ImageObserver {
 	 * @param image
 	 *            this image is used for the selected state a grey image is
 	 *            created from this image for the NOTHING state and a crossed
-	 *            for the SELECTED_NOT state
+	 *            for the SELECTED_NOT state 
 	 */
 	public ThreeStateButton(ImageIcon image) {
 		super(image);

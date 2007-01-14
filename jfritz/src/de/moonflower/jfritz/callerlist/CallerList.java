@@ -89,7 +89,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	// is the type exported from a 7170 with a >= XX.04.12
 	private final static String EXPORT_CSV_FORMAT_PUSHSERVICE_NEW = "Typ; Datum; Name; Rufnummer; Nebenstelle; Eigene Rufnummer; Dauer";
 
-	// is the type exported from the new firmware
+	// is the type exported from the new firmware						
 	private final static String EXPORT_CSV_FORMAT_FRITZBOX_NEWFIRMWARE = "Typ;Datum;Name;Rufnummer;Nebenstelle;Eigene Rufnummer;Dauer";
 
 	// english firmware, unknown version
@@ -99,6 +99,8 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 
 	private final static String EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH_NEW = "Typ;Date;Name;Number;Extension;Outgoing Caller ID;Duration";
 
+	private final static String EXPORT_CSV_FORMAT_FRITZBOX_EN_140426 = "Type;Date;Name;Number;Extension;Outgoing Caller ID;Duration";
+	
 	// call list used to display entries in the table, can be sorted by other
 	// criteria
 	private Vector<Call> filteredCallerData;
@@ -1068,7 +1070,8 @@ public boolean importFromCSVFile(BufferedReader br) {
 					|| line.equals(EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH)
 					|| line.equals(EXPORT_CSV_FORMAT_PUSHSERVICE_ENGLISH)
 					|| line.equals(EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH_NEW)
-					|| line.equals(EXPORT_CSV_FORMAT_PUSHSERVICE_NEW)) {
+					|| line.equals(EXPORT_CSV_FORMAT_PUSHSERVICE_NEW)
+					|| line.equals(EXPORT_CSV_FORMAT_FRITZBOX_EN_140426)) {
 
 				// check which kind of a file it is
 				if (line.equals(EXPORT_CSV_FORMAT_JFRITZ)) {
@@ -1081,7 +1084,8 @@ public boolean importFromCSVFile(BufferedReader br) {
 				} else if (line.equals(EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH) 
 						|| line.equals(EXPORT_CSV_FORMAT_PUSHSERVICE_ENGLISH)) {
 					isEnglishFirmware = true;
-				} else if (line.equals(EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH_NEW)) {
+				} else if (line.equals(EXPORT_CSV_FORMAT_FRITZBOX_ENGLISH_NEW)
+						|| line.equals(EXPORT_CSV_FORMAT_FRITZBOX_EN_140426)) {
 					isNewEnglishFirmware = true;
 				}
 
@@ -1552,7 +1556,9 @@ public boolean importFromCSVFile(BufferedReader br) {
 	}
 
 	/**
-	 * @author Brian Jensen function parses a line of a csv file, that was
+	 * @author Brian Jensen 
+	 * 
+	 * function parses a line of a csv file, that was
 	 *         directly exported from the Fritzbox web interface, either
 	 *         directly or through jfritz
 	 * 
@@ -1629,6 +1635,12 @@ public boolean importFromCSVFile(BufferedReader br) {
 
 		// split the duration into two stings, hours:minutes
 		String[] time = field[6].split(":");
+		Debug.msg("time length: "+time.length);
+		//Apparently with the new 14.04.26 the duration is stored as hours.minutes
+		if(time.length != 2){
+			time = field[6].split("\\.");
+			Debug.msg("adjusted length: "+time.length);
+		}
 
 		// change the port to fit the jfritz naming convention
 		if (field[4].equals("FON 1")) {

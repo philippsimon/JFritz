@@ -127,6 +127,7 @@
  * TODO-END 
  *
  * JFritz 0.6.2.02
+ * - Bugfix: Support for english firmware 14.04.26 corrected
  * - Neu: CallbyCall-Vorwahlen jetzt in einer xml-datei ausgelagert.
  * - Neu: CallbyCall-Vorwahlen jetzt in einer Datei einstellbar, für jedes Land möglich
  * - Neu: Unterteilung in Handy/Festnetz jetzt in einer Datei einstellbar, für jedes Land möglich
@@ -581,7 +582,7 @@ import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.Encryption;
 import de.moonflower.jfritz.utils.JFritzProperties;
 import de.moonflower.jfritz.utils.JFritzUtils;
-
+ 
 public class Main {
 
 	public final static String PROGRAM_NAME = "JFritz"; //$NON-NLS-1$

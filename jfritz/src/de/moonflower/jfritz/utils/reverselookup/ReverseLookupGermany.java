@@ -132,7 +132,7 @@ public final class ReverseLookupGermany {
 							if (str.indexOf(endString)!=-1)
 								flg_found_end = true;
 						}
-					}
+					} 
 					
 					Debug.msg(data);
 					d.close();
