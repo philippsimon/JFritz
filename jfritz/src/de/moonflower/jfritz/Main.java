@@ -162,8 +162,8 @@
  * Jfritz 0.6.2
  * - Neue Strings:
  *  check_for_new_version_after_start
- *  date_filter_last_week
- *  date_filter_this_week
+ *  date_filter.last_week
+ *  date_filter.this_week
  *  enable_inet_monitoring
  *  filter_search
  *  inet_usage
@@ -217,10 +217,10 @@
  *		delete_duplicate_phonebook_entries_confirm_msg
  *		delete_duplicate_phonebook_entries_inform_msg
  *		box.port
- *		config_wizard_info1
- *		config_wizard_info2
- *		config_wizard_info3
- *		config_wizard_info4
+ *		config_wizard.info1
+ *		config_wizard.info2
+ *		config_wizard.info3
+ *		config_wizard.info4
  *		config_wizard
  *		popup_delay
  *      dial_prefix
@@ -1145,8 +1145,8 @@ public class Main {
 				if ( !key.equals("filter_private") && !key.equals("filter.Phonebook.search")) 
 					properties.remove(key);
 			}
-			if ( key.equals("date_filter_special") ) {
-				properties.remove("date_filter_special");
+			if ( key.equals("date_filter.special") ) {
+				properties.remove("date_filter.special");
 			}
 		}
 		saveProperties();
