@@ -141,6 +141,14 @@ public class Call {
 	public CallType getCalltype() {
 		return calltype;
 	}
+	
+	/**
+	 * Set call type
+	 * @param callType
+	 */
+	public void setCallType(CallType callType) {
+		calltype = callType;
+	}
 
 	/**
 	 * @return Returns the comment.
