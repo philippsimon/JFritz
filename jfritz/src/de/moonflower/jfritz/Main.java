@@ -128,6 +128,7 @@
  * JFritz 0.6.2.03
  * - Umstrukturierung des Aufrufs von externen Programmen
  * - Leisere Sounds
+ * - Bugfix: Zu kurze Landesvorwahl
  * 
  * JFritz 0.6.2.02
  * - Bugfix: Problem mit der schweizer Rückwärtssuche behoben
