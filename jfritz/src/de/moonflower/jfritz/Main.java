@@ -125,10 +125,13 @@
  * - Connection-Timeout für ReverseLookup setzen
  * TODO-END 
  * 
+ * JFritz 0.6.2.04
+ * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
+ * 
  * JFritz 0.6.2.03
- * - Umstrukturierung des Aufrufs von externen Programmen
  * - Leisere Sounds
  * - Bugfix: Zu kurze Landesvorwahl
+ * - Bugfix: Falsche Rufnummern gelöscht
  * 
  * JFritz 0.6.2.02
  * - Bugfix: Problem mit der schweizer Rückwärtssuche behoben
