@@ -340,7 +340,7 @@ public final class JFritz implements  StatusListener{
 			MessageDlg msgDialog = new MessageDlg();
 			msgDialog.showMessage(msg, Long.parseLong(Main.getProperty(
 					"option.popupDelay", "10")) * 1000);
-			msgDialog.toFront();
+			msgDialog.repaint();
 			break;
 		}
 		case 2: {
@@ -351,7 +351,7 @@ public final class JFritz implements  StatusListener{
 				MessageDlg msgDialog = new MessageDlg();
 				msgDialog.showMessage(msg, Long.parseLong(Main.getProperty(
 						"option.popupDelay", "10")) * 1000);
-				msgDialog.toFront();
+				msgDialog.repaint();
 			}
 			break;
 		}
