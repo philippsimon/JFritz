@@ -129,6 +129,7 @@
  * 
  * JFritz 0.6.2.03
  * - Leisere Sounds
+ * - Doppelklick auf das Trayicon nun möglich
  * - Bugfix: Zu kurze Landesvorwahl
  * - Bugfix: Falsche Rufnummern gelöscht
  * - Bugfix?: JFritz verliert Einstellungen
