@@ -134,6 +134,7 @@
  * - Bugfix?: JFritz verliert Einstellungen
  * - Bugfix: Anrufmonitor funktioniert sporadisch nicht mehr. (Restart alle 5 Minuten)
  * - Bugfix: Wizard speichert IP nun wieder korrekt
+ * - Bugfix: Richtiger Quell- und Zielordner für die Backups
  * - INTERN: Getrenntes Speichern von config-properties und state-properties.
  *           config-properties: ip, passwort, optionen ...
  *           state-properties: filter-state, window-position, window-state, column-width...
@@ -1023,7 +1024,7 @@ public class Main {
 
 	protected static void doBackup() {
 		CopyFile backup = new CopyFile();
-		backup.copy(".", "xml"); //$NON-NLS-1$,  //$NON-NLS-2$
+		backup.copy(SAVE_DIR, "xml"); //$NON-NLS-1$,  //$NON-NLS-2$
 	}
 
 	/**
