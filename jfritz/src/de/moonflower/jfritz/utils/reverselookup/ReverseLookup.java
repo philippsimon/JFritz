@@ -185,6 +185,9 @@ public class ReverseLookup {
 				newPerson.addNumber(number.getAreaNumber(), "home");
 			}
 		}
+		
+		Debug.msg("Name:" +newPerson.getFullname());
+		
 		return newPerson;
 	}
 
