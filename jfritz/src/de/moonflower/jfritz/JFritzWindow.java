@@ -93,7 +93,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 
 	private static final long serialVersionUID = 1;
 
-	private Timer timer;
+	private Timer timer = null;
 
 	private JMenuBar menu;
 
@@ -179,8 +179,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		setTitle(Main.PROGRAM_NAME);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setDefaultLookAndFeel();
-//		ShutdownThread shutdownThread = new ShutdownThread();
-//		Runtime.getRuntime().addShutdownHook(shutdownThread);
 
 		addKeyListener(KeyEvent.VK_F5, "F5"); //$NON-NLS-1$
 
@@ -672,6 +670,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 							.equals("true")) { //$NON-NLS-1$
 						reverseLookup();
 					}
+					interrupt();
 				}
 			};
 			worker.start();
@@ -702,6 +701,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 					isretrieving = false;
 					// int rows = JFritz.getCallerlist().getRowCount();
 					setStatus();
+					interrupt();
 				}
 			};
 			worker.start();
@@ -1233,6 +1233,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			// TODO: Fehlermeldung für den User
 			e.printStackTrace();
 		}
+		thread.interrupt();
 		thread = null;
 	}
 
@@ -1569,7 +1570,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	}
 
 	public void saveWindowProperties() {
-		Debug.msg("Save window position"); //$NON-NLS-1$
+//		Debug.msg("Save window position"); //$NON-NLS-1$
 
 		Main.setStateProperty(
 				"position.left", Integer.toString(getLocation().x)); //$NON-NLS-1$
@@ -1578,21 +1579,21 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		Main.setStateProperty(
 				"position.width", Integer.toString(this.getWidth()));//$NON-NLS-1$
 		Main.setStateProperty(
-				"position.height", Integer.toString(this.getHeight()));//$NON-NLS-1$
-
+				"position.height", Integer.toString(this.getHeight()));//$NON-NLS-1$		
 		Main.setStateProperty("window.state", Integer.toString(this
 				.getExtendedState()));
 	}
 
-	public void saveStateProperties() {
+	public void prepareShutdown() {
+		if ( timer != null )
+			timer.cancel();
+		
 		saveWindowProperties();
 		callerListPanel.saveStateProperties();		
 
 		// TODO: möglicherweise speichern der Einstellungen für
 		// phonebookPanel
 		// quickDialPanel
-		// monitoringPanel
+		// monitoringPanel		
 	}
-
-
 }

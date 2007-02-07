@@ -100,6 +100,8 @@ public final class JFritz implements  StatusListener{
 	private static String HostOS = "other"; //$NON-NLS-1$
 
 	private static WatchdogThread watchdog;
+	
+	private static Timer watchdogTimer;
 
 	private static FritzBox fritzBox;
 
@@ -188,7 +190,7 @@ public final class JFritz implements  StatusListener{
 		try {
 			jframe = new JFritzWindow(this);
 		} catch (WrongPasswordException wpe) {
-			exit(0);
+			main.exit(0);
 		}
 		if (Main.checkForSystraySupport()) {
 			Debug.msg("Check Systray-Support"); //$NON-NLS-1$
@@ -217,6 +219,7 @@ public final class JFritz implements  StatusListener{
 			} catch (InterruptedException ie) {
 
 			}
+			ssdpthread.interrupt();
 		}
 
 		if (showConfWizard) {
@@ -488,15 +491,16 @@ public final class JFritz implements  StatusListener{
 	 * start timer for watchdog
 	 * 
 	 */
-	private static void startWatchdog() {
-		Timer timer = new Timer();
+	private static void startWatchdog() {		
+		watchdogTimer = new Timer();
 		watchdog = new WatchdogThread(1);
-		timer.schedule(new TimerTask() {
+		watchdog.setName("Watchdog-Thread");
+		watchdogTimer.schedule(new TimerTask() {
 			public void run() {
 				watchdog.run();
 			}
 		}, 5000, 1 * 60000);
-		Debug.msg("Watchdog enabled"); //$NON-NLS-1$
+		Debug.msg("Watchdog enabled"); //$NON-NLS-1$	
 	}
 
 	/**
@@ -529,7 +533,7 @@ public final class JFritz implements  StatusListener{
 		try {
 			jframe = new JFritzWindow(this);
 		} catch (WrongPasswordException wpe) {
-			exit(0);
+			main.exit(0);
 		}
 		javax.swing.SwingUtilities.invokeLater(jframe);
 		jframe.checkOptions();
@@ -545,37 +549,33 @@ public final class JFritz implements  StatusListener{
 			exit = showExitDialog();
 		}
 		if (exit) {
-			exit(0);
+			main.exit(0);
 		}
 	}
 	
-	/**
-	 * clean up and exit
-	 * 
-	 * @param i
-	 *            exit status.
-	 */
-	void exit(int i) {
-		Debug.msg("Shut down JFritz");
-
+	void prepareShutdown() {
 		// TODO maybe some more cleanup is needed
-		quickDials.saveToXMLFile(Main.SAVE_DIR + QUICKDIALS_FILE);
 		
-		if ( jframe != null) 
-			jframe.saveStateProperties();
-		
-		Main.saveStateProperties();
-		
-		if (callMonitor != null) {
-			callMonitor.stopCallMonitor();
+		if ( jframe != null) {
+			jframe.prepareShutdown();		
+			Main.saveStateProperties();
 		}
-		Debug.msg("disposing jframe");
-		if (jframe != null)
-			jframe.dispose();
-		Debug.msg("Saving done");
-		main.exit(i);
-	}
+		
+		if (Main.SYSTRAY_SUPPORT)
+			systray.removeTrayIcon(trayIcon);
+		systray = null;
+		
+		if (callMonitor != null) 
+			callMonitor.stopCallMonitor();
 
+		watchdog.interrupt();
+		watchdogTimer.cancel();
+
+//		Debug.msg("disposing jframe");
+		if (jframe != null)
+			jframe.dispose();		
+	}
+	
 	/**
 	 * Shows the exit dialog
 	 */
