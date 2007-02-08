@@ -219,7 +219,7 @@ public final class JFritz implements  StatusListener{
 			} catch (InterruptedException ie) {
 
 			}
-			ssdpthread.interrupt();
+//			ssdpthread.interrupt();
 		}
 
 		if (showConfWizard) {
@@ -349,6 +349,7 @@ public final class JFritz implements  StatusListener{
 			msgDialog.showMessage(msg, Long.parseLong(Main.getProperty(
 					"option.popupDelay", "10")) * 1000);
 			msgDialog.repaint();
+			msgDialog.toFront();
 			break;
 		}
 		case 2: {
@@ -360,6 +361,7 @@ public final class JFritz implements  StatusListener{
 				msgDialog.showMessage(msg, Long.parseLong(Main.getProperty(
 						"option.popupDelay", "10")) * 1000);
 				msgDialog.repaint();
+				msgDialog.toFront();
 			}
 			break;
 		}
@@ -561,19 +563,21 @@ public final class JFritz implements  StatusListener{
 			Main.saveStateProperties();
 		}
 		
-		if (Main.SYSTRAY_SUPPORT)
-			systray.removeTrayIcon(trayIcon);
-		systray = null;
-		
 		if (callMonitor != null) 
 			callMonitor.stopCallMonitor();
 
-		watchdog.interrupt();
-		watchdogTimer.cancel();
+		if ( watchdog != null ) {
+			watchdogTimer.cancel();
+			// FIXME: interrupt() lässt JFritz beim System-Shutdown hängen
+//			watchdog.interrupt();
+		}
 
 //		Debug.msg("disposing jframe");
-		if (jframe != null)
-			jframe.dispose();		
+//		if (jframe != null)
+//			jframe.dispose();
+//		if (Main.SYSTRAY_SUPPORT)
+//			systray.removeTrayIcon(null);
+		
 	}
 	
 	/**
