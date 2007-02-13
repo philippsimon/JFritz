@@ -128,6 +128,7 @@
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
  * 
  * JFritz 0.6.2.03
+ * - Autoupdate korrektur
  * - Leisere Sounds
  * - Doppelklick auf das Trayicon nun möglich
  * - Bugfix: Zu kurze Landesvorwahl
