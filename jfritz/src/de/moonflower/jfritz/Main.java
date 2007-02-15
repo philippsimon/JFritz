@@ -102,7 +102,13 @@
  * 						nur ich schätze es gibt gar keins => wir müssten eine schreiben.
  * 						Habe das programm bei mir in der Arbeit, und ich hasse es. Ich werde nicht mehr Zeit als notwendig ist damit verbringen.
  * 1 -  1 - Bild / Rufton / Farbe eines bestimmten Anrufers
- * 
+ * - Viele finden es super, daß man ein Bild pro Telefonnummer hinterlegen kann. Beim Anruf würde wie beim handy das Bild mit aufploppen
+ * - Einteilung der Benutzer in Gruppen 
+ * - Einfachere Verwaltung der Telefonbucheinträge, speziell das mergen zweier Einträge. Speziell wenn jemand mehrere Nummern hat, also Handy, Privat und SIP. Hier wäre es schön, wenn die eine Nummer leicht einem bestehenden Telefonbucheintrag hinzugefügt werden könnte und eben der 2te Eintrag dann gelöscht werden würde
+ * - Adressbuchimport nur XML :-(    CVS!?
+ * - Adressbuchabgleich mit SeaMonkey oder Thunderbird
+ * - Adressbuchabgleich mit Outlook
+ * - Adressbuchabgleich jfritz <-> FritzBox  
  * 
  * CHANGELOG:
  *
@@ -123,6 +129,13 @@
  * - Überprüfen, geht wohl nicht mehr: Rückwärtssuche für Österreich über dasoertliche.de wieder eingebaut
  * - Connection-Timeout für ReverseLookup setzen
  * TODO-END 
+ * 
+ * FIXME:
+ * - Einstellungsseite muß gescrollt werden, obwohl viel Platz am Bildschirm wäre
+ * - Bestehenden dummy Eintrag überschreiben
+ * - Rechtsklick in Teilnehmerspalte
+ *  
+ * FIXME-END
  * 
  * JFritz 0.6.2.04
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
@@ -658,6 +671,8 @@ public class Main {
 	
 	private static boolean isRunning = false;
 	
+	private static int exitCode = 0;
+	
 	public Main(String[] args) {
 		System.out.println(PROGRAM_NAME + " v" + PROGRAM_VERSION //$NON-NLS-1$
 				+ " (c) 2005-2006 by " + JFRITZ_PROJECT); //$NON-NLS-1$
@@ -928,7 +943,7 @@ public class Main {
 				if (answer == JOptionPane.YES_OPTION) {
 					Debug
 							.msg("Multiple instance lock: User decided to shut down this instance."); //$NON-NLS-1$
-					exit(0);
+					exit(-1);
 				} else {
 					Debug
 							.msg("Multiple instance lock: User decided NOT to shut down this instance."); //$NON-NLS-1$
@@ -1054,9 +1069,10 @@ public class Main {
 
 	public void exit(int i) {
 		Debug.msg("Main.exit(" + i + ")");
+		exitCode = i;
 		System.exit(i);
 	}
-
+	
 	/**
 	 * Loads properties from xml files
 	 */
@@ -1365,14 +1381,15 @@ public class Main {
 		
 		Debug.msg("Shutting down JFritz..."); //$NON-NLS-1$
 			
-		if (Main.isInstanceControlEnabled()) {
+		if (exitCode != -1 && Main.isInstanceControlEnabled()) {
 			File f = new File(Main.SAVE_DIR + Main.LOCK_FILE);
 			
 			if (f.exists())
 				f.delete();
 			Debug.msg("Multiple instance lock: release lock."); //$NON-NLS-1$
 		}
-	        if ( jfritz != null ) {
+	    
+		if ( jfritz != null ) {
 			jfritz.prepareShutdown();
 		}
 		
