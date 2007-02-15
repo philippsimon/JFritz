@@ -1858,6 +1858,8 @@ public boolean importFromCSVFile(BufferedReader br) {
 	 * @return
 	 */
 	public void reverseLookup(boolean filteredOnly) {
+		JFritz.getJframe().selectLookupButton(true);
+		JFritz.getJframe().setLookupBusy(true);
 		Vector<PhoneNumber> numbers = new Vector<PhoneNumber>();
 		if (filteredOnly) {
 			for (int i = 0; i < filteredCallerData.size(); i++) {
@@ -1871,21 +1873,27 @@ public boolean importFromCSVFile(BufferedReader br) {
 				}
 			}
 		} else {
-			for (int i = 0; i < unfilteredCallerData.size(); i++) {
-				Call call = unfilteredCallerData.get(i);
-				if (call.getPhoneNumber() != null) {
-					Person foundPerson = phonebook.findPerson(call);
-					if ((foundPerson == null)
-							&& !numbers.contains(call.getPhoneNumber())) {
-						numbers.add(call.getPhoneNumber());
-					}
+			numbers = getAllUnknownEntries();
+		}
+		reverseLookup(numbers);
+	}
+
+	public Vector<PhoneNumber> getAllUnknownEntries(){
+		Vector<PhoneNumber> numbers = new Vector<PhoneNumber>();
+		for (int i = 0; i < unfilteredCallerData.size(); i++) {
+			Call call = unfilteredCallerData.get(i);
+			if (call.getPhoneNumber() != null) {
+				Person foundPerson = phonebook.findPerson(call);
+				if ((foundPerson == null)
+						&& !numbers.contains(call.getPhoneNumber())) {
+					numbers.add(call.getPhoneNumber());
 				}
 			}
 		}
-		reverseLookup(numbers);
-
+		
+		return numbers;
 	}
-
+	
 	/**
 	 * does reverse lookup (find the name and address for a given phone number
 	 * 
@@ -1913,10 +1921,9 @@ public boolean importFromCSVFile(BufferedReader br) {
 	 *            a vector of numbers to do reverse lookup on
 	 */
 	public void reverseLookup(Vector<PhoneNumber> numbers) {
-		Debug.msg("Reverse lookup for " //$NON-NLS-1$
-				+ numbers.size() + " numbers");
-
-		ReverseLookup.lookup(numbers, this);
+		JFritz.getJframe().selectLookupButton(true);
+		JFritz.getJframe().setLookupBusy(true);
+		ReverseLookup.lookup(numbers, this, false);
 	}
 
 	/**
@@ -1927,6 +1934,9 @@ public boolean importFromCSVFile(BufferedReader br) {
 			phonebook.addEntries(persons);
 			this.fireTableDataChanged();
 		}
+		JFritz.getJframe().selectLookupButton(false);
+		JFritz.getJframe().setLookupBusy(false);
+		
 	}
 
 	public void percentOfLookupDone(float f) {
@@ -1981,4 +1991,8 @@ public boolean importFromCSVFile(BufferedReader br) {
 		return phonebook;
 	}
 
+	public void stopLookup(){
+		ReverseLookup.stopLookup();
+	}
+	
 }
