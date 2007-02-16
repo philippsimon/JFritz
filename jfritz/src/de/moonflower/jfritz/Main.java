@@ -139,13 +139,13 @@
  * 
  * JFritz 0.6.2.04
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
- * - Neu: Rückwärtssuche Engine komplette neu geschrieben. Alle paramter in einer XML-Datei einstellbar
  * 
  * JFritz 0.6.2.03
  * - Autoupdate korrektur
  * - Leisere Sounds
  * - Doppelklick auf das Trayicon nun möglich
- * - Bugfix: Rückwärtssuche bleibt nicht mehr stehen, falls die Verbindung zum Server stalled ist
+ * - Neu: Rückwärtssuche Engine komplette neu geschrieben. Alle paramter in einer XML-Datei einstellbar
+ * - Bugfix: Rückwärtssuche bleibt nicht mehr stehen, falls die Verbindung zum Server hängt
  * - Bugfix: Rückwärtssuche für deutschland wieder angepasst, dastelefonbuch.de und dasoertliche.de eingesetzt
  * - Bugfix: Zu kurze Landesvorwahl
  * - Bugfix: Falsche Rufnummern gelöscht
