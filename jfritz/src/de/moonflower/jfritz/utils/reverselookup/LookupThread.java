@@ -244,7 +244,7 @@ public class LookupThread extends Thread {
 										str = "";
 										for(int k=1; k <= mData.groupCount(); k++)
 											str = str + mData.group(k).trim() + " "; 
-										
+
 										String[] split = str.split(" ", 2); //$NON-NLS-1$
 										
 										lastname = JFritzUtils.removeLeadingSpaces(HTMLUtil.stripEntities(split[0]));
