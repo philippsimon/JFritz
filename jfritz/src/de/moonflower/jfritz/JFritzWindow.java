@@ -670,7 +670,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 					isretrieving = false;
 					if (Main.getProperty("option.lookupAfterFetch", "false") //$NON-NLS-1$,  //$NON-NLS-2$
 							.equals("true")) { //$NON-NLS-1$
-						JFritz.getCallerList().reverseLookup(false);
+						JFritz.getCallerList().reverseLookup(false, false);
 					}
 //					interrupt();
 				}
@@ -971,7 +971,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			boolean active = ((JToggleButton) e.getSource()).isSelected();
 			if (active) {
 				Debug.msg("Start reverselookup"); //$NON-NLS-1$
-				JFritz.getCallerList().reverseLookup(true);
+				JFritz.getCallerList().reverseLookup(true, false);
 			} else {
 				Debug.msg("Stopping reverse lookup"); //$NON-NLS-1$
 				JFritz.getCallerList().stopLookup();
@@ -1410,7 +1410,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 
 					if (Main.getProperty("option.lookupAfterFetch", "false")
 							.equals("true")) {
-						JFritz.getCallerList().reverseLookup(false);
+						JFritz.getCallerList().reverseLookup(false, false);
 					}
 
 				} catch (FileNotFoundException e) {

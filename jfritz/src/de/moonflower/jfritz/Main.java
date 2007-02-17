@@ -159,6 +159,8 @@
  * - INTERN: getProperty() gibt config-properties, getStateProperty()
  *           getStatePropery() gibt state-properties, setStateProperty() 
  * - INTERN: Shutdown-Thread wird NICHT mehr benutzt
+ * - Neue Strings:
+ * 		reverse_lookup_dummy
  * 
  * JFritz 0.6.2.02
  * - Bugfix: Problem mit der schweizer Rückwärtssuche behoben
@@ -1407,7 +1409,7 @@ public class Main implements LookupObserver {
 	 *
 	 */
 	private void doReverseLookup(){
-		ReverseLookup.lookup(JFritz.getCallerList().getAllUnknownEntries(), this, true);
+		ReverseLookup.lookup(JFritz.getCallerList().getAllUnknownEntries(false), this, true);
 		try{
 			ReverseLookup.thread.join();
 		}catch(InterruptedException e){
