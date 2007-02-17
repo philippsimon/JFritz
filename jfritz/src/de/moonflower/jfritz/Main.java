@@ -149,7 +149,7 @@
  * - Bugfix: Rückwärtssuche für deutschland wieder angepasst, dastelefonbuch.de und dasoertliche.de eingesetzt
  * - Bugfix: Zu kurze Landesvorwahl
  * - Bugfix: Falsche Rufnummern gelöscht
- * - Bugfix?: JFritz verliert Einstellungen
+ * - Bugfix: JFritz verliert Einstellungen
  * - Bugfix: Anrufmonitor funktioniert sporadisch nicht mehr. (Restart alle 5 Minuten)
  * - Bugfix: Wizard speichert IP nun wieder korrekt
  * - Bugfix: Richtiger Quell- und Zielordner für die Backups
@@ -1420,7 +1420,8 @@ public class Main implements LookupObserver {
 	 * adds the results to the phonebook and saves
 	 */
 	public void personsFound(Vector persons){
-		JFritz.getPhonebook().addEntries(persons);
+		if ( persons != null )
+			JFritz.getPhonebook().addEntries(persons);
 	}
 	
 	/**
@@ -1429,5 +1430,13 @@ public class Main implements LookupObserver {
 	public void percentOfLookupDone(float f){
 		//TODO: Update the status here!
 	}
+
+	/**
+	 * is called to save progress 
+	 */
+	public void saveFoundEntries(Vector persons) {
+		if ( persons != null )
+			JFritz.getPhonebook().addEntries(persons);
+	}	
 	
 }
