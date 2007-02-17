@@ -165,6 +165,7 @@ public class ReverseLookup {
 		results.add(person);
 		if ( results.size() % 20 == 0) {
 			observer.saveFoundEntries(results);
+			requests_done.clear();
 		}
 	}
 	
@@ -176,6 +177,7 @@ public class ReverseLookup {
 	public static synchronized void lookupDone(){
 		observer.personsFound(results);
 		results.clear();
+		requests_done.clear();
 	}
 	
 	/**
