@@ -133,7 +133,8 @@
  * FIXME:
  * - Einstellungsseite muß gescrollt werden, obwohl viel Platz am Bildschirm wäre
  * - Bestehenden dummy Eintrag überschreiben
- * - Rechtsklick in Teilnehmerspalte
+ * - Rechtsklick in Teilnehmerspalte 
+ * - Text ändern für reverse_lookup_dummy
  *  
  * FIXME-END
  * 
