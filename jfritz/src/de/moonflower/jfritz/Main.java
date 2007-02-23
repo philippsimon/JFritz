@@ -140,6 +140,9 @@
  * 
  * JFritz 0.6.2.04
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
+ * - Neu: Rückwärtssuche erweitert, jetzt können die Regex Ausdrücke beliebige groupiert werden
+ * - Bugfix: Rückwärtssuche erkennt die Charset jetzt automatisch
+ * - Neu: Rückwärtssuche für Türkei eingebaut
  * 
  * JFritz 0.6.2.03
  * - Autoupdate korrektur
