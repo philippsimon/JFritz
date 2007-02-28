@@ -32,6 +32,7 @@ import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.JFritzUtils;
 import de.moonflower.jfritz.utils.reverselookup.ReverseLookupGermany;
 import de.moonflower.jfritz.utils.reverselookup.ReverseLookupAustria;
+import de.moonflower.jfritz.utils.reverselookup.ReverseLookupTurkey;
 import de.moonflower.jfritz.utils.reverselookup.ReverseLookupXMLHandler;
 
 /**
@@ -185,12 +186,11 @@ public class ReverseLookup {
 	 *
 	 */
 	public static void loadSettings() {
-
 		ReverseLookupGermany.loadAreaCodes();
 		ReverseLookupAustria.loadAreaCodes();
 		ReverseLookupUnitedStates.loadAreaCodes();
+		ReverseLookupTurkey.loadAreaCodes();
 		loadrlsXMLFile();
-
 	}
 
 	/**

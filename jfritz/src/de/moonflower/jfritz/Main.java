@@ -143,6 +143,8 @@
  * - Neu: Rückwärtssuche erweitert, jetzt können die Regex Ausdrücke beliebige groupiert werden
  * - Bugfix: Rückwärtssuche erkennt die Charset jetzt automatisch
  * - Neu: Rückwärtssuche für Türkei eingebaut
+ * - Neu: Rückwärtssuche nach Ort für Türkei eingebaut
+ * - Bugfix: Amtskennzahl richtig verarbeitet beim CallMonitor
  * 
  * JFritz 0.6.2.03
  * - Autoupdate korrektur

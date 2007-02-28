@@ -60,7 +60,7 @@ public final class ReverseLookupUnitedStates {
 				}
 			}
 
-			Debug.msg(lines + " Lines read from areacodes_germany.csv");
+			Debug.msg(lines + " Lines read from areacodes_usa.csv");
 			Debug.msg("numberMap size: "+numberMap.size());
 
 		}catch(Exception e){
