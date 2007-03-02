@@ -10,7 +10,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Vector;
 import java.util.concurrent.PriorityBlockingQueue;
 
@@ -58,7 +57,7 @@ public class ReverseLookup {
 	static volatile PriorityBlockingQueue<LookupRequest> requests = new PriorityBlockingQueue<LookupRequest>();
 	static volatile PriorityBlockingQueue<LookupRequest> requests_done = new PriorityBlockingQueue<LookupRequest>();
 
-	public static HashMap<String, LinkedList<ReverseLookupSite>> rlsMap;
+	public static HashMap<String, Vector<ReverseLookupSite>> rlsMap;
 	
 	private static LookupObserver observer;
 
@@ -218,7 +217,7 @@ public class ReverseLookup {
 	public static void loadrlsXMLFile(){
 		try {
 			Debug.msg("Loading the reverse lookup xml file");
-			rlsMap = new HashMap<String, LinkedList<ReverseLookupSite>>(10);
+			rlsMap = new HashMap<String, Vector<ReverseLookupSite>>(8);
 			
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			factory.setValidating(false); 
@@ -269,7 +268,7 @@ public class ReverseLookup {
 	 * @param countryCode
 	 * @param rls_list
 	 */
-	public static void addReverseLookupSites(String countryCode, LinkedList<ReverseLookupSite> rls_list){
+	public static void addReverseLookupSites(String countryCode, Vector<ReverseLookupSite> rls_list){
 		rlsMap.put(countryCode, rls_list);
 	}
 }
