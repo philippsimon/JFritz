@@ -40,6 +40,8 @@ public class FritzBoxFirmware {
 	public final static byte BOXTYPE_FRITZBOX_5050 = 12;
 
     public final static byte BOXTYPE_FRITZBOX_7050 = 14;
+    
+    public final static byte BOXTYPE_EUMEX_300 = 15;
 
     public final static byte BOXTYPE_FRITZBOX_7170 = 29;
 
@@ -327,6 +329,8 @@ public class FritzBoxFirmware {
 			return "FRITZ!Box 5050"; //$NON-NLS-1$
 		case 11:
 			return "FRITZ!Box ata"; //$NON-NLS-1$
+		case 15:
+			return "Eumex 300ip"; //$NON-NLS-1$
         case 23:
             return "FRITZ!Box 5010"; //$NON-NLS-1$
         case 25:

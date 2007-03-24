@@ -145,6 +145,7 @@
  * - Neu: Rückwärtssuche für Türkei eingebaut
  * - Neu: Rückwärtssuche nach Ort für Türkei eingebaut
  * - Bugfix: Amtskennzahl richtig verarbeitet beim CallMonitor
+ * - Neu: Unterstützung für gemoddete Eumex 300ip (Firmware 15.xx.xx)
  * 
  * JFritz 0.6.2.03
  * - Autoupdate korrektur
