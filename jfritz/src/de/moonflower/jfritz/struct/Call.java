@@ -6,6 +6,8 @@
  */
 package de.moonflower.jfritz.struct;
 
+import java.io.Serializable;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
@@ -16,8 +18,10 @@ import de.moonflower.jfritz.utils.JFritzUtils;
 
 /**
  */
-public class Call {
+public class Call implements Serializable {
 
+	public static final long serialVersionUID = 101;
+	
 	public final static int ROUTE_FIXED_NETWORK = 0;
 
 	public final static int ROUTE_SIP = 1;

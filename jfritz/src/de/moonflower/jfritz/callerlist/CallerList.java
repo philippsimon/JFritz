@@ -421,7 +421,34 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		return true;
 
 	}
-
+	
+	/**
+	 * Adds a vector of new calls to the list, used by network code to
+	 * import en masse
+	 * 
+	 * @author brian
+	 * 
+	 * @param newCalls to be added to the call list
+	 */
+	public void addEntries(Vector<Call> newCalls){
+		for(Call call: newCalls)
+			addEntry(call);
+		fireUpdateCallVector();
+	}
+	
+	/**
+	 * Removes a vector of calls, as dictated by an external data source
+	 * 
+	 * @author brian
+	 * 
+	 * @param removeCalls
+	 */
+	public void removeEntries(Vector<Call> removeCalls){
+		
+			unfilteredCallerData.removeAll(removeCalls);
+		
+	}
+	
 	/**
 	 * This function tests if the given call (not the call object!!!) is
 	 * contained in the call list

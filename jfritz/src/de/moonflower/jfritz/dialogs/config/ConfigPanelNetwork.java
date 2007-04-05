@@ -1,0 +1,385 @@
+package de.moonflower.jfritz.dialogs.config;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionListener;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.TableCellRenderer;
+
+import de.moonflower.jfritz.JFritz;
+import de.moonflower.jfritz.Main;
+import de.moonflower.jfritz.network.NetworkSettings;
+import de.moonflower.jfritz.network.NetworkStateListener;
+import de.moonflower.jfritz.network.NetworkStateMonitor;
+import de.moonflower.jfritz.utils.Debug;
+import de.moonflower.jfritz.utils.Encryption;
+import de.moonflower.jfritz.utils.JFritzUtils;
+
+public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionListener,
+					NetworkStateListener {
+
+	private static final long serialVersionUID = 72671244193567208L;
+
+	private JComboBox networkTypeCombo;
+
+	private JCheckBox clientTelephoneBook, clientCallList,
+			isDumbClient, connectOnStartup, listenOnStartup;
+
+	private JTextField serverName, serverPort, serverLogin, 
+	 	clientsPort, maxConnections;
+
+	private JPasswordField serverPassword;
+	
+	private JToggleButton startClientButton, startServerButton;
+
+	private JTable logonsTable;
+	
+	private JPanel clientPanel, serverPanel;
+
+	private boolean showButtons;
+
+	public ConfigPanelNetwork() {
+
+		setLayout(new BorderLayout());
+		setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		networkTypeCombo = new JComboBox();
+		networkTypeCombo.addItem(Main.getMessage("no_network_function")); //$NON-NLS-1$
+		networkTypeCombo.addItem(Main.getMessage("network_server_function")); //$NON-NLS-1$
+		networkTypeCombo.addItem(Main.getMessage("network_client_function")); //$NON-NLS-1$
+		networkTypeCombo.addActionListener(this);
+
+		add(networkTypeCombo, BorderLayout.NORTH);
+		
+		clientPanel = getClientPanel();
+		serverPanel = getServerPanel();
+		
+		NetworkStateMonitor.addListener(this);
+		
+	}
+
+	public void loadSettings() {
+		String type = Main.getProperty("network.type", "0");
+		if(type.equals("0")){
+			networkTypeCombo.setSelectedIndex(0);
+		}else if(type.equals("1")){
+			add(serverPanel, BorderLayout.SOUTH);
+			networkTypeCombo.setSelectedIndex(1);
+		}else{
+			add(clientPanel, BorderLayout.SOUTH);
+			networkTypeCombo.setSelectedIndex(2);
+		}
+		
+		clientTelephoneBook.setSelected(JFritzUtils.parseBoolean(Main
+				.getProperty("option.clientTelephoneBook", "false"))); //$NON-NLS-1$,  //$NON-NLS-2$
+		
+		clientCallList.setSelected(JFritzUtils.parseBoolean(Main
+				.getProperty("option.clientCallList", "false"))); //$NON-NLS-1$,  //$NON-NLS-2$
+		
+		isDumbClient.setSelected(JFritzUtils.parseBoolean(Main
+				.getProperty("option.isDumbClient", "false"))); //$NON-NLS-1$,  //$NON-NLS-2$
+	
+		connectOnStartup.setSelected(JFritzUtils.parseBoolean(Main
+				.getProperty("option.connectOnStatup", "false"))); //$NON-NLS-1$,  //$NON-NLS-2$
+		
+		listenOnStartup.setSelected(JFritzUtils.parseBoolean(Main
+				.getProperty("option.listenOnStartup", "false"))); //$NON-NLS-1$,  //$NON-NLS-2$
+		
+		serverName.setText(Main.getProperty("server.name", ""));
+		serverPort.setText(Main.getProperty("server.port", ""));
+		serverLogin.setText(Main.getProperty("server.login", ""));
+		serverPassword.setText(Main.getProperty("server.password", ""));
+		
+		clientsPort.setText(Main.getProperty("clients.port", ""));
+		maxConnections.setText(Main.getProperty("max.Connections", "6"));
+		
+		if(NetworkStateMonitor.isListening()){
+			startServerButton.setSelected(true);
+			startServerButton.setText(Main.getMessage("server_is_listening"));
+			startClientButton.setSelected(false);
+			startClientButton.setText(Main.getMessage("connect_to_server"));		
+		}else if(NetworkStateMonitor.isConnectedToServer()){
+			startClientButton.setSelected(true);
+			startClientButton.setText(Main.getMessage("client_is_connected"));
+			startServerButton.setSelected(false);
+			startServerButton.setText(Main.getMessage("start_listening_clients"));
+		}else{
+			startClientButton.setSelected(false);
+			startClientButton.setText(Main.getMessage("connect_to_server"));
+			startServerButton.setSelected(false);
+			startServerButton.setText(Main.getMessage("start_listening_clients"));
+		}
+
+	}
+	
+	public void saveSettings() {
+		// save the various settings
+		Main.setProperty("option.clientTelephoneBook", Boolean.toString(clientTelephoneBook //$NON-NLS-1$
+				.isSelected()));
+		Main.setProperty("option.clientCallList", Boolean //$NON-NLS-1$
+				.toString(clientCallList.isSelected()));
+		Main.setProperty("option.isDumbClient", Boolean //$NON-NLS-1$
+				.toString(isDumbClient.isSelected()));
+		Main.setProperty("network.type", String //$NON-NLS-1$
+				.valueOf(networkTypeCombo.getSelectedIndex()));
+		Main.setProperty("option.connectOnStartup", Boolean //$NON-NLS-1$
+				.toString(connectOnStartup.isSelected()));
+		Main.setProperty("option.listenOnStartup", Boolean //$NON-NLS-1$
+				.toString(listenOnStartup.isSelected()));
+		
+		
+		Main.setProperty("server.name", serverName.getText());
+		Main.setProperty("server.port", serverPort.getText());
+		Main.setProperty("server.login", serverLogin.getText());
+		String password = new String(serverPassword.getPassword());
+		Main.setProperty("server.password", password);
+		
+		Main.setProperty("clients.port", clientsPort.getText());
+		Main.setProperty("max.Connections", maxConnections.getText());
+		
+		NetworkStateMonitor.removeListener(this);
+		
+	}
+
+	private JPanel getServerPanel(){
+		JPanel panel = new JPanel();
+		JPanel optionsPanel = new JPanel();
+		JPanel buttonPanel = new JPanel();
+		
+		panel.setLayout(new BorderLayout());
+		
+		optionsPanel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets.top = 5;
+		c.insets.bottom = 5;
+		c.insets.left = 5;
+		c.insets.right = 5;
+		c.anchor = GridBagConstraints.WEST;
+
+		c.gridy = 0;
+		optionsPanel.add(new JLabel(Main.getMessage("listen_on_startup")), c);
+		listenOnStartup = new JCheckBox();
+		optionsPanel.add(listenOnStartup, c);
+		
+		c.gridy = 1;
+		optionsPanel.add(new JLabel(Main.getMessage("client_connect_port")), c);
+		clientsPort = new JTextField("", 16);
+		clientsPort.setMinimumSize(new Dimension(200, 20));
+		optionsPanel.add(clientsPort, c);
+		
+		c.gridy = 2;
+		optionsPanel.add(new JLabel(Main.getMessage("max_client_connections")), c);
+		maxConnections = new JTextField("", 16);
+		maxConnections.setMinimumSize(new Dimension(200, 20));
+		optionsPanel.add(maxConnections, c);
+	
+		panel.add(optionsPanel, BorderLayout.NORTH);
+		
+		logonsTable = new JTable(JFritz.getClientLogins()) {
+			private static final long serialVersionUID = 1;
+
+			public Component prepareRenderer(TableCellRenderer renderer,
+					int rowIndex, int vColIndex) {
+				Component c = super.prepareRenderer(renderer, rowIndex,
+						vColIndex);
+				if (rowIndex % 2 == 0 && !isCellSelected(rowIndex, vColIndex)) {
+					c.setBackground(new Color(255, 255, 200));
+				} else if (!isCellSelected(rowIndex, vColIndex)) {
+					// If not shaded, match the table's background
+					c.setBackground(getBackground());
+				} else {
+					c.setBackground(new Color(204, 204, 255));
+				}
+				return c;
+			} 
+		};
+		
+		logonsTable.setRowHeight(24);
+		logonsTable.setFocusable(false);
+		logonsTable.setAutoCreateColumnsFromModel(true);
+		logonsTable.setColumnSelectionAllowed(false);
+		logonsTable.setCellSelectionEnabled(false);
+		logonsTable.setRowSelectionAllowed(true);
+		logonsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		logonsTable.getColumnModel().getColumn(0).setMinWidth(60);
+		logonsTable.getColumnModel().getColumn(0).setMaxWidth(120);
+		logonsTable.getColumnModel().getColumn(1).setMinWidth(60);
+		logonsTable.getColumnModel().getColumn(1).setMaxWidth(120);
+		logonsTable.getColumnModel().getColumn(2).setMinWidth(50);
+		logonsTable.getColumnModel().getColumn(2).setMaxWidth(50);
+		logonsTable.getColumnModel().getColumn(3).setMinWidth(50);
+		logonsTable.getColumnModel().getColumn(3).setMaxWidth(50);
+		logonsTable.getColumnModel().getColumn(4).setMinWidth(50);
+		logonsTable.getColumnModel().getColumn(4).setMaxWidth(50);
+		logonsTable.setPreferredScrollableViewportSize(new Dimension(200, 100));
+		JScrollPane jsPane = new JScrollPane(logonsTable);
+		jsPane.setMaximumSize(new Dimension(200, 100));
+		
+		panel.add(jsPane, BorderLayout.CENTER);
+		
+		c.gridy = 4;
+		startServerButton = new JToggleButton();
+		startServerButton.setMaximumSize(new Dimension(200, 20));
+		startServerButton.addActionListener(this);
+		startServerButton.setActionCommand("listen");
+		panel.add(startServerButton, BorderLayout.SOUTH);
+		
+		return panel;
+	}
+	
+	private JPanel getClientPanel(){
+		JPanel panel = new JPanel();
+
+		panel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets.top = 5;
+		c.insets.bottom = 5;
+		c.insets.left = 5;
+		c.insets.right = 5;
+		c.anchor = GridBagConstraints.WEST;
+		
+		c.gridy = 1;
+		panel.add(new JLabel(Main.getMessage("client_call_list")), c);
+		clientCallList = new JCheckBox();
+		panel.add(clientCallList, c);
+		
+		c.gridy = 2;
+		panel.add(new JLabel(Main.getMessage("client_telephone_book")), c);
+		clientTelephoneBook = new JCheckBox();
+		panel.add(clientTelephoneBook, c);
+		
+		c.gridy = 3;
+		panel.add(new JLabel(Main.getMessage("be_dumb_client")), c);
+		isDumbClient = new JCheckBox();
+		panel.add(isDumbClient, c);
+		
+		c.gridy = 4;
+		panel.add(new JLabel(Main.getMessage("connect_on_startup")), c);
+		connectOnStartup = new JCheckBox();
+		panel.add(connectOnStartup, c);
+		
+		c.gridy = 5;
+		panel.add(new JLabel(Main.getMessage("server_name")), c);
+		serverName = new JTextField("", 16);
+		serverName.setMinimumSize(new Dimension(200, 20));
+		panel.add(serverName, c);
+		
+		c.gridy = 6;
+		panel.add(new JLabel(Main.getMessage("server_login")), c);
+		serverLogin = new JTextField("", 16);
+		serverLogin.setMinimumSize(new Dimension(200, 20));
+		panel.add(serverLogin, c);
+		
+		c.gridy = 7;
+		panel.add(new JLabel(Main.getMessage("server_password")), c);
+		serverPassword = new JPasswordField("", 16);
+		serverPassword.setMinimumSize(new Dimension(200, 20));
+		panel.add(serverPassword, c);
+		
+		c.gridy = 8;
+		panel.add(new JLabel(Main.getMessage("server_port")), c);
+		serverPort = new JTextField("", 16);
+		serverPort.setMinimumSize(new Dimension(200, 20));
+		panel.add(serverPort, c);
+		
+		c.gridy = 9;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		startClientButton = new JToggleButton();
+		startClientButton.setMinimumSize(new Dimension(200, 20));
+		startClientButton.setActionCommand("connect");
+		startClientButton.addActionListener(this);
+		panel.add(startClientButton, c);
+		
+		
+		return panel;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		if ("comboboxchanged".equalsIgnoreCase(e.getActionCommand())) { //$NON-NLS-1$
+			// Zur Darstellung der gewünschten Einstellungspanels
+			switch (networkTypeCombo.getSelectedIndex()) {
+			case 0: {
+				Debug.msg("No network functionality chosen"); //$NON-NLS-1$
+				this.removeAll();
+				networkTypeCombo.setSelectedIndex(0);
+				this.add(networkTypeCombo, BorderLayout.NORTH);
+				this.repaint();
+				break;
+			}
+			case 1: {
+				Debug.msg("JFritz as a server chosen"); //$NON-NLS-1$
+				this.removeAll();
+				networkTypeCombo.setSelectedIndex(1);
+				this.add(networkTypeCombo, BorderLayout.NORTH);
+				this.add(serverPanel, BorderLayout.SOUTH);
+				this.repaint();
+				break;
+			}
+			case 2: {
+				Debug.msg("JFritz as a client chosen"); //$NON-NLS-1$
+				this.removeAll();
+				networkTypeCombo.setSelectedIndex(2);
+				this.add(networkTypeCombo, BorderLayout.NORTH);
+				this.add(clientPanel, BorderLayout.SOUTH);
+				this.repaint();
+				break;
+
+			}
+
+			}
+			
+		}else if(e.getActionCommand().equals("listen")){
+			if(startServerButton.isSelected()){
+				NetworkStateMonitor.startServer();
+			}else{
+				NetworkStateMonitor.stopServer();
+			}
+		}else if(e.getActionCommand().equals("connect")){
+			if(this.startClientButton.isSelected()){
+				NetworkStateMonitor.startClient();
+			}else{
+				//TODO
+			}
+		}
+	}
+	
+	public void clientStateChanged(){
+		if(NetworkStateMonitor.isConnectedToServer()){
+			startClientButton.setSelected(true);
+			startClientButton.setText(Main.getMessage("client_is_connected"));
+		}else{
+			startClientButton.setSelected(false);
+			startClientButton.setText(Main.getMessage("connect_to_server"));
+		}
+	}
+	
+	public void serverStateChanged(){
+		if(NetworkStateMonitor.isListening()){
+			startClientButton.setSelected(true);
+			startClientButton.setText(Main.getMessage("server_is_listening"));
+		}else{
+			startClientButton.setSelected(false);
+			startClientButton.setText(Main.getMessage("start_listening_clients"));
+		}
+	}
+	
+	
+	
+}

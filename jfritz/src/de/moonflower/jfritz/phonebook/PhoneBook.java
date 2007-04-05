@@ -1282,4 +1282,8 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
         }
         return person;
     }
+    
+    public Vector<Person> getUnfilteredPersons(){
+    	return unfilteredPersons;
+    }
 }

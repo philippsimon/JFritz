@@ -42,6 +42,9 @@ import de.moonflower.jfritz.dialogs.quickdial.QuickDials;
 import de.moonflower.jfritz.dialogs.simple.MessageDlg;
 import de.moonflower.jfritz.dialogs.sip.SipProviderTableModel;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
+import de.moonflower.jfritz.network.ClientConnectionListener;
+import de.moonflower.jfritz.network.ClientLoginsTableModel;
+import de.moonflower.jfritz.network.ServerConnectionThread;
 import de.moonflower.jfritz.phonebook.PhoneBook;
 import de.moonflower.jfritz.struct.FritzBox;
 import de.moonflower.jfritz.struct.PhoneNumber;
@@ -113,6 +116,8 @@ public final class JFritz implements  StatusListener{
 	public static CallMonitorList callMonitorList;
 
 	private Main main;
+	
+	private static ClientLoginsTableModel clientLogins;
 
 	/**
 	 * Constructs JFritz object
@@ -157,7 +162,7 @@ public final class JFritz implements  StatusListener{
 						.encrypt(""))), Main.getProperty("box.port", "80")); //$NON-NLS-1$
 		sipprovider = new SipProviderTableModel();
 		sipprovider.loadFromXMLFile(Main.SAVE_DIR + SIPPROVIDER_FILE);
-
+		
 		quickDials = new QuickDials();
 		quickDials.loadFromXMLFile(Main.SAVE_DIR + JFritz.QUICKDIALS_FILE);
 		
@@ -175,6 +180,11 @@ public final class JFritz implements  StatusListener{
 		callMonitorList.addCallMonitorListener(new DisplayCallsMonitor());
 		callMonitorList.addCallMonitorListener(new DisconnectMonitor());
 
+
+		clientLogins = new ClientLoginsTableModel();
+
+		ClientLoginsTableModel.loadClientLogins();
+		
 		if (Main
 				.getProperty(
 						"lookandfeel", UIManager.getSystemLookAndFeelClassName()).endsWith("MetalLookAndFeel")) { //$NON-NLS-1$,  //$NON-NLS-2$
@@ -663,4 +673,9 @@ public final class JFritz implements  StatusListener{
 	public static QuickDials getQuickDials() {
 		return quickDials;
 	}
+	
+	public static ClientLoginsTableModel getClientLogins(){
+		return clientLogins;
+	}
+	
 }

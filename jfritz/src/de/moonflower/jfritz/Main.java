@@ -1447,4 +1447,7 @@ public class Main implements LookupObserver {
 			JFritz.getPhonebook().addEntries(persons);
 	}	
 	
+	
+	
+	
 }
