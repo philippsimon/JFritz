@@ -114,6 +114,8 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	private int sortColumn;
 
 	private Vector<CallFilter> filters;
+	
+	private Vector<CallerListListener> listeners;
 
 	private boolean sortDirection = false;
 
@@ -134,10 +136,19 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		filters = new Vector<CallFilter>();
 		// lets see if my new method works better
 		newCalls = new Vector<Call>(32);
+		listeners = new Vector<CallerListListener>();
 
 		sortColumn = 1;
 	}
 
+	public void addListener(CallerListListener l){
+		listeners.add(l);
+	}
+	
+	public void removeListener(CallerListListener l){
+		listeners.remove(l);
+	}
+	
 	/**
 	 * 
 	 * @return Unfiltered Vector of Calls
@@ -434,6 +445,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		for(Call call: newCalls)
 			addEntry(call);
 		fireUpdateCallVector();
+		update();
 	}
 	
 	/**
@@ -446,6 +458,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	public void removeEntries(Vector<Call> removeCalls){
 		
 			unfilteredCallerData.removeAll(removeCalls);
+			update();
 		
 	}
 	
@@ -560,6 +573,10 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	public void fireUpdateCallVector() {
 		// update the call list and then sort it
 		unfilteredCallerData.addAll(newCalls);
+		
+		for(CallerListListener l: listeners)
+			l.callsAdded(newCalls);
+		
 		newCalls.clear();
 		sortAllUnfilteredRows();
 
@@ -981,10 +998,13 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 *            of the filteredCallerData to be removed
 	 */
 	public void removeEntries(int[] rows) {
+		
+		Vector<Call> removedCalls = new Vector<Call>(rows.length);
 		if (rows.length > 0) {
 			Call call;
 			for (int i = 0; i < rows.length; i++) {
 				call = filteredCallerData.get(rows[i]);
+				removedCalls.add(call);
 				unfilteredCallerData.remove(call);
 				Debug.msg("removing " + call);
 				Person p = call.getPerson();
@@ -996,6 +1016,11 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 				}
 
 			}
+			
+			//notify all listeners that calls have been removed
+			for(CallerListListener l: listeners)
+				l.callsRemoved(removedCalls);
+			
 			saveToXMLFile(Main.SAVE_DIR + JFritz.CALLS_FILE, true);
 			update();
 			fireTableDataChanged();

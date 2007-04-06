@@ -1,5 +1,7 @@
 package de.moonflower.jfritz.network;
 
+import java.io.Serializable;
+
 import java.util.Vector;
 
 /**
@@ -8,8 +10,10 @@ import java.util.Vector;
  * @author brian
  *
  */
-public class DataChange<E> {
+public class DataChange<E> implements Serializable {
 
+	public static final long serialVersionUID = 100;
+	
 	public enum Operation {ADD, REMOVE}
 	
 	public Operation operation;
@@ -21,5 +25,10 @@ public class DataChange<E> {
 	public String message;
 	
 	public Vector<E> data;
+	
+	public DataChange(){
+		data = new Vector<E>();
+	}
+	
 	
 }

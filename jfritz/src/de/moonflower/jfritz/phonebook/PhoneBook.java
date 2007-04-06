@@ -73,6 +73,8 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 
 	private Vector<Person> unfilteredPersons;
 
+	private Vector<PhoneBookListener> listeners;
+	
 	private String fileLocation;
 
 	private CallerList callerList;
@@ -96,6 +98,8 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		filteredPersons = new Vector<Person>();
 		unfilteredPersons = new Vector<Person>();
 		filterExceptions = new Vector<Person>();
+		listeners = new Vector<PhoneBookListener>();
+		
 	}
 
 	/**
@@ -112,6 +116,14 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		fireTableDataChanged();
 	}
 
+	public void addListener(PhoneBookListener l){
+		listeners.add(l);
+	}
+	
+	public void removeListener(PhoneBookListener l){
+		listeners.remove(l);
+	}
+	
 	/**
 	 * Sort table model rows by a specific column. The direction is determined
 	 * automatically.
@@ -344,11 +356,22 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 			Person element = (Person) iter.next();
 			addEntry(element);
 		}
+		
+		for(PhoneBookListener listener: listeners)
+			listener.contactsAdded(persons);
+		
 		updateFilter();
 		fireTableDataChanged();
 		this.saveToXMLFile(Main.SAVE_DIR + JFritz.PHONEBOOK_FILE);
 	}
 
+	public synchronized void removeEntries(Vector<Person> persons){
+		unfilteredPersons.removeAll(persons);
+		
+		for(Person person: persons)
+			this.deleteEntry(person);
+	}
+	
 	/*
 	 * inherited from AbstractTableModel
 	 */
@@ -1286,4 +1309,48 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
     public Vector<Person> getUnfilteredPersons(){
     	return unfilteredPersons;
     }
+    
+    /**
+     * function removes the user selected contacts from the phone book
+     *  
+     *  @author brian
+     *  
+     * @param rows
+     */
+    public void removePersons(int[] rows){
+    	if (rows.length > 0) {
+			// Markierte Einträge löschen
+			Vector<Person> personsToDelete = new Vector<Person>();
+			for (int i = 0; i < rows.length; i++) {
+				personsToDelete.add(this.filteredPersons.get(rows[i]));
+			}
+
+			unfilteredPersons.removeAll(personsToDelete);
+			for(PhoneBookListener listener: listeners)
+				listener.contactsRemoved(personsToDelete);
+			
+			fireTableDataChanged();
+			saveToXMLFile(Main.SAVE_DIR + JFritz.PHONEBOOK_FILE);
+		}
+    }
+    
+    /**
+     * This function is used to notify the network subsystem that a 
+     * contact has been modified
+     * 
+     * @param old
+     * @param updated
+     */
+    public void personUpdated(Person old, Person updated){
+    	Vector<Person> o = new Vector<Person>();
+    	Vector<Person> u = new Vector<Person>();
+    	o.add(old);
+    	u.add(updated);
+    	
+    	for(PhoneBookListener listener: listeners){
+    		listener.contactsRemoved(o);
+    		listener.contactsAdded(u);
+    	}
+    }    
+    
 }

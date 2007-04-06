@@ -75,20 +75,19 @@ public class ServerConnectionThread extends Thread {
 				
 				try{
 					socket = new Socket(server, port);
-					writer = new PrintWriter(socket.getOutputStream(), true);
-					reader = new BufferedReader(new InputStreamReader(
-						socket.getInputStream()));
+					//writer = new PrintWriter(socket.getOutputStream(), true);
+					//reader = new BufferedReader(new InputStreamReader(
+					//	socket.getInputStream()));
 					
 					Debug.msg("successfully connected to server, authenticating");
-					
-					if(JFritzProtocolV1.authenticateWithServer(socket, user, password)){
+					objectOut = new ObjectOutputStream(socket.getOutputStream());
+					objectIn = new ObjectInputStream(socket.getInputStream());
+
+					if(authenticateWithServer(user, password)){
 						Debug.msg("Successfully authenticated with server");
-						objectIn = new ObjectInputStream(socket.getInputStream());
-						objectOut = new ObjectOutputStream(socket.getOutputStream());
 						isConnected = true;
 						
 						//synchronizeWithServer();
-						Debug.msg("I made it here!!");
 						listenToServer();
 						
 						
@@ -108,6 +107,50 @@ public class ServerConnectionThread extends Thread {
 			
 			
 		}
+	}
+	
+	public boolean authenticateWithServer(String user, String password){
+		Object o;
+		String response;
+		try{
+			o = objectIn.readObject();
+			if(o instanceof String){
+				
+				response = (String) o;
+				Debug.msg("Connected to JFritz Server: "+response);
+				
+				for(int i=0; i < 3; i++){
+					objectOut.writeObject(user);
+					objectOut.writeObject(password);
+					objectOut.flush();
+					o = objectIn.readObject();
+					
+					if(o instanceof String){
+						response = (String) o;
+						if(response.equals("JFRITZ 1.0 OK"))
+							return true;
+						else if(response.equals("JFRITZ 1.0 INVALID"))
+							Debug.msg("login attempt refused by server");
+						else
+							Debug.msg("unrecognized response from server: "+response);
+					}else
+						Debug.msg("unexpected object received from server: "+o.toString());
+					
+				}
+			}else
+				Debug.msg("Server identification invalid, canceling login attempt: "+o.toString());
+			
+		}catch(ClassNotFoundException e){
+			Debug.err("Server authentication response invalid!");
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}catch(IOException e){
+			Debug.err("Error reading response during authentication!");
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 	
 	public void synchronizeWithServer(){
@@ -130,6 +173,7 @@ public class ServerConnectionThread extends Thread {
 		while(!quit){
 			try{
 				o = objectIn.readObject();
+				Debug.msg("received response from server!");
 				if(o != null && o instanceof DataChange){
 				
 					change = (DataChange) o;
@@ -147,7 +191,17 @@ public class ServerConnectionThread extends Thread {
 							}
 				
 						}else if(change.destination == DataChange.Destination.PHONEBOOK){
-							//ignoring for now
+							if(change.operation == DataChange.Operation.ADD){
+								vPersons = (Vector<Person>) change.data;
+								Debug.msg("Received request to add "+vPersons.size()+" contacts");
+								JFritz.getPhonebook().addEntries(vPersons);
+							}else if(change.operation == DataChange.Operation.REMOVE){
+								vPersons = (Vector<Person>) change.data;
+								Debug.msg("Received request to add "+vPersons.size()+" contacts");
+								JFritz.getPhonebook().removeEntries(vPersons);
+							}else{
+								Debug.msg("Operation not chosen for incoming data, ignoring");
+							}
 						}else{
 							Debug.msg("destination not chosen for incoming data, ignoring!");
 						}

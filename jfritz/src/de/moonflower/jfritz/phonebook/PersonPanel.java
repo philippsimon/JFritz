@@ -313,6 +313,7 @@ public class PersonPanel extends JPanel implements ActionListener,
 			firePropertyChange();
 		} else if (e.getActionCommand().equals("ok")) {
 			updatePerson();
+			
 			phoneBook.sortAllFilteredRows();
 			phoneBook.updateFilter();
 			phoneBook.saveToXMLFile(Main.SAVE_DIR + JFritz.PHONEBOOK_FILE);
