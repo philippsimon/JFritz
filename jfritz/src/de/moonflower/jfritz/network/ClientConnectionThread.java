@@ -58,14 +58,11 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 		
 		try{
 			objectOut = new ObjectOutputStream(socket.getOutputStream());
-			Debug.msg("Objout not blocking");
 			objectIn = new ObjectInputStream(socket.getInputStream());
-			Debug.msg("Objin not blocking");
 			
-			Debug.msg("Made it here!");
 			if((login = authenticateClient()) != null){
 			
-				Debug.msg("Authentication for client successful!");
+				Debug.msg("Authentication for client "+remoteAddress+" successful!");
 				callsAdd = new DataChange<Call>();
 				callsAdd.destination = DataChange.Destination.CALLLIST;
 				callsAdd.operation = DataChange.Operation.ADD;

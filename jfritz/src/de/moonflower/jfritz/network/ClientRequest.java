@@ -7,6 +7,8 @@ import java.util.Vector;
 
 public class ClientRequest<E> implements Serializable {
 
+	public static final long serialVersionUID = 100;
+	
 	public enum Operation{ ADD, GET, REMOVE}
 	
 	public Operation operation;

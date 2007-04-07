@@ -177,7 +177,7 @@ public class ServerConnectionThread extends Thread {
 		Debug.msg("Requesting updates from server");
 		try{
 			callListRequest.operation = ClientRequest.Operation.GET;
-			//callListRequest.timestamp = JFritz.getCallerList().getLastCallDate();
+			callListRequest.timestamp = JFritz.getCallerList().getLastCallDate();
 			objectOut.writeObject(callListRequest);
 			objectOut.flush();
 			objectOut.reset();

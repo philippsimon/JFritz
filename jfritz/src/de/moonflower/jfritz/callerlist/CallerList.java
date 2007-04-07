@@ -745,9 +745,19 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		fireTableCellUpdated(rowIndex, columnIndex);
 	}
 
-	public void setComment(String comment, int rowIndex) {
+	public synchronized void setComment(String comment, int rowIndex) {
 		Call call = filteredCallerData.get(rowIndex);
+		Vector<Call> cVector = new Vector<Call>();
+		cVector.add(call);
+		
+		//Remove the old copy at each client
+		for(CallerListListener listener: listeners)
+			listener.callsRemoved(cVector);
+		
+		//and readd it with the new comment
 		call.setComment(comment);
+		for(CallerListListener listener: listeners)
+			listener.callsAdded(cVector);
 	}
 
 	public void setPerson(Person person, int rowIndex) {
@@ -2097,17 +2107,20 @@ public boolean importFromCSVFile(BufferedReader br) {
 	 *
 	 */
 	public synchronized Date getLastCallDate(){
-		return unfilteredCallerData.lastElement().getCalldate();
+		if(unfilteredCallerData.size() > 0)
+			return unfilteredCallerData.lastElement().getCalldate();
+		return null;
 	}
 	
 	public synchronized Vector<Call> getNewerCalls(Date timestamp){
-		Vector<Call> newCalls = new Vector<Call>();
-		CallFilter callFilter = new DateFilter(timestamp, new Date(System.currentTimeMillis()));
+		Vector<Call> newerCalls = new Vector<Call>();
+		DateFilter dateFilter = new DateFilter(timestamp, new Date(System.currentTimeMillis()));
 		for(Call call: unfilteredCallerData){
-			
+			if(dateFilter.passFilter(call))
+				newerCalls.add(call);
 		}
 		
-		return newCalls;
+		return newerCalls;
 	}
 	
 }
