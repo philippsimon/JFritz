@@ -101,16 +101,46 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	
 	public void waitForClientRequest(){
 		Object o;
+		ClientRequest request;
 		
 		while(!quit){
 			try{
-				
-				//callsAdd.data = JFritz.getCallerList().getUnfilteredCallVector();
-				//objectOut.writeObject(callsAdd);
-				//objectOut.flush();
-				//Debug.msg("Wrote out test call data");
-				//quit = true;
+
 				o = objectIn.readObject();
+				Debug.msg("received request from "+remoteAddress);
+				if(o instanceof ClientRequest){
+					
+					request = (ClientRequest) o;
+					if(request.destination == ClientRequest.Destination.CALLLIST){
+					
+						if(request.operation == ClientRequest.Operation.GET){
+							
+							if(request.timestamp != null){
+								Debug.msg("Received call list update request from "+remoteAddress);
+								
+							}else{
+								Debug.msg("Received complete call list request from "+remoteAddress);
+								callsAdded(JFritz.getCallerList().getUnfilteredCallVector());
+							}
+						
+						}else{
+							//TODO:
+						}
+					}else if(request.destination == ClientRequest.Destination.PHONEBOOK){
+						
+						if(request.operation == ClientRequest.Operation.GET){
+							Debug.msg("Received complete phone book request from "+remoteAddress);
+							contactsAdded(JFritz.getPhonebook().getUnfilteredPersons());
+						}else{
+							//TODO:
+						}
+					}else{
+						Debug.msg("Request from "+remoteAddress+" contained no destination, ignoring");
+					}
+				}else{
+					Debug.msg("Received unexpected object from "+remoteAddress+" ignoring");
+				}
+			
 			
 			}catch(ClassNotFoundException e){
 				Debug.err("unrecognized class received as request from server");

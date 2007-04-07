@@ -42,6 +42,7 @@ import org.xml.sax.XMLReader;
 import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.Main;
 import de.moonflower.jfritz.callerlist.filter.CallFilter;
+import de.moonflower.jfritz.callerlist.filter.DateFilter;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
 import de.moonflower.jfritz.phonebook.PhoneBook;
 import de.moonflower.jfritz.struct.Call;
@@ -203,7 +204,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * @param wholeCallerList
 	 *            Save whole caller list or only selected entries
 	 */
-	public void saveToXMLFile(String filename, boolean wholeCallerList) {
+	public synchronized void saveToXMLFile(String filename, boolean wholeCallerList) {
 		Debug.msg("Saving to file " + filename); //$NON-NLS-1$
 		try {
 			BufferedWriter pw = new BufferedWriter(new OutputStreamWriter(
@@ -263,7 +264,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * @param wholeCallerList
 	 *            Save whole caller list or only selected entries
 	 */
-	public void saveToCSVFile(String filename, boolean wholeCallerList) {
+	public synchronized void saveToCSVFile(String filename, boolean wholeCallerList) {
 		Debug.msg("Saving to csv file " + filename); //$NON-NLS-1$
 		FileOutputStream fos;
 		try {
@@ -304,7 +305,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * 
 	 * @param filename
 	 */
-	public void loadFromXMLFile(String filename) {
+	public synchronized void loadFromXMLFile(String filename) {
 		try {
 
 			// Workaround for SAX parser
@@ -2086,6 +2087,27 @@ public boolean importFromCSVFile(BufferedReader br) {
 
 	public void stopLookup(){
 		ReverseLookup.stopLookup();
+	}
+	
+	/**
+	 *  This function is used to get the date of the last
+	 *  call in the list. Used by the network code to get updates
+	 *  
+	 *  @author brian
+	 *
+	 */
+	public synchronized Date getLastCallDate(){
+		return unfilteredCallerData.lastElement().getCalldate();
+	}
+	
+	public synchronized Vector<Call> getNewerCalls(Date timestamp){
+		Vector<Call> newCalls = new Vector<Call>();
+		CallFilter callFilter = new DateFilter(timestamp, new Date(System.currentTimeMillis()));
+		for(Call call: unfilteredCallerData){
+			
+		}
+		
+		return newCalls;
 	}
 	
 }

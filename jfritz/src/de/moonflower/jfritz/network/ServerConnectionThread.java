@@ -36,6 +36,10 @@ public class ServerConnectionThread extends Thread {
 	
 	private ObjectOutputStream objectOut;
 	
+	private ClientRequest<Call> callListRequest;
+	
+	private ClientRequest<Person> phoneBookRequest;
+	
 	private boolean quit = false;
 	
 	public static boolean isConnected(){
@@ -87,7 +91,13 @@ public class ServerConnectionThread extends Thread {
 						Debug.msg("Successfully authenticated with server");
 						isConnected = true;
 						
-						//synchronizeWithServer();
+						callListRequest = new ClientRequest<Call>();
+						callListRequest.destination = ClientRequest.Destination.CALLLIST;
+						
+						phoneBookRequest = new ClientRequest<Person>();
+						phoneBookRequest.destination = ClientRequest.Destination.PHONEBOOK;
+						
+						synchronizeWithServer();
 						listenToServer();
 						
 						
@@ -162,7 +172,26 @@ public class ServerConnectionThread extends Thread {
 		return false;
 	}
 	
-	public void synchronizeWithServer(){
+	private synchronized void synchronizeWithServer(){
+
+		Debug.msg("Requesting updates from server");
+		try{
+			callListRequest.operation = ClientRequest.Operation.GET;
+			//callListRequest.timestamp = JFritz.getCallerList().getLastCallDate();
+			objectOut.writeObject(callListRequest);
+			objectOut.flush();
+			objectOut.reset();
+			
+			phoneBookRequest.operation = ClientRequest.Operation.GET;
+			objectOut.writeObject(phoneBookRequest);
+			objectOut.flush();
+			objectOut.reset();
+			
+		}catch(IOException e){
+			Debug.err("Error writing synchronizing request to server!");
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}
 
 	}
 	
