@@ -42,9 +42,8 @@ import de.moonflower.jfritz.dialogs.quickdial.QuickDials;
 import de.moonflower.jfritz.dialogs.simple.MessageDlg;
 import de.moonflower.jfritz.dialogs.sip.SipProviderTableModel;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
-import de.moonflower.jfritz.network.ClientConnectionListener;
 import de.moonflower.jfritz.network.ClientLoginsTableModel;
-import de.moonflower.jfritz.network.ServerConnectionThread;
+import de.moonflower.jfritz.network.NetworkStateMonitor;
 import de.moonflower.jfritz.phonebook.PhoneBook;
 import de.moonflower.jfritz.struct.FritzBox;
 import de.moonflower.jfritz.struct.PhoneNumber;
@@ -239,6 +238,15 @@ public final class JFritz implements  StatusListener{
 
 		javax.swing.SwingUtilities.invokeLater(jframe);
 
+		if(Main.getProperty("network.type", "0").equals("1") &&
+				Boolean.parseBoolean(Main.getProperty("option.listenOnStartup", "false"))){
+			Debug.msg("listening on startup enabled, starting client listener!");
+			NetworkStateMonitor.startServer();
+		}else if(Main.getProperty("network.type", "0").equals("2") &&
+				Boolean.parseBoolean(Main.getProperty("option.connectOnStartup", "false"))){
+			Debug.msg("Connect on startup enabled, connectig to server");
+			NetworkStateMonitor.startClient();
+		}
 		startWatchdog();
 
 	}

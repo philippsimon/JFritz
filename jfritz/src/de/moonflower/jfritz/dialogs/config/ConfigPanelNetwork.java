@@ -97,7 +97,7 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 				.getProperty("option.isDumbClient", "false"))); //$NON-NLS-1$,  //$NON-NLS-2$
 	
 		connectOnStartup.setSelected(JFritzUtils.parseBoolean(Main
-				.getProperty("option.connectOnStatup", "false"))); //$NON-NLS-1$,  //$NON-NLS-2$
+				.getProperty("option.connectOnStartup", "false"))); //$NON-NLS-1$,  //$NON-NLS-2$
 		
 		listenOnStartup.setSelected(JFritzUtils.parseBoolean(Main
 				.getProperty("option.listenOnStartup", "false"))); //$NON-NLS-1$,  //$NON-NLS-2$

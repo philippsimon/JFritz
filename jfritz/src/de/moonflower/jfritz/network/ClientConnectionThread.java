@@ -85,6 +85,7 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 				waitForClientRequest();
 				
 				JFritz.getCallerList().removeListener(this);
+				JFritz.getPhonebook().removeListener(this);
 				
 			}
 		
@@ -218,7 +219,7 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	}
 	
 	public void callsAdded(Vector<Call> newCalls){
-		Debug.msg("Notifying client of added calls, size: "+newCalls.size());
+		Debug.msg("Notifying client "+remoteAddress+" of added calls, size: "+newCalls.size());
 		Vector<Call> filteredCalls = (Vector<Call>) newCalls.clone();
 		callsAdd.data.addAll(filteredCalls);
 		
@@ -237,7 +238,7 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	}
 	
 	public void callsRemoved(Vector<Call> removedCalls){
-		Debug.msg("Notifying client of removed calls, size:"+removedCalls.size());
+		Debug.msg("Notifying client "+remoteAddress+" of removed calls, size:"+removedCalls.size());
 		Vector<Call> filteredCalls = (Vector<Call>) removedCalls.clone();
 		callsRemove.data.addAll(filteredCalls);
 		Debug.msg("callsRemove size "+callsRemove.data.size());
@@ -284,7 +285,7 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 		
 		try{
 			
-			objectOut.writeObject(filteredPersons);
+			objectOut.writeObject(contactsRemove);
 			objectOut.flush();
 			contactsRemove.data.clear();
 			objectOut.reset();

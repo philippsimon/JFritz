@@ -75,6 +75,7 @@ public class ClientConnectionListener extends Thread {
 					e.printStackTrace();
 				}
 				Debug.msg("Client connection listener stopped");
+				listen = false;
 			}
 		}
 		

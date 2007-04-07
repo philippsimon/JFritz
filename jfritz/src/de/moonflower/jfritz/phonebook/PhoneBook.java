@@ -370,6 +370,11 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		
 		for(Person person: persons)
 			this.deleteEntry(person);
+		
+		updateFilter();
+		fireTableDataChanged();
+		saveToXMLFile(Main.SAVE_DIR + JFritz.PHONEBOOK_FILE);
+		
 	}
 	
 	/*

@@ -141,11 +141,11 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		sortColumn = 1;
 	}
 
-	public void addListener(CallerListListener l){
+	public synchronized void addListener(CallerListListener l){
 		listeners.add(l);
 	}
 	
-	public void removeListener(CallerListListener l){
+	public synchronized void removeListener(CallerListListener l){
 		listeners.remove(l);
 	}
 	
@@ -442,8 +442,28 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * @param newCalls to be added to the call list
 	 */
 	public void addEntries(Vector<Call> newCalls){
+		int newEntries = 0;
+		
 		for(Call call: newCalls)
-			addEntry(call);
+			if(addEntry(call))
+				newEntries++;
+		
+		if (newEntries > 0) {
+
+			saveToXMLFile(Main.SAVE_DIR + JFritz.CALLS_FILE, true);
+
+			String msg;
+
+			if (newEntries == 1) {
+				msg = Main.getMessage("imported_call"); //$NON-NLS-1$
+			} else {
+				msg = Main
+						.getMessage("imported_calls").replaceAll("%N", Integer.toString(newEntries)); //$NON-NLS-1$, //$NON-NLS-2$ 
+			}
+
+			JFritz.infoMsg(msg);
+		}
+		
 		fireUpdateCallVector();
 		update();
 	}
@@ -459,6 +479,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		
 			unfilteredCallerData.removeAll(removeCalls);
 			update();
+			saveToXMLFile(Main.SAVE_DIR + JFritz.CALLS_FILE, true);
 		
 	}
 	
@@ -570,7 +591,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * @author Brian Jensen
 	 * 
 	 */
-	public void fireUpdateCallVector() {
+	public synchronized void fireUpdateCallVector() {
 		// update the call list and then sort it
 		unfilteredCallerData.addAll(newCalls);
 		
@@ -997,7 +1018,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * @param rows
 	 *            of the filteredCallerData to be removed
 	 */
-	public void removeEntries(int[] rows) {
+	public synchronized void  removeEntries(int[] rows) {
 		
 		Vector<Call> removedCalls = new Vector<Call>(rows.length);
 		if (rows.length > 0) {

@@ -1,9 +1,9 @@
 package de.moonflower.jfritz.network;
 
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -94,6 +94,11 @@ public class ServerConnectionThread extends Thread {
 					}else
 						Debug.msg("Authentication failed!");
 					
+					isConnected = false;
+					objectOut.close();
+					objectIn.close();
+					socket.close();
+					
 				}catch(IOException e){
 					Debug.err(e.toString());
 					e.printStackTrace();
@@ -144,6 +149,10 @@ public class ServerConnectionThread extends Thread {
 			Debug.err("Server authentication response invalid!");
 			Debug.err(e.toString());
 			e.printStackTrace();
+		}catch(EOFException e){
+			Debug.err("Server closed Stream unexpectedly!");
+			Debug.err(e.toString());
+			e.printStackTrace();
 		}catch(IOException e){
 			Debug.err("Error reading response during authentication!");
 			Debug.err(e.toString());
@@ -154,9 +163,6 @@ public class ServerConnectionThread extends Thread {
 	}
 	
 	public void synchronizeWithServer(){
-		
-		Debug.msg("Requesting complete call list from server");
-		JFritzProtocolV1.requestCallList(true, writer, objectIn);
 
 	}
 	
@@ -197,7 +203,7 @@ public class ServerConnectionThread extends Thread {
 								JFritz.getPhonebook().addEntries(vPersons);
 							}else if(change.operation == DataChange.Operation.REMOVE){
 								vPersons = (Vector<Person>) change.data;
-								Debug.msg("Received request to add "+vPersons.size()+" contacts");
+								Debug.msg("Received request to remove "+vPersons.size()+" contacts");
 								JFritz.getPhonebook().removeEntries(vPersons);
 							}else{
 								Debug.msg("Operation not chosen for incoming data, ignoring");
@@ -206,6 +212,7 @@ public class ServerConnectionThread extends Thread {
 							Debug.msg("destination not chosen for incoming data, ignoring!");
 						}
 				} else {
+					Debug.msg(o.toString());
 					Debug.msg("received unexpected object, ignoring!");
 				}
 			
@@ -214,9 +221,15 @@ public class ServerConnectionThread extends Thread {
 				Debug.err("Response from server contained unkown object!");
 				Debug.err(e.toString());
 				e.printStackTrace();
+			}catch(EOFException e ){
+				Debug.err("Server closed stream unexpectedly!");
+				Debug.err(e.toString());
+				e.printStackTrace();
+				return;
 			}catch(IOException e){
 				Debug.err(e.toString());
 				e.printStackTrace();
+				return;
 			}
 		}
 	}
