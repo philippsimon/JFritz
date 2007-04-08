@@ -6,6 +6,7 @@ package de.moonflower.jfritz;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.Rectangle;
@@ -71,6 +72,8 @@ import de.moonflower.jfritz.exceptions.InvalidFirmwareException;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
 import de.moonflower.jfritz.firmware.FritzBoxFirmware;
 import de.moonflower.jfritz.monitoring.MonitoringPanel;
+import de.moonflower.jfritz.network.NetworkStateListener;
+import de.moonflower.jfritz.network.NetworkStateMonitor;
 import de.moonflower.jfritz.phonebook.PhoneBookPanel;
 
 import de.moonflower.jfritz.utils.BrowserLaunch;
@@ -89,7 +92,7 @@ import de.moonflower.jfritz.utils.SwingWorker;
  * @author akw
  */
 public class JFritzWindow extends JFrame implements Runnable, ActionListener,
-		ItemListener {
+		ItemListener, NetworkStateListener {
 
 	private static final long serialVersionUID = 1;
 
@@ -101,7 +104,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 
 	private JButton fetchButton, configButton;
 
-	private JToggleButton taskButton, monitorButton, lookupButton;
+	private JToggleButton taskButton, monitorButton, lookupButton, networkButton;
 
 	private JProgressBar progressbar;
 
@@ -394,6 +397,22 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		configButton.setIcon(getImage("config.png")); //$NON-NLS-1$
 		configButton.setToolTipText(Main.getMessage("config")); //$NON-NLS-1$
 		mBar.add(configButton);
+		
+		networkButton = new JToggleButton();
+		networkButton.setActionCommand("network");
+		networkButton.addActionListener(this);
+		networkButton.setIcon(getImage("server_new.png"));
+		networkButton.setToolTipText(Main.getMessage("enabel_disable_network"));
+		networkButton.setPreferredSize(new Dimension(32, 32));
+		
+		//disable icon if jfritz network functionality not wanted
+		if(Main.getProperty("network.type", "0").equals("0")){
+			networkButton.setEnabled(false);
+		}
+		
+		NetworkStateMonitor.addListener(this);
+		
+		mBar.add(networkButton);
 
 		mBar.addSeparator();
 		return mBar;
@@ -990,7 +1009,21 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			JFritz.hideShowJFritz();
 		} else if (e.getActionCommand().equals("configwizard")) {
 			JFritz.showConfigWizard();
-		} else {
+		} else if(e.getActionCommand().equals("network")){
+			
+			if(Main.getProperty("network.type", "0").equals("2")){
+				if(networkButton.isSelected())
+					NetworkStateMonitor.startClient();
+				else
+					NetworkStateMonitor.stopClient();
+			
+			}else if(Main.getProperty("network.type", "0").equals("1")){
+				if(networkButton.isSelected())
+					NetworkStateMonitor.startServer();
+				else
+					NetworkStateMonitor.stopServer();
+			}
+		}else {
 			Debug.err("Unimplemented action: " + e.getActionCommand()); //$NON-NLS-1$
 		}
 	}
@@ -1589,4 +1622,21 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	public void selectLookupButton(boolean select){
 		lookupButton.setSelected(select);
 	}
+	
+	public void clientStateChanged(){
+		networkButton.setEnabled(true);
+		if(NetworkStateMonitor.isConnectedToServer())
+			networkButton.setSelected(true);
+		else
+			networkButton.setSelected(false);
+	}
+
+	public void serverStateChanged(){
+		networkButton.setEnabled(true);
+		if(NetworkStateMonitor.isListening())
+			networkButton.setSelected(true);
+		else
+			networkButton.setSelected(false);
+	}
+	
 }

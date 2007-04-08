@@ -62,4 +62,10 @@ public class NetworkStateMonitor  {
 		serverConnection.connectToServer();
 	}
 	
+	public static void stopClient(){
+		if(serverConnection != null){
+			serverConnection.disconnectFromServer();
+		}
+	}
+	
 }

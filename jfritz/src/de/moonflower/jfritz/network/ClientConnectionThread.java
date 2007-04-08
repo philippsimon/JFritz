@@ -1,10 +1,9 @@
 package de.moonflower.jfritz.network;
 
-import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 
 import java.net.InetAddress;
 import java.net.Socket;
@@ -27,13 +26,7 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	
 	private Login login;
 	
-	private int count = 0;
-	
 	private InetAddress remoteAddress;
-	
-	private PrintWriter writer;
-	
-	private BufferedReader reader;
 	
 	private ObjectInputStream objectIn;
 	
@@ -42,8 +35,6 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	private DataChange<Call> callsAdd, callsRemove;
 	
 	private DataChange<Person> contactsAdd, contactsRemove;
-	
-	private boolean quit = false;
 	
 	public ClientConnectionThread(Socket socket){
 		super("Client connection for "+socket.getInetAddress());
@@ -83,7 +74,6 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 				
 				JFritz.getCallerList().removeListener(this);
 				JFritz.getPhonebook().removeListener(this);
-				
 			}
 		
 		}catch(IOException e){
@@ -91,16 +81,15 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 			e.printStackTrace();
 		}
 		
-
-		
 		ClientConnectionListener.clientConnectionEnded(this);
 	}
 	
 	public void waitForClientRequest(){
 		Object o;
 		ClientRequest request;
+		String message;
 		
-		while(!quit){
+		while(true){
 			try{
 
 				o = objectIn.readObject();
@@ -134,6 +123,14 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 					}else{
 						Debug.msg("Request from "+remoteAddress+" contained no destination, ignoring");
 					}
+				}else if(o instanceof String){
+					message = (String) o;
+					Debug.msg("Received message from client "+remoteAddress+": "+message);
+					if(message.equals("JFRITZ CLOSE")){
+						Debug.msg("Client is closing the connection, closing this thread");
+						disconnect();
+					}
+					
 				}else{
 					Debug.msg("Received unexpected object from "+remoteAddress+" ignoring");
 				}
@@ -150,11 +147,15 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 					Debug.err(e.toString());
 					e.printStackTrace();
 				}
-			}
-			catch (IOException e){
+				return;
+			}catch(EOFException e){
+				Debug.err("client "+remoteAddress+" closed stream unexpectedly");
+				Debug.err(e.toString());
+				e.printStackTrace();
+			}catch (IOException e){
 				Debug.msg("IOException occured reading client request");
 				e.printStackTrace();
-				break;
+				return;
 			}
 	
 		}
@@ -211,28 +212,34 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	
 	}
 	
-	public Vector<Call> getCompleteCallList(){
-		return JFritz.getCallerList().getUnfilteredCallVector();
-	}
-	
-	public Vector<Person> getCompleteTelephoneBook(){
-		return JFritz.getPhonebook().getUnfilteredPersons();
-	}
-	
-	public PrintWriter getPrintWriter(){
-		return writer;
-	}
-	
-	public BufferedReader getBufferedReader(){
-		return reader;
-	}
-	
-	public void closeConnection(){
-		quit = true;
+	public synchronized void disconnect(){
 		try{
+			objectOut.close();
+			objectIn.close();
 			socket.close();
+
 		}catch(IOException e){
-			Debug.err("Error closing socket!");
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}
+	}
+	
+	public synchronized void closeConnection(){
+		try{
+			Debug.msg("Notifying client "+remoteAddress+" to close connection");
+			objectOut.writeObject("JFRITZ CLOSE");
+			objectOut.flush();
+			objectOut.close();
+			objectIn.close();
+			socket.close();
+		}catch(SocketException e){
+			Debug.msg("Error closing socket");
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}catch(IOException e){
+			Debug.err("Error writing close request to client!");
+			Debug.err(e.toString());
+			e.printStackTrace();
 		}
 	}
 	
@@ -323,6 +330,4 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 			e.printStackTrace();
 		}
 	}
-	
-	
 }

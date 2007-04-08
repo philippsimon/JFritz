@@ -8,7 +8,6 @@ import java.net.SocketException;
 
 import java.util.Vector;
 
-import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.Main;
 import de.moonflower.jfritz.utils.Debug;
 
@@ -46,7 +45,8 @@ public class ClientConnectionListener extends Thread {
 					Debug.msg("Listening for client connections on: "+
 							Main.getProperty("clients.port", "4444"));
 					isListening = true;
-			
+					NetworkStateMonitor.serverStateChanged();
+					
 					while(listen){
 						
 						ClientConnectionThread connection = new ClientConnectionThread(serverSocket.accept());
@@ -58,7 +58,6 @@ public class ClientConnectionListener extends Thread {
 						connection.start();
 					}
 					
-					isListening = false;
 					serverSocket.close();
 					
 				}catch(SocketException e){
@@ -75,7 +74,16 @@ public class ClientConnectionListener extends Thread {
 					e.printStackTrace();
 				}
 				Debug.msg("Client connection listener stopped");
+				isListening = false;
 				listen = false;
+				
+				Debug.msg("Closing all open client connections");
+				synchronized(lock){
+					for(ClientConnectionThread client: connectedClients)
+						client.closeConnection();
+				}
+				
+				NetworkStateMonitor.serverStateChanged();
 			}
 		}
 		
@@ -96,8 +104,9 @@ public class ClientConnectionListener extends Thread {
 		}
 	}
 	
-	public void stopListening(){
+	public synchronized void stopListening(){
 		listen = false;
+		Debug.msg("Stopping client listener!");
 		try{
 			serverSocket.close(); 
 		
@@ -107,10 +116,6 @@ public class ClientConnectionListener extends Thread {
 			e.printStackTrace();
 		}
 		
-		synchronized(lock){
-			for(ClientConnectionThread client: connectedClients)
-				client.closeConnection();
-		}
 	}
 	
 }

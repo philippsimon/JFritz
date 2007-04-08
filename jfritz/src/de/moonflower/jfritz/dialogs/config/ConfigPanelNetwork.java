@@ -355,7 +355,7 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 			if(this.startClientButton.isSelected()){
 				NetworkStateMonitor.startClient();
 			}else{
-				//TODO
+				NetworkStateMonitor.stopClient();
 			}
 		}
 	}

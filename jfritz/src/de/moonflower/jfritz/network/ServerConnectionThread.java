@@ -10,7 +10,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 
 import java.net.Socket;
-import java.net.ServerSocket;
+import java.net.SocketException;
 
 import java.util.Vector;
 
@@ -27,10 +27,6 @@ public class ServerConnectionThread extends Thread {
 	private static boolean connect = false;
 	
 	private Socket socket;
-	
-	private PrintWriter writer;
-	
-	private BufferedReader reader;
 	
 	private ObjectInputStream objectIn;
 	
@@ -51,9 +47,23 @@ public class ServerConnectionThread extends Thread {
 		notify();
 	}
 	
+	public synchronized void disconnectFromServer(){
+		try{
+			Debug.msg("Writing disconnect message to the server");
+			objectOut.writeObject("JFRITZ CLOSE");
+			objectOut.flush();
+			objectOut.close();
+			objectIn.close();
+			socket.close();
+		}catch(IOException e){
+			Debug.err("Error writing disconnect message to server");
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}
+	}
+	
 	public void run(){
-		while(true){
-			Debug.msg("Server connection thread started");
+		while(!quit){
 			if(!connect){
 				try{
 					synchronized(this){
@@ -79,10 +89,6 @@ public class ServerConnectionThread extends Thread {
 				
 				try{
 					socket = new Socket(server, port);
-					//writer = new PrintWriter(socket.getOutputStream(), true);
-					//reader = new BufferedReader(new InputStreamReader(
-					//	socket.getInputStream()));
-					
 					Debug.msg("successfully connected to server, authenticating");
 					objectOut = new ObjectOutputStream(socket.getOutputStream());
 					objectIn = new ObjectInputStream(socket.getInputStream());
@@ -90,6 +96,7 @@ public class ServerConnectionThread extends Thread {
 					if(authenticateWithServer(user, password)){
 						Debug.msg("Successfully authenticated with server");
 						isConnected = true;
+						NetworkStateMonitor.clientStateChanged();
 						
 						callListRequest = new ClientRequest<Call>();
 						callListRequest.destination = ClientRequest.Destination.CALLLIST;
@@ -99,12 +106,12 @@ public class ServerConnectionThread extends Thread {
 						
 						synchronizeWithServer();
 						listenToServer();
-						
+						isConnected = false;
+						NetworkStateMonitor.clientStateChanged();
 						
 					}else
 						Debug.msg("Authentication failed!");
 					
-					isConnected = false;
 					objectOut.close();
 					objectIn.close();
 					socket.close();
@@ -118,13 +125,12 @@ public class ServerConnectionThread extends Thread {
 				
 			}
 			
+			Debug.msg("Connection to server closed");
 			//TODO: Cleanup code here!
-			
-			
 		}
 	}
 	
-	public boolean authenticateWithServer(String user, String password){
+	private boolean authenticateWithServer(String user, String password){
 		Object o;
 		String response;
 		try{
@@ -203,13 +209,13 @@ public class ServerConnectionThread extends Thread {
 //		DataChange<Call> cCall;
 //		DataChange<Person> cPerson;
 		Object o;
+		String message;
 		
 		Debug.msg("Listening for commands from server");
-		while(!quit){
+		while(true){
 			try{
 				o = objectIn.readObject();
-				Debug.msg("received response from server!");
-				if(o != null && o instanceof DataChange){
+				if(o instanceof DataChange){
 				
 					change = (DataChange) o;
 						if(change.destination == DataChange.Destination.CALLLIST){
@@ -240,7 +246,17 @@ public class ServerConnectionThread extends Thread {
 						}else{
 							Debug.msg("destination not chosen for incoming data, ignoring!");
 						}
-				} else {
+				}else if(o instanceof String){
+					message = (String) o;
+					Debug.msg("Received message from server: "+message);
+					if(message.equals("JFRITZ CLOSE")){
+						Debug.msg("Closing connection with server!");
+						disconnect();
+						return;
+					}
+					
+				
+				}else {
 					Debug.msg(o.toString());
 					Debug.msg("received unexpected object, ignoring!");
 				}
@@ -250,6 +266,14 @@ public class ServerConnectionThread extends Thread {
 				Debug.err("Response from server contained unkown object!");
 				Debug.err(e.toString());
 				e.printStackTrace();
+			}catch(SocketException e){
+				if(e.getMessage().equals("Socket closed")){
+					Debug.msg("Socket closed");
+				}else{
+					Debug.err(e.toString());
+					e.printStackTrace();
+				}
+				return;
 			}catch(EOFException e ){
 				Debug.err("Server closed stream unexpectedly!");
 				Debug.err(e.toString());
@@ -262,4 +286,22 @@ public class ServerConnectionThread extends Thread {
 			}
 		}
 	}
+	
+	private synchronized void disconnect(){
+		try{
+			objectOut.close();
+			objectIn.close();
+			socket.close();
+		}catch(IOException e){
+			Debug.err("Error disconnecting from server");
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}
+	}
+	
+	public synchronized void quitThread(){
+		quit = true;
+		notify();
+	}
+	
 }
