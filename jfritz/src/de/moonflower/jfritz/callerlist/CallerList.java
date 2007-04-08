@@ -142,10 +142,21 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		sortColumn = 1;
 	}
 
+	/**CallerListListeners are used to passively catch changes to the 
+	 * data in the call list
+	 * 
+	 * @param l the listener to be added
+	 */
 	public synchronized void addListener(CallerListListener l){
 		listeners.add(l);
 	}
 	
+	/**
+	 * CallerListListeners are used to passively catch changes to the
+	 * data in the call list
+	 * 
+	 * @param l the listener to be removed
+	 */
 	public synchronized void removeListener(CallerListListener l){
 		listeners.remove(l);
 	}
@@ -436,7 +447,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	
 	/**
 	 * Adds a vector of new calls to the list, used by network code to
-	 * import en masse
+	 * import calls en masse
 	 * 
 	 * @author brian
 	 * 
@@ -474,7 +485,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * 
 	 * @author brian
 	 * 
-	 * @param removeCalls
+	 * @param removeCalls calls to be removed
 	 */
 	public void removeEntries(Vector<Call> removeCalls){
 		
@@ -583,7 +594,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	}
 
 	/**
-	 * This method synchronises the main call vector with with the recently
+	 * This method synchronizes the main call vector with with the recently
 	 * added calls per addEntry(Call call)
 	 * 
 	 * NOTE: This method must be called after any calls have been added but
@@ -2112,6 +2123,14 @@ public boolean importFromCSVFile(BufferedReader br) {
 		return null;
 	}
 	
+	/** This function is used by the network code to retrieve all calls
+	 * newer than that of the timestamp
+	 * 
+	 * @author brian
+	 * 
+	 * @param timestamp of the last call received
+	 * @return a vector of calls newer than the timestamp
+	 */
 	public synchronized Vector<Call> getNewerCalls(Date timestamp){
 		Vector<Call> newerCalls = new Vector<Call>();
 		DateFilter dateFilter = new DateFilter(timestamp, new Date(System.currentTimeMillis()));

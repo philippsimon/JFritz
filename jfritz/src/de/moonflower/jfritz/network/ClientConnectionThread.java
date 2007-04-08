@@ -18,7 +18,18 @@ import de.moonflower.jfritz.struct.Call;
 import de.moonflower.jfritz.struct.Person;
 import de.moonflower.jfritz.utils.Debug;
 
-
+/**
+ * This class is responsible for interacting with a JFritz client.
+ * All communication between client and server is asynchronus.
+ * Communication between client and server is done using either
+ * ClientRequest or String objects. Communication between server 
+ * and client is done using DataChange or String objects.
+ *
+ * This thread exits automatically once the connection has been closed.
+ * 
+ * @author brian
+ *
+ */
 public class ClientConnectionThread extends Thread implements CallerListListener,
 			PhoneBookListener {
 
@@ -45,7 +56,6 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	public void run(){
 		
 		Debug.msg("Accepted incoming connection from "+remoteAddress);
-		//login = JFritzProtocolV1.autheticateClient(socket);
 		
 		try{
 			objectOut = new ObjectOutputStream(socket.getOutputStream());
@@ -84,6 +94,11 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 		ClientConnectionListener.clientConnectionEnded(this);
 	}
 	
+	/**
+	 * this function listens for client requests until the 
+	 * connection is ended.
+	 *
+	 */
 	public void waitForClientRequest(){
 		Object o;
 		ClientRequest request;
@@ -91,7 +106,9 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 		
 		while(true){
 			try{
-
+				
+				//currently only call list and phone book update
+				//requests are supported
 				o = objectIn.readObject();
 				Debug.msg("received request from "+remoteAddress);
 				if(o instanceof ClientRequest){
@@ -161,6 +178,13 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 		}
 	}
 	
+	/**
+	 * Authenticate client and record which login client used
+	 * logins are used to determine permissions and eventually
+	 * filter settings.
+	 * 
+	 * @return login used by client
+	 */
 	public Login authenticateClient(){
 		
 		Object o;
@@ -211,8 +235,13 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 		return null;
 	
 	}
-	
-	public synchronized void disconnect(){
+	/**
+	 * Called internally when client signals that it is going to end
+	 * the connection. Is sychronized with all other write requests,
+	 * so queued writes should still be written out.
+	 *
+	 */
+	private synchronized void disconnect(){
 		try{
 			objectOut.close();
 			objectIn.close();
@@ -224,6 +253,10 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 		}
 	}
 	
+	/**
+	 * called when the user has chosen to kill all network connections
+	 *
+	 */
 	public synchronized void closeConnection(){
 		try{
 			Debug.msg("Notifying client "+remoteAddress+" to close connection");
@@ -252,6 +285,10 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 		}
 	}
 	
+	/**
+	 * Called when new calls have been added to the call list.
+	 * Eventually filters based on login will be applied
+	 */
 	public void callsAdded(Vector<Call> newCalls){
 		Debug.msg("Notifying client "+remoteAddress+" of added calls, size: "+newCalls.size());
 		Vector<Call> filteredCalls = (Vector<Call>) newCalls.clone();
@@ -271,6 +308,10 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 		}
 	}
 	
+	/**
+	 * Called when calls have been removed from the call list.
+	 * Eventually filters based on login will be applied.
+	 */
 	public void callsRemoved(Vector<Call> removedCalls){
 		Debug.msg("Notifying client "+remoteAddress+" of removed calls, size:"+removedCalls.size());
 		Vector<Call> filteredCalls = (Vector<Call>) removedCalls.clone();
@@ -293,6 +334,11 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 		Debug.msg("callsRemove new size "+callsRemove.data.size());
 	}
 
+	/**
+	 * Called when contacts have been added to the call list.
+	 * Eventually filters will be applied based on login.
+	 * 
+	 */
 	public void contactsAdded(Vector<Person> newContacts){
 		Debug.msg("Notifying client "+remoteAddress+" of added contacts, size:"+newContacts.size());
 		Vector<Person> filteredPersons = (Vector<Person>) newContacts.clone();
@@ -312,6 +358,11 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 		}
 	}
 	
+	/**
+	 * Called when contacts have been removed from the call list.
+	 * Eventually filters will be applied based on login.
+	 * 
+	 */
 	public void contactsRemoved(Vector<Person> removedContacts){
 		Debug.msg("Notifying client "+remoteAddress+" of removed contacts, size: "+removedContacts.size());
 		Vector<Person> filteredPersons = (Vector<Person>) removedContacts.clone();

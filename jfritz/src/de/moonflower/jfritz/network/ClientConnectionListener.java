@@ -3,7 +3,6 @@ package de.moonflower.jfritz.network;
 import java.io.IOException;
 
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.SocketException;
 
 import java.util.Vector;
@@ -11,6 +10,15 @@ import java.util.Vector;
 import de.moonflower.jfritz.Main;
 import de.moonflower.jfritz.utils.Debug;
 
+/**
+ * This class is responsible for listening for new client connections
+ * on the user specified port. On an incoming connection this thread
+ * creates a new ClientConnectionThread to handle the communication
+ * with the new client.
+
+ * @author brian
+ *
+ */
 public class ClientConnectionListener extends Thread {
 
 	private static Object lock = new Object();
@@ -23,10 +31,12 @@ public class ClientConnectionListener extends Thread {
 	
 	private static ServerSocket serverSocket;
 	
+	private static boolean quit = false;
+	
 	public void run(){
 		Debug.msg("client connection listener started");
 		connectedClients = new Vector<ClientConnectionThread>();
-		while(true){
+		while(!quit){
 			if(!listen){
 				try{
 					synchronized(this){
@@ -69,7 +79,7 @@ public class ClientConnectionListener extends Thread {
 					}
 						
 				}catch(IOException e){
-					Debug.err("Error binding to port:");
+					Debug.err("Error binding to port: ");
 					Debug.err(e.toString());
 					e.printStackTrace();
 				}
@@ -86,24 +96,45 @@ public class ClientConnectionListener extends Thread {
 				NetworkStateMonitor.serverStateChanged();
 			}
 		}
+		Debug.msg("ClientConnectionListener thread quitting");
 		
 	}
 	
+	/** Used by the gui code to determine if the server is listening
+	 * 
+	 * @return status of the client listener thread
+	 */
 	public static boolean isListening(){
 		return isListening;
 	}
 
+	/**
+	 * Wakes the thread up which proceeds to open a serverSocket
+	 * connection to listen for new incoming connections.
+	 *
+	 */
 	public synchronized void startListening(){
 		listen = true;
 		notify();
 	}
-
+	
+	/**
+	 * This function is called by  a ClientConnectionThread to indicate
+	 * that a particular connection has ended
+	 * 
+	 * @param connection that has ended
+	 */
 	public static void clientConnectionEnded(ClientConnectionThread connection){
 		synchronized(lock){
 			connectedClients.remove(connection);
 		}
 	}
 	
+	/**
+	 * This function stops the ClientConnectionListioner and puts the
+	 * thread to sleep 
+	 *
+	 */
 	public synchronized void stopListening(){
 		listen = false;
 		Debug.msg("Stopping client listener!");
@@ -116,6 +147,16 @@ public class ClientConnectionListener extends Thread {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/**
+	 * This function must be called to terminate the thread when the
+	 * application is going to terminate
+	 *
+	 */
+	public synchronized void quitThread(){
+		quit = true;
+		notify();
 	}
 	
 }

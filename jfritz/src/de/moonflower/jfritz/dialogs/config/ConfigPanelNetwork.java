@@ -26,7 +26,6 @@ import javax.swing.table.TableCellRenderer;
 
 import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.Main;
-import de.moonflower.jfritz.network.NetworkSettings;
 import de.moonflower.jfritz.network.NetworkStateListener;
 import de.moonflower.jfritz.network.NetworkStateMonitor;
 import de.moonflower.jfritz.utils.Debug;

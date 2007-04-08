@@ -1,13 +1,9 @@
 package de.moonflower.jfritz.network;
 
-import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 
 import java.net.Socket;
 import java.net.SocketException;
@@ -20,6 +16,19 @@ import de.moonflower.jfritz.struct.Call;
 import de.moonflower.jfritz.struct.Person;
 import de.moonflower.jfritz.utils.Debug;
 
+/**
+ * This class is responsible for seting up a connection to a 
+ * JFritz server. All communication between server and client
+ * are asynchronus in nature. All communication from client to server
+ * uses either ClientRequest or String objects, whereas the String objects
+ * are intended only to pass messages to the server (like client closing
+ * the connection). All communication from server to client uses either
+ * DataChange or String objects, where the String objects are also
+ * used ot pass messages.
+ * 
+ * @author brian
+ *
+ */
 public class ServerConnectionThread extends Thread {
 
 	private static boolean isConnected = false;
@@ -38,15 +47,30 @@ public class ServerConnectionThread extends Thread {
 	
 	private boolean quit = false;
 	
+	/**
+	 * Returns the current state of this thread
+	 * 
+	 * @return the state of the connection to the server
+	 */
 	public static boolean isConnected(){
 		return isConnected;
 	}
 	
+	/**
+	 * Starts the thread and attempts to build a connection to the 
+	 * user specified server
+	 *
+	 */
 	public synchronized void connectToServer(){
 		connect = true;
 		notify();
 	}
 	
+	/**
+	 * Is used to cleanly kill a connection and put the current
+	 * thread into sleep mode
+	 *
+	 */
 	public synchronized void disconnectFromServer(){
 		try{
 			Debug.msg("Writing disconnect message to the server");
@@ -130,6 +154,13 @@ public class ServerConnectionThread extends Thread {
 		}
 	}
 	
+	/**
+	 * function attempts to login to the user specified server
+	 * 
+	 * @param user username of the account on the server
+	 * @param password password of the account on the server
+	 * @return whether the client successfully connected to the server or not
+	 */
 	private boolean authenticateWithServer(String user, String password){
 		Object o;
 		String response;
@@ -178,6 +209,11 @@ public class ServerConnectionThread extends Thread {
 		return false;
 	}
 	
+	/**
+	 * function gets all calls newer than the newest call in the call list
+	 * and gets all contacts from the server.
+	 *
+	 */
 	private synchronized void synchronizeWithServer(){
 
 		Debug.msg("Requesting updates from server");
@@ -185,8 +221,8 @@ public class ServerConnectionThread extends Thread {
 			callListRequest.operation = ClientRequest.Operation.GET;
 			callListRequest.timestamp = JFritz.getCallerList().getLastCallDate();
 			objectOut.writeObject(callListRequest);
-			objectOut.flush();
-			objectOut.reset();
+			objectOut.flush(); 
+			objectOut.reset(); //reset the streams object cache!
 			
 			phoneBookRequest.operation = ClientRequest.Operation.GET;
 			objectOut.writeObject(phoneBookRequest);
@@ -201,13 +237,16 @@ public class ServerConnectionThread extends Thread {
 
 	}
 	
-
+	/**
+	 * function listens to commands issued by the server, can only
+	 * be exited by closing the object streams or receiving a 
+	 * close request from the server
+	 *
+	 */
 	private void listenToServer(){
 		Vector<Call> vCalls;
 		Vector<Person> vPersons;
 		DataChange change;
-//		DataChange<Call> cCall;
-//		DataChange<Person> cPerson;
 		Object o;
 		String message;
 		
@@ -246,14 +285,14 @@ public class ServerConnectionThread extends Thread {
 						}else{
 							Debug.msg("destination not chosen for incoming data, ignoring!");
 						}
-				}else if(o instanceof String){
+				}else if(o instanceof String){ //message received from the server
 					message = (String) o;
 					Debug.msg("Received message from server: "+message);
-					if(message.equals("JFRITZ CLOSE")){
+					if(message.equals("JFRITZ CLOSE")){ 
 						Debug.msg("Closing connection with server!");
 						disconnect();
 						return;
-					}
+					} //TODO: Add other messages here if necessary
 					
 				
 				}else {
@@ -261,14 +300,13 @@ public class ServerConnectionThread extends Thread {
 					Debug.msg("received unexpected object, ignoring!");
 				}
 			
-			
 			}catch(ClassNotFoundException e){
 				Debug.err("Response from server contained unkown object!");
 				Debug.err(e.toString());
 				e.printStackTrace();
 			}catch(SocketException e){
 				if(e.getMessage().equals("Socket closed")){
-					Debug.msg("Socket closed");
+					Debug.msg("Socket closed");	//we closed the socket as requested by the user
 				}else{
 					Debug.err(e.toString());
 					e.printStackTrace();
@@ -287,6 +325,11 @@ public class ServerConnectionThread extends Thread {
 		}
 	}
 	
+	/**
+	 * Called when the server send a close request. This code makes sure that
+	 * we aren't writing a request to the server as the streams are closed
+	 *
+	 */
 	private synchronized void disconnect(){
 		try{
 			objectOut.close();
@@ -299,6 +342,10 @@ public class ServerConnectionThread extends Thread {
 		}
 	}
 	
+	/**
+	 * Function used to quit this thread, should be called on application exit
+	 *
+	 */
 	public synchronized void quitThread(){
 		quit = true;
 		notify();
