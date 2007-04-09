@@ -128,7 +128,6 @@
  * - http://www.ip-phone-forum.de/showthread.php?t=112348
  * - Überprüfen, geht wohl nicht mehr: Rückwärtssuche für Österreich über dasoertliche.de wieder eingebaut
  * - Connection-Timeout für ReverseLookup setzen
- * - Extra Button für die Wahlhilfe
  * TODO-END 
  * 
  * FIXME:
@@ -637,7 +636,7 @@ public class Main implements LookupObserver {
 
 	public final static String PROGRAM_NAME = "JFritz"; //$NON-NLS-1$
 
-	public final static String PROGRAM_VERSION = "0.6.2.03"; //$NON-NLS-1$
+	public final static String PROGRAM_VERSION = "0.6.2.04"; //$NON-NLS-1$
 	
 	public final static String CVS_TAG = "$Id$"; //$NON-NLS-1$
 
