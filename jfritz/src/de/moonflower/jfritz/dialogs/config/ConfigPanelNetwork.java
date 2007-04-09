@@ -26,6 +26,8 @@ import javax.swing.table.TableCellRenderer;
 
 import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.Main;
+import de.moonflower.jfritz.cellrenderer.ButtonEditor;
+import de.moonflower.jfritz.cellrenderer.PermissionsCellRenderer;
 import de.moonflower.jfritz.network.NetworkStateListener;
 import de.moonflower.jfritz.network.NetworkStateMonitor;
 import de.moonflower.jfritz.utils.Debug;
@@ -223,6 +225,8 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		logonsTable.getColumnModel().getColumn(1).setMaxWidth(120);
 		logonsTable.getColumnModel().getColumn(2).setMinWidth(80);
 		logonsTable.getColumnModel().getColumn(2).setMaxWidth(80);
+		logonsTable.getColumnModel().getColumn(2).setCellRenderer(new PermissionsCellRenderer());
+		logonsTable.getColumnModel().getColumn(2).setCellEditor(new ButtonEditor(new JCheckBox()));
 		logonsTable.getColumnModel().getColumn(3).setMinWidth(80);
 		logonsTable.getColumnModel().getColumn(3).setMaxWidth(80);
 		logonsTable.getColumnModel().getColumn(4).setMinWidth(80);

@@ -30,6 +30,10 @@ public class ClientLoginsTableModel extends AbstractTableModel{
 		return clientLogins.size();
 	}
 
+	public boolean isCellEditable(int row, int col){
+		return true;
+	}
+	
 	public Object getValueAt(int row, int column){
 		
 		Login login = clientLogins.elementAt(row);
@@ -43,7 +47,6 @@ public class ClientLoginsTableModel extends AbstractTableModel{
 				return "";
 		}
 		
-		//return "test: "+row+ " "+ column;
 	}
 
     public String getColumnName(int column) {

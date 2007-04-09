@@ -24,7 +24,7 @@ import de.moonflower.jfritz.utils.Debug;
  * are intended only to pass messages to the server (like client closing
  * the connection). All communication from server to client uses either
  * DataChange or String objects, where the String objects are also
- * used ot pass messages.
+ * used to pass messages.
  * 
  * @author brian
  *
