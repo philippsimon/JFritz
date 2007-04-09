@@ -128,6 +128,7 @@
  * - http://www.ip-phone-forum.de/showthread.php?t=112348
  * - Überprüfen, geht wohl nicht mehr: Rückwärtssuche für Österreich über dasoertliche.de wieder eingebaut
  * - Connection-Timeout für ReverseLookup setzen
+ * - Extra Button für die Wahlhilfe
  * TODO-END 
  * 
  * FIXME:
@@ -146,6 +147,8 @@
  * - Neu: Rückwärtssuche nach Ort für Türkei eingebaut
  * - Bugfix: Amtskennzahl richtig verarbeitet beim CallMonitor
  * - Neu: Unterstützung für gemoddete Eumex 300ip (Firmware 15.xx.xx)
+ * - Neu: Unterstützung für gemoddete Speedport W 900V (Firmware 34.xx.xx)
+ * - Neu: Beliebige Nummer direkt aus JFritz heraus wählen
  * 
  * JFritz 0.6.2.03
  * - Autoupdate korrektur
