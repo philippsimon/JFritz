@@ -146,7 +146,6 @@ public class ClientConnectionListener extends Thread {
 			Debug.err(e.toString());
 			e.printStackTrace();
 		}
-		
 	}
 	
 	/**
