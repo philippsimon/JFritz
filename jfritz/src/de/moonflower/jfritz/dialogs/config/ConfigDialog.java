@@ -94,7 +94,7 @@ public class ConfigDialog extends JDialog implements ChangeListener {
 		callMonitorPanel = new ConfigPanelCallMonitor(this, true, fritzBoxPanel);
 		languagePanel = new ConfigPanelLang();
 		otherPanel = new ConfigPanelOther(fritzBoxPanel);
-		networkPanel = new ConfigPanelNetwork();
+		networkPanel = new ConfigPanelNetwork(this);
 		
 		drawDialog();
 		setValues();
@@ -444,7 +444,7 @@ public class ConfigDialog extends JDialog implements ChangeListener {
 			setSize(new Dimension(510,180));
 		//network panel
 		}else if(tpane.getSelectedIndex() == 7){
-			setSize(new Dimension(510, 450));
+			setSize(new Dimension(510, 500));
 		//other panel
 		}else if(tpane.getSelectedIndex() == 8){
 			setSize(new Dimension(610,470));

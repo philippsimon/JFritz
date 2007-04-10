@@ -26,8 +26,8 @@ import javax.swing.table.TableCellRenderer;
 
 import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.Main;
-import de.moonflower.jfritz.cellrenderer.ButtonEditor;
-import de.moonflower.jfritz.cellrenderer.PermissionsCellRenderer;
+import de.moonflower.jfritz.cellrenderer.ButtonCellRenderer;
+import de.moonflower.jfritz.cellrenderer.ButtonCellEditor;
 import de.moonflower.jfritz.network.NetworkStateListener;
 import de.moonflower.jfritz.network.NetworkStateMonitor;
 import de.moonflower.jfritz.utils.Debug;
@@ -39,6 +39,8 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 
 	private static final long serialVersionUID = 72671244193567208L;
 
+	private JDialog parent;
+	
 	private JComboBox networkTypeCombo;
 
 	private JCheckBox clientTelephoneBook, clientCallList,
@@ -57,8 +59,8 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 
 	private boolean showButtons;
 
-	public ConfigPanelNetwork() {
-
+	public ConfigPanelNetwork(JDialog parent) {
+		this.parent = parent;
 		setLayout(new BorderLayout());
 		setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		networkTypeCombo = new JComboBox();
@@ -71,6 +73,10 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		
 		clientPanel = getClientPanel();
 		serverPanel = getServerPanel();
+		
+
+		if(this.parent != null)
+			System.out.println("parent isn't null in configpanelnetwork");
 		
 		NetworkStateMonitor.addListener(this);
 		
@@ -219,18 +225,28 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		logonsTable.setCellSelectionEnabled(false);
 		logonsTable.setRowSelectionAllowed(true);
 		logonsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		logonsTable.getColumnModel().getColumn(0).setMinWidth(80);
+	
+		logonsTable.getColumnModel().getColumn(0).setMinWidth(50);
 		logonsTable.getColumnModel().getColumn(0).setMaxWidth(120);
-		logonsTable.getColumnModel().getColumn(1).setMinWidth(80);
+		logonsTable.getColumnModel().getColumn(1).setMinWidth(50);
 		logonsTable.getColumnModel().getColumn(1).setMaxWidth(120);
-		logonsTable.getColumnModel().getColumn(2).setMinWidth(80);
-		logonsTable.getColumnModel().getColumn(2).setMaxWidth(80);
-		logonsTable.getColumnModel().getColumn(2).setCellRenderer(new PermissionsCellRenderer());
-		logonsTable.getColumnModel().getColumn(2).setCellEditor(new ButtonEditor(new JCheckBox()));
-		logonsTable.getColumnModel().getColumn(3).setMinWidth(80);
-		logonsTable.getColumnModel().getColumn(3).setMaxWidth(80);
-		logonsTable.getColumnModel().getColumn(4).setMinWidth(80);
-		logonsTable.getColumnModel().getColumn(4).setMaxWidth(80);
+		logonsTable.getColumnModel().getColumn(2).setMinWidth(100);
+		logonsTable.getColumnModel().getColumn(2).setMaxWidth(100);
+		
+		if(parent != null){
+			System.out.println("parent isnt null during panel creation");
+		}
+		
+		logonsTable.getColumnModel().getColumn(2).setCellRenderer(new ButtonCellRenderer());
+		logonsTable.getColumnModel().getColumn(2).setCellEditor(new ButtonCellEditor(new JCheckBox(), parent));
+		logonsTable.getColumnModel().getColumn(3).setMinWidth(100);
+		logonsTable.getColumnModel().getColumn(3).setMaxWidth(100);
+		logonsTable.getColumnModel().getColumn(3).setCellRenderer(new ButtonCellRenderer());
+		logonsTable.getColumnModel().getColumn(3).setCellEditor(new ButtonCellEditor(new JCheckBox(), parent));
+		logonsTable.getColumnModel().getColumn(4).setMinWidth(100);
+		logonsTable.getColumnModel().getColumn(4).setMaxWidth(100);
+		logonsTable.getColumnModel().getColumn(4).setCellRenderer(new ButtonCellRenderer());
+		logonsTable.getColumnModel().getColumn(4).setCellEditor(new ButtonCellEditor(new JCheckBox(), parent));
 		logonsTable.setPreferredScrollableViewportSize(new Dimension(200, 100));
 		JScrollPane jsPane = new JScrollPane(logonsTable);
 		jsPane.setMaximumSize(new Dimension(200, 100));

@@ -7,19 +7,24 @@ import java.awt.Component;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JTable;
-import javax.swing.JOptionPane;
 
-public class ButtonEditor extends DefaultCellEditor {
+public class ButtonCellEditor extends DefaultCellEditor {
 
 	public static final long serialVersionUID = 100;
 	
 	protected JButton button;
 	private String label;
 	private boolean isPushed;
+	private JTable table;
+	private int column, row;
+	private JDialog parent;
 	
-	public ButtonEditor(JCheckBox checkBox){
+	public ButtonCellEditor(JCheckBox checkBox, JDialog parent){
 		super(checkBox);
+		this.parent = parent;
+
 		button = new JButton();
 		button.setOpaque(true);
 		button.addActionListener(new ActionListener(){
@@ -39,6 +44,9 @@ public class ButtonEditor extends DefaultCellEditor {
 			button.setForeground(table.getForeground());
 			button.setBackground(table.getBackground());
 		}
+		this.column = column;
+		this.row = row;
+		this.table = table;
 		label = (value == null) ? "" : value.toString();
 		button.setText(label);
 		isPushed = true;
@@ -47,7 +55,7 @@ public class ButtonEditor extends DefaultCellEditor {
 	
 	public Object getCellEditorValue(){
 		if(isPushed){
-			JOptionPane.showMessageDialog(button, label + ": Ouch!");
+			table.setValueAt(parent, row, column);
 		}
 		isPushed = false;
 		return new String(label);

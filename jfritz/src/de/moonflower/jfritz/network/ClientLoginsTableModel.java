@@ -2,10 +2,16 @@ package de.moonflower.jfritz.network;
 
 import java.util.Vector;
 
+import java.awt.Component;
+
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
+
 
 import de.moonflower.jfritz.Main;
 import de.moonflower.jfritz.callerlist.filter.CallFilter;
+import de.moonflower.jfritz.dialogs.config.PermissionsDialog;
 import de.moonflower.jfritz.utils.Debug;
 
 public class ClientLoginsTableModel extends AbstractTableModel{
@@ -19,8 +25,8 @@ public class ClientLoginsTableModel extends AbstractTableModel{
 	}
 	
     private final String columnNames[] = { Main.getMessage("username"), Main.getMessage("password"), //$NON-NLS-1$,  //$NON-NLS-2$
-    		Main.getMessage("client_permissions"), Main.getMessage("client_calllist_filters"), 
-    		Main.getMessage("client_telephonebook_filters")}; //$NON-NLS-1$,  //$NON-NLS-2$
+    		Main.getMessage("permissions"), Main.getMessage("callerlist_filters"), 
+    		Main.getMessage("phonebook_filters")}; //$NON-NLS-1$,  //$NON-NLS-2$
 	
 	public int getColumnCount(){
 		return columnNames.length;
@@ -31,6 +37,7 @@ public class ClientLoginsTableModel extends AbstractTableModel{
 	}
 
 	public boolean isCellEditable(int row, int col){
+
 		return true;
 	}
 	
@@ -42,13 +49,42 @@ public class ClientLoginsTableModel extends AbstractTableModel{
 				return login.user;
 			case 1:
 				return login.password;
-
+			case 2:
+				return Main.getMessage("set");
+			case 3:
+				return Main.getMessage("set");
+			case 4:
+				return Main.getMessage("set");
 			default:
 				return "";
 		}
 		
 	}
 
+	public void setValueAt(Object value, int row, int column){
+		Login login = clientLogins.elementAt(row);
+		switch(column){
+		case 0:
+			login.user = value.toString();
+			break;
+		case 1:
+			login.password = value.toString();
+			break;
+		case 2:
+			if(value instanceof JDialog){
+				PermissionsDialog dialog = new PermissionsDialog((JDialog) value,login);
+				dialog.showConfigDialog();
+				dialog.dispose();
+			}
+			break;
+		case 3:
+		case 4:
+			if(value instanceof JDialog){
+				JOptionPane.showMessageDialog((Component) value, "Function not yet implemented!!");
+			}
+		}
+	}
+	
     public String getColumnName(int column) {
         return columnNames[column];
     }
