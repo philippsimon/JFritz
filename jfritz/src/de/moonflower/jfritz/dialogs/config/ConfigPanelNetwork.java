@@ -28,6 +28,7 @@ import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.Main;
 import de.moonflower.jfritz.cellrenderer.ButtonCellRenderer;
 import de.moonflower.jfritz.cellrenderer.ButtonCellEditor;
+import de.moonflower.jfritz.network.ClientLoginsTableModel;
 import de.moonflower.jfritz.network.NetworkStateListener;
 import de.moonflower.jfritz.network.NetworkStateMonitor;
 import de.moonflower.jfritz.utils.Debug;
@@ -73,10 +74,6 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		
 		clientPanel = getClientPanel();
 		serverPanel = getServerPanel();
-		
-
-		if(this.parent != null)
-			System.out.println("parent isn't null in configpanelnetwork");
 		
 		NetworkStateMonitor.addListener(this);
 		
@@ -163,6 +160,8 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		
 		NetworkStateMonitor.removeListener(this);
 		
+		ClientLoginsTableModel.saveToXMLFile(Main.SAVE_DIR + JFritz.CLIENT_SETTINGS_FILE);
+		
 	}
 
 	private JPanel getServerPanel(){
@@ -231,12 +230,7 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		logonsTable.getColumnModel().getColumn(1).setMinWidth(50);
 		logonsTable.getColumnModel().getColumn(1).setMaxWidth(120);
 		logonsTable.getColumnModel().getColumn(2).setMinWidth(100);
-		logonsTable.getColumnModel().getColumn(2).setMaxWidth(100);
-		
-		if(parent != null){
-			System.out.println("parent isnt null during panel creation");
-		}
-		
+		logonsTable.getColumnModel().getColumn(2).setMaxWidth(100);	
 		logonsTable.getColumnModel().getColumn(2).setCellRenderer(new ButtonCellRenderer());
 		logonsTable.getColumnModel().getColumn(2).setCellEditor(new ButtonCellEditor(new JCheckBox(), parent));
 		logonsTable.getColumnModel().getColumn(3).setMinWidth(100);

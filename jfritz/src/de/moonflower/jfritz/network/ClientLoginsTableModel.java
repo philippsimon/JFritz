@@ -1,8 +1,12 @@
 package de.moonflower.jfritz.network;
 
+import java.util.Enumeration;
 import java.util.Vector;
 
 import java.awt.Component;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -12,6 +16,7 @@ import javax.swing.table.AbstractTableModel;
 import de.moonflower.jfritz.Main;
 import de.moonflower.jfritz.callerlist.filter.CallFilter;
 import de.moonflower.jfritz.dialogs.config.PermissionsDialog;
+import de.moonflower.jfritz.dialogs.sip.SipProvider;
 import de.moonflower.jfritz.utils.Debug;
 
 public class ClientLoginsTableModel extends AbstractTableModel{
@@ -102,5 +107,36 @@ public class ClientLoginsTableModel extends AbstractTableModel{
     			false, new Vector<CallFilter>(), "");
     	clientLogins.add(login);
     }
+    
+    public static void saveToXMLFile(String filename){
+    	Debug.msg("Saving to file " + filename); //$NON-NLS-1$
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(filename);
+			PrintWriter pw = new PrintWriter(fos);
+			pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); //$NON-NLS-1$
+			pw.println("<clientsettings>"); //$NON-NLS-1$
+			for(Login login: clientLogins){
+				pw.println("\t<client>");
+				pw.println("\t\t<user>"+login.user+"</user>");
+				pw.println("\t\t<password>"+login.password+"</password>");
+				pw.println("\t\t<allowCallListAdd>"+login.allowAddList+"</allowCallListAdd>");
+				pw.println("\t\t<allowCallListUpdate>"+login.allowUpdateList+"</allowCallListUpdate>");
+				pw.println("\t\t<allowCallListRemove>"+login.allowRemoveList+"</allowCallListRemove>");
+				pw.println("\t\t<allowPhoneBookAdd>"+login.allowAddBook+"</allowPhoneBookAdd>");
+				pw.println("\t\t<allowPhoneBookUpdate>"+login.allowUpdateBook+"</allowPhoneBookUpdate>");
+				pw.println("\t\t<allowPhoneBookRemove>"+login.allowRemoveBook+"</allowPhoneBookRemove>");
+				pw.println("\t\t<allowDoLookup>"+login.allowLookup+"</allowDoLookup>");
+				pw.println("\t\t<allowGetCallList>"+login.allowGetList+"</allowGetCallList>");
+				pw.println("\t</client>");
+			}
+			
+			pw.println("</clientsettings>"); //$NON-NLS-1$
+			pw.close();
+		} catch (FileNotFoundException e) {
+			Debug.err("Could not write " + filename + "!"); //$NON-NLS-1$,  //$NON-NLS-2$
+		}
+    }
+    
     
 }

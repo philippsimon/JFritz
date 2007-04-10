@@ -72,6 +72,8 @@ public final class JFritz implements  StatusListener{
 	public final static String PHONEBOOK_FILE = "jfritz.phonebook.xml"; //$NON-NLS-1$
 
 	public final static String SIPPROVIDER_FILE = "jfritz.sipprovider.xml"; //$NON-NLS-1$
+	
+	public final static String CLIENT_SETTINGS_FILE = "jfritz.clientsettings.xml"; //$NON-NLS-1$
 
 	public final static String CALLS_CSV_FILE = "calls.csv"; //$NON-NLS-1$
 

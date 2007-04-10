@@ -11,12 +11,16 @@ import java.awt.event.KeyListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
 
 import de.moonflower.jfritz.Main;
 import de.moonflower.jfritz.network.Login;
@@ -55,7 +59,7 @@ public class PermissionsDialog extends JDialog {
 	
 	public void init(){
 		setTitle(Main.getMessage("set_client_permissions"));
-	      setSize(270, 240);
+	      setSize(260, 300);
 	      drawDialog();
 	      setProperties();
 	}
@@ -171,6 +175,11 @@ public class PermissionsDialog extends JDialog {
         buttonPanel.add(okButton);
         buttonPanel.add(cancelButton);
 
+		Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+		Border compound = BorderFactory.createCompoundBorder(
+				lowerEtched, new EmptyBorder(10,10,15,10));
+		panel.setBorder(compound);
+        
         getContentPane().add(panel, BorderLayout.CENTER);
         getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 	    
