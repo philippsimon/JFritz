@@ -184,7 +184,7 @@ public final class JFritz implements  StatusListener{
 
 		clientLogins = new ClientLoginsTableModel();
 
-		ClientLoginsTableModel.loadClientLogins();
+		ClientLoginsTableModel.loadFromXMLFile(Main.SAVE_DIR+CLIENT_SETTINGS_FILE);
 		
 		if (Main
 				.getProperty(

@@ -1,23 +1,38 @@
 package de.moonflower.jfritz.network;
 
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Vector;
 
 import java.awt.Component;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.XMLReader;
 
 
 import de.moonflower.jfritz.Main;
 import de.moonflower.jfritz.callerlist.filter.CallFilter;
 import de.moonflower.jfritz.dialogs.config.PermissionsDialog;
 import de.moonflower.jfritz.dialogs.sip.SipProvider;
+import de.moonflower.jfritz.struct.ReverseLookupSite;
 import de.moonflower.jfritz.utils.Debug;
+import de.moonflower.jfritz.utils.Encryption;
+import de.moonflower.jfritz.utils.JFritzUtils;
+import de.moonflower.jfritz.utils.reverselookup.ReverseLookupXMLHandler;
 
 public class ClientLoginsTableModel extends AbstractTableModel{
 
@@ -98,16 +113,6 @@ public class ClientLoginsTableModel extends AbstractTableModel{
     	return clientLogins;
     }
     
-    public static void loadClientLogins(){
-    	Debug.msg("Loading client logins");
-    	Login login = new Login("Brian", "password", true, true, true, true, true,
-    			true, true, true, new Vector<CallFilter>(), "");
-    	clientLogins.add(login);
-    	login = new Login("dummy", "none", false, false, false, false, false, false, false,
-    			false, new Vector<CallFilter>(), "");
-    	clientLogins.add(login);
-    }
-    
     public static void saveToXMLFile(String filename){
     	Debug.msg("Saving to file " + filename); //$NON-NLS-1$
 		FileOutputStream fos;
@@ -119,7 +124,7 @@ public class ClientLoginsTableModel extends AbstractTableModel{
 			for(Login login: clientLogins){
 				pw.println("\t<client>");
 				pw.println("\t\t<user>"+login.user+"</user>");
-				pw.println("\t\t<password>"+login.password+"</password>");
+				pw.println("\t\t<password>"+Encryption.encrypt(login.password)+"</password>");
 				pw.println("\t\t<allowCallListAdd>"+login.allowAddList+"</allowCallListAdd>");
 				pw.println("\t\t<allowCallListUpdate>"+login.allowUpdateList+"</allowCallListUpdate>");
 				pw.println("\t\t<allowCallListRemove>"+login.allowRemoveList+"</allowCallListRemove>");
@@ -138,5 +143,58 @@ public class ClientLoginsTableModel extends AbstractTableModel{
 		}
     }
     
+    public static void loadFromXMLFile(String filename){
+    	try {
+			Debug.msg("loading the client settings xml file: "+filename);
+			
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+			factory.setValidating(false); 
+			SAXParser parser = factory.newSAXParser();
+			XMLReader reader = parser.getXMLReader();
+
+			reader.setErrorHandler(new ErrorHandler() {
+				public void error(SAXParseException x) throws SAXException {
+					// Debug.err(x.toString());
+					throw x;
+				}
+
+				public void fatalError(SAXParseException x) throws SAXException {
+					// Debug.err(x.toString());
+					throw x;
+				}
+
+				public void warning(SAXParseException x) throws SAXException {
+					// Debug.err(x.toString());
+					throw x;
+				}
+			});
+			
+			reader.setContentHandler(new ClientLoginsXMLHandler());
+			reader.parse(new InputSource(new FileInputStream(filename)));
+					
+		} catch (ParserConfigurationException e) {
+			Debug.err("Error with ParserConfiguration!"); //$NON-NLS-1$
+		} catch (SAXException e) {
+			Debug.err("Error on parsing client login settings!"); //$NON-NLS-1$,  //$NON-NLS-2$
+			Debug.err(e.toString());
+			e.printStackTrace();
+			
+			if (e.getLocalizedMessage().startsWith("Relative URI") //$NON-NLS-1$
+					|| e.getLocalizedMessage().startsWith(
+							"Invalid system identifier")) { //$NON-NLS-1$
+				Debug.err(e.getLocalizedMessage());
+			}
+		} catch (IOException e) {
+			Debug.err("Could not read client login settings! No settings loaded!"); //$NON-NLS-1$,  //$NON-NLS-2$
+		}
+    }
+    
+    public static void addLogin(Login login){
+    	clientLogins.add(login);
+    }
+    
+    public static void removeLogin(Login login){
+    	clientLogins.remove(login);
+    }
     
 }

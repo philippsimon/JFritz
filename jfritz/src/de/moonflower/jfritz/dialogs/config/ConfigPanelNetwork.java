@@ -38,7 +38,7 @@ import de.moonflower.jfritz.utils.JFritzUtils;
 public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionListener,
 					NetworkStateListener {
 
-	private static final long serialVersionUID = 72671244193567208L;
+	private static final long serialVersionUID = 100;
 
 	private JDialog parent;
 	
@@ -109,7 +109,7 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		serverName.setText(Main.getProperty("server.name", ""));
 		serverPort.setText(Main.getProperty("server.port", ""));
 		serverLogin.setText(Main.getProperty("server.login", ""));
-		serverPassword.setText(Main.getProperty("server.password", ""));
+		serverPassword.setText(Encryption.decrypt(Main.getProperty("server.password", "")));
 		
 		clientsPort.setText(Main.getProperty("clients.port", ""));
 		maxConnections.setText(Main.getProperty("max.Connections", "6"));
@@ -153,7 +153,7 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		Main.setProperty("server.port", serverPort.getText());
 		Main.setProperty("server.login", serverLogin.getText());
 		String password = new String(serverPassword.getPassword());
-		Main.setProperty("server.password", password);
+		Main.setProperty("server.password", Encryption.encrypt(password));
 		
 		Main.setProperty("clients.port", clientsPort.getText());
 		Main.setProperty("max.Connections", maxConnections.getText());
