@@ -15,6 +15,7 @@ import de.moonflower.jfritz.Main;
 import de.moonflower.jfritz.struct.Call;
 import de.moonflower.jfritz.struct.Person;
 import de.moonflower.jfritz.utils.Debug;
+import de.moonflower.jfritz.utils.Encryption;
 
 /**
  * This class is responsible for seting up a connection to a 
@@ -103,7 +104,7 @@ public class ServerConnectionThread extends Thread {
 				server = Main.getProperty("server.name", "");
 				port = Integer.parseInt(Main.getProperty("server.port", "0"));
 				user = Main.getProperty("server.login", "");
-				password = Main.getProperty("server.password", "");
+				password = Encryption.decrypt(Main.getProperty("server.password", ""));
 				
 				Debug.msg("Attempting to connect to server");
 				Debug.msg("Server: "+ server);
