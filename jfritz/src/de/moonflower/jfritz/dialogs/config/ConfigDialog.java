@@ -444,7 +444,7 @@ public class ConfigDialog extends JDialog implements ChangeListener {
 			setSize(new Dimension(510,180));
 		//network panel
 		}else if(tpane.getSelectedIndex() == 7){
-			setSize(new Dimension(510, 500));
+			setSize(new Dimension(510, 490));
 		//other panel
 		}else if(tpane.getSelectedIndex() == 8){
 			setSize(new Dimension(610,470));

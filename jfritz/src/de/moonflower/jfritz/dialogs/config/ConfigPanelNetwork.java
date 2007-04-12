@@ -9,6 +9,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 
+import java.util.Vector;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -26,9 +28,12 @@ import javax.swing.table.TableCellRenderer;
 
 import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.Main;
+import de.moonflower.jfritz.callerlist.filter.CallFilter;
 import de.moonflower.jfritz.cellrenderer.ButtonCellRenderer;
 import de.moonflower.jfritz.cellrenderer.ButtonCellEditor;
+import de.moonflower.jfritz.cellrenderer.PasswordCellRenderer;
 import de.moonflower.jfritz.network.ClientLoginsTableModel;
+import de.moonflower.jfritz.network.Login;
 import de.moonflower.jfritz.network.NetworkStateListener;
 import de.moonflower.jfritz.network.NetworkStateMonitor;
 import de.moonflower.jfritz.utils.Debug;
@@ -57,8 +62,6 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 	private JTable logonsTable;
 	
 	private JPanel clientPanel, serverPanel;
-
-	private boolean showButtons;
 
 	public ConfigPanelNetwork(JDialog parent) {
 		this.parent = parent;
@@ -167,7 +170,6 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 	private JPanel getServerPanel(){
 		JPanel panel = new JPanel();
 		JPanel optionsPanel = new JPanel();
-		JPanel buttonPanel = new JPanel();
 		
 		panel.setLayout(new BorderLayout());
 		
@@ -196,6 +198,22 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		maxConnections.setMinimumSize(new Dimension(200, 20));
 		optionsPanel.add(maxConnections, c);
 	
+		c.gridy = 3;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.anchor = GridBagConstraints.CENTER;
+		JPanel buttonsPanel = new JPanel();
+		JButton addButton = new JButton(Main.getMessage("add"));
+		addButton.setActionCommand("add");
+		addButton.addActionListener(this);
+		buttonsPanel.add(addButton);
+		
+		JButton removeButton = new JButton(Main.getMessage("remove"));
+		removeButton.setActionCommand("remove");
+		removeButton.addActionListener(this);
+		buttonsPanel.add(removeButton);
+		optionsPanel.add(buttonsPanel, c);
+		
+		
 		panel.add(optionsPanel, BorderLayout.NORTH);
 		
 		logonsTable = new JTable(JFritz.getClientLogins()) {
@@ -229,6 +247,7 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		logonsTable.getColumnModel().getColumn(0).setMaxWidth(120);
 		logonsTable.getColumnModel().getColumn(1).setMinWidth(50);
 		logonsTable.getColumnModel().getColumn(1).setMaxWidth(120);
+		logonsTable.getColumnModel().getColumn(1).setCellRenderer(new PasswordCellRenderer());
 		logonsTable.getColumnModel().getColumn(2).setMinWidth(100);
 		logonsTable.getColumnModel().getColumn(2).setMaxWidth(100);	
 		logonsTable.getColumnModel().getColumn(2).setCellRenderer(new ButtonCellRenderer());
@@ -247,7 +266,6 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		
 		panel.add(jsPane, BorderLayout.CENTER);
 		
-		c.gridy = 4;
 		startServerButton = new JToggleButton();
 		startServerButton.setMaximumSize(new Dimension(200, 20));
 		startServerButton.addActionListener(this);
@@ -264,7 +282,7 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets.top = 5;
 		c.insets.bottom = 5;
-		c.insets.left = 5;
+		c.insets.left = 85;
 		c.insets.right = 5;
 		c.anchor = GridBagConstraints.WEST;
 		
@@ -289,6 +307,7 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		panel.add(connectOnStartup, c);
 		
 		c.gridy = 5;
+		c.insets.left = 5;
 		panel.add(new JLabel(Main.getMessage("server_name")), c);
 		serverName = new JTextField("", 16);
 		serverName.setMinimumSize(new Dimension(200, 20));
@@ -313,6 +332,7 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		panel.add(serverPort, c);
 		
 		c.gridy = 9;
+		c.anchor = GridBagConstraints.CENTER;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		startClientButton = new JToggleButton();
 		startClientButton.setMinimumSize(new Dimension(200, 20));
@@ -360,16 +380,28 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 			
 		}else if(e.getActionCommand().equals("listen")){
 			if(startServerButton.isSelected()){
+				this.saveSettings();
 				NetworkStateMonitor.startServer();
 			}else{
 				NetworkStateMonitor.stopServer();
 			}
 		}else if(e.getActionCommand().equals("connect")){
 			if(this.startClientButton.isSelected()){
+				this.saveSettings();
 				NetworkStateMonitor.startClient();
 			}else{
 				NetworkStateMonitor.stopClient();
 			}
+		}else if(e.getActionCommand().equals("add")){
+			ClientLoginsTableModel.addLogin(new Login("changeme", "", false, false, 
+					false, false, false, false, false, false,
+					new Vector<CallFilter>(), ""));
+			JFritz.getClientLogins().fireTableDataChanged();
+			
+		}else if(e.getActionCommand().equals("remove")){
+			int loginIndex = logonsTable.getSelectedRow();
+			ClientLoginsTableModel.removeLogin(loginIndex);
+			JFritz.getClientLogins().fireTableDataChanged();
 		}
 	}
 	

@@ -193,8 +193,8 @@ public class ClientLoginsTableModel extends AbstractTableModel{
     	clientLogins.add(login);
     }
     
-    public static void removeLogin(Login login){
-    	clientLogins.remove(login);
+    public static void removeLogin(int index){
+    	clientLogins.remove(index);
     }
     
 }
