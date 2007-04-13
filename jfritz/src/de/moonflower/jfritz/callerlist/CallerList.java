@@ -453,7 +453,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * 
 	 * @param newCalls to be added to the call list
 	 */
-	public void addEntries(Vector<Call> newCalls){
+	public synchronized void addEntries(Vector<Call> newCalls){
 		int newEntries = 0;
 		
 		for(Call call: newCalls)
@@ -487,7 +487,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * 
 	 * @param removeCalls calls to be removed
 	 */
-	public void removeEntries(Vector<Call> removeCalls){
+	public synchronized void removeEntries(Vector<Call> removeCalls){
 		
 			unfilteredCallerData.removeAll(removeCalls);
 			update();
@@ -496,7 +496,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	}
 	
 	/**
-	 * This function tests if the given call (not the call object!!!) is
+	 * This function tests if the given call  is
 	 * contained in the call list
 	 * 
 	 * This new method is using a binary search algorithm, that means
@@ -506,7 +506,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * @author Brian Jensen
 	 * 
 	 */
-	public boolean contains(Call newCall) {
+	public synchronized boolean contains(Call newCall) {
 		int left, right, middle;
 		left = 0;
 		right = unfilteredCallerData.size() - 1;
@@ -1131,7 +1131,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * @param filename
 	 *            of the csv file to import from
 	 */
-public boolean importFromCSVFile(BufferedReader br) {
+public synchronized boolean importFromCSVFile(BufferedReader br) {
 		long t1, t2;
 		t1 = System.currentTimeMillis();
 		String line = "";

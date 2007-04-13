@@ -369,7 +369,7 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		unfilteredPersons.removeAll(persons);
 		
 		for(Person person: persons)
-			this.deleteEntry(person);
+			deleteEntry(person);
 		
 		updateFilter();
 		fireTableDataChanged();
@@ -1328,12 +1328,14 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 			Vector<Person> personsToDelete = new Vector<Person>();
 			for (int i = 0; i < rows.length; i++) {
 				personsToDelete.add(this.filteredPersons.get(rows[i]));
+				
 			}
 
 			unfilteredPersons.removeAll(personsToDelete);
 			for(PhoneBookListener listener: listeners)
 				listener.contactsRemoved(personsToDelete);
 			
+			updateFilter();
 			fireTableDataChanged();
 			saveToXMLFile(Main.SAVE_DIR + JFritz.PHONEBOOK_FILE);
 		}

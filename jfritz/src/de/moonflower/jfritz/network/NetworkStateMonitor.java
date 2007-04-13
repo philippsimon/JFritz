@@ -68,4 +68,12 @@ public class NetworkStateMonitor  {
 		}
 	}
 	
+	public static void requestLookupFromServer(){
+		serverConnection.requestLookup();
+	}
+	
+	public static void requestGetCallListFromServer(){
+		serverConnection.requestGetCallList();
+	}
+	
 }

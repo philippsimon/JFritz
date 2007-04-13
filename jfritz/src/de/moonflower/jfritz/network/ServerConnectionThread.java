@@ -12,6 +12,7 @@ import java.util.Vector;
 
 import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.Main;
+import de.moonflower.jfritz.callerlist.CallerListListener;
 import de.moonflower.jfritz.struct.Call;
 import de.moonflower.jfritz.struct.Person;
 import de.moonflower.jfritz.utils.Debug;
@@ -20,17 +21,20 @@ import de.moonflower.jfritz.utils.Encryption;
 /**
  * This class is responsible for seting up a connection to a 
  * JFritz server. All communication between server and client
- * are asynchronus in nature. All communication from client to server
- * uses either ClientRequest or String objects, whereas the String objects
- * are intended only to pass messages to the server (like client closing
- * the connection). All communication from server to client uses either
- * DataChange or String objects, where the String objects are also
- * used to pass messages.
+ * are asynchronus in nature. 
+ * 
+ * All communication from client to server
+ * uses either ClientDataRequest, ClientActionRequest or String objects, 
+ * whereas the String objects are intended only to pass messages to the 
+ * server (like client closing the connection). 
+ * 
+ * All communication from server to client uses either DataChange or 
+ * String objects, where the String objects are also used to pass messages.
  * 
  * @author brian
  *
  */
-public class ServerConnectionThread extends Thread {
+public class ServerConnectionThread extends Thread implements CallerListListener {
 
 	private static boolean isConnected = false;
 	
@@ -42,11 +46,16 @@ public class ServerConnectionThread extends Thread {
 	
 	private ObjectOutputStream objectOut;
 	
-	private ClientRequest<Call> callListRequest;
+	private ClientDataRequest<Call> callListRequest;
 	
-	private ClientRequest<Person> phoneBookRequest;
+	private ClientDataRequest<Person> phoneBookRequest;
+	
+	private ClientActionRequest actionRequest;
 	
 	private boolean quit = false;
+	
+	private boolean callsAdded = false, callsRemoved=false,
+		contactsAdded=false, contactsRemoved=false;
 	
 	/**
 	 * Returns the current state of this thread
@@ -123,11 +132,13 @@ public class ServerConnectionThread extends Thread {
 						isConnected = true;
 						NetworkStateMonitor.clientStateChanged();
 						
-						callListRequest = new ClientRequest<Call>();
-						callListRequest.destination = ClientRequest.Destination.CALLLIST;
+						callListRequest = new ClientDataRequest<Call>();
+						callListRequest.destination = ClientDataRequest.Destination.CALLLIST;
 						
-						phoneBookRequest = new ClientRequest<Person>();
-						phoneBookRequest.destination = ClientRequest.Destination.PHONEBOOK;
+						phoneBookRequest = new ClientDataRequest<Person>();
+						phoneBookRequest.destination = ClientDataRequest.Destination.PHONEBOOK;
+						
+						actionRequest = new ClientActionRequest();
 						
 						synchronizeWithServer();
 						listenToServer();
@@ -219,13 +230,13 @@ public class ServerConnectionThread extends Thread {
 
 		Debug.msg("Requesting updates from server");
 		try{
-			callListRequest.operation = ClientRequest.Operation.GET;
+			callListRequest.operation = ClientDataRequest.Operation.GET;
 			callListRequest.timestamp = JFritz.getCallerList().getLastCallDate();
 			objectOut.writeObject(callListRequest);
 			objectOut.flush(); 
 			objectOut.reset(); //reset the streams object cache!
 			
-			phoneBookRequest.operation = ClientRequest.Operation.GET;
+			phoneBookRequest.operation = ClientDataRequest.Operation.GET;
 			objectOut.writeObject(phoneBookRequest);
 			objectOut.flush();
 			objectOut.reset();
@@ -235,7 +246,6 @@ public class ServerConnectionThread extends Thread {
 			Debug.err(e.toString());
 			e.printStackTrace();
 		}
-
 	}
 	
 	/**
@@ -351,5 +361,44 @@ public class ServerConnectionThread extends Thread {
 		quit = true;
 		notify();
 	}
+	
+	
+	public synchronized void requestLookup(){
+		actionRequest.doLookup = true;
+		try{
+			objectOut.writeObject(actionRequest);
+			objectOut.flush();
+			objectOut.reset();
+			
+		}catch(IOException e){
+			Debug.err("Error writing lookup request to server");
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}
+		actionRequest.getCallList = false;
+	}
+	
+	public synchronized void requestGetCallList(){
+		actionRequest.getCallList = true;
+		try{
+			objectOut.writeObject(actionRequest);
+			objectOut.flush();
+			objectOut.reset();
+		}catch(IOException e){
+			Debug.err("Error writing do get list request");
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}
+		actionRequest.getCallList = false;
+	}
+	
+	public void callsAdded(Vector<Call> newCalls){
+		
+	}
+	
+	public void callsRemoved(Vector<Call> removedCalls){
+		
+	}
+	
 	
 }

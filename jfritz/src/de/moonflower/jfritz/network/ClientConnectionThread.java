@@ -101,7 +101,8 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	 */
 	public void waitForClientRequest(){
 		Object o;
-		ClientRequest request;
+		ClientDataRequest dataRequest;
+		ClientActionRequest actionRequest;
 		String message;
 		
 		while(true){
@@ -111,14 +112,14 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 				//requests are supported
 				o = objectIn.readObject();
 				Debug.msg("received request from "+remoteAddress);
-				if(o instanceof ClientRequest){
+				if(o instanceof ClientDataRequest){
 					
-					request = (ClientRequest) o;
-					if(request.destination == ClientRequest.Destination.CALLLIST){
+					dataRequest = (ClientDataRequest) o;
+					if(dataRequest.destination == ClientDataRequest.Destination.CALLLIST){
 					
-						if(request.operation == ClientRequest.Operation.GET){
+						if(dataRequest.operation == ClientDataRequest.Operation.GET){
 							
-							if(request.timestamp != null){
+							if(dataRequest.timestamp != null){
 								Debug.msg("Received call list update request from "+remoteAddress);
 								
 							}else{
@@ -129,9 +130,9 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 						}else{
 							//TODO:
 						}
-					}else if(request.destination == ClientRequest.Destination.PHONEBOOK){
+					}else if(dataRequest.destination == ClientDataRequest.Destination.PHONEBOOK){
 						
-						if(request.operation == ClientRequest.Operation.GET){
+						if(dataRequest.operation == ClientDataRequest.Operation.GET){
 							Debug.msg("Received complete phone book request from "+remoteAddress);
 							contactsAdded(JFritz.getPhonebook().getUnfilteredPersons());
 						}else{
@@ -140,6 +141,18 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 					}else{
 						Debug.msg("Request from "+remoteAddress+" contained no destination, ignoring");
 					}
+				}else if(o instanceof ClientActionRequest){
+					//client has requested to perform an action
+					actionRequest = (ClientActionRequest) o;
+					if(actionRequest.doLookup && login.allowLookup){
+						Debug.msg("Received request to do reverse lookup from "+remoteAddress);
+						JFritz.getJframe().doLookupButtonClick();
+					}
+					if(actionRequest.getCallList && login.allowGetList){
+						Debug.msg("Received request to get call from the box from "+remoteAddress);
+						JFritz.getJframe().doFetchButtonClick();
+					}
+					
 				}else if(o instanceof String){
 					message = (String) o;
 					Debug.msg("Received message from client "+remoteAddress+": "+message);
@@ -169,6 +182,7 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 				Debug.err("client "+remoteAddress+" closed stream unexpectedly");
 				Debug.err(e.toString());
 				e.printStackTrace();
+				return;
 			}catch (IOException e){
 				Debug.msg("IOException occured reading client request");
 				e.printStackTrace();

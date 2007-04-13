@@ -629,7 +629,12 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	 * Fetches list from box
 	 */
 	public void fetchList(final boolean deleteFritzBoxCallerList) {
-		if (!isretrieving) { // Prevent multiple clicking
+		if(Main.getProperty("option.clientCallList", "false").equals("true")){
+			if(NetworkStateMonitor.isConnectedToServer()){
+				Debug.msg("requesting get call list from box from the server");
+				NetworkStateMonitor.requestGetCallListFromServer();
+			}
+		} else if (!isretrieving) { // Prevent multiple clicking
 			isretrieving = true;
 			tabber.setSelectedComponent(callerListPanel);
 			final SwingWorker worker = new SwingWorker() {
@@ -689,7 +694,11 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 					isretrieving = false;
 					if (Main.getProperty("option.lookupAfterFetch", "false") //$NON-NLS-1$,  //$NON-NLS-2$
 							.equals("true")) { //$NON-NLS-1$
-						JFritz.getCallerList().reverseLookup(false, false);
+
+						if(Main.getProperty("option.clientTelephoneBook", "false").equals("true"))
+							lookupButton.doClick();
+						else						
+							JFritz.getCallerList().reverseLookup(false, false);
 					}
 //					interrupt();
 				}
@@ -989,8 +998,16 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			//reverseLookup();
 			boolean active = ((JToggleButton) e.getSource()).isSelected();
 			if (active) {
-				Debug.msg("Start reverselookup"); //$NON-NLS-1$
-				JFritz.getCallerList().reverseLookup(true, false);
+				if(Main.getProperty("option.clientTelephoneBook").equals("true") &&
+						NetworkStateMonitor.isConnectedToServer()){
+					//if connected to server make server to the lookup
+					Debug.msg("requesting reverse lookup from server");
+					NetworkStateMonitor.requestLookupFromServer();
+					lookupButton.setSelected(false);
+				}else{
+					Debug.msg("Start reverselookup"); //$NON-NLS-1$
+					JFritz.getCallerList().reverseLookup(true, false);
+				}
 			} else {
 				Debug.msg("Stopping reverse lookup"); //$NON-NLS-1$
 				JFritz.getCallerList().stopLookup();
@@ -1637,6 +1654,16 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			networkButton.setSelected(true);
 		else
 			networkButton.setSelected(false);
+	}
+	
+	public void doLookupButtonClick(){
+		if(!lookupButton.isSelected())
+			lookupButton.doClick();
+	}
+	
+	public void doFetchButtonClick(){
+		if(fetchButton.isEnabled())
+			fetchButton.doClick();
 	}
 	
 }

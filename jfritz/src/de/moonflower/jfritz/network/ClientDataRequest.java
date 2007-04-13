@@ -14,11 +14,11 @@ import java.util.Vector;
  *
  * @param <E>
  */
-public class ClientRequest<E> implements Serializable {
+public class ClientDataRequest<E> implements Serializable {
 
 	public static final long serialVersionUID = 100;
 	
-	public enum Operation{ ADD, GET, REMOVE}
+	public enum Operation{ ADD, GET, UPDATE, REMOVE}
 	
 	public Operation operation;
 	
