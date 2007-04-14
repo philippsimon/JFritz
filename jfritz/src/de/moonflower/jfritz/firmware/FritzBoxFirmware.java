@@ -44,6 +44,8 @@ public class FritzBoxFirmware {
     public final static byte BOXTYPE_EUMEX_300 = 15;
 
     public final static byte BOXTYPE_FRITZBOX_7170 = 29;
+    
+    public final static byte BOXTYPE_SPEEDPORT_W900V = 34;
 
     public final static byte ACCESS_METHOD_POST_0342 = 0;
 
