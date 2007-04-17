@@ -138,16 +138,18 @@
  *  
  * FIXME-END
  * 
- * JFritz 0.6.2.04
+ * JFritz 0.6.2.05
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
- * - Neu: Rückwärtssuche erweitert, jetzt können die Regex Ausdrücke beliebige groupiert werden
- * - Bugfix: Rückwärtssuche erkennt die Charset jetzt automatisch
+ * 
+ * JFritz 0.6.2.04
+ * - Neu: Rückwärtssuche erweitert, jetzt können die Regex Ausdrücke beliebig gruppiert werden
  * - Neu: Rückwärtssuche für Türkei eingebaut
  * - Neu: Rückwärtssuche nach Ort für Türkei eingebaut
- * - Bugfix: Amtskennzahl richtig verarbeitet beim CallMonitor
  * - Neu: Unterstützung für gemoddete Eumex 300ip (Firmware 15.xx.xx)
  * - Neu: Unterstützung für gemoddete Speedport W 900V (Firmware 34.xx.xx)
  * - Neu: Beliebige Nummer direkt aus JFritz heraus wählen
+ * - Bugfix: Rückwärtssuche erkennt die Charset jetzt automatisch
+ * - Bugfix: Amtskennzahl richtig verarbeitet beim CallMonitor
  * 
  * JFritz 0.6.2.03
  * - Autoupdate korrektur
@@ -636,7 +638,7 @@ public class Main implements LookupObserver {
 
 	public final static String PROGRAM_NAME = "JFritz"; //$NON-NLS-1$
 
-	public final static String PROGRAM_VERSION = "0.6.2.04"; //$NON-NLS-1$
+	public final static String PROGRAM_VERSION = "0.6.2.05"; //$NON-NLS-1$
 	
 	public final static String CVS_TAG = "$Id$"; //$NON-NLS-1$
 
