@@ -391,7 +391,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * @param inputStr
 	 * @return outputStr
 	 */
-	public static String removeDuplicateWhitespace(String inputStr) {
+	public synchronized static String removeDuplicateWhitespace(String inputStr) {
 		Pattern p = Pattern.compile("\\s+"); //$NON-NLS-1$
 		Matcher matcher = p.matcher(inputStr);
 		return matcher.replaceAll(" "); //$NON-NLS-1$

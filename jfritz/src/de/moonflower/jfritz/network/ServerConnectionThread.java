@@ -51,7 +51,7 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 	private ClientDataRequest<Person> phoneBookRequest;
 	
 	private ClientActionRequest actionRequest;
-	
+
 	private boolean quit = false;
 	
 	private boolean callsAdded = false, callsRemoved=false,
@@ -140,8 +140,12 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 						
 						actionRequest = new ClientActionRequest();
 						
+						JFritz.getCallerList().addListener(this);
+						
 						synchronizeWithServer();
 						listenToServer();
+						
+						JFritz.getCallerList().removeListener(this);
 						isConnected = false;
 						NetworkStateMonitor.clientStateChanged();
 						
@@ -272,11 +276,19 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 							if(change.operation == DataChange.Operation.ADD){
 								vCalls = (Vector<Call>) change.data;
 								Debug.msg("Received request to add "+vCalls.size()+" calls");
-								JFritz.getCallerList().addEntries(vCalls);
+								
+								//lock the call list so the new entries don't ping pong back and forth
+								synchronized(JFritz.getCallerList()){
+									callsAdded = true;
+									JFritz.getCallerList().addEntries(vCalls);
+								}
 							}else if(change.operation == DataChange.Operation.REMOVE){
 								vCalls = (Vector<Call>) change.data;
 								Debug.msg("Received request to remove "+vCalls.size()+" calls");
-								JFritz.getCallerList().removeEntries(vCalls);
+								synchronized(JFritz.getCallerList()){
+									callsRemoved = true;
+									JFritz.getCallerList().removeEntries(vCalls);
+								}
 							}else{
 								Debug.msg("Operation not chosen for incoming data, ignoring!");
 							}
@@ -393,12 +405,52 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 	}
 	
 	public void callsAdded(Vector<Call> newCalls){
+		//this thread added the new calls, so we don't need to write them back
+		if(callsAdded){
+			callsAdded = false;
+			return;
+		}
+		Debug.msg("Notifying the server of added calls, size: "+newCalls.size());
+		callListRequest.data = newCalls;
+		callListRequest.operation = ClientDataRequest.Operation.ADD;
 		
+		try{
+			objectOut.writeObject(callListRequest);
+			objectOut.flush();
+			objectOut.reset();
+		
+		}catch(IOException e){
+			Debug.err("Error writing new calls to the server");
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}
+	
+		//remove reference to the data
+		callListRequest.data = null;
 	}
 	
 	public void callsRemoved(Vector<Call> removedCalls){
+		//this thread removed the calls, no need to write them back
+		if(callsRemoved){
+			callsRemoved = false;
+			return;
+		}
+		Debug.msg("Notifying the server of removed calls, size: "+removedCalls.size());
+		callListRequest.data = removedCalls;
+		callListRequest.operation = ClientDataRequest.Operation.REMOVE;
 		
+		try{
+			objectOut.writeObject(callListRequest);
+			objectOut.flush();
+			objectOut.reset();
+		}catch(IOException e){
+			Debug.err("Error writing removed calls to the server");
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}
+		
+		//remove reference to the data
+		callListRequest.data = null;
 	}
-	
 	
 }

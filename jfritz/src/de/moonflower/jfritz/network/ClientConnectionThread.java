@@ -21,6 +21,7 @@ import de.moonflower.jfritz.utils.Debug;
 /**
  * This class is responsible for interacting with a JFritz client.
  * All communication between client and server is asynchronus.
+ * 
  * Communication between client and server is done using either
  * ClientRequest or String objects. Communication between server 
  * and client is done using DataChange or String objects.
@@ -46,6 +47,9 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	private DataChange<Call> callsAdd, callsRemove;
 	
 	private DataChange<Person> contactsAdd, contactsRemove;
+	
+	private boolean callsAdded=false, callsRemoved=false,
+		contactsAdded=false, contactsRemoved=false;
 	
 	public ClientConnectionThread(Socket socket){
 		super("Client connection for "+socket.getInetAddress());
@@ -127,8 +131,20 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 								callsAdded(JFritz.getCallerList().getUnfilteredCallVector());
 							}
 						
-						}else{
-							//TODO:
+						}else if(dataRequest.operation == ClientDataRequest.Operation.ADD && login.allowAddList){
+							Debug.msg("Received request to add "+dataRequest.data.size()+" calls from "+remoteAddress);
+							synchronized(JFritz.getCallerList()){
+								callsAdded = true;
+								JFritz.getCallerList().addEntries(dataRequest.data);
+								callsAdded = false;
+							}
+						}else if(dataRequest.operation == ClientDataRequest.Operation.REMOVE && login.allowRemoveList){
+							Debug.msg("Received request to remove "+dataRequest.data.size()+" calls from "+remoteAddress);
+							synchronized(JFritz.getCallerList()){
+								callsRemoved = true;
+								JFritz.getCallerList().removeEntries(dataRequest.data);
+								callsRemoved = false;
+							}
 						}
 					}else if(dataRequest.destination == ClientDataRequest.Destination.PHONEBOOK){
 						
@@ -304,6 +320,13 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	 * Eventually filters based on login will be applied
 	 */
 	public void callsAdded(Vector<Call> newCalls){
+		
+		//this thread added calls, no need to write them back
+		if(callsAdded){
+			callsAdded = false;
+			return;
+		}
+		
 		Debug.msg("Notifying client "+remoteAddress+" of added calls, size: "+newCalls.size());
 		Vector<Call> filteredCalls = (Vector<Call>) newCalls.clone();
 		callsAdd.data.addAll(filteredCalls);
@@ -327,6 +350,13 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	 * Eventually filters based on login will be applied.
 	 */
 	public void callsRemoved(Vector<Call> removedCalls){
+		
+		//this thread removed calls no need to add them back
+		if(callsRemoved){
+			callsRemoved = false;
+			return;
+		}
+		
 		Debug.msg("Notifying client "+remoteAddress+" of removed calls, size:"+removedCalls.size());
 		Vector<Call> filteredCalls = (Vector<Call>) removedCalls.clone();
 		callsRemove.data.addAll(filteredCalls);
