@@ -121,38 +121,60 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 					dataRequest = (ClientDataRequest) o;
 					if(dataRequest.destination == ClientDataRequest.Destination.CALLLIST){
 					
+						//determine what operation to carry out, if applicable
 						if(dataRequest.operation == ClientDataRequest.Operation.GET){
 							
 							if(dataRequest.timestamp != null){
 								Debug.msg("Received call list update request from "+remoteAddress);
-								
+								callsAdded(JFritz.getCallerList().getNewerCalls(dataRequest.timestamp));
 							}else{
 								Debug.msg("Received complete call list request from "+remoteAddress);
 								callsAdded(JFritz.getCallerList().getUnfilteredCallVector());
 							}
 						
 						}else if(dataRequest.operation == ClientDataRequest.Operation.ADD && login.allowAddList){
+							
 							Debug.msg("Received request to add "+dataRequest.data.size()+" calls from "+remoteAddress);
 							synchronized(JFritz.getCallerList()){
 								callsAdded = true;
 								JFritz.getCallerList().addEntries(dataRequest.data);
 								callsAdded = false;
 							}
+							
 						}else if(dataRequest.operation == ClientDataRequest.Operation.REMOVE && login.allowRemoveList){
+							
 							Debug.msg("Received request to remove "+dataRequest.data.size()+" calls from "+remoteAddress);
 							synchronized(JFritz.getCallerList()){
 								callsRemoved = true;
 								JFritz.getCallerList().removeEntries(dataRequest.data);
 								callsRemoved = false;
 							}
+							
 						}
 					}else if(dataRequest.destination == ClientDataRequest.Destination.PHONEBOOK){
 						
-						if(dataRequest.operation == ClientDataRequest.Operation.GET){
+						//determine what operation to carry out, if applicable
+						if(dataRequest.operation == ClientDataRequest.Operation.GET && login.allowAddBook){
 							Debug.msg("Received complete phone book request from "+remoteAddress);
 							contactsAdded(JFritz.getPhonebook().getUnfilteredPersons());
-						}else{
-							//TODO:
+						
+						}else if(dataRequest.operation == ClientDataRequest.Operation.ADD){
+						
+							Debug.msg("Received request to add "+dataRequest.data.size()+" contacts from "+remoteAddress);
+							synchronized(JFritz.getPhonebook()){
+								contactsAdded = true;
+								JFritz.getPhonebook().addEntries(dataRequest.data);
+								contactsAdded = false;
+							}
+							
+						}else if(dataRequest.operation == ClientDataRequest.Operation.REMOVE && login.allowRemoveBook){
+							
+							Debug.msg("Received request to remove "+dataRequest.data.size()+" contacts from "+remoteAddress);
+							synchronized(JFritz.getPhonebook()){
+								contactsRemoved = true;
+								JFritz.getPhonebook().removeEntries(dataRequest.data);
+								contactsRemoved = false;
+							}
 						}
 					}else{
 						Debug.msg("Request from "+remoteAddress+" contained no destination, ignoring");
@@ -258,6 +280,7 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 			Debug.err(e.toString());
 			e.printStackTrace();
 		}catch(IOException e){
+			Debug.err("Error authenticating client!");
 			Debug.err(e.toString());
 			e.printStackTrace();
 		}
@@ -384,6 +407,10 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	 * 
 	 */
 	public void contactsAdded(Vector<Person> newContacts){
+		
+		if(contactsAdded)
+			return;
+		
 		Debug.msg("Notifying client "+remoteAddress+" of added contacts, size:"+newContacts.size());
 		Vector<Person> filteredPersons = (Vector<Person>) newContacts.clone();
 		contactsAdd.data.addAll(filteredPersons);
@@ -408,6 +435,10 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	 * 
 	 */
 	public void contactsRemoved(Vector<Person> removedContacts){
+		
+		if(contactsRemoved)
+			return;
+		
 		Debug.msg("Notifying client "+remoteAddress+" of removed contacts, size: "+removedContacts.size());
 		Vector<Person> filteredPersons = (Vector<Person>) removedContacts.clone();
 		contactsRemove.data.addAll(filteredPersons);

@@ -13,6 +13,7 @@ import java.util.Vector;
 import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.Main;
 import de.moonflower.jfritz.callerlist.CallerListListener;
+import de.moonflower.jfritz.phonebook.PhoneBookListener;
 import de.moonflower.jfritz.struct.Call;
 import de.moonflower.jfritz.struct.Person;
 import de.moonflower.jfritz.utils.Debug;
@@ -34,7 +35,8 @@ import de.moonflower.jfritz.utils.Encryption;
  * @author brian
  *
  */
-public class ServerConnectionThread extends Thread implements CallerListListener {
+public class ServerConnectionThread extends Thread implements CallerListListener, 
+		PhoneBookListener {
 
 	private static boolean isConnected = false;
 	
@@ -141,11 +143,13 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 						actionRequest = new ClientActionRequest();
 						
 						JFritz.getCallerList().addListener(this);
+						JFritz.getPhonebook().addListener(this);
 						
 						synchronizeWithServer();
 						listenToServer();
 						
 						JFritz.getCallerList().removeListener(this);
+						JFritz.getPhonebook().removeListener(this);
 						isConnected = false;
 						NetworkStateMonitor.clientStateChanged();
 						
@@ -274,6 +278,7 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 					change = (DataChange) o;
 						if(change.destination == DataChange.Destination.CALLLIST){
 							if(change.operation == DataChange.Operation.ADD){
+								
 								vCalls = (Vector<Call>) change.data;
 								Debug.msg("Received request to add "+vCalls.size()+" calls");
 								
@@ -281,27 +286,47 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 								synchronized(JFritz.getCallerList()){
 									callsAdded = true;
 									JFritz.getCallerList().addEntries(vCalls);
+									callsAdded = true;
 								}
+								
 							}else if(change.operation == DataChange.Operation.REMOVE){
+								
 								vCalls = (Vector<Call>) change.data;
 								Debug.msg("Received request to remove "+vCalls.size()+" calls");
+								
 								synchronized(JFritz.getCallerList()){
 									callsRemoved = true;
 									JFritz.getCallerList().removeEntries(vCalls);
+									callsRemoved = false;
 								}
+								
 							}else{
 								Debug.msg("Operation not chosen for incoming data, ignoring!");
 							}
 				
 						}else if(change.destination == DataChange.Destination.PHONEBOOK){
 							if(change.operation == DataChange.Operation.ADD){
+								
 								vPersons = (Vector<Person>) change.data;
 								Debug.msg("Received request to add "+vPersons.size()+" contacts");
-								JFritz.getPhonebook().addEntries(vPersons);
+								
+								synchronized(JFritz.getCallerList()){
+									contactsAdded = true;
+									JFritz.getPhonebook().addEntries(vPersons);
+									contactsAdded = false;
+								}
+								
 							}else if(change.operation == DataChange.Operation.REMOVE){
+								
 								vPersons = (Vector<Person>) change.data;
 								Debug.msg("Received request to remove "+vPersons.size()+" contacts");
-								JFritz.getPhonebook().removeEntries(vPersons);
+								
+								synchronized(JFritz.getPhonebook()){
+									contactsRemoved = true;
+									JFritz.getPhonebook().removeEntries(vPersons);
+									contactsRemoved = false;
+								}
+								
 							}else{
 								Debug.msg("Operation not chosen for incoming data, ignoring");
 							}
@@ -405,11 +430,11 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 	}
 	
 	public void callsAdded(Vector<Call> newCalls){
+		
 		//this thread added the new calls, so we don't need to write them back
-		if(callsAdded){
-			callsAdded = false;
+		if(callsAdded)
 			return;
-		}
+
 		Debug.msg("Notifying the server of added calls, size: "+newCalls.size());
 		callListRequest.data = newCalls;
 		callListRequest.operation = ClientDataRequest.Operation.ADD;
@@ -430,11 +455,11 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 	}
 	
 	public void callsRemoved(Vector<Call> removedCalls){
+		
 		//this thread removed the calls, no need to write them back
-		if(callsRemoved){
-			callsRemoved = false;
+		if(callsRemoved)
 			return;
-		}
+		
 		Debug.msg("Notifying the server of removed calls, size: "+removedCalls.size());
 		callListRequest.data = removedCalls;
 		callListRequest.operation = ClientDataRequest.Operation.REMOVE;
@@ -452,5 +477,52 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 		//remove reference to the data
 		callListRequest.data = null;
 	}
+
+	public void contactsAdded(Vector<Person> newContacts){
+		
+		//This thread added the contacts, no need to write them back
+		if(contactsAdded)
+			return;
+		
+		Debug.msg("Notifying the server of added contacts, size: "+newContacts.size());
+		phoneBookRequest.data = newContacts;
+		phoneBookRequest.operation = ClientDataRequest.Operation.ADD;
+		
+		try{
+			objectOut.writeObject(phoneBookRequest);
+			objectOut.flush();
+			objectOut.reset();
+		}catch(IOException e){
+			Debug.err("Error writing new contacts to server!");
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}
+		
+		phoneBookRequest.data = null;
+	}
+	
+	public void contactsRemoved(Vector<Person> removedContacts){
+		
+		//This thread removed the contacts, no need to write them back
+		if(contactsRemoved)
+			return;
+		
+		Debug.msg("Notifyingthe server of removed contacts, size: "+removedContacts.size());
+		phoneBookRequest.data = removedContacts;
+		phoneBookRequest.operation = ClientDataRequest.Operation.REMOVE;
+		
+		try{
+			objectOut.writeObject(phoneBookRequest);
+			objectOut.flush();
+			objectOut.reset();
+		}catch(IOException e){
+			Debug.err("Error writing removed contacts to server!");
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}
+		
+		phoneBookRequest.data = null;	
+	}
+	
 	
 }

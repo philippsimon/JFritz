@@ -116,11 +116,11 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		fireTableDataChanged();
 	}
 
-	public void addListener(PhoneBookListener l){
+	public synchronized void addListener(PhoneBookListener l){
 		listeners.add(l);
 	}
 	
-	public void removeListener(PhoneBookListener l){
+	public synchronized void removeListener(PhoneBookListener l){
 		listeners.remove(l);
 	}
 	
@@ -370,6 +370,9 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		
 		for(Person person: persons)
 			deleteEntry(person);
+		
+		for(PhoneBookListener listener: listeners)
+			listener.contactsRemoved(persons);
 		
 		updateFilter();
 		fireTableDataChanged();
@@ -1322,7 +1325,7 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
      *  
      * @param rows
      */
-    public void removePersons(int[] rows){
+    public synchronized void removePersons(int[] rows){
     	if (rows.length > 0) {
 			// Markierte Einträge löschen
 			Vector<Person> personsToDelete = new Vector<Person>();
