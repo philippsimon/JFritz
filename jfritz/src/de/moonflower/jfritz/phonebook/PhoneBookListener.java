@@ -9,4 +9,6 @@ public interface PhoneBookListener {
 	public void contactsAdded(Vector<Person> newContacts);
 	
 	public void contactsRemoved(Vector<Person> removedContacts);
+	
+	public void contactUpdated(Person original, Person updated);
 }

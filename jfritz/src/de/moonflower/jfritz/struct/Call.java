@@ -88,7 +88,7 @@ public class Call implements Serializable {
 	}
 
 	/**
-	 * This function compares the contents of the current call object with the
+	 * This function compares the current call object with the
 	 * contents of the parameter call object
 	 * 
 	 * @author Brian Jensen
@@ -133,6 +133,13 @@ public class Call implements Serializable {
 
 	}
 
+	//clones this object
+	public Call clone(){
+		return new Call(calltype, calldate, number, 
+				port, route, duration, comment);
+	
+	}
+	
 	/**
 	 * @return Returns the calldate.
 	 */

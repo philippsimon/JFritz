@@ -44,12 +44,12 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	
 	private ObjectOutputStream objectOut;
 	
-	private DataChange<Call> callsAdd, callsRemove;
+	private DataChange<Call> callsAdd, callsRemove, callUpdate;
 	
-	private DataChange<Person> contactsAdd, contactsRemove;
+	private DataChange<Person> contactsAdd, contactsRemove, contactUpdate;
 	
-	private boolean callsAdded=false, callsRemoved=false,
-		contactsAdded=false, contactsRemoved=false;
+	private boolean callsAdded=false, callsRemoved=false, callUpdated = false,
+		contactsAdded=false, contactsRemoved=false, contactUpdated=false;
 	
 	public ClientConnectionThread(Socket socket){
 		super("Client connection for "+socket.getInetAddress());
@@ -74,6 +74,9 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 				callsRemove = new DataChange<Call>();
 				callsRemove.destination = DataChange.Destination.CALLLIST;
 				callsRemove.operation = DataChange.Operation.REMOVE;
+				callUpdate = new DataChange<Call>();
+				callUpdate.destination = DataChange.Destination.CALLLIST;
+				callUpdate.operation = DataChange.Operation.UPDATE;
 				
 				contactsAdd = new DataChange<Person>();
 				contactsAdd.destination = DataChange.Destination.PHONEBOOK;
@@ -81,6 +84,9 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 				contactsRemove = new DataChange<Person>();
 				contactsRemove.destination = DataChange.Destination.PHONEBOOK;
 				contactsRemove.operation = DataChange.Operation.REMOVE;
+				contactUpdate = new DataChange<Person>();
+				contactUpdate.destination = DataChange.Destination.PHONEBOOK;
+				contactUpdate.operation = DataChange.Operation.UPDATE;
 				
 				JFritz.getCallerList().addListener(this);
 				JFritz.getPhonebook().addListener(this);
@@ -150,7 +156,16 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 								callsRemoved = false;
 							}
 							
+						}else if(dataRequest.operation == ClientDataRequest.Operation.UPDATE && login.allowUpdateList){
+							
+							Debug.msg("Received request to update a call from "+remoteAddress);
+							synchronized(JFritz.getCallerList()){
+								callUpdated = true;
+								JFritz.getCallerList().updateEntry((Call) dataRequest.original, (Call) dataRequest.updated);
+								callUpdated = false;
+							}
 						}
+						
 					}else if(dataRequest.destination == ClientDataRequest.Destination.PHONEBOOK){
 						
 						//determine what operation to carry out, if applicable
@@ -176,6 +191,7 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 								contactsRemoved = false;
 							}
 						}
+						
 					}else{
 						Debug.msg("Request from "+remoteAddress+" contained no destination, ignoring");
 					}
@@ -329,20 +345,11 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 		}
 	}
 	
-	public void writeCompleteCallList(){
-		try{
-			objectOut.writeObject(JFritz.getCallerList().getUnfilteredCallVector());
-		}catch(IOException e){
-			Debug.err(e.toString());
-			e.printStackTrace();
-		}
-	}
-	
 	/**
 	 * Called when new calls have been added to the call list.
 	 * Eventually filters based on login will be applied
 	 */
-	public void callsAdded(Vector<Call> newCalls){
+	public synchronized void callsAdded(Vector<Call> newCalls){
 		
 		//this thread added calls, no need to write them back
 		if(callsAdded){
@@ -351,14 +358,12 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 		}
 		
 		Debug.msg("Notifying client "+remoteAddress+" of added calls, size: "+newCalls.size());
-		Vector<Call> filteredCalls = (Vector<Call>) newCalls.clone();
-		callsAdd.data.addAll(filteredCalls);
+		callsAdd.data =  newCalls;
 		
 		try{
 			
 			objectOut.writeObject(callsAdd);
 			objectOut.flush();
-			callsAdd.data.clear();
 			objectOut.reset();
 			
 		}catch(IOException e){
@@ -366,13 +371,16 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 			Debug.err(e.toString());
 			e.printStackTrace();
 		}
+		
+		callsAdd.data = null;
+		
 	}
 	
 	/**
 	 * Called when calls have been removed from the call list.
 	 * Eventually filters based on login will be applied.
 	 */
-	public void callsRemoved(Vector<Call> removedCalls){
+	public synchronized void callsRemoved(Vector<Call> removedCalls){
 		
 		//this thread removed calls no need to add them back
 		if(callsRemoved){
@@ -380,16 +388,13 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 			return;
 		}
 		
-		Debug.msg("Notifying client "+remoteAddress+" of removed calls, size:"+removedCalls.size());
-		Vector<Call> filteredCalls = (Vector<Call>) removedCalls.clone();
-		callsRemove.data.addAll(filteredCalls);
-		Debug.msg("callsRemove size "+callsRemove.data.size());
+		Debug.msg("Notifying client "+remoteAddress+" of removed calls, size: "+removedCalls.size());
+		callsRemove.data = removedCalls;
 		
 		try{
 			
 			objectOut.writeObject(callsRemove);
 			objectOut.flush();
-			callsRemove.data.clear();
 			objectOut.reset();
 			
 		}catch(IOException e){
@@ -398,28 +403,51 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 			e.printStackTrace();
 		}
 		
-		Debug.msg("callsRemove new size "+callsRemove.data.size());
+		callsRemove.data = null;
+		
 	}
 
+	/**
+	 * called when a call has been updated (comment changed)
+	 */
+	public synchronized void callsUpdated(Call original, Call updated){
+		
+		if(callUpdated)
+			return;
+		
+		Debug.msg("Notifying client "+remoteAddress+" of updated call");
+		callUpdate.original = original;
+		callUpdate.updated = updated;
+		
+		try{
+			objectOut.writeObject(callUpdate);
+			objectOut.flush();
+			objectOut.reset();
+		}catch(IOException e){
+			Debug.err("Error writing updated call to client "+remoteAddress);
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}
+		
+	}
+	
 	/**
 	 * Called when contacts have been added to the call list.
 	 * Eventually filters will be applied based on login.
 	 * 
 	 */
-	public void contactsAdded(Vector<Person> newContacts){
+	public synchronized void contactsAdded(Vector<Person> newContacts){
 		
 		if(contactsAdded)
 			return;
 		
-		Debug.msg("Notifying client "+remoteAddress+" of added contacts, size:"+newContacts.size());
-		Vector<Person> filteredPersons = (Vector<Person>) newContacts.clone();
-		contactsAdd.data.addAll(filteredPersons);
+		Debug.msg("Notifying client "+remoteAddress+" of added contacts, size: "+newContacts.size());
+		contactsAdd.data = newContacts;
 		
 		try{
 			
 			objectOut.writeObject(contactsAdd);
 			objectOut.flush();
-			contactsAdd.data.clear();
 			objectOut.reset();
 		
 		}catch(IOException e){
@@ -427,6 +455,8 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 			Debug.err(e.toString());
 			e.printStackTrace();
 		}
+		
+		contactsAdd.data = null;
 	}
 	
 	/**
@@ -434,24 +464,46 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	 * Eventually filters will be applied based on login.
 	 * 
 	 */
-	public void contactsRemoved(Vector<Person> removedContacts){
+	public synchronized void contactsRemoved(Vector<Person> removedContacts){
 		
 		if(contactsRemoved)
 			return;
 		
 		Debug.msg("Notifying client "+remoteAddress+" of removed contacts, size: "+removedContacts.size());
-		Vector<Person> filteredPersons = (Vector<Person>) removedContacts.clone();
-		contactsRemove.data.addAll(filteredPersons);
+		contactsRemove.data = removedContacts;
 		
 		try{
 			
 			objectOut.writeObject(contactsRemove);
 			objectOut.flush();
-			contactsRemove.data.clear();
 			objectOut.reset();
 			
 		}catch(IOException e){
 			Debug.err("Error while writing removed contacts to client "+remoteAddress);
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}
+		
+		contactsRemove.data = null;
+	}
+	
+	public synchronized void contactUpdated(Person original, Person updated){
+		
+		if(contactUpdated)
+			return;
+		
+		Debug.msg("Notifying client "+remoteAddress+" of updated contact");
+		contactUpdate.original = original;
+		contactUpdate.updated = updated;
+		
+		try{
+			
+			objectOut.writeObject(contactUpdate);
+			objectOut.flush();
+			objectOut.reset();
+			
+		}catch(IOException e){
+			Debug.err("Error writing updated contact to client "+remoteAddress);
 			Debug.err(e.toString());
 			e.printStackTrace();
 		}

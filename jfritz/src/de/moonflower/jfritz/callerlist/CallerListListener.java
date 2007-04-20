@@ -14,6 +14,8 @@ public interface CallerListListener {
 
 	public void callsAdded(Vector<Call> newCalls);
 	
+	public void callsUpdated(Call original, Call update);
+	
 	public void callsRemoved(Vector<Call> callsRemoved);
 	
 }

@@ -8,7 +8,7 @@ import java.util.Vector;
 /**
  * This class represents client requests to the server. 
  * Currently the fields data and timestamp are optional
- * and should be left null if not used to save space.
+ * and should be left null if not used to save space and bandwidth.
  * 
  * @author brian
  *
@@ -18,7 +18,7 @@ public class ClientDataRequest<E> implements Serializable {
 
 	public static final long serialVersionUID = 100;
 	
-	public enum Operation{ ADD, GET, UPDATE, REMOVE}
+	public enum Operation{ ADD, GET, REMOVE, UPDATE}
 	
 	public Operation operation;
 	
@@ -29,5 +29,7 @@ public class ClientDataRequest<E> implements Serializable {
 	public Vector<E> data;
 	
 	public Date timestamp;
+	
+	public E original, updated;
 	
 }

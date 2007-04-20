@@ -481,6 +481,29 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	}
 	
 	/**
+	 * Updates call data based upon an external data source
+	 * 
+	 * @param oldCall original call
+	 * @param newCall new call containing changed data
+	 */
+	public synchronized void updateEntry(Call oldCall, Call newCall){
+		
+		int index = unfilteredCallerData.indexOf(oldCall);
+		
+		//make sure original call was in our list
+		if(index >= 0){
+			
+			unfilteredCallerData.setElementAt(newCall, index);
+		
+			for(CallerListListener listener: listeners)
+				listener.callsUpdated(oldCall, newCall);
+		
+			update();
+			saveToXMLFile(Main.SAVE_DIR+JFritz.CALLS_FILE, true);
+		}
+	}
+	
+	/**
 	 * Removes a vector of calls, as dictated by an external data source
 	 * 
 	 * @author brian
@@ -757,18 +780,14 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	}
 
 	public synchronized void setComment(String comment, int rowIndex) {
-		Call call = filteredCallerData.get(rowIndex);
-		Vector<Call> cVector = new Vector<Call>();
-		cVector.add(call);
+		Call updated = filteredCallerData.get(rowIndex);
+		Call original = updated.clone();
+		updated.setComment(comment);
 		
 		//Remove the old copy at each client
 		for(CallerListListener listener: listeners)
-			listener.callsRemoved(cVector);
+			listener.callsUpdated(original, updated);
 		
-		//and readd it with the new comment
-		call.setComment(comment);
-		for(CallerListListener listener: listeners)
-			listener.callsAdded(cVector);
 	}
 
 	public void setPerson(Person person, int rowIndex) {

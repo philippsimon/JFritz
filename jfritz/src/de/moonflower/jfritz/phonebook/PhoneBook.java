@@ -364,9 +364,8 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		fireTableDataChanged();
 		this.saveToXMLFile(Main.SAVE_DIR + JFritz.PHONEBOOK_FILE);
 	}
-
+	
 	public synchronized void removeEntries(Vector<Person> persons){
-		unfilteredPersons.removeAll(persons);
 		
 		for(Person person: persons)
 			deleteEntry(person);
@@ -376,9 +375,34 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		
 		updateFilter();
 		fireTableDataChanged();
+		Debug.msg("removed contact data dump:");
 		saveToXMLFile(Main.SAVE_DIR + JFritz.PHONEBOOK_FILE);
 		
 	}
+	
+	public synchronized void updateEntry(Person original, Person updated){
+		int index = unfilteredPersons.indexOf(original);
+		
+		//make sure original contact was in our list first
+		if(index >= 0){
+			unfilteredPersons.set(index, updated);
+			
+			for(PhoneBookListener listener: listeners)
+				listener.contactUpdated(original, updated);
+			
+			updateFilter();
+			fireTableDataChanged();
+			saveToXMLFile(Main.SAVE_DIR + JFritz.PHONEBOOK_FILE);
+			
+		}
+	}
+	
+	public synchronized void notifyListenersOfUpdate(Person original, Person updated){
+		for(PhoneBookListener listener: listeners)
+			listener.contactUpdated(original, updated);
+		
+	}
+	
 	
 	/*
 	 * inherited from AbstractTableModel
@@ -1020,6 +1044,8 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		if ((!filter_private) && (keywords.length == 0)) {
 			// Use unfiltered data
 			filteredPersons = unfilteredPersons;
+			Debug.msg("Im updating the filter");
+			Debug.msg("Size of filtered contacts: "+filteredPersons.size());
 		} else {
 			// Data got to be filtered
 			Vector<Person> newFilteredPersons = new Vector<Person>();

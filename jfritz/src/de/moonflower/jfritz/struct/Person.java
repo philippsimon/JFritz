@@ -50,6 +50,28 @@ public class Person implements Cloneable, Serializable{
 		numbers = new Vector<PhoneNumber>();
 	}
 
+	/**
+	 * this function is needed to override the basic function equals
+	 * inherited by object or else the network code won't work at all
+	 * 
+	 * @author brian
+	 * 
+	 */
+	public boolean equals(Object p){
+		Person person;
+		if(!(p instanceof Person))
+			return false;
+		
+		person = (Person) p;
+		
+		//Just use csv to compare for now, if it doesnt work then write one by hand
+		if(person.toCSV().equals(this.toCSV()))
+			return true;
+		else
+			return false;
+		
+	}
+	
 	public Person(String firstName, String company, String lastName,
 			String street, String postalCode, String city, String eMail) {
 		this();

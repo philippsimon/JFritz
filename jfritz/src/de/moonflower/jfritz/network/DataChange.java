@@ -20,7 +20,7 @@ public class DataChange<E> implements Serializable {
 	//makes serialization go a bit faster
 	public static final long serialVersionUID = 100;
 	
-	public enum Operation {ADD, REMOVE}
+	public enum Operation {ADD, UPDATE, REMOVE}
 	
 	public Operation operation;
 	
@@ -30,9 +30,6 @@ public class DataChange<E> implements Serializable {
 	
 	public Vector<E> data;
 	
-	public DataChange(){
-		data = new Vector<E>();
-	}
-	
+	public E original, updated;
 	
 }

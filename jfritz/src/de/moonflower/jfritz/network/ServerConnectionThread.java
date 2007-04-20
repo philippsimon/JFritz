@@ -56,8 +56,8 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 
 	private boolean quit = false;
 	
-	private boolean callsAdded = false, callsRemoved=false,
-		contactsAdded=false, contactsRemoved=false;
+	private boolean callsAdded = false, callsRemoved=false, callUpdated=false,
+		contactsAdded=false, contactsRemoved=false, contactUpdated=false;
 	
 	/**
 	 * Returns the current state of this thread
@@ -300,10 +300,16 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 									callsRemoved = false;
 								}
 								
-							}else{
-								Debug.msg("Operation not chosen for incoming data, ignoring!");
+							}else if(change.operation == DataChange.Operation.UPDATE){
+								
+								Debug.msg("Received request to upate a call");
+								synchronized(JFritz.getCallerList()){
+									callUpdated=true;
+									JFritz.getCallerList().updateEntry((Call) change.original, (Call) change.updated);
+									callUpdated=false;
+								}
 							}
-				
+							
 						}else if(change.destination == DataChange.Destination.PHONEBOOK){
 							if(change.operation == DataChange.Operation.ADD){
 								
@@ -315,7 +321,7 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 									JFritz.getPhonebook().addEntries(vPersons);
 									contactsAdded = false;
 								}
-								
+				
 							}else if(change.operation == DataChange.Operation.REMOVE){
 								
 								vPersons = (Vector<Person>) change.data;
@@ -327,9 +333,17 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 									contactsRemoved = false;
 								}
 								
-							}else{
-								Debug.msg("Operation not chosen for incoming data, ignoring");
+							}else if(change.operation == DataChange.Operation.UPDATE){
+							
+								Debug.msg("Recieved request to update a contact");
+								
+								synchronized(JFritz.getPhonebook()){
+									contactUpdated = true;
+									JFritz.getPhonebook().updateEntry((Person) change.original, (Person) change.updated);
+									contactUpdated = false;
+								}
 							}
+							
 						}else{
 							Debug.msg("destination not chosen for incoming data, ignoring!");
 						}
@@ -342,7 +356,7 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 						return;
 					} //TODO: Add other messages here if necessary
 					
-				
+					
 				}else {
 					Debug.msg(o.toString());
 					Debug.msg("received unexpected object, ignoring!");
@@ -417,10 +431,13 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 	
 	public synchronized void requestGetCallList(){
 		actionRequest.getCallList = true;
+		
 		try{
+		
 			objectOut.writeObject(actionRequest);
 			objectOut.flush();
 			objectOut.reset();
+		
 		}catch(IOException e){
 			Debug.err("Error writing do get list request");
 			Debug.err(e.toString());
@@ -429,7 +446,7 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 		actionRequest.getCallList = false;
 	}
 	
-	public void callsAdded(Vector<Call> newCalls){
+	public synchronized void callsAdded(Vector<Call> newCalls){
 		
 		//this thread added the new calls, so we don't need to write them back
 		if(callsAdded)
@@ -454,7 +471,7 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 		callListRequest.data = null;
 	}
 	
-	public void callsRemoved(Vector<Call> removedCalls){
+	public synchronized void callsRemoved(Vector<Call> removedCalls){
 		
 		//this thread removed the calls, no need to write them back
 		if(callsRemoved)
@@ -478,7 +495,35 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 		callListRequest.data = null;
 	}
 
-	public void contactsAdded(Vector<Person> newContacts){
+	public synchronized void callsUpdated(Call original, Call updated){
+	
+		if(callUpdated)
+			return;
+		
+		Debug.msg("Notifying server of updated call");
+		callListRequest.operation = ClientDataRequest.Operation.UPDATE;
+		callListRequest.original = original;
+		callListRequest.updated = updated;
+		
+		try{
+			
+			objectOut.writeObject(callListRequest);
+			objectOut.flush();
+			objectOut.reset();
+			
+		}catch(IOException e){
+			Debug.err("Error writing updated call to server!");
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}
+		
+		//wipe out uneeded contents for later
+		callListRequest.original = null;
+		callListRequest.updated = null;
+		
+	}
+	
+	public synchronized void contactsAdded(Vector<Person> newContacts){
 		
 		//This thread added the contacts, no need to write them back
 		if(contactsAdded)
@@ -501,20 +546,22 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 		phoneBookRequest.data = null;
 	}
 	
-	public void contactsRemoved(Vector<Person> removedContacts){
+	public synchronized void contactsRemoved(Vector<Person> removedContacts){
 		
 		//This thread removed the contacts, no need to write them back
 		if(contactsRemoved)
 			return;
 		
-		Debug.msg("Notifyingthe server of removed contacts, size: "+removedContacts.size());
+		Debug.msg("Notifying the server of removed contacts, size: "+removedContacts.size());
 		phoneBookRequest.data = removedContacts;
 		phoneBookRequest.operation = ClientDataRequest.Operation.REMOVE;
 		
 		try{
+			
 			objectOut.writeObject(phoneBookRequest);
 			objectOut.flush();
 			objectOut.reset();
+			
 		}catch(IOException e){
 			Debug.err("Error writing removed contacts to server!");
 			Debug.err(e.toString());
@@ -524,5 +571,28 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 		phoneBookRequest.data = null;	
 	}
 	
-	
+	public synchronized void contactUpdated(Person original, Person updated){
+		
+		if(contactUpdated)
+			return;
+		
+		phoneBookRequest.operation = ClientDataRequest.Operation.UPDATE;
+		phoneBookRequest.original = original;
+		phoneBookRequest.updated = updated;
+		
+		try{
+			
+			objectOut.writeObject(phoneBookRequest);
+			objectOut.flush();
+			objectOut.reset();
+		
+		}catch(IOException e){
+			Debug.err("Error writing updated contact to server");
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}
+		
+		phoneBookRequest.original = null;
+		phoneBookRequest.updated = null;	
+	}
 }

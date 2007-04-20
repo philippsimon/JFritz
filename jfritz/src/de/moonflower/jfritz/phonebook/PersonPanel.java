@@ -463,21 +463,27 @@ public class PersonPanel extends JPanel implements ActionListener,
 
 	public final Person updatePerson() {
 		terminateEditing();
-		originalPerson.setPrivateEntry(chkBoxPrivateEntry.isSelected());
-		originalPerson.setFirstName(tfFirstName.getText());
-		originalPerson.setCompany(tfCompany.getText());
-		originalPerson.setLastName(tfLastName.getText());
-		originalPerson.setStreet(tfStreet.getText());
-		originalPerson.setPostalCode(tfPostalCode.getText());
-		originalPerson.setCity(tfCity.getText());
-		originalPerson.setEmailAddress(tfEmail.getText());
+		Person unchanged = originalPerson.clone();
+		synchronized(phoneBook){
+			originalPerson.setPrivateEntry(chkBoxPrivateEntry.isSelected());
+			originalPerson.setFirstName(tfFirstName.getText());
+			originalPerson.setCompany(tfCompany.getText());
+			originalPerson.setLastName(tfLastName.getText());
+			originalPerson.setStreet(tfStreet.getText());
+			originalPerson.setPostalCode(tfPostalCode.getText());
+			originalPerson.setCity(tfCity.getText());
+			originalPerson.setEmailAddress(tfEmail.getText());
 
-		originalPerson.setNumbers((Vector<PhoneNumber>) clonedPerson
-				.getNumbers().clone(), clonedPerson.getStandard());
+			originalPerson.setNumbers((Vector<PhoneNumber>) clonedPerson
+					.getNumbers().clone(), clonedPerson.getStandard());
 
-		hasChanged = false;
-		numberHasChanged = false;
-
+			phoneBook.notifyListenersOfUpdate(unchanged, originalPerson);
+			
+			hasChanged = false;
+			numberHasChanged = false;
+		}
+		
+		
 		return originalPerson;
 	}
 
