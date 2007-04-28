@@ -138,6 +138,40 @@
  *  
  * FIXME-END
  * 
+ * JFritz network-v1
+ * 	 Neue Strings:
+ * 	 no_network_function
+ *   network_server_function
+ *   network_client_function
+ *   client_call_list
+ *   client_telephone_book
+ *   be_dumb_client
+ *   connect_on_startup
+ *   server_name
+ *   server_login
+ *   server_password
+ *   server_port
+ *   set
+ *   listen_on_startup
+ *   client_connect_port
+ *   max_client_connections
+ *   add
+ *   remove
+ *   network
+ *   server_is_listening
+ *   connect_to_server
+ *   set_client_permissions
+ *   allow_client_add_calllist
+ *   allow_client_remove_calllist
+ *   allow_client_update_calllist
+ *   allow_client_add_phonebook
+ *   allow_client_remove_phonebook
+ *   allow_client_update_phoneBook 
+ *   allow_client_lookup
+ *   allow_client_getcalllist
+ *   authentification_failed
+ *  
+ * 
  * JFritz 0.6.2.04
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
  * - Neu: Rückwärtssuche erweitert, jetzt können die Regex Ausdrücke beliebige groupiert werden

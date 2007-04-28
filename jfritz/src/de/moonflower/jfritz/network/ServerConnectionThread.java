@@ -153,8 +153,11 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 						isConnected = false;
 						NetworkStateMonitor.clientStateChanged();
 						
-					}else
+					}else{
 						Debug.msg("Authentication failed!");
+						Debug.errDlg(Main.getMessage("authentification_failed"));
+					}
+					
 					
 					objectOut.close();
 					objectIn.close();

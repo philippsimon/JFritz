@@ -79,7 +79,6 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		serverPanel = getServerPanel();
 		
 		NetworkStateMonitor.addListener(this);
-		
 	}
 
 	public void loadSettings() {

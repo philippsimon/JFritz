@@ -25,6 +25,12 @@ import javax.swing.border.EtchedBorder;
 import de.moonflower.jfritz.Main;
 import de.moonflower.jfritz.network.Login;
 
+/**
+ * This dialog is used for setting the permission of a client connections
+ *  
+ * @author brian
+ *
+ */
 public class PermissionsDialog extends JDialog {
 
 	public static final long serialVersionUID = 100;
@@ -117,24 +123,24 @@ public class PermissionsDialog extends JDialog {
         panel.add(allowCallListAdd, c);
         
         c.gridy = 1;
-        allowCallListUpdate = new JCheckBox(Main.getMessage("allow_client_update_calllist"));
-        panel.add(allowCallListUpdate, c);
+        allowCallListRemove = new JCheckBox(Main.getMessage("allow_client_remove_calllist"));
+        panel.add(allowCallListRemove, c);
         
         c.gridy = 2;
-        allowCallListRemove = new JCheckBox(Main.getMessage("allow_client_remove_calllist"));
-        panel.add(allowCallListAdd, c);
+        allowCallListUpdate = new JCheckBox(Main.getMessage("allow_client_update_calllist"));
+        panel.add(allowCallListUpdate, c);
         
         c.gridy = 3;
         allowPhoneBookAdd = new JCheckBox(Main.getMessage("allow_client_add_phonebook"));
         panel.add(allowPhoneBookAdd, c);
         
         c.gridy = 4;
-        allowPhoneBookUpdate = new JCheckBox(Main.getMessage("allow_client_update_phoneBook"));
-        panel.add(allowPhoneBookUpdate, c);
-        
-        c.gridy = 5;
         allowPhoneBookRemove = new JCheckBox(Main.getMessage("allow_client_remove_phonebook"));
         panel.add(allowPhoneBookRemove, c);
+        
+        c.gridy = 5;
+        allowPhoneBookUpdate = new JCheckBox(Main.getMessage("allow_client_update_phoneBook"));
+        panel.add(allowPhoneBookUpdate, c);
         
         c.gridy = 6;
         allowLookup = new JCheckBox(Main.getMessage("allow_client_lookup"));
