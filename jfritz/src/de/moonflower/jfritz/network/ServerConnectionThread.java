@@ -53,7 +53,7 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 	private ClientDataRequest<Person> phoneBookRequest;
 	
 	private ClientActionRequest actionRequest;
-
+	
 	private boolean quit = false;
 	
 	private boolean callsAdded = false, callsRemoved=false, callUpdated=false,

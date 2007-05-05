@@ -59,13 +59,19 @@ public class ClientConnectionListener extends Thread {
 					
 					while(listen){
 						
-						ClientConnectionThread connection = new ClientConnectionThread(serverSocket.accept());
-						
-						synchronized(lock){
-							connectedClients.add(connection);
+						synchronized(this){
+							if(Integer.parseInt(Main.getProperty("max.connections", "1")) <= connectedClients.size()){
+								try{
+									wait();
+								}catch(InterruptedException e){
+									Debug.err("client listener interrupted while waiting for connection to close!");
+								}
+							}else{
+								ClientConnectionThread connection = new ClientConnectionThread(serverSocket.accept(), this);
+								connectedClients.add(connection);
+								connection.start();
+							}
 						}
-						
-						connection.start();
 					}
 					
 					serverSocket.close();
@@ -124,10 +130,9 @@ public class ClientConnectionListener extends Thread {
 	 * 
 	 * @param connection that has ended
 	 */
-	public static void clientConnectionEnded(ClientConnectionThread connection){
-		synchronized(lock){
+	public synchronized void clientConnectionEnded(ClientConnectionThread connection){
 			connectedClients.remove(connection);
-		}
+			notify();
 	}
 	
 	/**

@@ -44,6 +44,8 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	
 	private ObjectOutputStream objectOut;
 	
+	private ClientConnectionListener connectionListener;
+	
 	private DataChange<Call> callsAdd, callsRemove, callUpdate;
 	
 	private DataChange<Person> contactsAdd, contactsRemove, contactUpdate;
@@ -51,9 +53,10 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 	private boolean callsAdded=false, callsRemoved=false, callUpdated = false,
 		contactsAdded=false, contactsRemoved=false, contactUpdated=false;
 	
-	public ClientConnectionThread(Socket socket){
+	public ClientConnectionThread(Socket socket, ClientConnectionListener connectionListener){
 		super("Client connection for "+socket.getInetAddress());
 		this.socket = socket;
+		this.connectionListener = connectionListener;
 		remoteAddress = socket.getInetAddress();
 	}
 	
@@ -101,7 +104,7 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 			e.printStackTrace();
 		}
 		
-		ClientConnectionListener.clientConnectionEnded(this);
+		connectionListener.clientConnectionEnded(this);
 	}
 	
 	/**
