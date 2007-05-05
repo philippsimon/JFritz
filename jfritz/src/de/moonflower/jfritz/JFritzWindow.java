@@ -401,7 +401,18 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		networkButton = new JToggleButton();
 		networkButton.setActionCommand("network");
 		networkButton.addActionListener(this);
-		networkButton.setIcon(getImage("server_new.png"));
+
+		String networkType = Main.getProperty("network.type", "0");
+		
+		if(networkType.equals("1"))
+			networkButton.setIcon(getImage("server.png"));
+		else if(networkType.equals("2"))
+			networkButton.setIcon(getImage("client.png"));
+		else{
+			networkButton.setIcon(getImage("no_network.png"));
+			networkButton.setEnabled(false);
+		}
+		
 		networkButton.setToolTipText(Main.getMessage("enabel_disable_network"));
 		networkButton.setPreferredSize(new Dimension(32, 32));
 		
@@ -1656,6 +1667,11 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			networkButton.setSelected(false);
 	}
 	
+	/**
+	 * This function is called by the network code
+	 * when a client requests a reverse lookup
+	 *
+	 */
 	public void doLookupButtonClick(){
 		if(!lookupButton.isSelected())
 			lookupButton.doClick();
@@ -1664,6 +1680,29 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	public void doFetchButtonClick(){
 		if(fetchButton.isEnabled())
 			fetchButton.doClick();
+	}
+	
+	/**
+	 * This function sets the icon for the network button
+	 * and enables or disables the toggle button. 
+	 * function called after saving the settings in the dialog
+	 * 
+	 *
+	 */
+	public void setNetworkButton(){
+		
+		String networkType = Main.getProperty("network.type", "0");
+		
+		if(networkType.equals("1")){
+			networkButton.setIcon(getImage("server.png"));
+			networkButton.setEnabled(true);
+		}else if(networkType.equals("2")){
+			networkButton.setIcon(getImage("client.png"));
+			networkButton.setEnabled(true);
+		}else{
+			networkButton.setIcon(getImage("no_network.png"));
+			networkButton.setEnabled(false);
+		}
 	}
 	
 }

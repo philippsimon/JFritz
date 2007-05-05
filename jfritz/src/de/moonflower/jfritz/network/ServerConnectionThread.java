@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -151,23 +152,30 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 						JFritz.getCallerList().removeListener(this);
 						JFritz.getPhonebook().removeListener(this);
 						isConnected = false;
-						NetworkStateMonitor.clientStateChanged();
 						
 					}else{
 						Debug.msg("Authentication failed!");
 						Debug.errDlg(Main.getMessage("authentification_failed"));
+
 					}
-					
 					
 					objectOut.close();
 					objectIn.close();
 					socket.close();
+					
+				}catch(ConnectException e){
+					
+					Debug.errDlg(Main.getMessage("connection_server_refused"));
+					Debug.err("Error connection to the server");
+					Debug.err(e.toString());
+					e.printStackTrace();
 					
 				}catch(IOException e){
 					Debug.err(e.toString());
 					e.printStackTrace();
 				}
 				
+				NetworkStateMonitor.clientStateChanged();
 				connect = false;
 				
 			}

@@ -245,7 +245,6 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 				e.printStackTrace();
 				return;
 			}
-	
 		}
 	}
 	
@@ -490,6 +489,10 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 		contactsRemove.data = null;
 	}
 	
+	/**
+	 * called when a contact has been updated by the user
+	 * Eventually filters will be applied based on login
+	 */
 	public synchronized void contactUpdated(Person original, Person updated){
 		
 		if(contactUpdated)

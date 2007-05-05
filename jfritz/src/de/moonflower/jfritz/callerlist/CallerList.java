@@ -220,6 +220,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		try {
 			BufferedWriter pw = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(filename), "UTF8")); //$NON-NLS-1$
+			
 			pw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); //$NON-NLS-1$
 			pw.newLine();
 			// pw.write("<!DOCTYPE calls SYSTEM \"" + CALLS_DTD_URI + "\">");
@@ -462,6 +463,9 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		
 		if (newEntries > 0) {
 
+			fireUpdateCallVector();
+			update();
+			
 			saveToXMLFile(Main.SAVE_DIR + JFritz.CALLS_FILE, true);
 
 			String msg;
@@ -475,9 +479,6 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 
 			JFritz.infoMsg(msg);
 		}
-		
-		fireUpdateCallVector();
-		update();
 	}
 	
 	/**
@@ -1068,7 +1069,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 				call = filteredCallerData.get(rows[i]);
 				removedCalls.add(call);
 				unfilteredCallerData.remove(call);
-				Debug.msg("removing " + call);
+				//Debug.msg("removing " + call);
 				Person p = call.getPerson();
 				if (p != null) {
 					if (call.equals(p.getLastCall())) {

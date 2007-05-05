@@ -170,7 +170,8 @@
  *   allow_client_lookup
  *   allow_client_getcalllist
  *   authentification_failed
- *  
+ *   connection_server_refused
+ *   error_binding_port
  * 
  * JFritz 0.6.2.04
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
@@ -651,6 +652,7 @@ import javax.swing.JOptionPane;
 import de.moonflower.jfritz.autoupdate.JFritzUpdate;
 import de.moonflower.jfritz.autoupdate.Update;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
+import de.moonflower.jfritz.network.NetworkStateMonitor;
 import de.moonflower.jfritz.struct.FritzBox;
 import de.moonflower.jfritz.utils.CLIOption;
 import de.moonflower.jfritz.utils.CLIOptions;
@@ -1118,8 +1120,23 @@ public class Main implements LookupObserver {
 	public void exit(int i) {
 		Debug.msg("Main.exit(" + i + ")");
 		exitCode = i;
+		closeOpenConnections();
 		System.exit(i);
 	}
+	
+	public void closeOpenConnections(){
+		Debug.msg("Closing all open network connections");
+		
+		String networkType = Main.getProperty("network.type", "0");
+		
+		if(networkType.equals("1") && NetworkStateMonitor.isListening())
+			NetworkStateMonitor.stopServer();
+			
+		else if(networkType.equals("2") && NetworkStateMonitor.isConnectedToServer())
+			NetworkStateMonitor.stopClient();
+		
+	}
+	
 	
 	/**
 	 * Loads properties from xml files

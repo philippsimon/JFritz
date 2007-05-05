@@ -137,6 +137,8 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 	
 	public void saveSettings() {
 		// save the various settings
+		int selectedIndex = networkTypeCombo.getSelectedIndex();
+		
 		Main.setProperty("option.clientTelephoneBook", Boolean.toString(clientTelephoneBook //$NON-NLS-1$
 				.isSelected()));
 		Main.setProperty("option.clientCallList", Boolean //$NON-NLS-1$
@@ -144,12 +146,11 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		Main.setProperty("option.isDumbClient", Boolean //$NON-NLS-1$
 				.toString(isDumbClient.isSelected()));
 		Main.setProperty("network.type", String //$NON-NLS-1$
-				.valueOf(networkTypeCombo.getSelectedIndex()));
+				.valueOf(selectedIndex));
 		Main.setProperty("option.connectOnStartup", Boolean //$NON-NLS-1$
 				.toString(connectOnStartup.isSelected()));
 		Main.setProperty("option.listenOnStartup", Boolean //$NON-NLS-1$
 				.toString(listenOnStartup.isSelected()));
-		
 		
 		Main.setProperty("server.name", serverName.getText());
 		Main.setProperty("server.port", serverPort.getText());
@@ -162,6 +163,22 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		
 		NetworkStateMonitor.removeListener(this);
 		
+		//Clear the previous network connections that don't fit to the user selection
+		if(selectedIndex == 0){
+			if(NetworkStateMonitor.isListening())
+				NetworkStateMonitor.stopServer();
+			else if(NetworkStateMonitor.isConnectedToServer())
+				NetworkStateMonitor.stopClient();
+		}else if(selectedIndex == 1){
+			if(NetworkStateMonitor.isConnectedToServer())
+				NetworkStateMonitor.stopClient();
+			
+		}else if(selectedIndex == 2){
+			if(NetworkStateMonitor.isListening())
+				NetworkStateMonitor.stopServer();
+		}
+		
+		JFritz.getJframe().setNetworkButton();
 		ClientLoginsTableModel.saveToXMLFile(Main.SAVE_DIR + JFritz.CLIENT_SETTINGS_FILE);
 		
 	}

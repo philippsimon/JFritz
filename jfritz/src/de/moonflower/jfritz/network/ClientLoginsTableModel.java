@@ -1,6 +1,5 @@
 package de.moonflower.jfritz.network;
 
-import java.util.HashMap;
 import java.util.Vector;
 
 import java.awt.Component;
@@ -25,14 +24,9 @@ import org.xml.sax.XMLReader;
 
 
 import de.moonflower.jfritz.Main;
-import de.moonflower.jfritz.callerlist.filter.CallFilter;
 import de.moonflower.jfritz.dialogs.config.PermissionsDialog;
-import de.moonflower.jfritz.dialogs.sip.SipProvider;
-import de.moonflower.jfritz.struct.ReverseLookupSite;
 import de.moonflower.jfritz.utils.Debug;
 import de.moonflower.jfritz.utils.Encryption;
-import de.moonflower.jfritz.utils.JFritzUtils;
-import de.moonflower.jfritz.utils.reverselookup.ReverseLookupXMLHandler;
 
 public class ClientLoginsTableModel extends AbstractTableModel{
 

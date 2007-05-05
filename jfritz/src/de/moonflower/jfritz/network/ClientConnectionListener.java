@@ -20,8 +20,6 @@ import de.moonflower.jfritz.utils.Debug;
  *
  */
 public class ClientConnectionListener extends Thread {
-
-	private static Object lock = new Object();
 	
 	private static boolean isListening = false;
 	
@@ -59,18 +57,23 @@ public class ClientConnectionListener extends Thread {
 					
 					while(listen){
 						
-						synchronized(this){
-							if(Integer.parseInt(Main.getProperty("max.connections", "1")) <= connectedClients.size()){
+						if(Integer.parseInt(Main.getProperty("max.connections", "1")) <= connectedClients.size()){
+
+							synchronized(this){
 								try{
 									wait();
 								}catch(InterruptedException e){
 									Debug.err("client listener interrupted while waiting for connection to close!");
 								}
-							}else{
-								ClientConnectionThread connection = new ClientConnectionThread(serverSocket.accept(), this);
-								connectedClients.add(connection);
-								connection.start();
 							}
+						}else{
+							ClientConnectionThread connection = new ClientConnectionThread(serverSocket.accept(), this);
+							
+							synchronized(this){
+								connectedClients.add(connection);
+							}
+							
+							connection.start();
 						}
 					}
 					
@@ -85,7 +88,8 @@ public class ClientConnectionListener extends Thread {
 					}
 						
 				}catch(IOException e){
-					Debug.err("Error binding to port: ");
+					Debug.errDlg(Main.getMessage("error_binding_port"));
+					Debug.err("Error binding to port: "+Main.getProperty("clients.port", "4444"));
 					Debug.err(e.toString());
 					e.printStackTrace();
 				}
@@ -94,7 +98,7 @@ public class ClientConnectionListener extends Thread {
 				listen = false;
 				
 				Debug.msg("Closing all open client connections");
-				synchronized(lock){
+				synchronized(this){
 					for(ClientConnectionThread client: connectedClients)
 						client.closeConnection();
 				}
@@ -151,6 +155,8 @@ public class ClientConnectionListener extends Thread {
 			Debug.err(e.toString());
 			e.printStackTrace();
 		}
+		
+		notify();
 	}
 	
 	/**
