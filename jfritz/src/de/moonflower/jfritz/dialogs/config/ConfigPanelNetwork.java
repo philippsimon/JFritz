@@ -322,6 +322,7 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		connectOnStartup = new JCheckBox();
 		panel.add(connectOnStartup, c);
 		
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridy = 5;
 		c.insets.left = 5;
 		panel.add(new JLabel(Main.getMessage("server_name")), c);
@@ -340,7 +341,7 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		serverPassword = new JPasswordField("", 16);
 		serverPassword.setMinimumSize(new Dimension(200, 20));
 		panel.add(serverPassword, c);
-		
+
 		c.gridy = 8;
 		panel.add(new JLabel(Main.getMessage("server_port")), c);
 		serverPort = new JTextField("", 16);
@@ -349,6 +350,7 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		
 		c.gridy = 9;
 		c.anchor = GridBagConstraints.CENTER;
+		c.fill = GridBagConstraints.NONE;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		startClientButton = new JToggleButton();
 		startClientButton.setMinimumSize(new Dimension(200, 20));

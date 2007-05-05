@@ -65,7 +65,7 @@ public class PermissionsDialog extends JDialog {
 	
 	public void init(){
 		setTitle(Main.getMessage("set_client_permissions"));
-	      setSize(260, 300);
+	      setSize(290, 320);
 	      drawDialog();
 	      setProperties();
 	}
