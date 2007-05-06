@@ -135,6 +135,7 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 							
 							if(dataRequest.timestamp != null){
 								Debug.msg("Received call list update request from "+remoteAddress);
+								Debug.msg("Timestamp: "+dataRequest.timestamp.toString());
 								callsAdded(JFritz.getCallerList().getNewerCalls(dataRequest.timestamp));
 							}else{
 								Debug.msg("Received complete call list request from "+remoteAddress);
@@ -172,11 +173,11 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 					}else if(dataRequest.destination == ClientDataRequest.Destination.PHONEBOOK){
 						
 						//determine what operation to carry out, if applicable
-						if(dataRequest.operation == ClientDataRequest.Operation.GET && login.allowAddBook){
+						if(dataRequest.operation == ClientDataRequest.Operation.GET){
 							Debug.msg("Received complete phone book request from "+remoteAddress);
 							contactsAdded(JFritz.getPhonebook().getUnfilteredPersons());
 						
-						}else if(dataRequest.operation == ClientDataRequest.Operation.ADD){
+						}else if(dataRequest.operation == ClientDataRequest.Operation.ADD && login.allowAddBook){
 						
 							Debug.msg("Received request to add "+dataRequest.data.size()+" contacts from "+remoteAddress);
 							synchronized(JFritz.getPhonebook()){
@@ -192,6 +193,14 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 								contactsRemoved = true;
 								JFritz.getPhonebook().removeEntries(dataRequest.data);
 								contactsRemoved = false;
+							}
+						}else if(dataRequest.operation == ClientDataRequest.Operation.UPDATE && login.allowUpdateBook){
+							
+							Debug.msg("Received request to update a contact from "+remoteAddress);
+							synchronized(JFritz.getPhonebook()){
+								contactUpdated = true;
+								JFritz.getPhonebook().updateEntry((Person) dataRequest.original, (Person) dataRequest.updated);
+								contactUpdated = false;
 							}
 						}
 						

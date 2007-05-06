@@ -113,7 +113,7 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		serverLogin.setText(Main.getProperty("server.login", ""));
 		serverPassword.setText(Encryption.decrypt(Main.getProperty("server.password", "")));
 		
-		clientsPort.setText(Main.getProperty("clients.port", ""));
+		clientsPort.setText(Main.getProperty("clients.port", "4455"));
 		maxConnections.setText(Main.getProperty("max.Connections", "6"));
 		
 		if(NetworkStateMonitor.isListening()){

@@ -48,10 +48,10 @@ public class ClientConnectionListener extends Thread {
 			
 				try{
 					serverSocket = new ServerSocket(Integer.parseInt(
-							Main.getProperty("clients.port", "4444")));
+							Main.getProperty("clients.port", "4455")));
 					
 					Debug.msg("Listening for client connections on: "+
-							Main.getProperty("clients.port", "4444"));
+							Main.getProperty("clients.port", "4455"));
 					isListening = true;
 					NetworkStateMonitor.serverStateChanged();
 					
@@ -89,7 +89,7 @@ public class ClientConnectionListener extends Thread {
 						
 				}catch(IOException e){
 					Debug.errDlg(Main.getMessage("error_binding_port"));
-					Debug.err("Error binding to port: "+Main.getProperty("clients.port", "4444"));
+					Debug.err("Error binding to port: "+Main.getProperty("clients.port", "4455"));
 					Debug.err(e.toString());
 					e.printStackTrace();
 				}

@@ -2138,8 +2138,9 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 	 *
 	 */
 	public synchronized Date getLastCallDate(){
+		
 		if(unfilteredCallerData.size() > 0)
-			return unfilteredCallerData.lastElement().getCalldate();
+			return unfilteredCallerData.firstElement().getCalldate();
 		return null;
 	}
 	
