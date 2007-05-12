@@ -37,6 +37,7 @@ import javax.swing.table.TableCellRenderer;
 
 import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.Main;
+import de.moonflower.jfritz.struct.Call;
 import de.moonflower.jfritz.struct.Person;
 import de.moonflower.jfritz.struct.PhoneNumber;
 
@@ -319,6 +320,7 @@ public class PersonPanel extends JPanel implements ActionListener,
 			phoneBook.saveToXMLFile(Main.SAVE_DIR + JFritz.PHONEBOOK_FILE);
 			JFritz.getJframe().getPhoneBookPanel().getPhoneBookTable()
 					.showAndSelectPerson(originalPerson);
+			
 			Enumeration<ActionListener> en = actionListener.elements();
 			while (en.hasMoreElements()) {
 				ActionListener al = en.nextElement();
@@ -464,6 +466,16 @@ public class PersonPanel extends JPanel implements ActionListener,
 	public final Person updatePerson() {
 		terminateEditing();
 		Person unchanged = originalPerson.clone();
+		
+		//remove the person reference in the call list, if one was present!
+		Call call = originalPerson.getLastCall();
+		Person newPerson = null;
+		if(call != null){
+			newPerson = phoneBook.findPerson(call);
+			JFritz.getCallerList().setPerson(newPerson, call);
+		}
+		JFritz.getCallerList().updatePersonInCalls(newPerson, originalPerson.getNumbers());
+		
 		synchronized(phoneBook){
 			originalPerson.setPrivateEntry(chkBoxPrivateEntry.isSelected());
 			originalPerson.setFirstName(tfFirstName.getText());
@@ -478,10 +490,14 @@ public class PersonPanel extends JPanel implements ActionListener,
 					.getNumbers().clone(), clonedPerson.getStandard());
 
 			phoneBook.notifyListenersOfUpdate(unchanged, originalPerson);
-			
-			hasChanged = false;
-			numberHasChanged = false;
 		}
+		
+		originalPerson.setLastCall(JFritz.getCallerList().findLastCall(originalPerson));
+		JFritz.getCallerList().updatePersonInCalls(originalPerson, originalPerson.getNumbers());
+		
+		hasChanged = false;
+		numberHasChanged = false;
+		
 		
 		
 		return originalPerson;

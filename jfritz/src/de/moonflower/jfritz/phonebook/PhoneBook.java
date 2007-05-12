@@ -351,11 +351,14 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		filterExceptions.clear();
 	}
 
-	public synchronized void addEntries(Vector persons) {
-		for (Iterator iter = persons.iterator(); iter.hasNext();) {
-			Person element = (Person) iter.next();
-			addEntry(element);
-		}
+	public synchronized void addEntries(Vector<Person> persons) {
+		
+		for(Person person: persons)
+			addEntry(person);
+		//for (Iterator iter = persons.iterator(); iter.hasNext();) {
+		//	Person element = (Person) iter.next();
+		//	addEntry(element);
+		//}
 		
 		for(PhoneBookListener listener: listeners)
 			listener.contactsAdded(persons);
@@ -375,7 +378,6 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		
 		updateFilter();
 		fireTableDataChanged();
-		Debug.msg("removed contact data dump:");
 		saveToXMLFile(Main.SAVE_DIR + JFritz.PHONEBOOK_FILE);
 		
 	}
@@ -386,6 +388,9 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		//make sure original contact was in our list first
 		if(index >= 0){
 			unfilteredPersons.set(index, updated);
+			
+			updated.setLastCall(JFritz.getCallerList().findLastCall(updated));
+			JFritz.getCallerList().updatePersonInCalls(updated, updated.getNumbers());
 			
 			for(PhoneBookListener listener: listeners)
 				listener.contactUpdated(original, updated);
@@ -446,6 +451,14 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		fireTableDataChanged();
 	}
 
+	/**
+	 * This method is used for removing a person from the telephonebook and
+	 * for removing the reference from call list, if one was present.
+	 * 
+	 * If this method is not called, the person reference in the telephonebook will remain!
+	 * 
+	 * @param person
+	 */
 	public void deleteEntry(Person person) {
 		unfilteredPersons.remove(person);
 		Call call = callerList.findLastCall(person);
@@ -455,7 +468,7 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 			callerList.setPerson(newPerson, call);
 		}
 		callerList.updatePersonInCalls(newPerson, person.getNumbers());
-		updateFilter();
+		//updateFilter();
 	}
 
 	/**
@@ -1355,12 +1368,13 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
     	if (rows.length > 0) {
 			// Markierte Einträge löschen
 			Vector<Person> personsToDelete = new Vector<Person>();
+			Person person;
 			for (int i = 0; i < rows.length; i++) {
-				personsToDelete.add(this.filteredPersons.get(rows[i]));
-				
+				person = filteredPersons.get(rows[i]);
+				personsToDelete.add(person);
+				deleteEntry(person);
 			}
 
-			unfilteredPersons.removeAll(personsToDelete);
 			for(PhoneBookListener listener: listeners)
 				listener.contactsRemoved(personsToDelete);
 			

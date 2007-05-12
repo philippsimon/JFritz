@@ -478,6 +478,20 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 			}
 
 			JFritz.infoMsg(msg);
+			
+			// Notify user?
+			if (Main.getProperty("option.notifyOnCalls", "true")
+					.equals("true")) {
+				JFritz.getJframe().setVisible(true);
+				JFritz.getJframe().toFront();
+			}
+
+			// Make back-up after fetching the caller list?
+			if (JFritzUtils.parseBoolean(Main.getProperty(
+							"option.createBackupAfterFetch", "false")))
+				doBackup();
+			
+			
 		}
 	}
 	
@@ -2051,7 +2065,7 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 	/**
 	 * for the LookupObserver
 	 */
-	public void personsFound(Vector persons) {
+	public void personsFound(Vector<Person> persons) {
 		if (persons != null) {
 			phonebook.addEntries(persons);
 			this.fireTableDataChanged();
@@ -2072,7 +2086,7 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 	/**
 	 * for the LookupObserver
 	 */
-	public void saveFoundEntries(Vector persons) {
+	public void saveFoundEntries(Vector<Person> persons) {
 		if (persons != null) {
 			phonebook.addEntries(persons);
 			this.fireTableDataChanged();

@@ -173,6 +173,10 @@
  *   connection_server_refused
  *   error_binding_port
  * 
+ * changelog:
+ * - Networkcode hinzugefügt! JFritz kann nun entweder als Server oder client arbeiten
+ * - 
+ * 
  * JFritz 0.6.2.04
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
  * - Neu: Rückwärtssuche erweitert, jetzt können die Regex Ausdrücke beliebige groupiert werden
