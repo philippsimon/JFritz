@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 import java.util.Vector;
 
@@ -80,7 +81,7 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 	}
 	
 	/**
-	 * Is used to cleanly kill a connection and put the current
+	 * This method is used to cleanly kill a connection and put the current
 	 * thread into sleep mode
 	 *
 	 */
@@ -99,6 +100,11 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 		}
 	}
 	
+	/**
+	 * This is where the connection is initiated and the client is 
+	 * synchronized with the server
+	 * 
+	 */
 	public void run(){
 		while(!quit){
 			if(!connect){
@@ -166,7 +172,7 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 				}catch(ConnectException e){
 					
 					Debug.errDlg(Main.getMessage("connection_server_refused"));
-					Debug.err("Error connection to the server");
+					Debug.err("Error connecting to the server");
 					Debug.err(e.toString());
 					e.printStackTrace();
 					
@@ -196,6 +202,8 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 		Object o;
 		String response;
 		try{
+			//set timeout in case server thread is not functioning properly
+			socket.setSoTimeout(15000);
 			o = objectIn.readObject();
 			if(o instanceof String){
 				
@@ -210,8 +218,12 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 					
 					if(o instanceof String){
 						response = (String) o;
-						if(response.equals("JFRITZ 1.0 OK"))
+						if(response.equals("JFRITZ 1.0 OK")){
+							//remove timeout, no need since all communcation is asynchronous anyways
+							socket.setSoTimeout(0);
 							return true;
+						}
+							
 						else if(response.equals("JFRITZ 1.0 INVALID"))
 							Debug.msg("login attempt refused by server");
 						else
@@ -229,6 +241,10 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 			e.printStackTrace();
 		}catch(EOFException e){
 			Debug.err("Server closed Stream unexpectedly!");
+			Debug.err(e.toString());
+			e.printStackTrace();
+		}catch(SocketTimeoutException e){
+			Debug.err("Read timeout while authenticating with server!");
 			Debug.err(e.toString());
 			e.printStackTrace();
 		}catch(IOException e){

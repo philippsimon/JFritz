@@ -172,6 +172,8 @@
  *   authentification_failed
  *   connection_server_refused
  *   error_binding_port
+ *   start_listening_clients
+ *   client_is_connected
  * 
  * changelog:
  * - Networkcode hinzugefügt! JFritz kann nun entweder als Server oder client arbeiten

@@ -272,6 +272,8 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 		Vector<Login> clientLogins = ClientLoginsTableModel.getClientLogins();
 		
 		try{
+			//set timeout in case client implementation is broken
+			socket.setSoTimeout(15000);
 			objectOut.writeObject("JFRITZ SERVER 1.0");
 			objectOut.flush();
 			for(int i = 0; i < 3; i++){
@@ -288,6 +290,8 @@ public class ClientConnectionThread extends Thread implements CallerListListener
 								objectOut.writeObject("JFRITZ 1.0 OK");
 								objectOut.flush();
 								objectOut.reset();
+								//client properly authenticated itself, no need for timer any more
+								socket.setSoTimeout(0);
 								return login;
 							}else{
 								objectOut.writeObject("JFRITZ 1.0 INVALID");

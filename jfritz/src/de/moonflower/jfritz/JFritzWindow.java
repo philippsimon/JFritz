@@ -404,16 +404,17 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 
 		String networkType = Main.getProperty("network.type", "0");
 		
-		if(networkType.equals("1"))
+		if(networkType.equals("1")){
 			networkButton.setIcon(getImage("server.png"));
-		else if(networkType.equals("2"))
+			networkButton.setToolTipText(Main.getMessage("start_listening_clients"));
+		}else if(networkType.equals("2")){
 			networkButton.setIcon(getImage("client.png"));
-		else{
+			networkButton.setToolTipText(Main.getMessage("connect_to_server"));
+		}else{
 			networkButton.setIcon(getImage("no_network.png"));
 			networkButton.setEnabled(false);
 		}
 		
-		networkButton.setToolTipText(Main.getMessage("enabel_disable_network"));
 		networkButton.setPreferredSize(new Dimension(32, 32));
 		
 		//disable icon if jfritz network functionality not wanted
@@ -1653,18 +1654,24 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	
 	public void clientStateChanged(){
 		networkButton.setEnabled(true);
-		if(NetworkStateMonitor.isConnectedToServer())
+		if(NetworkStateMonitor.isConnectedToServer()){
 			networkButton.setSelected(true);
-		else
+			networkButton.setToolTipText(Main.getMessage("client_is_connected"));
+		}else{
 			networkButton.setSelected(false);
+			networkButton.setToolTipText(Main.getMessage("connect_to_server"));
+		}
 	}
 
 	public void serverStateChanged(){
 		networkButton.setEnabled(true);
-		if(NetworkStateMonitor.isListening())
+		if(NetworkStateMonitor.isListening()){
 			networkButton.setSelected(true);
-		else
+			networkButton.setToolTipText(Main.getMessage("server_is_listening"));
+		}else{
 			networkButton.setSelected(false);
+			networkButton.setToolTipText(Main.getMessage("start_listening_clients"));
+		}
 	}
 	
 	/**
@@ -1696,12 +1703,15 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		if(networkType.equals("1")){
 			networkButton.setIcon(getImage("server.png"));
 			networkButton.setEnabled(true);
+			networkButton.setToolTipText(Main.getMessage("start_listening_clients"));
 		}else if(networkType.equals("2")){
 			networkButton.setIcon(getImage("client.png"));
 			networkButton.setEnabled(true);
+			networkButton.setToolTipText(Main.getMessage("connect_to_server"));
 		}else{
 			networkButton.setIcon(getImage("no_network.png"));
 			networkButton.setEnabled(false);
+			networkButton.setToolTipText("");
 		}
 	}
 	
