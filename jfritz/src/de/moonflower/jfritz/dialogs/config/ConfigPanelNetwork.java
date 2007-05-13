@@ -49,7 +49,7 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 	
 	private JComboBox networkTypeCombo;
 
-	private JCheckBox clientTelephoneBook, clientCallList,
+	private JCheckBox clientTelephoneBook, clientCallList, clientCallMonitor,
 			isDumbClient, connectOnStartup, listenOnStartup;
 
 	private JTextField serverName, serverPort, serverLogin, 
@@ -99,6 +99,12 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		clientCallList.setSelected(JFritzUtils.parseBoolean(Main
 				.getProperty("option.clientCallList", "false"))); //$NON-NLS-1$,  //$NON-NLS-2$
 		
+		clientCallMonitor.setSelected(JFritzUtils.parseBoolean(Main
+				.getProperty("option.clientCallMonitor", "false"))); //$NON-NLS-1$,  //$NON-NLS-2$
+		
+		listenOnStartup.setSelected(JFritzUtils.parseBoolean(Main
+				.getProperty("option.clientCallMonitor", "false"))); //$NON-NLS-1$,  //$NON-NLS-2$
+		
 		isDumbClient.setSelected(JFritzUtils.parseBoolean(Main
 				.getProperty("option.isDumbClient", "false"))); //$NON-NLS-1$,  //$NON-NLS-2$
 	
@@ -143,6 +149,8 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 				.isSelected()));
 		Main.setProperty("option.clientCallList", Boolean //$NON-NLS-1$
 				.toString(clientCallList.isSelected()));
+		Main.setProperty("option.clientCallMonitor", Boolean //$NON-NLS-1$
+				.toString(clientCallMonitor.isSelected()));
 		Main.setProperty("option.isDumbClient", Boolean //$NON-NLS-1$
 				.toString(isDumbClient.isSelected()));
 		Main.setProperty("network.type", String //$NON-NLS-1$
@@ -313,42 +321,47 @@ public class ConfigPanelNetwork extends JPanel implements ConfigPanel, ActionLis
 		panel.add(clientTelephoneBook, c);
 		
 		c.gridy = 3;
+		panel.add(new JLabel(Main.getMessage("client_call_monitor")), c);
+		clientCallMonitor = new JCheckBox();
+		panel.add(clientCallMonitor, c);
+		
+		c.gridy = 4;
 		panel.add(new JLabel(Main.getMessage("be_dumb_client")), c);
 		isDumbClient = new JCheckBox();
 		panel.add(isDumbClient, c);
 		
-		c.gridy = 4;
+		c.gridy = 5;
 		panel.add(new JLabel(Main.getMessage("connect_on_startup")), c);
 		connectOnStartup = new JCheckBox();
 		panel.add(connectOnStartup, c);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridy = 5;
+		c.gridy = 6;
 		c.insets.left = 5;
 		panel.add(new JLabel(Main.getMessage("server_name")), c);
 		serverName = new JTextField("", 16);
 		serverName.setMinimumSize(new Dimension(200, 20));
 		panel.add(serverName, c);
 		
-		c.gridy = 6;
+		c.gridy = 7;
 		panel.add(new JLabel(Main.getMessage("server_login")), c);
 		serverLogin = new JTextField("", 16);
 		serverLogin.setMinimumSize(new Dimension(200, 20));
 		panel.add(serverLogin, c);
 		
-		c.gridy = 7;
+		c.gridy = 8;
 		panel.add(new JLabel(Main.getMessage("server_password")), c);
 		serverPassword = new JPasswordField("", 16);
 		serverPassword.setMinimumSize(new Dimension(200, 20));
 		panel.add(serverPassword, c);
 
-		c.gridy = 8;
+		c.gridy = 9;
 		panel.add(new JLabel(Main.getMessage("server_port")), c);
 		serverPort = new JTextField("", 16);
 		serverPort.setMinimumSize(new Dimension(200, 20));
 		panel.add(serverPort, c);
 		
-		c.gridy = 9;
+		c.gridy = 10;
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.NONE;
 		c.gridwidth = GridBagConstraints.REMAINDER;

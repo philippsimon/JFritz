@@ -375,14 +375,15 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 							Debug.msg("destination not chosen for incoming data, ignoring!");
 						}
 				}else if(o instanceof String){ //message received from the server
+					
 					message = (String) o;
 					Debug.msg("Received message from server: "+message);
+					
 					if(message.equals("JFRITZ CLOSE")){ 
 						Debug.msg("Closing connection with server!");
 						disconnect();
 						return;
 					} //TODO: Add other messages here if necessary
-					
 					
 				}else {
 					Debug.msg(o.toString());

@@ -1229,6 +1229,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	public void activatePhoneBook() {
 		Rectangle rect = phoneBookPanel.getPhoneBookTable().getCellRect(
 				phoneBookPanel.getPhoneBookTable().getSelectedRow(), 0, true);
+		Debug.msg("Rectangle: "+rect.toString());
 		phoneBookPanel.getPhoneBookTable().scrollRectToVisible(rect);
 		tabber.setSelectedComponent(phoneBookPanel);
 	}

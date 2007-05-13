@@ -351,14 +351,22 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		filterExceptions.clear();
 	}
 
+	/**
+	 * This method is called by the network code and reverselookup code
+	 * to add many contacts at one
+	 * 
+	 * This method calls addEntry(Person person), to set properties
+	 * like last call and set the correct person in the call list.
+	 * It then notifies all PhoneBookListener objects of the new data.
+	 * 
+	 * @author brian
+	 * 
+	 * @param persons to be added to the phonebook
+	 */
 	public synchronized void addEntries(Vector<Person> persons) {
 		
 		for(Person person: persons)
 			addEntry(person);
-		//for (Iterator iter = persons.iterator(); iter.hasNext();) {
-		//	Person element = (Person) iter.next();
-		//	addEntry(element);
-		//}
 		
 		for(PhoneBookListener listener: listeners)
 			listener.contactsAdded(persons);
@@ -368,6 +376,17 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		this.saveToXMLFile(Main.SAVE_DIR + JFritz.PHONEBOOK_FILE);
 	}
 	
+	/**
+	 * This method is called by the network code to remove many contacts at once
+	 * 
+	 * It calls deleteEntry(Person person) for person to ensure all traces are removed in
+	 * the callerlist.
+	 * 
+	 * It then notifies all listeners of the removed data.
+	 * 
+	 * 
+	 * @param persons
+	 */
 	public synchronized void removeEntries(Vector<Person> persons){
 		
 		for(Person person: persons)
@@ -382,6 +401,15 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		
 	}
 	
+	/**
+	 * This function is responsible for updating a contact
+	 * 
+	 * It is called by the network code for updating the contact
+	 * in the call list and the telephonebook
+	 * 
+	 * @param original the original contact
+	 * @param updated the updated data for this contact
+	 */
 	public synchronized void updateEntry(Person original, Person updated){
 		int index = unfilteredPersons.indexOf(original);
 		
@@ -402,22 +430,28 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		}
 	}
 	
+	/**
+	 * This function is called once a user has clicked ok on the
+	 * edit user pane
+	 * 
+	 * @param original the original data for this contact
+	 * @param updated the updated data for this contact
+	 */
 	public synchronized void notifyListenersOfUpdate(Person original, Person updated){
 		for(PhoneBookListener listener: listeners)
 			listener.contactUpdated(original, updated);
 		
 	}
 	
-	
 	/*
 	 * inherited from AbstractTableModel
 	 */
-	private synchronized boolean addEntry(Person newPerson) {
+	public synchronized boolean addEntry(Person newPerson) {
 		// TODO: Mergen von Einträgen.
 		PhoneNumber pn1 = newPerson.getStandardTelephoneNumber();
 
 		Enumeration<Person> en = unfilteredPersons.elements();
-		while (en.hasMoreElements()) {
+		while (en.hasMoreElements()){
 			Person p = en.nextElement();
 			if (p.isDummy()
 					&& p.getStandardTelephoneNumber() != null

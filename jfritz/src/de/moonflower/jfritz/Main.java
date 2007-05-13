@@ -174,6 +174,9 @@
  *   error_binding_port
  *   start_listening_clients
  *   client_is_connected
+ *   client_call_monitor
+ *   callerlist_filters
+ *   phonebook_filters
  * 
  * changelog:
  * - Neu: Networkcode hinzugefügt! JFritz kann nun entweder als Server oder client arbeiten

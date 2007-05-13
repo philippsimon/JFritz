@@ -80,7 +80,6 @@ public class PhoneNumber implements Comparable, Serializable {
 		this.type = type;
 		// if (number.matches(numberMatcher)) this.number = number;
 		this.number = number;
-		//createMobileMap();
 		refactorNumber();
 	}
 
@@ -109,11 +108,11 @@ public class PhoneNumber implements Comparable, Serializable {
 	 */
 	public PhoneNumber(String fullNumber, boolean parseDialOut) {
 		this.type = "";
-		// if (number.matches(numberMatcher)) this.number = fullNumber;
-		if (fullNumber != null
-				&& !fullNumber.equals(Main.getMessage("unknown"))) {
+
+		if (fullNumber != null) {
 			this.number = fullNumber;
 		}
+		
 		if (parseDialOut
 				&& this.number.startsWith(Main.getProperty("dial.prefix", " "))) {
 			this.number = number.substring(Main.getProperty("dial.prefix")
@@ -121,7 +120,6 @@ public class PhoneNumber implements Comparable, Serializable {
 			Debug.msg("Parsed the dial out prefix, new number: " + this.number);
 		}
 		
-			//createMobileMap();
 			refactorNumber();
 	}
 
