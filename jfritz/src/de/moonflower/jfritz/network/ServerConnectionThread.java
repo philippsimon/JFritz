@@ -157,7 +157,6 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 						
 						JFritz.getCallerList().removeListener(this);
 						JFritz.getPhonebook().removeListener(this);
-						isConnected = false;
 						
 					}else{
 						Debug.msg("Authentication failed!");
@@ -181,6 +180,7 @@ public class ServerConnectionThread extends Thread implements CallerListListener
 					e.printStackTrace();
 				}
 				
+				isConnected = false;
 				NetworkStateMonitor.clientStateChanged();
 				connect = false;
 				

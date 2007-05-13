@@ -218,8 +218,10 @@ public final class JFritz implements  StatusListener{
 		}
 		jframe.checkStartOptions();
 		//FIXME ich nehme mal an SSDPdiscover macht irgendwas mit der Fritzbox? => nach Fritzbox verschieben
+		//only do the search if jfritz is not running as a client and using the call list from server
 		if (JFritzUtils.parseBoolean(Main.getProperty("option.useSSDP",//$NON-NLS-1$
-				"true"))) {//$NON-NLS-1$
+				"true")) && !(Main.getProperty("network.type", "0").equals("2")
+						&& Boolean.parseBoolean(Main.getProperty("option.clientCallList", "false"))) ) {//$NON-NLS-1$
 			Debug.msg("Searching for  FritzBox per UPnP / SSDP");//$NON-NLS-1$
 
 			ssdpthread = new SSDPdiscoverThread(SSDP_TIMEOUT);
@@ -458,8 +460,10 @@ public final class JFritz implements  StatusListener{
 	 * @return Returns the fritzbox devices.
 	 */
 	public static final Vector getDevices() {
+		//avoid using the ssdp thread if jfritz is running as a client and using the call list from server
 		if (JFritzUtils.parseBoolean(Main.getProperty("option.useSSDP", //$NON-NLS-1$
-				"true"))) { //$NON-NLS-1$
+				"true")) && !(Main.getProperty("network.type", "0").equals("2")
+						&& Boolean.parseBoolean(Main.getProperty("option.clientCallList", "false")))) { //$NON-NLS-1$
 			try {
 				ssdpthread.join();
 			} catch (InterruptedException e) {

@@ -176,8 +176,12 @@
  *   client_is_connected
  * 
  * changelog:
- * - Networkcode hinzugefügt! JFritz kann nun entweder als Server oder client arbeiten
- * - 
+ * - Neu: Networkcode hinzugefügt! JFritz kann nun entweder als Server oder client arbeiten
+ * - Bugfix: Neue kontakte werden jetzt richtig in der Anrufliste dargestellt
+ * - Bugfix: Gelöschte Kontakte werden jetzt auch in der Anrufliste entfernt
+ * - Bugfix: Geänderte Kontakte werden jetzt auch richtig in der Anrufliste dargestellt
+ * - Bugfix: Clientseitige / serverseitige Änderungen im Telefonbuch werden bei allen Clients auch richtig in der Anrufliste dargestellt
+ * - Neu: Clients, die die Anrufliste des Servers übernehmen, versuchen nicht mehr auf die Box zuzugreifen.
  * 
  * JFritz 0.6.2.04
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
