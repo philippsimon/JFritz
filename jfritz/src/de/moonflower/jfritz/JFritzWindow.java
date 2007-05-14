@@ -1008,8 +1008,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 
 		} else if (e.getActionCommand().equals("reverselookup")) {
 			//reverseLookup();
-			boolean active = ((JToggleButton) e.getSource()).isSelected();
-			if (active) {
+			Object o = e.getSource();
+			if (lookupButton.isSelected() || (o instanceof JMenuItem  && !lookupButton.isSelected())) {
 				if(Main.getProperty("option.clientTelephoneBook").equals("true") &&
 						NetworkStateMonitor.isConnectedToServer()){
 					//if connected to server make server to the lookup
