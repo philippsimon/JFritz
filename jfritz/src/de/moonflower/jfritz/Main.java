@@ -185,6 +185,7 @@
  * - Bugfix: Geänderte Kontakte werden jetzt auch richtig in der Anrufliste dargestellt
  * - Bugfix: Clientseitige / serverseitige Änderungen im Telefonbuch werden bei allen Clients auch richtig in der Anrufliste dargestellt
  * - Neu: Clients, die die Anrufliste des Servers übernehmen, versuchen nicht mehr auf die Box zuzugreifen.
+ * - Bugfix: NullPointerException beim Charset-Lesen entfernt, Rückwärtssuche funktioniert bei einigen wieder
  * 
  * JFritz 0.6.2.04
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
@@ -682,7 +683,7 @@ public class Main implements LookupObserver {
 
 	public final static String PROGRAM_NAME = "JFritz"; //$NON-NLS-1$
 
-	public final static String PROGRAM_VERSION = "0.6.2.03"; //$NON-NLS-1$
+	public final static String PROGRAM_VERSION = "0.6.2.04"; //$NON-NLS-1$
 	
 	public final static String CVS_TAG = "$Id$"; //$NON-NLS-1$
 

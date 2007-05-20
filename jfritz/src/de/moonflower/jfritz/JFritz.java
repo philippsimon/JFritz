@@ -42,6 +42,9 @@ import de.moonflower.jfritz.dialogs.quickdial.QuickDials;
 import de.moonflower.jfritz.dialogs.simple.MessageDlg;
 import de.moonflower.jfritz.dialogs.sip.SipProviderTableModel;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
+import de.moonflower.jfritz.JFritzEvent.*;
+import de.moonflower.jfritz.JFritzEvent.actions.*;
+import de.moonflower.jfritz.JFritzEvent.events.*;
 import de.moonflower.jfritz.network.ClientLoginsTableModel;
 import de.moonflower.jfritz.network.NetworkStateMonitor;
 import de.moonflower.jfritz.phonebook.PhoneBook;
@@ -126,6 +129,17 @@ public final class JFritz implements  StatusListener{
 	public JFritz(Main main) {
 		this.main = main;
 
+		/*
+		JFritzEventDispatcher eventDispatcher = new JFritzEventDispatcher();
+		JFritzEventDispatcher.registerEventType(new MessageEvent());
+
+		JFritzEventDispatcher.registerActionType(new PopupAction());
+		JFritzEventDispatcher.registerActionType(new TrayMessageAction());
+		
+		JFritzEventDispatcher.loadFromXML();
+
+		*/
+		
 		if (JFritzUtils.parseBoolean(Main.getProperty(
 				"option.createBackup", "false"))) { //$NON-NLS-1$,  //$NON-NLS-2$
 			Main.doBackup();

@@ -207,10 +207,10 @@ public class LookupThread extends Thread {
 								if ("content-type".equalsIgnoreCase(headerName)) { //$NON-NLS-1$
 									String[] split = headerValue.split(";", 2); //$NON-NLS-1$
 									for (int k = 0; k < split.length; k++) {
-										if (split[k].toLowerCase().startsWith(
+										if (split[k].trim().toLowerCase().startsWith(
 												"charset=")) { //$NON-NLS-1$
 											String[] charsetSplit = split[k].split("="); //$NON-NLS-1$
-											charSet = charsetSplit[1];
+											charSet = charsetSplit[1].trim();
 										}
 									}
 								}
