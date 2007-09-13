@@ -140,6 +140,8 @@
  * 
  * JFritz 0.6.2.05
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
+ * - Neu: Einführung von ServerSenderThreads, jede Verbindung hat eigene Empfänger und Sender-Threads
+ * - Neu: Clients können den Anrufmonitor vom Server verwenden
  * 
  * JFritz network-v1
  * 	 Neue Strings:
