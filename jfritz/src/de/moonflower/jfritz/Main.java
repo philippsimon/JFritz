@@ -694,7 +694,7 @@ public class Main implements LookupObserver {
 
 	public final static String PROGRAM_NAME = "JFritz"; //$NON-NLS-1$
 
-	public final static String PROGRAM_VERSION = "0.6.2.05"; //$NON-NLS-1$
+	public final static String PROGRAM_VERSION = "0.6.3"; //$NON-NLS-1$
 	
 	public final static String CVS_TAG = "$Id$"; //$NON-NLS-1$
 
