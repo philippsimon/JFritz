@@ -138,11 +138,18 @@
  *  
  * FIXME-END
  * 
- * JFritz 0.6.2.05
+ * JFritz 0.6.2.3
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
  * - Neu: Einführung von ServerSenderThreads, jede Verbindung hat eigene Empfänger und Sender-Threads
  * - Neu: Clients können den Anrufmonitor vom Server verwenden
- * 
+ * - Neu: Networkcode hinzugefügt! JFritz kann nun entweder als Server oder client arbeiten
+ * - Bugfix: Neue kontakte werden jetzt richtig in der Anrufliste dargestellt
+ * - Bugfix: Gelöschte Kontakte werden jetzt auch in der Anrufliste entfernt
+ * - Bugfix: Geänderte Kontakte werden jetzt auch richtig in der Anrufliste dargestellt
+ * - Bugfix: Clientseitige / serverseitige Änderungen im Telefonbuch werden bei allen Clients auch richtig in der Anrufliste dargestellt
+ * - Neu: Clients, die die Anrufliste des Servers übernehmen, versuchen nicht mehr auf die Box zuzugreifen.
+ * - Bugfix: NullPointerException beim Charset-Lesen entfernt, Rückwärtssuche funktioniert bei einigen wieder
+ *  
  * JFritz network-v1
  * 	 Neue Strings:
  * 	 no_network_function
@@ -182,17 +189,6 @@
  *   client_call_monitor
  *   callerlist_filters
  *   phonebook_filters
- * 
- * changelog:
- * - Neu: Networkcode hinzugefügt! JFritz kann nun entweder als Server oder client arbeiten
- * - Bugfix: Neue kontakte werden jetzt richtig in der Anrufliste dargestellt
- * - Bugfix: Gelöschte Kontakte werden jetzt auch in der Anrufliste entfernt
- * - Bugfix: Geänderte Kontakte werden jetzt auch richtig in der Anrufliste dargestellt
- * - Bugfix: Clientseitige / serverseitige Änderungen im Telefonbuch werden bei allen Clients auch richtig in der Anrufliste dargestellt
- * - Neu: Clients, die die Anrufliste des Servers übernehmen, versuchen nicht mehr auf die Box zuzugreifen.
- * - Bugfix: NullPointerException beim Charset-Lesen entfernt, Rückwärtssuche funktioniert bei einigen wieder
- * 
- *
  *
  * JFritz 0.6.2.04
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
