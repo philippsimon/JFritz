@@ -45,5 +45,9 @@ public class SipFilter extends CallFilter {
 		this.sipProviders = sipProvider;
 		
 	}
+	
+	public String getType(){
+		return type;
+	}
 
 }
