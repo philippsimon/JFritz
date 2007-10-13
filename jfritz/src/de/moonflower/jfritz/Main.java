@@ -189,6 +189,8 @@
  *   client_call_monitor
  *   callerlist_filters
  *   phonebook_filters
+ *	 apply_filter_client
+ *   set_client_callfilter
  *
  * JFritz 0.6.2.04
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
