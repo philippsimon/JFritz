@@ -149,6 +149,7 @@
  * - Bugfix: Clientseitige / serverseitige Änderungen im Telefonbuch werden bei allen Clients auch richtig in der Anrufliste dargestellt
  * - Neu: Clients, die die Anrufliste des Servers übernehmen, versuchen nicht mehr auf die Box zuzugreifen.
  * - Bugfix: NullPointerException beim Charset-Lesen entfernt, Rückwärtssuche funktioniert bei einigen wieder
+ * - Neu: JFritz-Server kann jetzt serverseitig die Anrufliste für jeden Client selbst filtern
  *  
  * JFritz network-v1
  * 	 Neue Strings:
@@ -191,6 +192,8 @@
  *   phonebook_filters
  *	 apply_filter_client
  *   set_client_callfilter
+ *   username
+ *   permissions
  *
  * JFritz 0.6.2.04
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
