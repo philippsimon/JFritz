@@ -174,12 +174,15 @@
  *   server_is_listening
  *   connect_to_server
  *   set_client_permissions
+ *   allow_client_calllist
  *   allow_client_add_calllist
  *   allow_client_remove_calllist
  *   allow_client_update_calllist
+ *   allow_client_phonebook
  *   allow_client_add_phonebook
  *   allow_client_remove_phonebook
- *   allow_client_update_phoneBook 
+ *   allow_client_update_phoneBook
+ *   allow_client_callmonitor 
  *   allow_client_lookup
  *   allow_client_getcalllist
  *   authentification_failed
