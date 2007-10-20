@@ -147,9 +147,7 @@
  * - Bugfix: Gelöschte Kontakte werden jetzt auch in der Anrufliste entfernt
  * - Bugfix: Geänderte Kontakte werden jetzt auch richtig in der Anrufliste dargestellt
  * - Bugfix: Clientseitige / serverseitige Änderungen im Telefonbuch werden bei allen Clients auch richtig in der Anrufliste dargestellt
- * - Neu: Clients, die die Anrufliste des Servers übernehmen, versuchen nicht mehr auf die Box zuzugreifen.
  * - Bugfix: NullPointerException beim Charset-Lesen entfernt, Rückwärtssuche funktioniert bei einigen wieder
- * - Neu: JFritz-Server kann jetzt serverseitig die Anrufliste für jeden Client selbst filtern
  *  
  * JFritz network-v1
  * 	 Neue Strings:
