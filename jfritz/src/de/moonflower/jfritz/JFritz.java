@@ -532,6 +532,7 @@ public final class JFritz implements  StatusListener{
 		watchdogTimer = new Timer();
 		watchdog = new WatchdogThread(1);
 		watchdog.setName("Watchdog-Thread");
+		watchdog.setDaemon(false);
 		watchdogTimer.schedule(new TimerTask() {
 			public void run() {
 				watchdog.run();
@@ -618,7 +619,7 @@ public final class JFritz implements  StatusListener{
 		if (jframe != null)
 			jframe.dispose();
 		 	
-		Debug.msg("prepareShutdown in JFritz.java done");		
+		Debug.msg("prepareShutdown in JFritz.java done");
 	}
 	
 	/**
