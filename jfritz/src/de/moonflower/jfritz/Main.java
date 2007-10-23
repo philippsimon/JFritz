@@ -750,6 +750,8 @@ public class Main implements LookupObserver {
 	
 	private static int exitCode = 0;
 	
+	private static boolean already_done_shutdown;
+	
 	public Main(String[] args) {
 		System.out.println(PROGRAM_NAME + " v" + PROGRAM_VERSION //$NON-NLS-1$
 				+ " (c) 2005-2007 by " + JFRITZ_PROJECT); //$NON-NLS-1$
@@ -772,6 +774,7 @@ public class Main implements LookupObserver {
 	 * 
 	 */
 	public static void main(String[] args) {
+		already_done_shutdown = false;
 		Main main = new Main(args);
 		main.initiateCLIParameters();
 		main.checkDebugParameters(args);
@@ -1147,8 +1150,8 @@ public class Main implements LookupObserver {
 	public void exit(int i) {
 		Debug.msg("Main.exit(" + i + ")");
 		exitCode = i;
-		closeOpenConnections();
-		System.exit(i);
+		prepareShutdown();
+//		System.exit(i);
 	}
 	
 	public void closeOpenConnections(){
@@ -1471,21 +1474,27 @@ public class Main implements LookupObserver {
 	
 	public void prepareShutdown() {
 		
-		Debug.msg("Shutting down JFritz..."); //$NON-NLS-1$
+		if ( !already_done_shutdown )
+		{
+			Debug.msg("Shutting down JFritz..."); //$NON-NLS-1$
 			
-		if (exitCode != -1 && Main.isInstanceControlEnabled()) {
-			File f = new File(Main.SAVE_DIR + Main.LOCK_FILE);
-			
-			if (f.exists())
-				f.delete();
-			Debug.msg("Multiple instance lock: release lock."); //$NON-NLS-1$
-		}
+			closeOpenConnections();
 	    
-		if ( jfritz != null ) {
-			jfritz.prepareShutdown();
+			if ( jfritz != null ) {
+				jfritz.prepareShutdown();
+			}
+
+			if (exitCode != -1 && Main.isInstanceControlEnabled()) {
+				File f = new File(Main.SAVE_DIR + Main.LOCK_FILE);
+			
+				if (f.exists())
+					f.delete();
+				Debug.msg("Multiple instance lock: release lock."); //$NON-NLS-1$
+			}
+
+			Debug.msg("Finished shutting down"); //$NON-NLS-1$
+			already_done_shutdown = true;
 		}
-		
-		Debug.msg("Finished shutting down"); //$NON-NLS-1$	
 	}
 	
 	/**
@@ -1523,9 +1532,9 @@ public class Main implements LookupObserver {
 	public void saveFoundEntries(Vector persons) {
 		if ( persons != null )
 			JFritz.getPhonebook().addEntries(persons);
-	}	
+	}
+		
 	
-	
-	
-	
+
+
 }
