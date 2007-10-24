@@ -149,6 +149,7 @@
  * - Bugfix: Geänderte Kontakte werden jetzt auch richtig in der Anrufliste dargestellt
  * - Bugfix: Clientseitige / serverseitige Änderungen im Telefonbuch werden bei allen Clients auch richtig in der Anrufliste dargestellt
  * - Bugfix: NullPointerException beim Charset-Lesen entfernt, Rückwärtssuche funktioniert bei einigen wieder
+ * - Neu: JFritz Log-Datein kann jetzt im beliebigen Verzeichnis gespeichert werden
  *  
  * JFritz network-v1
  * 	 Neue Strings:
