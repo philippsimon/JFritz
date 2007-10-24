@@ -72,7 +72,8 @@
  * 5 -  5 - Signalisieren der neu eingegangenen Anrufe im Tray (blinken, oder Zahl)
  * 5 -  5 - Button zum Löschen der Anrufliste
  * 5 -  7 - Mehrere FritzBoxen abfragen (SF [ 1515855 ]) Dafür sollten wir alle zugriffe auf die Box in eigene Threads unterbringen. 
- *                      Dann würde JFritz sich beim Hochfahren nicht so lange verzögern, wenn die Box nicht erreichbar ist.  
+ *                      Dann würde JFritz sich beim Hochfahren nicht so lange verzögern, wenn die Box nicht erreichbar ist.
+ *                      Unterscheidung der Boxen anhand der MAC-Adresse (jpcap-Biblipthek für Java für ARP-Anfragen) 
  * 4 -  5 - Visualisierung der aktuellen Gespräche (Frei, Nummer, Name, Dauer des Gesprächs ...)
  * 4 -  4 - Plugins (Mögliche Plugins: Drucken, Anrufmonitor)
  * 4 -  2 - Import vom Tool Fritzinfo (http://www.ip-phone-forum.de/showthread.php?t=101090)
@@ -102,13 +103,15 @@
  * 						nur ich schätze es gibt gar keins => wir müssten eine schreiben.
  * 						Habe das programm bei mir in der Arbeit, und ich hasse es. Ich werde nicht mehr Zeit als notwendig ist damit verbringen.
  * 1 -  1 - Bild / Rufton / Farbe eines bestimmten Anrufers
+ * 1 -  1 - Verschiedene Klingeltöne per Rufnummer
  * - Viele finden es super, daß man ein Bild pro Telefonnummer hinterlegen kann. Beim Anruf würde wie beim handy das Bild mit aufploppen
  * - Einteilung der Benutzer in Gruppen 
  * - Einfachere Verwaltung der Telefonbucheinträge, speziell das mergen zweier Einträge. Speziell wenn jemand mehrere Nummern hat, also Handy, Privat und SIP. Hier wäre es schön, wenn die eine Nummer leicht einem bestehenden Telefonbucheintrag hinzugefügt werden könnte und eben der 2te Eintrag dann gelöscht werden würde
  * - Adressbuchimport nur XML :-(    CVS!?
  * - Adressbuchabgleich mit SeaMonkey oder Thunderbird
  * - Adressbuchabgleich mit Outlook
- * - Adressbuchabgleich jfritz <-> FritzBox  
+ * - Adressbuchabgleich jfritz <-> FritzBox
+ * - Mehrere lokale Benutzer?  
  * 
  * CHANGELOG:
  *
@@ -129,13 +132,22 @@
  * - Überprüfen, geht wohl nicht mehr: Rückwärtssuche für Österreich über dasoertliche.de wieder eingebaut
  * - Connection-Timeout für ReverseLookup setzen
  * - Möglichst alle Fenstergrößen und -positionen speichern und wiederherstellen
- * - Gesprächigeres JFritz, bessere Statusleiste
  * - Einstellung der Standardsprache anhand der Betriebssystemsprache
  * - Alle Strings im Wizard überprüfen, vor allem die Sprache sollte stimmen
  * - Standardmäßiges Einbelden des Bearbeitungsfensters im Telefonbuch
  * - Plötzlicher Wechsel vom Telefonbuch zur Anrufliste
  * - Hilfe für jede Einstellungsseite, womit zur Wiki-Seite verlinkt wird
  * - .jfritz eigentlich unter Windows unter Anwendungsdaten\.jfritz
+ * - Eigenständige Inverssuche nach beliebiger Nummer
+ * - Fertigstellen von Event/Action
+ * - Umbau auf Plugin-Konzept
+ * - Integration von Klingeling
+ * - Gesprächigeres JFritz, bessere Statusleiste
+ * - Umbau der Filter: Kein vorhergehendes Klicken in der Anrufliste, sondern alle Optionen als Kontextmenü
+ * - Zentrieren des Wizards
+ * - Popup trotz fehlender Inverssuche
+ * - Eigenes Debug-Fenster
+ * - Überprüfen, ob Internetüberwachung auch mit neueren Firmwares geht
  * TODO-END 
  * 
  * FIXME:
