@@ -135,7 +135,6 @@
  * - Einstellung der Standardsprache anhand der Betriebssystemsprache
  * - Alle Strings im Wizard überprüfen, vor allem die Sprache sollte stimmen
  * - Standardmäßiges Einbelden des Bearbeitungsfensters im Telefonbuch
- * - Plötzlicher Wechsel vom Telefonbuch zur Anrufliste
  * - Hilfe für jede Einstellungsseite, womit zur Wiki-Seite verlinkt wird
  * - .jfritz eigentlich unter Windows unter Anwendungsdaten\.jfritz
  * - Eigenständige Inverssuche nach beliebiger Nummer
@@ -162,6 +161,7 @@
  * - Bugfix: Bug beim Herunterfahren / Abmelden unter Linux, Windows behoben
  * - Bugfix: JFritz blockiert das Herunterfahren / Abmelden von OS X nicht mehr
  * - Bugfix: Aussehen von JFritz wird nun wieder gespeichert
+ * - Bugfix: Kein plötzlicher Wechsel vom Telefonbuch zur Anrufliste mehr
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
  * - Neu: Einführung von ServerSenderThreads, jede Verbindung hat eigene Empfänger und Sender-Threads
  * - Neu: Clients können den Anrufmonitor vom Server verwenden
@@ -172,6 +172,8 @@
  * - Bugfix: Clientseitige / serverseitige Änderungen im Telefonbuch werden bei allen Clients auch richtig in der Anrufliste dargestellt
  * - Bugfix: NullPointerException beim Charset-Lesen entfernt, Rückwärtssuche funktioniert bei einigen wieder
  * - Neu: JFritz Log-Datein kann jetzt im beliebigen Verzeichnis gespeichert werden
+ * - Neu: Neuer Menüpunkt unter "Ansicht" für das Monitoring-Panel
+ * - Fix: About-Dialog korrigiert
  *  
  * JFritz network-v1
  * 	 Neue Strings:
