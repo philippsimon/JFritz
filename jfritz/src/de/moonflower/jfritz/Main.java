@@ -161,6 +161,7 @@
  * JFritz 0.6.3
  * - Bugfix: Bug beim Herunterfahren / Abmelden unter Linux, Windows behoben
  * - Bugfix: JFritz blockiert das Herunterfahren / Abmelden von OS X nicht mehr
+ * - Bugfix: Aussehen von JFritz wird nun wieder gespeichert
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
  * - Neu: Einführung von ServerSenderThreads, jede Verbindung hat eigene Empfänger und Sender-Threads
  * - Neu: Clients können den Anrufmonitor vom Server verwenden
