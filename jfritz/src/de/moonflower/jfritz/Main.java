@@ -177,6 +177,7 @@
  * - Fix: About-Dialog korrigiert
  * - Bugfix: Zu kleines Fenster bei Popup-Verzögerung behoben
  * - Neu: Drei neue Look&Feels
+ * - Bugfix: Ubuntu 7.04 trayicon and Sun Java 1.6 working now
  *  
  * JFritz network-v1
  * 	 Neue Strings:
