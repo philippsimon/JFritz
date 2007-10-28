@@ -19,17 +19,20 @@ import de.moonflower.jfritz.Main;
 public class ConfigPanelMessage extends JPanel implements ConfigPanel {
 
 	private static final long serialVersionUID = -630145657490186844L;
-	
+
 	private AbstractButton popupNoButton;
+
 	private AbstractButton popupDialogButton;
+
 	private JRadioButton popupTrayButton;
+
 	private JTextField popupDelay;
+
 	private JLabel delayLbl;
 
 	public ConfigPanelMessage() {
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-		setBorder(BorderFactory.createEmptyBorder(50, 20, 50, 20));
 		c.anchor = GridBagConstraints.WEST;
 
 		c.gridy = 0;
@@ -79,57 +82,56 @@ public class ConfigPanelMessage extends JPanel implements ConfigPanel {
 		c.insets.top = 10;
 		add(delayLbl, c);
 
-		popupDelay = new JTextField();
-		popupDelay.setPreferredSize(new Dimension(30, 20));
+		popupDelay = new JTextField("", 3);
 		c.gridx = 1;
 		c.insets.left = 15;
 		add(popupDelay, c);
-		
+
 		if (!Main.SYSTRAY_SUPPORT) {
 			popupTrayButton.setVisible(false);
 		}
 	}
-	
+
 	public void loadSettings() {
 		if (!Main.SYSTRAY_SUPPORT) {
 			popupTrayButton.setVisible(false);
 		}
 		switch (Integer.parseInt(Main.getProperty("option.popuptype", "1"))) { //$NON-NLS-1$,  //$NON-NLS-2$
-			case 0 : {
-				popupNoButton.setSelected(true);
-				delayLbl.setVisible(false);
-				popupDelay.setVisible(false);
-				break;
-			}
-			case 1 : {
-				popupDialogButton.setSelected(true);
-				delayLbl.setVisible(true);
-				popupDelay.setVisible(true);
-				break;
-			}
-			case 2 : {
-				popupTrayButton.setSelected(true);
-				delayLbl.setVisible(false);
-				popupDelay.setVisible(false);
-				break;
-			}
+		case 0: {
+			popupNoButton.setSelected(true);
+			delayLbl.setVisible(false);
+			popupDelay.setVisible(false);
+			break;
+		}
+		case 1: {
+			popupDialogButton.setSelected(true);
+			delayLbl.setVisible(true);
+			popupDelay.setVisible(true);
+			break;
+		}
+		case 2: {
+			popupTrayButton.setSelected(true);
+			delayLbl.setVisible(false);
+			popupDelay.setVisible(false);
+			break;
+		}
 		}
 
-		popupDelay.setText(Main.getProperty("option.popupDelay", "10"));		
+		popupDelay.setText(Main.getProperty("option.popupDelay", "10"));
 
 	}
 
 	public void saveSettings() {
-			// Set Popup Messages Type
-			if ( popupNoButton.isSelected() ) {
-				Main.setProperty("option.popuptype", "0"); //$NON-NLS-1$, //$NON-NLS-2$
-			} else if (popupDialogButton.isSelected()) {
-				Main.setProperty("option.popuptype", "1"); //$NON-NLS-1$, //$NON-NLS-2$
-			} else {
-				Main.setProperty("option.popuptype", "2"); //$NON-NLS-1$, //$NON-NLS-2$
-			}
+		// Set Popup Messages Type
+		if (popupNoButton.isSelected()) {
+			Main.setProperty("option.popuptype", "0"); //$NON-NLS-1$, //$NON-NLS-2$
+		} else if (popupDialogButton.isSelected()) {
+			Main.setProperty("option.popuptype", "1"); //$NON-NLS-1$, //$NON-NLS-2$
+		} else {
+			Main.setProperty("option.popuptype", "2"); //$NON-NLS-1$, //$NON-NLS-2$
+		}
 
-			Main.setProperty("option.popupDelay", popupDelay.getText());
+		Main.setProperty("option.popupDelay", popupDelay.getText());
 
 	}
 

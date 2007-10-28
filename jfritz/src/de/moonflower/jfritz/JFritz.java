@@ -621,27 +621,33 @@ public final class JFritz implements  StatusListener{
 			jframe.prepareShutdown();		
 			Main.saveStateProperties();
 		}
-		
+
+		Debug.msg("Stopping callMonitor"); //$NON-NLS-1$
 		if (callMonitor != null) 
 			callMonitor.stopCallMonitor();
 
+		Debug.msg("Removing systray"); //$NON-NLS-1$
+		if ( Main.SYSTRAY_SUPPORT && systray != null )
+		{
+			systray.removeTrayIcon(trayIcon);
+			systray = null;
+		}
+		 	
+		Debug.msg("Stopping watchdog"); //$NON-NLS-1$
+		
 		if ( watchdog != null ) {
 			watchdogTimer.cancel();
 			// FIXME: interrupt() lässt JFritz beim System-Shutdown hängen
 			//			watchdog.interrupt();
 		}
 
-		if ( Main.SYSTRAY_SUPPORT && systray != null )
-		{
-			systray.removeTrayIcon(trayIcon);
-			systray = null;
-		}
+		Debug.msg("prepareShutdown in JFritz.java done");
 
-		Debug.msg("disposing jframe");
+		// This must be the last call, after disposing JFritzWindow nothing 
+		// is executed at windows-shutdown
+		Debug.msg("Disposing jframe");
 		if (jframe != null)
 			jframe.dispose();
-		 	
-		Debug.msg("prepareShutdown in JFritz.java done");
 	}
 	
 	/**
