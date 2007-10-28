@@ -482,8 +482,10 @@ public final class JFritz implements  StatusListener{
 			} catch (InterruptedException e) {
 			}
 			return ssdpthread.getDevices();
-		} else
+		} else {
+			Debug.netMsg("jfritz is configured as a client, canceling box detection");
 			return null;
+		}
 	}
 
 	public static void stopCallMonitor() {
