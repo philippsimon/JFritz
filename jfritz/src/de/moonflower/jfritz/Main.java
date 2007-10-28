@@ -175,6 +175,7 @@
  * - Neu: Neuer Menüpunkt unter "Ansicht" für das Monitoring-Panel
  * - Fix: About-Dialog korrigiert
  * - Bugfix: Zu kleines Fenster bei Popup-Verzögerung behoben
+ * - Neu: Vier neue Look&Feels
  *  
  * JFritz network-v1
  * 	 Neue Strings:
