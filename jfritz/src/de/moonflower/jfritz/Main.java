@@ -175,6 +175,7 @@
  * - Neu: Neuer Menüpunkt unter "Ansicht" für das Monitoring-Panel
  * - Fix: About-Dialog korrigiert
  * - Bugfix: Zu kleines Fenster bei Popup-Verzögerung behoben
+ * - Bugfix: MSN-Filter werden jetzt richtig gespeichert und geladen
  * - Neu: Drei neue Look&Feels
  * - Bugfix: Ubuntu 7.04 trayicon and Sun Java 1.6 working now
  * - Neu: Sprache wird beim ersten Start von JFritz automatisch auf Betriebssystemsprache eingestellt
