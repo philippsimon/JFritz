@@ -178,9 +178,10 @@
  * - Neu: Drei neue Look&Feels
  * - Bugfix: Ubuntu 7.04 trayicon and Sun Java 1.6 funktioniert nun
  * - Neu: Sprache wird beim ersten Start von JFritz automatisch auf Betriebssystemsprache eingestellt
+ * - Neu: Rückwärtssuche kann von der Anrufliste aus für eine ausgewählte Seite ausgeführt werden
  * - Standardmäßiges Einbelden des Bearbeitungsfensters im Telefonbuch
  * - Debug-Nachrichten können nun unter "Hilfe"-"Debug-Fenster" eingesehen und gespeichert werden
- * 
+ *  
  * JFritz network-v1
  * 	 Neue Strings:
  * 	 no_network_function
