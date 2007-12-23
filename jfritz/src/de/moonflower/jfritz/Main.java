@@ -185,6 +185,7 @@
  * - Bugfix: Einstellungsfenster wird zentriert
  * - Bugfix: "Verbindungsgerät" in "MSN/Rufnummer" ändern
  * - Bugfix: Anzeige von "Durchwahl" statt "3" in der Anrufliste
+ * - Neu: Anzeige des Ports beim Anrufmonitor
  *  
  * JFritz network-v1
  * 	 Neue Strings:
