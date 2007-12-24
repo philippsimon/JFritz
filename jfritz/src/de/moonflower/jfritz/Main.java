@@ -154,10 +154,10 @@
  * - Popup wird beim Anrufmonitor mehrfach gestartet
  * FIXME-END
  *
- * JFritz 0.6.4
+ * JFritz 0.7.1
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
  * 
- * JFritz 0.6.3
+ * JFritz 0.7.0
  * - Neu: Unterstützung für Fritz!Box 7270, Fritz!Box 7140, Fritz!Box 7141, Fritz!Box 7113, Fritz!Box 5140
  * - Bugfix: Bug beim Herunterfahren / Abmelden unter Linux, Windows behoben
  * - Bugfix: JFritz blockiert das Herunterfahren / Abmelden von OS X nicht mehr
@@ -740,7 +740,7 @@ public class Main implements LookupObserver {
 
 	public final static String PROGRAM_NAME = "JFritz"; //$NON-NLS-1$
 
-	public final static String PROGRAM_VERSION = "0.6.3"; //$NON-NLS-1$
+	public final static String PROGRAM_VERSION = "0.7.0"; //$NON-NLS-1$
 	
 	public final static String CVS_TAG = "$Id$"; //$NON-NLS-1$
 
