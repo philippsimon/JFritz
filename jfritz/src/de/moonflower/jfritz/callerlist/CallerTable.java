@@ -259,8 +259,8 @@ public class CallerTable extends JTable {
 
 		TableColumn participantColumn = createColumn(4, "participant",
 				new PersonCellRenderer());
-		participantColumn.setCellEditor(new PersonCellEditor(
-				(CallerList) getModel()));
+//		participantColumn.setCellEditor(new PersonCellEditor(
+//				(CallerList) getModel()));
 
 		portColumn = createColumn(5, "port", new PortCellRenderer());
 
