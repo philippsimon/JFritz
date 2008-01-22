@@ -160,6 +160,7 @@
  * JFritz 0.7.1
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
  * - Bugfix: Internet Monitoring funktioniert wieder
+ * - Umstrukturierung des Statiskdialogs, funktioniert jetzt wieder
  * 
  * JFritz 0.7.0.1
  * - Funktioniert nun wieder mit Java 1.5
