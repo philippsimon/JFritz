@@ -162,6 +162,12 @@
  * - Bugfix: Internet Monitoring funktioniert wieder
  * - Umstrukturierung des Statiskdialogs, funktioniert jetzt wieder
  * 
+ * Strings:
+ * 	allow_client_deletelist
+ * 	allow_client_docall;
+ * 
+ * 
+ * 
  * JFritz 0.7.0.1
  * - Funktioniert nun wieder mit Java 1.5
  * - Bugfix: JFrtz-Menü manchmal nicht sichtbar
@@ -812,7 +818,7 @@ public class Main implements LookupObserver {
 	
 	public Main(String[] args) {
 		System.out.println(PROGRAM_NAME + " v" + PROGRAM_VERSION //$NON-NLS-1$
-				+ " (c) 2005-2007 by " + JFRITZ_PROJECT); //$NON-NLS-1$
+				+ " (c) 2005-2008 by " + JFRITZ_PROJECT); //$NON-NLS-1$
 		Thread.currentThread().setPriority(5);
 		Thread.currentThread().setName("JFritz main thread");
 		
