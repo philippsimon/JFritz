@@ -57,7 +57,7 @@ public class StatsDialog extends JDialog implements AddonInfosListener {
 
 	JLabel totalBytesSentLabel, totalBytesReceivedLabel, dns1Label, dns2Label,
 			voipDnsLabel1, voipDnsLabel2, upnpLabel, routedBridgeMode,
-			autoDisconnectLabel, idleTimeLabel;
+			autoDisconnectLabel, idleTimeLabel, externalIPLabel;
 
 	private boolean pressed_OK = false;
 
@@ -82,6 +82,7 @@ public class StatsDialog extends JDialog implements AddonInfosListener {
 		
 		JFritz.getFritzBox().getInternetStats(this);
 		JFritz.getFritzBox().getWebservice();
+		externalIPLabel.setText(JFritz.getFritzBox().getExternalIPAddress());
 	
 	}
 
@@ -97,7 +98,6 @@ public class StatsDialog extends JDialog implements AddonInfosListener {
 		JPanel topPane = new JPanel();
 		JPanel mainPane = new JPanel();
 		JPanel bottomPane = new JPanel();
-		BoxLayout boxlayout = new BoxLayout(mainPane, BoxLayout.Y_AXIS);
 		mainPane.setBorder(BorderFactory.createEmptyBorder(10, 20, 5, 20));
 		mainPane.setLayout(new GridBagLayout());
 
@@ -176,6 +176,7 @@ public class StatsDialog extends JDialog implements AddonInfosListener {
 		routedBridgeMode = new JLabel();
 		autoDisconnectLabel = new JLabel();
 		idleTimeLabel = new JLabel();
+		externalIPLabel = new JLabel();
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets.top = 5;
@@ -233,6 +234,13 @@ public class StatsDialog extends JDialog implements AddonInfosListener {
 		mainPane.add(new JLabel("Routed Bridge Mode Both: "), c);
 		c.gridx = 3;
 		mainPane.add(routedBridgeMode, c);
+		
+		c.gridx = 0;
+		c.gridy = 5;
+		mainPane.add(new JLabel("External IP:"), c);
+		c.gridx = 1;
+		mainPane.add(externalIPLabel, c);
+		
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
