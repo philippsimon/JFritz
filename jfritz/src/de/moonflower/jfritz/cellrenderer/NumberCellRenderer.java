@@ -27,8 +27,6 @@ public class NumberCellRenderer extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = 1;
 	private final ImageIcon imagePhone, /*imageHandy,*/ imageHome, imageWorld,
 			imageFreeCall; 	
-	
-//	private final static boolean showHandyLogos = true;
 
 	static final String FILESEP = System.getProperty("file.separator");			//$NON-NLS-1$
 	
@@ -84,10 +82,6 @@ public class NumberCellRenderer extends DefaultTableCellRenderer {
 					label.setIcon(imagePhone);
 					setToolTipText(Main.getMessage("fixed_network")); //$NON-NLS-1$
 				
-					//condition is never true!!
-				//} else if ( number.isMobile() && !showHandyLogos ) {
-				//	label.setIcon(imageHandy);
-				//	setToolTipText(number.getDescription());
 				}else{
 					if(!number.getFlagFileName().equals("")){
 						label.setIcon(new ImageIcon(lang + FILESEP + "flags" + FILESEP + number.getFlagFileName()));

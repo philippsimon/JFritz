@@ -161,7 +161,8 @@
  * - Umstrukturierung des Aufrufs von externen Programmen (noch nicht abgeschlossen)
  * - Bugfix: Internet Monitoring funktioniert wieder
  * - Umstrukturierung des Statiskdialogs, funktioniert jetzt wieder
- * - Neu: Clients können jetzt über den Server die Anrufliste von der Box löschen 
+ * - Neu: Clients können über den Server die Anrufliste von der Box löschen
+ * - Neu: Clients können die Wahlhilfe über den Server verwenden.
  * 
  * Strings:
  * 	allow_client_deletelist
