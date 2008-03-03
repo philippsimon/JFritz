@@ -167,6 +167,7 @@
  * Strings:
  * 	allow_client_deletelist
  * 	allow_client_docall;
+ * 	client_stand_alone
  * 
  * 
  * 
