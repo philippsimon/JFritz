@@ -80,6 +80,11 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 	private CallerList callerList;
 
 	private boolean allLastCallsSearched = false;
+	
+	/**
+	 * Flag do determine if xml file is now loading. Prevent saving to phonebook on loading from it
+	 */
+	private boolean loadingXMLFile = false;
 
 	/**
 	 * A vector of Persons that will match any search filter. In other words: a
@@ -373,7 +378,10 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 		
 		updateFilter();
 		fireTableDataChanged();
-		this.saveToXMLFile(Main.SAVE_DIR + JFritz.PHONEBOOK_FILE);
+		if ( !loadingXMLFile )
+		{
+			this.saveToXMLFile(Main.SAVE_DIR + JFritz.PHONEBOOK_FILE);
+		}
 	}
 	
 	/**
@@ -753,6 +761,7 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 
 	public synchronized void loadFromXMLFile(String filename) {
 		try {
+			loadingXMLFile = true;
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			factory.setValidating(false);
 			SAXParser parser = factory.newSAXParser();
@@ -807,6 +816,7 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 			Debug.err("Could not read " + filename + "!"); //$NON-NLS-1$,  //$NON-NLS-2$
 		}
 		allLastCallsSearched = true;
+		loadingXMLFile = false;
 		updateFilter();
 	}
 
