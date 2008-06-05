@@ -171,8 +171,9 @@
  * - Bugfix für Java 1.5: JFritz-Menü manchmal nicht sichtbar - Part 2
  * - Bugfix: Aktualisierung der Rückwärtssuche mit "Das Telefonbuch"
  * - Bugfix: Rückwärtssuche für Türkei und andere Länder korrigiert. CountryCode wurde nicht korrekt extrahiert.
- * - Bugfix: Korrektes Beenden des Lookup-Threads
+ * - Bugfix: Korrektes Beenden des Lookup-Threads.
  * - Bugfix: Kein "Beenden"-Bug mehr nach dem Darstellen eines Popups.
+ * - Bugfix: Inverssuche aktualisiert.
  * 
  * Strings:
  * 	allow_client_deletelist
