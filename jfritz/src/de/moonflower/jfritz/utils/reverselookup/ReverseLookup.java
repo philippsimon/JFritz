@@ -6,6 +6,7 @@
  */
 package de.moonflower.jfritz.utils.reverselookup;
 
+import java.awt.Dimension;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -13,6 +14,8 @@ import java.util.HashMap;
 import java.util.Vector;
 import java.util.concurrent.PriorityBlockingQueue;
 
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -23,7 +26,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
+import de.moonflower.jfritz.JFritz;
 import de.moonflower.jfritz.Main;
+import de.moonflower.jfritz.StatusBarPanel;
 import de.moonflower.jfritz.network.NetworkStateMonitor;
 import de.moonflower.jfritz.struct.Person;
 import de.moonflower.jfritz.struct.PhoneNumber;
@@ -66,6 +71,12 @@ public class ReverseLookup {
 	private static Vector<Person> results = new Vector<Person>();
 	
 	private static int count = 0, done;
+	
+	private static StatusBarPanel statusBar = null;
+	
+	private static JLabel label = null;
+	
+	private static JProgressBar progressBar = null;
 	
 	/**
 	 * This Function does a lookup for a Vector of PhoneNumbers, the caller must
@@ -130,6 +141,7 @@ public class ReverseLookup {
 		}else{
 			thread.resumeLookup();
 		}
+		createStatusBar();
 	}
 	
 
@@ -153,14 +165,14 @@ public class ReverseLookup {
 		
 		Debug.msg("Creating Lookup request for "+number+" using "+siteName);
 		observer = obs;
-		
-		count = requests.size();
-		done = 0;
-		
+				
 		LookupRequest request = new LookupRequest(number, 10, siteName);
 		if(!requests.contains(request) && !requests_done.contains(request))
 			requests.put(request);
-	
+
+		count = requests.size();
+		done = 0;
+
 		//if the thread isn't started yet, start it up
 		if (thread == null) {
 			Debug.msg("creating thread");
@@ -171,7 +183,7 @@ public class ReverseLookup {
 		}else{
 			thread.resumeLookup();
 		}
-		
+		createStatusBar();
 	}
 	
 	/**
@@ -216,7 +228,6 @@ public class ReverseLookup {
 	 */
 	public static synchronized void personFound(Person person){
 		done++;
-		Debug.msg("Finished "+done+" from "+count+" requests");
 		try {
 			requests_done.add(requests.take());
 		}catch(InterruptedException e){
@@ -228,6 +239,8 @@ public class ReverseLookup {
 			requests_done.clear();
 			results.clear();
 		}
+		Debug.msg("Finished "+done+" from "+ count +" requests");
+		updateStatusBar(false);
 	}
 	
 	/**
@@ -239,6 +252,7 @@ public class ReverseLookup {
 		observer.personsFound(results);
 		results.clear();
 		requests_done.clear();
+		updateStatusBar(true);
 	}
 	
 	/**
@@ -333,4 +347,60 @@ public class ReverseLookup {
 		rlsMap.put(countryCode, rls_list);
 	}
 
+	private static void createStatusBar()
+	{
+		if ( statusBar == null )
+		{
+			statusBar = new StatusBarPanel(2);
+			label = new JLabel("Reverse lookup: ");
+			progressBar = new JProgressBar();
+			progressBar.setVisible(false);
+			progressBar.setValue(0);
+			progressBar.setStringPainted(true);
+			
+			statusBar.add(label);
+			statusBar.add(progressBar);
+			if (   (JFritz.getJframe() != null )
+				&& (JFritz.getJframe().getStatusBar() != null ))
+				{				
+					JFritz.getJframe().getStatusBar().registerDynamicStatusPanel(statusBar);
+				}
+			updateStatusBar(false);
+		}
+	}
+	
+	private static void updateStatusBar(boolean finished)
+	{
+		if ( finished )
+		{
+			label.setVisible(false);
+			progressBar.setVisible(false);
+			progressBar.setValue(0);
+			statusBar.setVisible(false);
+		}
+		else
+		{
+			statusBar.setVisible(true);
+			label.setVisible(true);
+			progressBar.setVisible(true);
+			progressBar.setMinimum(0);
+			progressBar.setMaximum(count);
+			Dimension dim = new Dimension(100, 20);
+			progressBar.setMinimumSize(dim);
+			progressBar.setMaximumSize(dim);
+			progressBar.setPreferredSize(dim);			
+			progressBar.setValue(done);
+			if ( done == 0 )
+			{
+				progressBar.setIndeterminate(true);
+				progressBar.setStringPainted(false);
+			}
+			else
+			{
+				progressBar.setIndeterminate(false);
+				progressBar.setStringPainted(true);
+			}
+		}
+		JFritz.getJframe().getStatusBar().refresh();
+	}
 }

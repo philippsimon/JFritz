@@ -53,10 +53,12 @@ public class AddressPasswordDialog extends JDialog {
 
 	public AddressPasswordDialog(Frame parent, String title) {
 		super(parent, title);
+	    addWindowListener(new WindowCloseHandle(this));		
 	}
 
 	public AddressPasswordDialog(Frame parent, boolean isPasswordDlg) {
 		super(parent, true);
+	    addWindowListener(new WindowCloseHandle(this));		
 		this.isPasswordDlg = isPasswordDlg;
 		if (parent != null) {
 			setLocationRelativeTo(parent);
@@ -188,4 +190,18 @@ public class AddressPasswordDialog extends JDialog {
 		setVisible(true);
 		return okPressed();
 	}
+	
+	private class WindowCloseHandle extends java.awt.event.WindowAdapter
+	{
+		private AddressPasswordDialog dialog;
+		public WindowCloseHandle(AddressPasswordDialog dlg)
+		{
+			this.dialog = dlg;
+		}
+
+		public void windowClosing(java.awt.event.WindowEvent evt)
+        {
+			dialog.dispose();
+        }
+	}	
 }
