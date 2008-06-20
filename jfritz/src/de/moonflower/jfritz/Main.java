@@ -183,7 +183,9 @@
  * - Neu: Bestimmung der MAC-Adresse, um FRITZ!Boxen zu unterscheiden.
  * - Bugfix: Beim Doppelklick in der Anrufliste wird der korrekte Telefonbucheintrag angezeigt.
  * - Bugfix: Inverssuche für viele Rufnummern korrigiert.
- * - Neu: Splash-Screen 
+ * - Neu: Splash-Screen.
+ * - Neu: Alle Inverssuche-Seiten aus Klingeling hinzugefügt.
+ * - Bugfix: Suche nach der Stadt anhand der Vorwahl für die Türkei, USA, Österreich und Deutschland 
  * 
  * Strings:
  * 	allow_client_deletelist
