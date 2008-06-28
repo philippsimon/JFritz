@@ -142,6 +142,7 @@
  * - Zentrieren des Wizards
  * - Popup trotz fehlender Inverssuche
  * - Überprüfen, ob Internetüberwachung auch mit neueren Firmwares geht
+ * - Popup am Bildschirmrand andocken.
  * TODO-END 
  * 
  * FIXME:
@@ -200,6 +201,8 @@
  *  new_fritzbox
  *  set_default_fritzbox
  *  show_on_google_maps
+ *  dialog_title_callin // New syntax
+ *  dialog_title_callout // New syntax
  * 
  * JFritz 0.7.0.1
  * - Funktioniert nun wieder mit Java 1.5
