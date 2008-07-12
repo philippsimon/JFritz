@@ -186,7 +186,8 @@
  * - Bugfix: Inverssuche für viele Rufnummern korrigiert.
  * - Neu: Splash-Screen.
  * - Neu: Alle Inverssuche-Seiten aus Klingeling hinzugefügt.
- * - Bugfix: Suche nach der Stadt anhand der Vorwahl für die Türkei, USA, Österreich und Deutschland 
+ * - Bugfix: Suche nach der Stadt anhand der Vorwahl für die Türkei, USA, Österreich und Deutschland
+ * - Neu: Fortschrittsanzeige beim Abholen der Anrufliste 
  * 
  * Strings:
  * 	allow_client_deletelist

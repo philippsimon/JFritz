@@ -1643,7 +1643,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 					FileReader fr = new FileReader(file.getAbsolutePath());
 					BufferedReader br = new BufferedReader(fr);
 					JFritz.getCallerList().importFromCSVFile(br);
-
 					br.close();
 
 					if (Main.getProperty("option.lookupAfterFetch", "false")

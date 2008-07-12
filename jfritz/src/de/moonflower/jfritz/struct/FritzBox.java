@@ -508,14 +508,14 @@ public class FritzBox {
 				// Get response data from the box
 				reader = new BufferedReader(new InputStreamReader(urlConn
 						.getInputStream()));
-
+						
 				// pass it on to the import function
 
 				Debug.msg("Received response, begin processing call list");
 				newEntries = JFritz.getCallerList().importFromCSVFile(reader);
 				Debug.msg("Finished processing response");
 
-				// close the reader and the cocket connection
+				// close the reader and the socket connection
 				reader.close();
 				urlConn.getInputStream().close();
 
