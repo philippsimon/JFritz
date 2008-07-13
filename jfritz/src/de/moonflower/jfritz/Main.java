@@ -1054,8 +1054,7 @@ public class Main implements LookupObserver {
 			case 'l': //$NON-NLS-1$
 				String logFilename = option.getParameter();
 				if (logFilename == null || logFilename.equals("")) { //$NON-NLS-1$
-					System.err.println(getMessage("parameter_not_found")); //$NON-NLS-1$
-					exit(0);
+					Debug.logToFile("Debuglog.txt");
 				} else {
 					Debug.logToFile(logFilename);
 					break;
