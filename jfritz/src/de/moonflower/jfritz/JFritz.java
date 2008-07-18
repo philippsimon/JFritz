@@ -12,6 +12,7 @@ import java.awt.event.ItemListener;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -160,7 +161,6 @@ public final class JFritz implements  StatusListener, ItemListener {
 					+ Main.getProperty("country.code"));
 
 		loadSounds();
-
 		String osName = System.getProperty("os.name"); //$NON-NLS-1$
 		Debug.msg("Operating System : " + osName); //$NON-NLS-1$
 		if (osName.toLowerCase().startsWith("mac os")) //$NON-NLS-1$
@@ -189,13 +189,23 @@ public final class JFritz implements  StatusListener, ItemListener {
 		loadNumberSettings();
 	}
 	
-	public int initFritzBox()
+	public int initFritzBox() throws WrongPasswordException, InvalidFirmwareException, IOException
 	{
 		int result = 0;
+		Exception ex = null;
 		fritzBox = new FritzBox(Main
 				.getProperty("box.address", "192.168.178.1"), Encryption //$NON-NLS-1$,  //$NON-NLS-2$
 				.decrypt(Main.getProperty("box.password", Encryption //$NON-NLS-1$
-						.encrypt(""))), Main.getProperty("box.port", "80")); //$NON-NLS-1$
+						.encrypt(""))), Main.getProperty("box.port", "80"), ex); //$NON-NLS-1$
+		if ( ex != null)
+		{
+			try {
+				throw ex;
+			} catch (Exception e)
+			{
+				Debug.err("Error: " + e.getLocalizedMessage());
+			}
+		}
 		String macStr = Main.getProperty("box.mac", "");
 		if ( fritzBox.getFirmware() != null )
 		{
@@ -271,11 +281,7 @@ public final class JFritz implements  StatusListener, ItemListener {
 
 	public void createJFrame(boolean showConfWizard) {
 		Debug.msg("New instance of JFrame"); //$NON-NLS-1$
-		try {
-			jframe = new JFritzWindow(this);
-		} catch (WrongPasswordException wpe) {
-			main.exit(0);
-		}
+		jframe = new JFritzWindow(this);
 		if (Main.checkForSystraySupport()) {
 			Debug.msg("Check Systray-Support"); //$NON-NLS-1$
 			try {
@@ -310,7 +316,7 @@ public final class JFritz implements  StatusListener, ItemListener {
 
 		if (showConfWizard) {
 			Debug.msg("Presenting user with the configuration dialog");
-			showConfigWizard();
+			jframe.showConfigWizard();
 		}
 
 		javax.swing.SwingUtilities.invokeLater(jframe);
@@ -333,8 +339,11 @@ public final class JFritz implements  StatusListener, ItemListener {
 	 * settings are loaded for this jfritz object
 	 * 
 	 * @author brian jensen
+	 * @throws IOException 
+	 * @throws InvalidFirmwareException 
+	 * @throws WrongPasswordException 
 	 */
-	public JFritz(String test) {
+	public JFritz(String test) throws WrongPasswordException, InvalidFirmwareException, IOException {
 
 		// make sure there is a plus on the country code, or else the number
 		// scheme won't work
@@ -347,12 +356,21 @@ public final class JFritz implements  StatusListener, ItemListener {
 		// loads various country specific number settings and tables
 		loadNumberSettings();
 
+		Exception ex = null;
 		fritzBox = new FritzBox(Main
 				.getProperty("box.address", "192.168.178.1"), Encryption //$NON-NLS-1$, //$NON-NLS-2$
 				.decrypt(Main.getProperty("box.password", Encryption //$NON-NLS-1$
-						.encrypt(""))), Main.getProperty("box.port", "80")); // //$NON-NLS-1$
+						.encrypt(""))), Main.getProperty("box.port", "80"), ex); // //$NON-NLS-1$
 		// $NON-NLS-2$
-
+		if ( ex != null )
+		{
+			try {
+				throw ex;
+			} catch (Exception e)
+			{
+				Debug.err("Error: " + e.getLocalizedMessage());
+			}
+		}
 		sipprovider = new SipProviderTableModel();
 		// sipprovider.loadFromXMLFile(SAVE_DIR + SIPPROVIDER_FILE);
 
@@ -694,11 +712,7 @@ public final class JFritz implements  StatusListener, ItemListener {
 		jframe.dispose();
 		setDefaultLookAndFeel();
 		javax.swing.SwingUtilities.invokeLater(jframe);
-		try {
-			jframe = new JFritzWindow(this);
-		} catch (WrongPasswordException wpe) {
-			main.exit(0);
-		}
+		jframe = new JFritzWindow(this);
 		javax.swing.SwingUtilities.invokeLater(jframe);
 		jframe.checkOptions();
 		javax.swing.SwingUtilities.invokeLater(jframe);
@@ -793,16 +807,6 @@ public final class JFritz implements  StatusListener, ItemListener {
 	 */
 	public static FritzBox getFritzBox() {
 		return fritzBox;
-	}
-
-	/**
-	 * @author Brian Jensen This creates and then display the config wizard
-	 * 
-	 */
-	public static void showConfigWizard() {
-		ConfigWizard wizard = new ConfigWizard(jframe);
-		wizard.showWizard();
-
 	}
 
 	public static void loadNumberSettings() {
