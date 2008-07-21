@@ -15,6 +15,7 @@ import java.util.Vector;
 
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.ToolTipManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
@@ -78,6 +79,7 @@ public class CallerTable extends JTable {
 	 */
 	public CallerTable(CallerListPanel parentPanel, CallerList list) {
 		super(list);
+		this.setAutoResizeMode(AUTO_RESIZE_LAST_COLUMN);
 		this.parentPanel = parentPanel;
 		this.callerList = list;
 		headerTips = new ColumnHeaderToolTips();

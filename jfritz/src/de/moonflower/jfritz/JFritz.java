@@ -123,15 +123,15 @@ public final class JFritz implements  StatusListener, ItemListener {
 	
 	public static CallMonitorList callMonitorList;
 
-	private Main main;
+	private static Main main;
 	
 	private static ClientLoginsTableModel clientLogins;
 	
 	/**
 	 * Constructs JFritz object
 	 */
-	public JFritz(Main main) {
-		this.main = main;
+	public JFritz(Main mn) {
+		main = mn;
 
 		/*
 		JFritzEventDispatcher eventDispatcher = new JFritzEventDispatcher();
@@ -651,16 +651,17 @@ public final class JFritz implements  StatusListener, ItemListener {
 	 * start timer for watchdog
 	 * 
 	 */
-	private static void startWatchdog() {		
+	private static void startWatchdog() {
+		int interval = 10; // seconds
 		watchdogTimer = new Timer();
-		watchdog = new WatchdogThread(1);
+		watchdog = new WatchdogThread(interval);
 		watchdog.setName("Watchdog-Thread");
 		watchdog.setDaemon(false);
 		watchdogTimer.schedule(new TimerTask() {
 			public void run() {
 				watchdog.run();
 			}
-		}, 5000, 1 * 60000);
+		}, interval*1000, interval * 1000);
 		Debug.msg("Watchdog enabled"); //$NON-NLS-1$	
 	}
 
@@ -730,6 +731,11 @@ public final class JFritz implements  StatusListener, ItemListener {
 			main.exit(0);
 		}
 		return exit;
+	}
+	
+	public static String showPasswordDialog(String str)
+	{
+		return main.showPasswordDialog(str);
 	}
 	
 	void prepareShutdown(boolean shutdownhook) {
