@@ -1448,8 +1448,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		try {
 			thread.join();
 		} catch (InterruptedException e) {
-			// TODO: Fehlermeldung für den User
-			e.printStackTrace();
+        	Thread.currentThread().interrupt();
 		}
 //		thread.interrupt();
 		thread = null;

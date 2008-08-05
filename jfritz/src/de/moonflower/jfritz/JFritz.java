@@ -45,7 +45,6 @@ import de.moonflower.jfritz.callmonitor.CallMonitorInterface;
 import de.moonflower.jfritz.callmonitor.CallMonitorList;
 import de.moonflower.jfritz.callmonitor.DisconnectMonitor;
 import de.moonflower.jfritz.callmonitor.DisplayCallsMonitor;
-import de.moonflower.jfritz.dialogs.configwizard.ConfigWizard;
 import de.moonflower.jfritz.dialogs.quickdial.QuickDials;
 import de.moonflower.jfritz.dialogs.simple.MessageDlg;
 import de.moonflower.jfritz.dialogs.sip.SipProviderTableModel;
@@ -308,7 +307,7 @@ public final class JFritz implements  StatusListener, ItemListener {
 			try {
 				ssdpthread.join();//FIXME start a thread just to call join in the next line?
 			} catch (InterruptedException ie) {
-
+	        	Thread.currentThread().interrupt();
 			}
 //			ssdpthread.interrupt();
 		}
@@ -555,6 +554,7 @@ public final class JFritz implements  StatusListener, ItemListener {
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e1) {
+		        	Thread.currentThread().interrupt();
 				}
 				if (!clip.isRunning()) {
 					break;
@@ -654,8 +654,8 @@ public final class JFritz implements  StatusListener, ItemListener {
 		int interval = 10; // seconds
 		watchdogTimer = new Timer();
 		watchdog = new WatchdogThread(interval);
-		watchdog.setName("Watchdog-Thread");
 		watchdog.setDaemon(false);
+		watchdog.setName("Watchdog-Thread");
 		watchdogTimer.schedule(new TimerTask() {
 			public void run() {
 				watchdog.run();
@@ -737,7 +737,7 @@ public final class JFritz implements  StatusListener, ItemListener {
 		return main.showPasswordDialog(str);
 	}
 	
-	void prepareShutdown(boolean shutdownhook) {
+	void prepareShutdown(boolean shutdownThread, boolean shutdownHook) throws InterruptedException {
 		// TODO maybe some more cleanup is needed
 		Debug.msg("prepareShutdown in JFritz.java");
 				
@@ -750,10 +750,12 @@ public final class JFritz implements  StatusListener, ItemListener {
 		ReverseLookup.terminate();
 		
 		Debug.msg("Stopping callMonitor"); //$NON-NLS-1$
-		if (callMonitor != null) 
+		if (callMonitor != null)
+		{
 			callMonitor.stopCallMonitor();
+		}
 
-		if ( (!shutdownhook) && (Main.SYSTRAY_SUPPORT) && (systray != null) )
+		if ( (!shutdownHook) && (!shutdownThread) && (Main.SYSTRAY_SUPPORT) && (systray != null) )
 		{
 			Debug.msg("Removing systray"); //$NON-NLS-1$
 			systray.removeTrayIcon(trayIcon);			
@@ -770,11 +772,11 @@ public final class JFritz implements  StatusListener, ItemListener {
 			//			watchdog.interrupt();
 		}
 
-		Debug.msg("prepareShutdown in JFritz.java done");
-
+		Debug.msg("prepareShutdown in JFritz.java done");		
+		
 		// This must be the last call, after disposing JFritzWindow nothing 
 		// is executed at windows-shutdown
-		if ( (!shutdownhook) && (jframe != null) )
+		if ( (!shutdownThread) && (jframe != null) )
 		{
 			Debug.msg("Disposing jframe");
 			jframe.dispose();
