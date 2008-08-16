@@ -1376,6 +1376,11 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 	public void run() {
 	}
 
+	public void interrupt()
+	{
+		Thread.currentThread().interrupt();
+	}
+	
 	/**
 	 * @return Returns the phoneBookPanel.
 	 */
