@@ -157,6 +157,31 @@
  * - Rückwärtssuche beim Client funktioniert nicht
  * FIXME-END
  *
+ * JFritz 0.7.1.12
+ * - Bugfix: Splash bleibt beim Start hängen.
+ * - Bugfix: Anrufliste kann nicht geholt werden, wenn Timer deaktiviert.
+ * - Bugfix: Autostart CallMonitor after standby or lost connection.
+ * - Bugfix: Set sound volume to 100%.
+ * - Bugfix: Inverssuche DasÖrtliche korrigiert (Straßenname).
+ * - New: Icons für den Anrufmonitorstatus.
+ * - Change: Renamed Phonebook-Button "Okay" to "Save".
+ * - New: Popup im Telefonbuch, wenn ungespeicherte Änderungen vorhanden sind.
+ * - Change: Passwort-Dialog nun zentriert.
+ * - Change: Config-Wizard überarbeitet.
+ * 
+ * Strings:
+ * adapted all german strings to unicode 
+ * config_wizard.finish1 - finish5 (new)
+ * welcome_jfritz (new)
+ *
+ * JFritz 0.7.1.11
+ * - Restart des Anrufmonitors bei Verlust der Verbindung und nach Standby
+ * - Icon zur Anzeige des Verbindungsstatus des Anrufmonitors
+ * 
+ * Strings:
+ * connected_callmonitor (new)
+ * disconnected_calllmonitor (new)
+ *
  * JFritz 0.7.1.10
  * - Bugfix: Reparatur der Tel.Search.Ch-Inverssuche.
  * - Bugfix: Manuelles Abholen der Anrufliste startet den Timer zum automatischen Abholen der Anrufliste wieder neu.
@@ -823,7 +848,7 @@ public class Main implements LookupObserver {
 
 	public final static String PROGRAM_NAME = "JFritz"; //$NON-NLS-1$
 
-	public final static String PROGRAM_VERSION = "0.7.1.10"; //$NON-NLS-1$
+	public final static String PROGRAM_VERSION = "0.7.1.12"; //$NON-NLS-1$
 	
 	public final static String CVS_TAG = "$Id$"; //$NON-NLS-1$
 
@@ -883,7 +908,7 @@ public class Main implements LookupObserver {
 	private static ShutdownHook.Handler shutdownHandler;
 	private static ShutdownThread shutdownThread; 
 	
-	public Main(String[] args) {
+	public Main(String[] args) {		
 		System.out.println(PROGRAM_NAME + " v" + PROGRAM_VERSION //$NON-NLS-1$
 				+ " (c) 2005-2008 by " + JFRITZ_PROJECT); //$NON-NLS-1$
 		Thread.currentThread().setPriority(5);
@@ -1049,6 +1074,7 @@ public class Main implements LookupObserver {
 		{
 			main.exit(result);
 		}
+		JFritz.getJframe().checkOptions();
 	}
 
 	/**
