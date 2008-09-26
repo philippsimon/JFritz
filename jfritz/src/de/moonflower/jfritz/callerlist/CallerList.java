@@ -697,12 +697,15 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 
 			boolean newEntries = JFritz.getFritzBox().retrieveCSVList();
 
-			if ((newEntries && Main.getProperty("option.deleteAfterFetch",
-					"false").equals("true"))
-					|| deleteFritzBoxCallerList) {
-				JFritz.getFritzBox().clearListOnFritzBox();
+			if (!JFritz.isShutdownInvoked())
+			{
+				if ((newEntries && Main.getProperty("option.deleteAfterFetch",
+						"false").equals("true"))
+						|| deleteFritzBoxCallerList) {
+					JFritz.getFritzBox().clearListOnFritzBox();
+				}
 			}
-
+			
 			// Make back-up after fetching the caller list?
 			if (newEntries
 					&& JFritzUtils.parseBoolean(Main.getProperty(
@@ -1238,7 +1241,7 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 
 				int linesRead = 0;
 				Call c;
-				while (null != (line = br.readLine())) {
+				while (!JFritz.isShutdownInvoked() && null != (line = br.readLine())) {
 					linesRead++;
 
 					// call the appropriate parse function
