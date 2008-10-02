@@ -154,13 +154,13 @@ public final class JFritz implements  StatusListener, ItemListener {
 		*/
 		
 		if (JFritzUtils.parseBoolean(Main.getProperty(
-				"option.createBackup", "false"))) { //$NON-NLS-1$,  //$NON-NLS-2$
+				"option.createBackup"))) { //$NON-NLS-1$,  //$NON-NLS-2$
 			Main.doBackup();
 		}
 
 			//option was removed from the config dialog in 0.7.1, make sure
 			//it is automatically deselected
-		if(Main.getProperty("option.callMonitorType", "0").equals("6"))
+		if(Main.getProperty("option.callMonitorType").equals("6"))
 			Main.setProperty("option.callMonitorType", "0");
 		
 		// make sure there is a plus on the country code, or else the number
@@ -203,9 +203,9 @@ public final class JFritz implements  StatusListener, ItemListener {
 		int result = 0;
 		Exception ex = null;
 		fritzBox = new FritzBox(Main
-				.getProperty("box.address", "192.168.178.1"), Encryption //$NON-NLS-1$,  //$NON-NLS-2$
-				.decrypt(Main.getProperty("box.password", Encryption //$NON-NLS-1$
-						.encrypt(""))), Main.getProperty("box.port", "80"), ex); //$NON-NLS-1$
+				.getProperty("box.address"), Encryption //$NON-NLS-1$,  //$NON-NLS-2$
+				.decrypt(Main.getProperty("box.password")), //$NON-NLS-1$
+				Main.getProperty("box.port"), ex); //$NON-NLS-1$
 		if ( ex != null)
 		{
 			try {
@@ -215,7 +215,7 @@ public final class JFritz implements  StatusListener, ItemListener {
 				Debug.err("Error: " + e.getLocalizedMessage());
 			}
 		}
-		String macStr = Main.getProperty("box.mac", "");
+		String macStr = Main.getProperty("box.mac");
 		if ( fritzBox.getFirmware() != null )
 		{
 			if ( (!macStr.equals("")) && (!fritzBox.getFirmware().getMacAddress().equals("")) && (!fritzBox.getFirmware().getMacAddress().equals(macStr)))
@@ -279,8 +279,8 @@ public final class JFritz implements  StatusListener, ItemListener {
 	{
 		setDefaultLookAndFeel();
 		if (Main
-				.getProperty(
-						"lookandfeel", UIManager.getSystemLookAndFeelClassName()).endsWith("MetalLookAndFeel")) { //$NON-NLS-1$,  //$NON-NLS-2$
+				.getProperty("lookandfeel")
+				.endsWith("MetalLookAndFeel")) { //$NON-NLS-1$,  //$NON-NLS-2$
 			JFrame.setDefaultLookAndFeelDecorated(true);
 			JDialog.setDefaultLookAndFeelDecorated(true); // uses L&F
 			// decorations for
@@ -307,9 +307,9 @@ public final class JFritz implements  StatusListener, ItemListener {
 		jframe.checkStartOptions();
 		//FIXME ich nehme mal an SSDPdiscover macht irgendwas mit der Fritzbox? => nach Fritzbox verschieben
 		//only do the search if jfritz is not running as a client and using the call list from server
-		if (JFritzUtils.parseBoolean(Main.getProperty("option.useSSDP",//$NON-NLS-1$
-				"true")) && !(Main.getProperty("network.type", "0").equals("2")
-						&& Boolean.parseBoolean(Main.getProperty("option.clientCallList", "false"))) ) {//$NON-NLS-1$
+		if (JFritzUtils.parseBoolean(Main.getProperty("option.useSSDP"))//$NON-NLS-1$
+				&& !(Main.getProperty("network.type").equals("2")
+						&& Boolean.parseBoolean(Main.getProperty("option.clientCallList"))) ) {//$NON-NLS-1$
 			Debug.msg("Searching for  FritzBox per UPnP / SSDP");//$NON-NLS-1$
 
 			if (!shutdownInvoked)
@@ -335,12 +335,12 @@ public final class JFritz implements  StatusListener, ItemListener {
 		{
 			javax.swing.SwingUtilities.invokeLater(jframe);
 
-			if(Main.getProperty("network.type", "0").equals("1") &&
-					Boolean.parseBoolean(Main.getProperty("option.listenOnStartup", "false"))){
+			if(Main.getProperty("network.type").equals("1") &&
+					Boolean.parseBoolean(Main.getProperty("option.listenOnStartup"))){
 				Debug.msg("listening on startup enabled, starting client listener!");
 				NetworkStateMonitor.startServer();
-			}else if(Main.getProperty("network.type", "0").equals("2") &&
-					Boolean.parseBoolean(Main.getProperty("option.connectOnStartup", "false"))){
+			}else if(Main.getProperty("network.type").equals("2") &&
+					Boolean.parseBoolean(Main.getProperty("option.connectOnStartup"))){
 				Debug.msg("Connect on startup enabled, connectig to server");
 				NetworkStateMonitor.startClient();
 			}
@@ -372,9 +372,9 @@ public final class JFritz implements  StatusListener, ItemListener {
 
 		Exception ex = null;
 		fritzBox = new FritzBox(Main
-				.getProperty("box.address", "192.168.178.1"), Encryption //$NON-NLS-1$, //$NON-NLS-2$
-				.decrypt(Main.getProperty("box.password", Encryption //$NON-NLS-1$
-						.encrypt(""))), Main.getProperty("box.port", "80"), ex); // //$NON-NLS-1$
+				.getProperty("box.address"), Encryption //$NON-NLS-1$, //$NON-NLS-2$
+				.decrypt(Main.getProperty("box.password")), //$NON-NLS-1$
+				Main.getProperty("box.port"), ex); // //$NON-NLS-1$
 		// $NON-NLS-2$
 		if ( ex != null )
 		{
@@ -516,14 +516,14 @@ public final class JFritz implements  StatusListener, ItemListener {
 	 *            Message to be displayed
 	 */
 	public static void infoMsg(String msg) {
-		switch (Integer.parseInt(Main.getProperty("option.popuptype", "1"))) { //$NON-NLS-1$,  //$NON-NLS-2$
+		switch (Integer.parseInt(Main.getProperty("option.popuptype"))) { //$NON-NLS-1$,  //$NON-NLS-2$
 		case 0: { // No Popup
 			break;
 		}
 		case 1: {			
 			MessageDlg msgDialog = new MessageDlg();
 			msgDialog.showMessage(msg, Long.parseLong(Main.getProperty(
-					"option.popupDelay", "10")) * 1000);
+					"option.popupDelay")) * 1000);
 			msgDialog.repaint();
 			msgDialog.toFront();
 			break;
@@ -535,7 +535,7 @@ public final class JFritz implements  StatusListener, ItemListener {
 			else if (trayIcon == null) {
 				MessageDlg msgDialog = new MessageDlg();
 				msgDialog.showMessage(msg, Long.parseLong(Main.getProperty(
-						"option.popupDelay", "10")) * 1000);
+						"option.popupDelay")) * 1000);
 				msgDialog.repaint();
 				msgDialog.toFront();
 			}
@@ -625,9 +625,9 @@ public final class JFritz implements  StatusListener, ItemListener {
 	 */
 	public static final Vector getDevices() {
 		//avoid using the ssdp thread if jfritz is running as a client and using the call list from server
-		if (JFritzUtils.parseBoolean(Main.getProperty("option.useSSDP", //$NON-NLS-1$
-				"true")) && !(Main.getProperty("network.type", "0").equals("2")
-						&& Boolean.parseBoolean(Main.getProperty("option.clientCallList", "false")))) { //$NON-NLS-1$
+		if (JFritzUtils.parseBoolean(Main.getProperty("option.useSSDP")) //$NON-NLS-1$
+			&& !(Main.getProperty("network.type").equals("2")
+						&& Boolean.parseBoolean(Main.getProperty("option.clientCallList")))) { //$NON-NLS-1$
 			try {
 				ssdpthread.join();
 			} catch (InterruptedException e) {
@@ -642,18 +642,17 @@ public final class JFritz implements  StatusListener, ItemListener {
 	public void startChosenCallMonitor(boolean showErrorMessage) {
 		if (!shutdownInvoked)
 		{
-			if(Main.getProperty("option.clientCallMonitor", "false").equals("true")
+			if(Main.getProperty("option.clientCallMonitor").equals("true")
 				 && NetworkStateMonitor.isConnectedToServer()){
 				
 				return;
 			}
 					
 			
-			switch (Integer.parseInt(Main.getProperty("option.callMonitorType", //$NON-NLS-1$
-					"0"))) { //$NON-NLS-1$
+			switch (Integer.parseInt(Main.getProperty("option.callMonitorType"))) //$NON-NLS-1$
+			{ 
 				case 1: {
 					try {
-						getJframe().setConnectedStatus();
 						if (JFritz.getFritzBox().checkValidFirmware()) {
 							FritzBoxFirmware currentFirm = JFritz.getFritzBox()
 									.getFirmware();
@@ -711,15 +710,13 @@ public final class JFritz implements  StatusListener, ItemListener {
 				}
 				case 4: {
 					JFritz.setCallMonitor(new YACCallMonitor(Integer.parseInt(Main
-							.getProperty("option.yacport", //$NON-NLS-1$
-									"10629")))); //$NON-NLS-1$
+							.getProperty("option.yacport")))); //$NON-NLS-1$
 					getJframe().setCallMonitorButtonPushed(true);
 					break;
 				}
 				case 5: {
 					JFritz.setCallMonitor(new CallmessageCallMonitor(Integer
-							.parseInt(Main.getProperty("option.callmessageport", //$NON-NLS-1$
-									"23232")))); //$NON-NLS-1$
+							.parseInt(Main.getProperty("option.callmessageport")))); //$NON-NLS-1$
 					getJframe().setCallMonitorButtonPushed(true);
 					break;
 				}		
@@ -760,9 +757,10 @@ public final class JFritz implements  StatusListener, ItemListener {
 	private void startWatchdog() {
 		if (!shutdownInvoked)
 		{
-			int interval = 10; // seconds
+			int interval = 5; // seconds
+			int factor = 2; // factor how many times a STANDBY will be checked
 			watchdogTimer = new Timer();
-			watchdog = new WatchdogThread(interval, this);
+			watchdog = new WatchdogThread(interval, factor, this);
 			watchdog.setDaemon(true);
 			watchdog.setName("Watchdog-Thread");
 			watchdogTimer.schedule(new TimerTask() {
@@ -798,10 +796,8 @@ public final class JFritz implements  StatusListener, ItemListener {
 	public void setDefaultLookAndFeel() {
 		JFritzWindow.setDefaultLookAndFeelDecorated(true);
 		try {
-			Debug.msg("Changing look and feel to: " + Main.getStateProperty("lookandfeel", //$NON-NLS-1$
-					UIManager.getSystemLookAndFeelClassName()));
-			UIManager.setLookAndFeel(Main.getStateProperty("lookandfeel", //$NON-NLS-1$
-					UIManager.getSystemLookAndFeelClassName()));
+			Debug.msg("Changing look and feel to: " + Main.getStateProperty("lookandfeel")); //$NON-NLS-1$
+			UIManager.setLookAndFeel(Main.getStateProperty("lookandfeel")); //$NON-NLS-1$
 			if ( jframe != null )
 			{
 				SwingUtilities.updateComponentTreeUI(jframe);
@@ -835,7 +831,7 @@ public final class JFritz implements  StatusListener, ItemListener {
 	boolean maybeExit(int i) {
 		boolean exit = true;
 		if (JFritzUtils.parseBoolean(Main.getProperty(
-				"option.confirmOnExit", "false"))) { //$NON-NLS-1$ $NON-NLS-2$
+				"option.confirmOnExit"))) { //$NON-NLS-1$ $NON-NLS-2$
 			exit = showExitDialog();
 		}
 		if (exit) {
