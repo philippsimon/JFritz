@@ -201,7 +201,7 @@ public class Main implements LookupObserver {
 
 	public final static String PROGRAM_NAME = "JFritz"; //$NON-NLS-1$
 
-	public final static String PROGRAM_VERSION = "0.7.1.17"; //$NON-NLS-1$
+	public final static String PROGRAM_VERSION = "0.7.1.18"; //$NON-NLS-1$
 	
 	public final static String CVS_TAG = "$Id$"; //$NON-NLS-1$
 
@@ -1365,16 +1365,19 @@ public class Main implements LookupObserver {
 			if ( jfritz != null ) {
 				jfritz.prepareShutdown(shutdownThread, shutdownHook);
 			}
-			showActiveThreads();	
-			Frame[] frames = Frame.getFrames();
-			for (int i=0; i< frames.length; i++)
+			showActiveThreads();
+			if (JFritz.getJframe() != null)
 			{
-				Debug.msg("Frame: " + frames[i]);
-				Debug.msg("Frame name: " + frames[i].getName());
-				Debug.msg("Frame visible: " + frames[i].isVisible());
-				Debug.msg("Frame displayable: " + frames[i].isDisplayable());
-				Debug.msg("---");
-			}			
+				Frame[] frames = Frame.getFrames();
+				for (int i=0; i< frames.length; i++)
+				{
+					Debug.msg("Frame: " + frames[i]);
+					Debug.msg("Frame name: " + frames[i].getName());
+					Debug.msg("Frame visible: " + frames[i].isVisible());
+					Debug.msg("Frame displayable: " + frames[i].isDisplayable());
+					Debug.msg("---");
+				}
+			}
 		}
 		} catch (InterruptedException e) {
         	Thread.currentThread().interrupt();
