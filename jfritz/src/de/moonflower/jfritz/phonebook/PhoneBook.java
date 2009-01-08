@@ -463,13 +463,14 @@ public class PhoneBook extends AbstractTableModel implements LookupObserver {
 	/*
 	 * inherited from AbstractTableModel
 	 */
-	public synchronized boolean addEntry(Person newPerson) {
+	public synchronized boolean addEntry(Person newPerson) {		
 		// TODO: Mergen von Einträgen.
 		PhoneNumber pn1 = newPerson.getStandardTelephoneNumber();
 
 		Enumeration<Person> en = unfilteredPersons.elements();
 		while (en.hasMoreElements()){
 			Person p = en.nextElement();
+			//TODO: search more numbers, not only the standard one
 			if (p.isDummy()
 					&& p.getStandardTelephoneNumber() != null
 					&& newPerson.getStandardTelephoneNumber() != null
