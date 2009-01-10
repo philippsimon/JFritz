@@ -1820,9 +1820,8 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		Debug.msg("prepareShutdown in JFritzWindow.java");
 		if ( timer != null )
 			timer.cancel();
-		
-		if(MonitoringPanel.timer != null)
-			MonitoringPanel.timer.cancel();
+
+		monitoringPanel.prepareShutdown();
 		
 		// TODO: möglicherweise speichern der Einstellungen für
 		// phonebookPanel
