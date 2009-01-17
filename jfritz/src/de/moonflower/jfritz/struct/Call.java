@@ -63,8 +63,7 @@ public class Call implements Serializable {
 		if ( route.contains("@")) {
 			this.route_type = ROUTE_SIP;
 		} else if (this.route.startsWith("Internet: ")) {
-			Enumeration en = JFritz.getSIPProviderTableModel()
-			.getProviderList().elements();
+			Enumeration<SipProvider> en = JFritz.getSIPProviderTableModel().getProviderList().elements();
 			while (en.hasMoreElements()) {
 				SipProvider sipProvider = (SipProvider) en.nextElement();
 				if (sipProvider.getNumber().equals(this.route.substring(10))) {
@@ -329,8 +328,7 @@ public class Call implements Serializable {
 			// String sipRoute = ""; //$NON-NLS-1$
 			String convertedRoute = route;
 			if (route.startsWith("SIP")) { // FIXME old code
-				Enumeration en = JFritz.getSIPProviderTableModel()
-						.getProviderList().elements();
+				Enumeration<SipProvider> en = JFritz.getSIPProviderTableModel().getProviderList().elements();
 				while (en.hasMoreElements()) {
 					SipProvider sipProvider = (SipProvider) en.nextElement();
 					if (route.substring(3).equals(
@@ -453,8 +451,7 @@ public class Call implements Serializable {
 		if (!route.equals("")) { //$NON-NLS-1$
 			String convertedRoute = route;
 			if (route.startsWith("SIP")) {
-				Enumeration en = JFritz.getSIPProviderTableModel()
-						.getProviderList().elements();
+				Enumeration<SipProvider> en = JFritz.getSIPProviderTableModel().getProviderList().elements();
 				while (en.hasMoreElements()) {
 					SipProvider sipProvider = (SipProvider) en.nextElement();
 					if (route.substring(3).equals(
