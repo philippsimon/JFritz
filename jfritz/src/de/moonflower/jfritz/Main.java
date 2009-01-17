@@ -162,7 +162,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Savepoint;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -201,7 +200,7 @@ public class Main implements LookupObserver {
 
 	public final static String PROGRAM_NAME = "JFritz"; //$NON-NLS-1$
 
-	public final static String PROGRAM_VERSION = "0.7.2.6"; //$NON-NLS-1$
+	public final static String PROGRAM_VERSION = "0.7.2.7"; //$NON-NLS-1$
 	
 	public final static String CVS_TAG = "$Id$"; //$NON-NLS-1$
 
@@ -939,7 +938,7 @@ public class Main implements LookupObserver {
 		defProps.setProperty("server.password", "");//$NON-NLS-1$, //$NON-NLS-2$
 		defProps.setProperty("telefond.laststarted", "");//$NON-NLS-1$, //$NON-NLS-2$				
 		defProps.setProperty("telnet.user", "");//$NON-NLS-1$, //$NON-NLS-2$		
-		defProps.setProperty("telnet.password", "");//$NON-NLS-1$, //$NON-NLS-2$		
+		defProps.setProperty("telnet.password", "");//$NON-NLS-1$, //$NON-NLS-2$
 		return defProps;		
 	}
 	
@@ -985,6 +984,18 @@ public class Main implements LookupObserver {
 		defProps.setProperty("callerTable.column." + CallerTable.COLUMN_ROUTE + ".width", default_column_width);//$NON-NLS-1$, //$NON-NLS-2$
 		defProps.setProperty("callerTable.column." + CallerTable.COLUMN_TYPE + ".width", default_column_width);//$NON-NLS-1$, //$NON-NLS-2$
 		
+		// column order
+		defProps.setProperty("callerTable.column0.name", "type");
+		defProps.setProperty("callerTable.column1.name", "date");
+		defProps.setProperty("callerTable.column2.name", "callbycall");
+		defProps.setProperty("callerTable.column3.name", "number");
+		defProps.setProperty("callerTable.column4.name", "participant");
+		defProps.setProperty("callerTable.column5.name", "port");
+		defProps.setProperty("callerTable.column6.name", "route");
+		defProps.setProperty("callerTable.column7.name", "duration");
+		defProps.setProperty("callerTable.column8.name", "comment");
+		defProps.setProperty("callerTable.column9.name", "picture");
+		
 		defProps.setProperty("option.picture.default_path", ".");//$NON-NLS-1$, //$NON-NLS-2$
 		defProps.setProperty("filter.Phonebook.search", "");//$NON-NLS-1$, //$NON-NLS-2$
 		defProps.setProperty("filter_private", "false");//$NON-NLS-1$, //$NON-NLS-2$
@@ -992,8 +1003,6 @@ public class Main implements LookupObserver {
 		defProps.setProperty("option.phonebook.import_xml_path", ".");//$NON-NLS-1$, //$NON-NLS-2$
 		defProps.setProperty("lookandfeel", UIManager.getSystemLookAndFeelClassName());//$NON-NLS-1$, //$NON-NLS-2$
 
-		
-		
 		return defProps;
 	}
 	
@@ -1003,7 +1012,6 @@ public class Main implements LookupObserver {
 	public static void loadProperties() {
 		
 		config_properties = new JFritzProperties(loadDefaultProperties());
-
 		try {
 			config_properties.loadFromXML(Main.SAVE_DIR + CONFIG_PROPERTIES_FILE);
 		} catch (FileNotFoundException e) {
@@ -1045,7 +1053,7 @@ public class Main implements LookupObserver {
 				state_properties.remove("column"+i+".name");
 			}
 		}
-		
+
 		String currentProp = state_properties.getProperty("column." + CallerTable.COLUMN_CALL_BY_CALL + ".width");
 		
 		if (currentProp != null)
@@ -1147,7 +1155,7 @@ public class Main implements LookupObserver {
 			config_properties.setProperty("option.showCallerListColumn."+CallerTable.COLUMN_PORT, currentProp);
 			config_properties.remove("option.showPortColumn");
 		}
-		
+
 		saveConfigProperties();
 	}
 
