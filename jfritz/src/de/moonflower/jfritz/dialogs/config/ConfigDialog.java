@@ -10,7 +10,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -47,6 +46,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import de.moonflower.jfritz.JFritz;
+import de.moonflower.jfritz.JFritzWindow;
 import de.moonflower.jfritz.Main;
 import de.moonflower.jfritz.dialogs.sip.SipProvider;
 import de.moonflower.jfritz.exceptions.InvalidFirmwareException;
@@ -67,7 +67,7 @@ public class ConfigDialog extends JDialog {
 	
 	private JButton okButton, cancelButton;
 	
-	private Frame parent;
+	private JFritzWindow parent;
 	
 	private ConfigPanelPhone phonePanel;
 	private ConfigPanelFritzBox fritzBoxPanel;
@@ -92,7 +92,7 @@ public class ConfigDialog extends JDialog {
 	private JLabel helpLinkLabel;
 	private String helpUrl = "";
 	
-	public ConfigDialog(Frame parent) {
+	public ConfigDialog(JFritzWindow parent) {
 		super(parent, true);
 		this.parent = parent;
 		setTitle(Main.getMessage("config")); //$NON-NLS-1$
@@ -266,8 +266,16 @@ public class ConfigDialog extends JDialog {
 	/**
 	 * Stores values in dialog components to programm properties
 	 */
-	public void storeValues() throws WrongPasswordException, InvalidFirmwareException, IOException {
-		fritzBoxPanel.saveSettings();
+	public void storeValues() {
+		try {
+			fritzBoxPanel.saveSettings();
+		} catch (WrongPasswordException e) {
+			parent.setDisconnectedStatus();
+		} catch (InvalidFirmwareException e) {
+			parent.setDisconnectedStatus();
+		} catch (IOException e) {
+			parent.setDisconnectedStatus();
+		}
 		phonePanel.saveSettings();
 		messagePanel.saveSettings();
 		callMonitorPanel.saveSettings();
@@ -281,7 +289,15 @@ public class ConfigDialog extends JDialog {
 		JFritz.getFritzBox().setAddress(fritzBoxPanel.getAddress());
 		JFritz.getFritzBox().setPassword(fritzBoxPanel.getPassword());
 		JFritz.getFritzBox().setPort(fritzBoxPanel.getPort());
-		JFritz.getFritzBox().detectFirmware();
+		try {
+			JFritz.getFritzBox().detectFirmware();
+		} catch (WrongPasswordException e) {
+			parent.setDisconnectedStatus();
+		} catch (InvalidFirmwareException e) {
+			parent.setDisconnectedStatus();
+		} catch (IOException e) {
+			parent.setDisconnectedStatus();
+		}
 		
 		Debug.msg("Saved config"); //$NON-NLS-1$
 		JFritz.getSIPProviderTableModel()
