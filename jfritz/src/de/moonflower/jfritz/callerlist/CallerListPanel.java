@@ -36,6 +36,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
@@ -451,7 +452,7 @@ public class CallerListPanel extends JPanel implements ActionListener,
 
 		MouseAdapter popupListener = new PopupListener(callerlistPopupMenu, this);
 		callerTable.addMouseListener(popupListener);
-
+		
 		return new JScrollPane(callerTable);
 	}
 
