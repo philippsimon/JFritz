@@ -60,8 +60,8 @@ public class JFritzClipboard{
     {
     	//Run test via console from <project>\bin with  
     	//"java de.moonflower.jfritz.utils.JFritzClipboard"
-    	System.out.print("\tTesting JFritzClipboard:\t"); //$NON-NLS-1$
-    	System.out.println(JFritzClipboard.runTest()?"OK":"Error"); //$NON-NLS-1$,  //$NON-NLS-2$
+    	System.out.print("\tTesting JFritzClipboard:\t"); //$NON-NLS-1$ 
+    	System.out.println(JFritzClipboard.runTest()?"OK":"Error"); //$NON-NLS-1$,  //$NON-NLS-2$ 
     }
 
     

@@ -15,10 +15,10 @@ public class TestProperties {
 		Main.loadSaveDir();
 		windowProperties = new JFritzProperties();
 		try {
-			System.out.println(Main.SAVE_DIR + PROPERTIES_FILE);
+			System.out.println(Main.SAVE_DIR + PROPERTIES_FILE); 
 			windowProperties.loadFromXML(Main.SAVE_DIR + PROPERTIES_FILE);
-			System.err.println(windowProperties.size());
-			System.err.println(windowProperties);
+			System.err.println(windowProperties.size()); 
+			System.err.println(windowProperties); 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

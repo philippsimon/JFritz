@@ -213,7 +213,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			setVisible(true);
 			Debug.msg("CHECKSTARTOPTIONS: don't start minimized");
 		} else {
-			if (!Main.SYSTRAY_SUPPORT) {
+			if (!Main.systraySupport) {
 				setVisible(true);
 			}
 			if ( getExtendedState() != Frame.ICONIFIED )
@@ -514,7 +514,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		button.addActionListener(this);
 		button.setIcon(getImage("stats.png")); //$NON-NLS-1$
 		button.setToolTipText(Main.getMessage("stats")); //$NON-NLS-1$
-		// button.setEnabled(JFritz.DEVEL_VERSION);
+		button.setEnabled(false);
 		mBar.add(button);
 
 		button = new JButton();
@@ -522,7 +522,6 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		button.addActionListener(this);
 		button.setIcon(getImage("help.png")); //$NON-NLS-1$
 		button.setToolTipText(Main.getMessage("help_menu")); //$NON-NLS-1$
-		// button.setEnabled(JFritz.DEVEL_VERSION);
 		mBar.add(button);
 
 		mBar.addSeparator();
@@ -1023,7 +1022,7 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 		} else if (e.getID() == WindowEvent.WINDOW_ICONIFIED) {
 			Debug.msg("PROCESS WINDOW EVENT: minimize");
 			setExtendedState(Frame.ICONIFIED);
-			if (Main.SYSTRAY_SUPPORT) {
+			if (Main.systraySupport) {
 				setVisible(false);
 			}
 		} else {
@@ -1126,9 +1125,9 @@ public class JFritzWindow extends JFrame implements Runnable, ActionListener,
 			JFrame debug_frame = new JFrame();
 			debug_frame.add(Debug.getPanel());
 			debug_frame.setTitle(Main.getMessage("debug_window"));
-			Debug.SetSaveButtonText(Main.getMessage("save"));
-			Debug.SetClearButtonText(Main.getMessage("clear"));
-			Debug.SetCloseButtonText(Main.getMessage("close"));
+			Debug.setSaveButtonText(Main.getMessage("save"));
+			Debug.setClearButtonText(Main.getMessage("clear"));
+			Debug.setCloseButtonText(Main.getMessage("close"));
 			Debug.setFrame(debug_frame);
 			debug_frame.pack();
 			debug_frame.setVisible(true);			

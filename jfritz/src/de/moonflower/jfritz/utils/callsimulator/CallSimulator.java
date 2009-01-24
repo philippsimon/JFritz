@@ -130,7 +130,7 @@ public class CallSimulator extends JFrame implements ActionListener {
 	public void startServer() {
 		try {
 			int listenPort = 1012;
-			System.out.println("Listening on port " + listenPort);
+			System.out.println("Listening on port " + listenPort); 
 			ServerSocket listenSocket = new ServerSocket(listenPort);
 			int i = 0;
 			while (true) {
@@ -138,12 +138,12 @@ public class CallSimulator extends JFrame implements ActionListener {
 				clientSocket = listenSocket.accept();
 				enableCallButtons(true);
 				closeAdapter.setSocket(clientSocket);
-				System.out.println("Connected to client " + i);
+				System.out.println("Connected to client " + i); 
 				outputStream = new DataOutputStream(clientSocket
 						.getOutputStream());
 			}
 		} catch (IOException ioe) {
-			System.err.println("Listen socket: " + ioe.getMessage());
+			System.err.println("Listen socket: " + ioe.getMessage()); 
 		}
 	}
 
@@ -223,7 +223,7 @@ public class CallSimulator extends JFrame implements ActionListener {
 						+ "1" + ";" + disconnectText.getText() + ";" + "\n");
 			}
 		} catch (IOException ioe) {
-			System.err.println("Could not send message: " + ioe.getMessage());
+			System.err.println("Could not send message: " + ioe.getMessage()); 
 		} finally {
 		}
 	}
@@ -239,7 +239,7 @@ class WindowCloseAdapter extends WindowAdapter {
 				clientSocket.close();
 			}
 		} catch (IOException ioe) {
-			System.err.println("Could not close socket: " + ioe.getMessage());
+			System.err.println("Could not close socket: " + ioe.getMessage()); 
 		}
 	}
 
@@ -267,21 +267,21 @@ class Connection extends Thread {
 			out = new DataOutputStream(clientSocket.getOutputStream());
 			this.start();
 		} catch (IOException ioe) {
-			System.err.println("Connection: " + ioe.getMessage());
+			System.err.println("Connection: " + ioe.getMessage()); 
 		}
 	}
 
 	public void run() {
 		try {
-			System.out.println("Sending call ...");
+			System.out.println("Sending call ..."); 
 			out.writeUTF("Test");
 		} catch (IOException ioe) {
-			System.err.println("Could not send message: " + ioe.getMessage());
+			System.err.println("Could not send message: " + ioe.getMessage()); 
 		} finally {
 			try {
 				clientSocket.close();
 			} catch (IOException ioe) {
-				System.err.println("Could not close socket: "
+				System.err.println("Could not close socket: " 
 						+ ioe.getMessage());
 			}
 		}

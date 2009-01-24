@@ -23,7 +23,7 @@ public class Test {
 		jep.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent hle) {
 				if (HyperlinkEvent.EventType.ACTIVATED.equals(hle.getEventType())) {
-					System.out.println(hle.getURL());
+					System.out.println(hle.getURL()); 
 				}
 			}
 		});

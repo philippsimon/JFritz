@@ -200,7 +200,7 @@ public class Main implements LookupObserver {
 
 	public final static String PROGRAM_NAME = "JFritz"; //$NON-NLS-1$
 
-	public final static String PROGRAM_VERSION = "0.7.2.9.2"; //$NON-NLS-1$
+	public final static String PROGRAM_VERSION = "0.7.2.10"; //$NON-NLS-1$
 	
 	public final static String CVS_TAG = "$Id$"; //$NON-NLS-1$
 
@@ -226,9 +226,9 @@ public class Main implements LookupObserver {
 
 	public final static String STATE_PROPERTIES_FILE = "jfritz.state.properties.xml"; //$NON-NLS-1$
 
-	public static boolean SYSTRAY_SUPPORT = false;
+	public static boolean systraySupport = false;
 	
-	public static boolean SHOW_SPLASH_SCREEN = true;
+	public static boolean showSplashScreen = true;
 
 	private static JFritzProperties config_properties;
 
@@ -253,7 +253,7 @@ public class Main implements LookupObserver {
 	
 	private static int exitCode = 0;
 	
-	private static boolean already_done_shutdown;
+	private static boolean alreadyDoneShutdown;
 	
 	private static Vector<Locale> supported_languages;
 	
@@ -261,7 +261,7 @@ public class Main implements LookupObserver {
 	private static ShutdownThread shutdownThread; 
 	
 	public Main(String[] args) {		
-		System.out.println(PROGRAM_NAME + " v" + PROGRAM_VERSION //$NON-NLS-1$
+		System.out.println(PROGRAM_NAME + " v" + PROGRAM_VERSION //$NON-NLS-1$ 
 				+ " (c) 2005-2009 by " + JFRITZ_PROJECT); //$NON-NLS-1$
 		Thread.currentThread().setPriority(5);
 		Thread.currentThread().setName("JFritz main thread");
@@ -297,11 +297,11 @@ public class Main implements LookupObserver {
 	 */
 	public static void main(String[] args) {
 		Debug.on();
-		already_done_shutdown = false;
+		alreadyDoneShutdown = false;
 		Main main = new Main(args);
 		main.initiateCLIParameters();
 		main.checkDebugParameters(args);
-		SplashScreen splash = new SplashScreen(SHOW_SPLASH_SCREEN);
+		SplashScreen splash = new SplashScreen(showSplashScreen);
 		splash.setVersion("v" + Main.PROGRAM_VERSION);
 		splash.setStatus("Initializing JFritz...");
 
@@ -489,7 +489,7 @@ public class Main implements LookupObserver {
 
 			switch (option.getShortOption()) {
 			case 'h': //$NON-NLS-1$
-				System.out.println("Usage: java -jar jfritz.jar [Options]"); //$NON-NLS-1$
+				System.out.println("Usage: java -jar jfritz.jar [Options]"); //$NON-NLS-1$ 
 				options.printOptions();
 				exit(0);
 				break;
@@ -505,7 +505,7 @@ public class Main implements LookupObserver {
 					break;
 				}
 			case 'q': //$NON-NSL-1$
-				SHOW_SPLASH_SCREEN = false;
+				showSplashScreen = false;
 				break;
 			}
 		}
@@ -531,7 +531,7 @@ public class Main implements LookupObserver {
 				doBackup();
 				break;
 			case 's': //$NON-NLS-1$
-				SYSTRAY_SUPPORT = true;
+				systraySupport = true;
 				break;
 			case 'n': //$NON-NLS-1$
 				checkSystray = false;
@@ -559,7 +559,7 @@ public class Main implements LookupObserver {
 			case 'e':
 				String csvFileName = option.getParameter();
 				if (csvFileName == null || csvFileName.equals("")) { //$NON-NLS-1$
-					System.err.println(getMessage("parameter_not_found")); //$NON-NLS-1$
+					System.err.println(getMessage("parameter_not_found")); //$NON-NLS-1$ 
 					exit(0);
 				}
 				Debug.msg("Exporting Call list (csv) to " + csvFileName); //$NON-NLS-1$
@@ -585,13 +585,13 @@ public class Main implements LookupObserver {
             case 'i': //$NON-NLS-1$
             	String language = option.getParameter();
             	if(language == null){
-            		System.err.println(Main.getMessage("invalid_language")); //$NON-NLS-1$
-            		System.err.println("Deutsch: de"); //$NON-NLS-1$
-            		System.err.println("English: en"); //$NON-NLS-1$
-            		System.err.println("Italian: it"); //$NON-NLS-1$
-            		System.err.println("Netherland: nl"); //$NON-NLS-1$
-            		System.err.println("Poland: pl"); //$NON-NLS-1$
-            		System.err.println("Russia: ru"); //$NON-NLS-1$
+            		System.err.println(Main.getMessage("invalid_language")); //$NON-NLS-1$ 
+            		System.err.println("Deutsch: de"); //$NON-NLS-1$ 
+            		System.err.println("English: en"); //$NON-NLS-1$ 
+            		System.err.println("Italian: it"); //$NON-NLS-1$ 
+            		System.err.println("Netherland: nl"); //$NON-NLS-1$ 
+            		System.err.println("Poland: pl"); //$NON-NLS-1$ 
+            		System.err.println("Russia: ru"); //$NON-NLS-1$ 
             		System.exit(0);
             	}else if(language.equals("english") || language.equals("en")){ //$NON-NLS-1$
             		Main.setProperty("locale", "en_US");
@@ -606,26 +606,26 @@ public class Main implements LookupObserver {
             	}else if(language.equals("russian") || language.equals("ru")){ //$NON-NLS-1$
             		Main.setProperty("locale", "ru_RU");            	
             	}else{
-            		System.err.println(Main.getMessage("invalid_language")); //$NON-NLS-1$
-            		System.err.println("Deutsch: de"); //$NON-NLS-1$
-            		System.err.println("English: en"); //$NON-NLS-1$
-            		System.err.println("Italian: it"); //$NON-NLS-1$
-            		System.err.println("Netherland: nl"); //$NON-NLS-1$
-            		System.err.println("Poland: pl"); //$NON-NLS-1$
-            		System.err.println("Russia: ru"); //$NON-NLS-1$
+            		System.err.println(Main.getMessage("invalid_language")); //$NON-NLS-1$ 
+            		System.err.println("Deutsch: de"); //$NON-NLS-1$ 
+            		System.err.println("English: en"); //$NON-NLS-1$ 
+            		System.err.println("Italian: it"); //$NON-NLS-1$ 
+            		System.err.println("Netherland: nl"); //$NON-NLS-1$ 
+            		System.err.println("Poland: pl"); //$NON-NLS-1$ 
+            		System.err.println("Russia: ru"); //$NON-NLS-1$ 
             		System.exit(0);
             	}
         		loadMessages(new Locale(Main.getProperty("locale"))); //$NON-NLS-1$,  //$NON-NLS-2$            		
             	break;
 			case 'w': //$NON-NLS-1$
 				enableInstanceControl = false;
-				System.err.println("Turning off Multiple instance control!"); //$NON-NLS-1$
-				System.err.println("You were warned! Data loss may occur."); //$NON-NLS-1$
+				System.err.println("Turning off Multiple instance control!"); //$NON-NLS-1$ 
+				System.err.println("You were warned! Data loss may occur."); //$NON-NLS-1$ 
 				break;
 			case 'p': //$NON-NLS-1$
 				String priority = option.getParameter();
 				if (priority == null || priority.equals("")) { //$NON-NLS-1$
-					System.err.println(getMessage("parameter_not_found")); //$NON-NLS-1$
+					System.err.println(getMessage("parameter_not_found")); //$NON-NLS-1$ 
 					exit(0);
 				} else {
 					try {
@@ -633,12 +633,10 @@ public class Main implements LookupObserver {
 						Thread.currentThread().setPriority(level);
 						Debug.msg("Set priority to level " + priority); //$NON-NLS-1$
 					} catch (NumberFormatException nfe) {
-						System.err
-								.println(getMessage("parameter_wrong_priority")); //$NON-NLS-1$
+						System.err.println(getMessage("parameter_wrong_priority")); //$NON-NLS-1$ 
 						exit(0);
 					} catch (IllegalArgumentException iae) {
-						System.err
-								.println(getMessage("parameter_wrong_priority")); //$NON-NLS-1$
+						System.err.println(getMessage("parameter_wrong_priority")); //$NON-NLS-1$ 
 						exit(0);
 					}
 					break;
@@ -1331,9 +1329,9 @@ public class Main implements LookupObserver {
 		String os = System.getProperty("os.name"); //$NON-NLS-1$
 		if (os.equals("Linux") || os.equals("Solaris") //$NON-NLS-1$,  //$NON-NLS-2$
 				|| os.startsWith("Windows")) { //$NON-NLS-1$
-			SYSTRAY_SUPPORT = true;
+			systraySupport = true;
 		}
-		return SYSTRAY_SUPPORT;
+		return systraySupport;
 	}
 
 	public static String getHomeDirectory() {
@@ -1380,10 +1378,10 @@ public class Main implements LookupObserver {
 	
 	public void prepareShutdown(boolean shutdownThread, boolean shutdownHook) {
 		try {
-		if ( !already_done_shutdown )
+		if ( !alreadyDoneShutdown )
 		{
 			showActiveThreads();		
-			already_done_shutdown = true;
+			alreadyDoneShutdown = true;
 			Debug.msg("Shutting down JFritz..."); //$NON-NLS-1$
 			closeOpenConnections();
 			Debug.msg("Releasing lock");

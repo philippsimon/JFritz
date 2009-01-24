@@ -50,7 +50,7 @@ public class StatsDialog extends JDialog implements UPNPAddonInfosListener, UPNP
 			voipDnsLabel1, voipDnsLabel2, upnpLabel, routedBridgeMode,
 			autoDisconnectLabel, idleTimeLabel, externalIPLabel;
 
-	private boolean pressed_OK = false;
+	private boolean pressedOK = false;
 
 	/**
 	 * @param owner
@@ -100,12 +100,12 @@ public class StatsDialog extends JDialog implements UPNPAddonInfosListener, UPNP
 				Debug.msg("KEY: " + e); //$NON-NLS-1$
 				if (e.getKeyCode() == KeyEvent.VK_ESCAPE
 						|| (e.getSource() == cancelButton && e.getKeyCode() == KeyEvent.VK_ENTER)) {
-					pressed_OK = false;
+					pressedOK = false;
 					setVisible(false);
 				}
 				if (e.getSource() == okButton
 						&& e.getKeyCode() == KeyEvent.VK_ENTER) {
-					pressed_OK = true;
+					pressedOK = true;
 					setVisible(false);
 				}
 			}
@@ -115,7 +115,7 @@ public class StatsDialog extends JDialog implements UPNPAddonInfosListener, UPNP
 		ActionListener actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Object source = e.getSource();
-				pressed_OK = (source == okButton);
+				pressedOK = (source == okButton);
 				setVisible((source != okButton) && (source != cancelButton));
 				if (e.getSource() == refreshButton) {
 					getStats();
@@ -249,7 +249,7 @@ public class StatsDialog extends JDialog implements UPNPAddonInfosListener, UPNP
 	}
 
 	public boolean okPressed() {
-		return pressed_OK;
+		return pressedOK;
 	}
 
 	public boolean showDialog() {
