@@ -26,8 +26,11 @@ public class FBoxListenerV3Test extends TestCase {
     public FBoxListenerV3Test() {
     	Debug.on();
 		Main.loadProperties();
-		Main.loadMessages(new Locale("de_DE"));    	
-        jfritz = new Main(new String[0]).getJfritz();
+		Main.loadMessages(new Locale("de_DE"));
+		String[] args = new String[1];
+		args[0] = "-q";
+		Main main = new Main(args);
+        jfritz = main.getJfritz();
     }
     
     public void setUp() throws Exception {
