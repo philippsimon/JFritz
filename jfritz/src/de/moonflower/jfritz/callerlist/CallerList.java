@@ -22,6 +22,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -154,8 +157,8 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * 
 	 * @param l the listener to be added
 	 */
-	public synchronized void addListener(CallerListListener l){
-		callListListeners.add(l);
+	public synchronized void addListener(final CallerListListener listener){
+		callListListeners.add(listener);
 	}
 	
 	/**
@@ -164,8 +167,8 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * 
 	 * @param l the listener to be removed
 	 */
-	public synchronized void removeListener(CallerListListener l){
-		callListListeners.remove(l);
+	public synchronized void removeListener(final CallerListListener listener){
+		callListListeners.remove(listener);
 	}
 	
 	/**
@@ -187,17 +190,19 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	/**
 	 * Is used for the clickability!
 	 */
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		String columnName = getRealColumnName(columnIndex);
-//		if (columnName.equals("participant")) { //$NON-NLS-1$
-//			return (filteredCallerData.get(rowIndex)).getPhoneNumber() != null;
-//		} else 
+	public boolean isCellEditable(final int rowIndex, final int columnIndex) {
+		boolean isEditable;
+		final String columnName = getRealColumnName(columnIndex); // NOPMD
 		if (columnName.equals(CallerTable.COLUMN_COMMENT)) { //$NON-NLS-1$
-			return true;
+			isEditable = true;
 		} else if (columnName.equals(CallerTable.COLUMN_NUMBER)) { //$NON-NLS-1$
-			return true;
+			isEditable = true;
 		}
-		return false;
+		else
+		{
+			isEditable = false;
+		}
+		return isEditable;
 	}
 
 	/**
@@ -205,14 +210,15 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * @return class of column
 	 */
 	@SuppressWarnings("unchecked")
-	public Class getColumnClass(int columnIndex) {
-		Object o = getValueAt(0, columnIndex);
+	public Class getColumnClass(final int columnIndex) {
+		Class result;
+		final Object o = getValueAt(0, columnIndex); // NOPMD
 		if (o == null) {
-			return Object.class;
+			result = Object.class;
 		} else {
-			return o.getClass();
+			result = o.getClass();
 		}
-
+		return result;
 	}
 
 	/**
@@ -223,7 +229,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * @param wholeCallerList
 	 *            Save whole caller list or only selected entries
 	 */
-	public synchronized void saveToXMLFile(String filename, boolean wholeCallerList) {
+	public synchronized void saveToXMLFile(final String filename, final boolean wholeCallerList) {
 		Debug.msg("Saving to file " + filename); //$NON-NLS-1$
 		try {
 			BufferedWriter pw = new BufferedWriter(new OutputStreamWriter(
@@ -244,22 +250,25 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 				rows = JFritz.getJframe().getCallerTable().getSelectedRows();
 			}
 			if (!wholeCallerList && (rows != null) && (rows.length > 0)) {
+				Call currentCall;
 				for (int i = 0; i < rows.length; i++) {
-					Call currentCall = filteredCallerData.elementAt(rows[i]);
+					currentCall = filteredCallerData.elementAt(rows[i]);
 					pw.write(currentCall.toXML());
 					pw.newLine();
 				}
 			} else if (wholeCallerList) { // Export ALL UNFILTERED Calls
 				Enumeration<Call> en = unfilteredCallerData.elements();
+				Call call;
 				while (en.hasMoreElements()) {
-					Call call = en.nextElement();
+					call = en.nextElement();
 					pw.write(call.toXML());
 					pw.newLine();
 				}
 			} else {// Export ALL FILTERED Calls
 				Enumeration<Call> en = filteredCallerData.elements();
+				Call call;
 				while (en.hasMoreElements()) {
-					Call call = en.nextElement();
+					call = en.nextElement();
 					pw.write(call.toXML());
 					pw.newLine();
 				}
@@ -297,20 +306,23 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 				rows = JFritz.getJframe().getCallerTable().getSelectedRows();
 			}
 			if (!wholeCallerList && (rows != null) && (rows.length > 0)) {
+				Call currentCall;
 				for (int i = 0; i < rows.length; i++) {
-					Call currentCall = filteredCallerData.elementAt(rows[i]);
+					currentCall = filteredCallerData.elementAt(rows[i]);
 					pw.println(currentCall.toCSV());
 				}
 			} else if (wholeCallerList) { // Export ALL UNFILTERED Calls
 				Enumeration<Call> en = unfilteredCallerData.elements();
+				Call call;
 				while (en.hasMoreElements()) {
-					Call call = en.nextElement();
+					call = en.nextElement();
 					pw.println(call.toCSV());
 				}
 			} else { // Export ALL FILTERED Calls
 				Enumeration<Call> en = filteredCallerData.elements();
+				Call call;
 				while (en.hasMoreElements()) {
-					Call call = en.nextElement();
+					call = en.nextElement();
 					pw.println(call.toCSV());
 				}
 			}
@@ -407,23 +419,6 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	}
 
 	/**
-	 * Adds new Call to CallerList
-	 * 
-	 * @param symbol
-	 * @param datum
-	 * @param number
-	 * @param port
-	 * @param route
-	 * @param duration
-	 */
-	public boolean addEntry(CallType symbol, Date datum, PhoneNumber number,
-			String port, String route, int duration, String comment) {
-		Call call = new Call(symbol, datum, number, port, route, duration,
-				comment);
-		return addEntry(call);
-	}
-
-	/**
 	 * Adds an entry to the call list this function calls contains(Call newCall)
 	 * to test if the given call is contained in the list the function then adds
 	 * the entry to newCalls if appropriate
@@ -433,8 +428,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	 * 
 	 * @author Brian Jensen
 	 */
-	public boolean addEntry(Call call) {
-		// if( unfilteredCallerData.contains(call))return false;
+	public synchronized boolean addEntry(Call call) {
 		if (contains(call)) {
 			return false;
 		} // add a new enty to the call list
@@ -466,8 +460,12 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		int newEntries = 0;
 		
 		for(Call call: newCalls)
+		{
 			if(addEntry(call))
+			{
 				newEntries++;
+			}
+		}
 		
 		if (newEntries > 0) {
 
@@ -486,17 +484,16 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 			}
 
 			// Notify user?
-			if (Main.getProperty("option.notifyOnCalls")
-					.equals("true")) {				
+			if (JFritzUtils.parseBoolean(Main.getProperty("option.notifyOnCalls"))) {				
 				JFritz.infoMsg(msg);
 			}
 
 			// Make back-up after fetching the caller list?
 			if (JFritzUtils.parseBoolean(Main.getProperty(
 							"option.createBackupAfterFetch")))
+			{
 				doBackup();
-			
-			
+			}			
 		}
 	}
 	
@@ -554,6 +551,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		left = 0;
 		right = unfilteredCallerData.size() - 1;
 
+		Call c;
 		while (left <= right) {
 			middle = ((right - left) / 2) + left;
 
@@ -561,7 +559,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 				return false;
 			}
 
-			Call c = unfilteredCallerData.elementAt(middle);
+			c = unfilteredCallerData.elementAt(middle);
 			int Compare = newCall.getCalldate().compareTo(c.getCalldate());
 
 			// check if the date is before or after the current element in the
@@ -854,8 +852,9 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		Debug.msg("Sorting unfiltered data"); //$NON-NLS-1$
 		
 		int indexOfDate = -1;
+		String columnName = "";
 		for (int i = 0; i < getColumnCount(); i++) {
-			String columnName = getRealColumnName(i);
+			columnName = getRealColumnName(i);
 			if (columnName.equals(CallerTable.COLUMN_DATE)) {
 				indexOfDate = i;
 			}
@@ -1017,8 +1016,9 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	public int getTotalDuration() {
 		Enumeration<Call> en = filteredCallerData.elements();
 		int total = 0;
+		Call call;
 		while (en.hasMoreElements()) {
-			Call call = en.nextElement();
+			call = en.nextElement();
 			total += call.getDuration();
 		}
 		return total;
@@ -1030,8 +1030,9 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	public int getTotalCosts() {
 		Enumeration<Call> en = filteredCallerData.elements();
 		int total = 0;
+		Call call;
 		while (en.hasMoreElements()) {
-			Call call = en.nextElement();
+			call = en.nextElement();
 			if (call.getCost() > 0) {
 				total += call.getCost();
 			}
@@ -1047,8 +1048,9 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		Vector<PhoneNumber> numbers = person.getNumbers();
 		if (numbers.size() > 0) {
 			Enumeration<Call> en = unfilteredCallerData.elements();
+			Call call;
 			while (en.hasMoreElements()) {
-				Call call = en.nextElement();
+				call = en.nextElement();
 				if (call.getPhoneNumber() != null) {
 					for (int i = 0; i < numbers.size(); i++) {
 						if (call.getPhoneNumber().getIntNumber().equals(
@@ -1086,12 +1088,13 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		Vector<Call> removedCalls = new Vector<Call>(rows.length);
 		if (rows.length > 0) {
 			Call call;
+			Person p;
 			for (int i = 0; i < rows.length; i++) {
 				call = filteredCallerData.get(rows[i]);
 				removedCalls.add(call);
 				unfilteredCallerData.remove(call);
 				//Debug.msg("removing " + call);
-				Person p = call.getPerson();
+				p = call.getPerson();
 				if (p != null) {
 					if (call.equals(p.getLastCall())) {
 						// this was the LastCall of the Person
@@ -1120,8 +1123,9 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		if (JFritz.getJframe() != null) {
 			Enumeration<TableColumn> en = JFritz.getJframe().getCallerTable()
 					.getTableHeader().getColumnModel().getColumns();
+			TableColumn col;
 			while (en.hasMoreElements()) {
-				TableColumn col = (TableColumn) en.nextElement();
+				col = (TableColumn) en.nextElement();
 				if (col.getModelIndex() == columnIndex) {
 					columnName = col.getIdentifier().toString();
 				}
@@ -1398,6 +1402,18 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 			field[5] = "3";
 		} else if (field[5].equals("ISDN")) {
 			field[5] = "4";
+		} else if (field[5].equals("DECT 1")) {
+			field[5] = "10";
+		} else if (field[5].equals("DECT 2")) {
+			field[5] = "11";
+		} else if (field[5].equals("DECT 3")) {
+			field[5] = "12";
+		} else if (field[5].equals("DECT 4")) {
+			field[5] = "13";
+		} else if (field[5].equals("DECT 5")) {
+			field[5] = "14";
+		} else if (field[5].equals("DECT 6")) {
+			field[5] = "15";
 		} else if (field[5].equals("DATA")) {
 			field[5] = "36";
 		}
@@ -1950,8 +1966,9 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 	 */
 	public Vector<String> getCbCProviders(int[] rows) {
 		Vector<String> callByCallProviders = new Vector<String>();
+		Call call;
 		for (int i = 0; i < rows.length; i++) {
-			Call call = filteredCallerData.get(rows[i]);
+			call = filteredCallerData.get(rows[i]);
 			addIfCbCProvider(callByCallProviders, call);
 		}
 		return callByCallProviders;
@@ -1987,8 +2004,9 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 	 */
 	public Vector<String> getCbCProviders() {
 		Vector<String> callByCallProviders = new Vector<String>();
+		Call call;
 		for (int i = 0; i < unfilteredCallerData.size(); i++) {
-			Call call = unfilteredCallerData.get(i);
+			call = unfilteredCallerData.get(i);
 			addIfCbCProvider(callByCallProviders, call);
 		}
 		return callByCallProviders;
@@ -2001,8 +2019,9 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 	 */
 	public Vector<String> getSelectedProviders(int[] rows) {
 		Vector<String> selectedProviders = new Vector<String>();
+		Call call;
 		for (int i = 0; i < rows.length; i++) {
-			Call call = filteredCallerData.get(rows[i]);
+			call = filteredCallerData.get(rows[i]);
 			if (!call.getRoute().equals("")) {
 				if (!selectedProviders.contains(call.getRoute())) {
 					selectedProviders.add(call.getRoute());
@@ -2018,8 +2037,9 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 	 */
 	public Vector<String> getAllSipProviders() {
 		Vector<String> sipProviders = new Vector<String>();
+		Call call;
 		for (int i = 0; i < filteredCallerData.size(); i++) {
-			Call call = filteredCallerData.get(i);
+			call = filteredCallerData.get(i);
 			// Debug.msg("route:"+route);
 			// Debug.msg("callrouteType:"+call.getRouteType());
 			if (!call.getRoute().equals("")) {
@@ -2073,10 +2093,12 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 		JFritz.getJframe().setLookupBusy(true);
 		Vector<PhoneNumber> numbers = new Vector<PhoneNumber>();
 		if (filteredOnly) {
+			Call call;
+			Person foundPerson;
 			for (int i = 0; i < filteredCallerData.size(); i++) {
-				Call call = filteredCallerData.get(i);
+				call = filteredCallerData.get(i);
 				if (call.getPhoneNumber() != null) {
-					Person foundPerson = phonebook.findPerson(call);
+					foundPerson = phonebook.findPerson(call);
 					if ((foundPerson == null ) || (searchAlsoForDummyEntries && foundPerson.isDummy())
 							&& !numbers.contains(call.getPhoneNumber())) {
 						numbers.add(call.getPhoneNumber());
@@ -2096,10 +2118,12 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 	 */
 	public Vector<PhoneNumber> getAllUnknownEntries(boolean searchAlsoForDummyEntries){
 		Vector<PhoneNumber> numbers = new Vector<PhoneNumber>();
+		Call call;
+		Person foundPerson;
 		for (int i = 0; i < unfilteredCallerData.size(); i++) {
-			Call call = unfilteredCallerData.get(i);
+			call = unfilteredCallerData.get(i);
 			if (call.getPhoneNumber() != null) {
-				Person foundPerson = phonebook.findPerson(call);
+				foundPerson = phonebook.findPerson(call);
 				if ((foundPerson == null || (searchAlsoForDummyEntries && foundPerson.isDummy()))
 						&& !numbers.contains(call.getPhoneNumber())) {
 					numbers.add(call.getPhoneNumber());
@@ -2121,8 +2145,9 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 		Vector<PhoneNumber> numbers = new Vector<PhoneNumber>();
 		// nur für markierte Einträge ReverseLookup
 		// durchführen
+		Call call;
 		for (int i = 0; i < rows.length; i++) {
-			Call call = filteredCallerData.get(rows[i]);
+			call = filteredCallerData.get(rows[i]);
 			if (call.getPhoneNumber() != null) {
 				numbers.add(call.getPhoneNumber());
 			}
@@ -2207,8 +2232,9 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 	public void updatePersonInCalls(Person person,
 			Vector<PhoneNumber> phoneNumbers) {
 		Enumeration<Call> en = unfilteredCallerData.elements();
+		Call call;
 		while (en.hasMoreElements()) {
-			Call call = en.nextElement();
+			call = en.nextElement();
 			if (phoneNumbers.contains(call.getPhoneNumber())) {
 				call.setPerson(person);
 			}
