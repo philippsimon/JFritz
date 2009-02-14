@@ -200,7 +200,7 @@ public class Main implements LookupObserver {
 
 	public final static String PROGRAM_NAME = "JFritz"; //$NON-NLS-1$
 
-	public final static String PROGRAM_VERSION = "0.7.2.14"; //$NON-NLS-1$
+	public final static String PROGRAM_VERSION = "0.7.2.16"; //$NON-NLS-1$
 	
 	public final static String CVS_TAG = "$Id$"; //$NON-NLS-1$
 
@@ -259,6 +259,18 @@ public class Main implements LookupObserver {
 	
 	private static ShutdownHook.Handler shutdownHandler;
 	private static ShutdownThread shutdownThread; 
+	
+	public Main()
+	{
+		// NICHT VERWENDEN, nur für TestCases, nicht alles initialisiert. NICHT VERWENDEN!
+		loadLanguages();
+		loadSaveDir();
+		loadProperties();
+		String loc = Main.getProperty("locale");    		
+		loadMessages(new Locale(loc.substring(0, loc.indexOf("_")), loc.substring(loc.indexOf("_")+1, loc.length()))); //$NON-NLS-1$,  //$NON-NLS-2$
+		loadLocaleMeanings(new Locale("int", "INT"));
+		
+	}
 	
 	public Main(String[] args) {
 		System.out.println(PROGRAM_NAME + " v" + PROGRAM_VERSION //$NON-NLS-1$ 
