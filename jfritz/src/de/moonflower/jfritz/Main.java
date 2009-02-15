@@ -200,7 +200,7 @@ public class Main implements LookupObserver {
 
 	public final static String PROGRAM_NAME = "JFritz"; //$NON-NLS-1$
 
-	public final static String PROGRAM_VERSION = "0.7.2.16"; //$NON-NLS-1$
+	public final static String PROGRAM_VERSION = "0.7.2.17"; //$NON-NLS-1$
 	
 	public final static String CVS_TAG = "$Id$"; //$NON-NLS-1$
 
@@ -273,7 +273,7 @@ public class Main implements LookupObserver {
 	}
 	
 	public Main(String[] args) {
-		System.out.println(PROGRAM_NAME + " v" + PROGRAM_VERSION //$NON-NLS-1$ 
+		Debug.msg(PROGRAM_NAME + " v" + PROGRAM_VERSION //$NON-NLS-1$ 
 				+ " (c) 2005-2009 by " + JFRITZ_PROJECT); //$NON-NLS-1$
 		Thread.currentThread().setPriority(5);
 		Thread.currentThread().setName("JFritz main thread");
