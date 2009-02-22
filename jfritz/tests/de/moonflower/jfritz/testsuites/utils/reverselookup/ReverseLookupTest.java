@@ -285,6 +285,11 @@ public class ReverseLookupTest extends TestCase {
 		ReverseLookup.lookup(checkNum, entry, true);
 		testGermanyFailed = checkEntry(entry, testGermanyFailed);
 		
+		checkNum = new PhoneNumber("+498962021830", false);
+		entry = new CheckEntry(checkNum, "Birgit u. Dirk", "Lütkefent", "Moarstr. 6", "85737", "Ismaning");
+		ReverseLookup.lookup(checkNum, entry, true);
+		testGermanyFailed = checkEntry(entry, testGermanyFailed);
+		
 		assertFalse(testGermanyFailed);
 	}
 	

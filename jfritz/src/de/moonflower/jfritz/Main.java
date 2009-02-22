@@ -200,7 +200,7 @@ public class Main implements LookupObserver {
 
 	public final static String PROGRAM_NAME = "JFritz"; //$NON-NLS-1$
 
-	public final static String PROGRAM_VERSION = "0.7.2.18"; //$NON-NLS-1$
+	public final static String PROGRAM_VERSION = "0.7.2.20"; //$NON-NLS-1$
 	
 	public final static String CVS_TAG = "$Id$"; //$NON-NLS-1$
 
@@ -295,7 +295,7 @@ public class Main implements LookupObserver {
 		shutdownThread = new ShutdownThread(this);
 		Runtime.getRuntime().addShutdownHook(shutdownThread);
 
-		jfritzHomedir = JFritzUtils.getFullPath(".update");
+		jfritzHomedir = JFritzUtils.getFullPath(JFritzUtils.FILESEP + ".update");
 		jfritzHomedir = jfritzHomedir.substring(0, jfritzHomedir.length() - 7);
 
 		initiateCLIParameters();
