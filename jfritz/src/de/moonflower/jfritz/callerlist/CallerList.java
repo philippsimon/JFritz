@@ -48,6 +48,7 @@ import de.moonflower.jfritz.callerlist.filter.DateFilter;
 import de.moonflower.jfritz.exceptions.InvalidFirmwareException;
 import de.moonflower.jfritz.exceptions.WrongPasswordException;
 import de.moonflower.jfritz.phonebook.PhoneBook;
+import de.moonflower.jfritz.phonebook.PhoneBookListener;
 import de.moonflower.jfritz.struct.Call;
 import de.moonflower.jfritz.struct.CallType;
 import de.moonflower.jfritz.struct.IProgressListener;
@@ -63,7 +64,7 @@ import de.moonflower.jfritz.utils.reverselookup.ReverseLookup;
  * This class manages the caller list.
  * 
  */
-public class CallerList extends AbstractTableModel implements LookupObserver {
+public class CallerList extends AbstractTableModel implements LookupObserver, PhoneBookListener {
 	private static final long serialVersionUID = 1;
 
 	private static final String CALLS_DTD_URI = "http://jfritz.moonflower.de/dtd/calls.dtd"; //$NON-NLS-1$
@@ -406,6 +407,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		} catch (IOException e) {
 			Debug.err("Could not read " + filename + "!"); //$NON-NLS-1$,  //$NON-NLS-2$
 		}
+		JFritz.getPhonebook().addListener(this);		
 	}
 
 	/**
@@ -436,7 +438,6 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		} // add a new enty to the call list
 
 		Person p = phonebook.findPerson(call.getPhoneNumber());
-		call.setPerson(p);
 		if (p != null) {
 			if (p.getLastCall() == null) {
 				phonebook.setLastCall(p, call);
@@ -764,7 +765,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		} else if (columnName.equals(CallerTable.COLUMN_NUMBER)) { //$NON-NLS-1$
 			return call.getPhoneNumber();
 		} else if (columnName.equals(CallerTable.COLUMN_PARTICIPANT)) { //$NON-NLS-1$
-			return call.getPerson();
+			return JFritz.getPhonebook().findPerson(call);
 		} else if (columnName.equals(CallerTable.COLUMN_PORT)) { //$NON-NLS-1$
 			return call.getPort();
 		} else if (columnName.equals(CallerTable.COLUMN_ROUTE)) { //$NON-NLS-1$
@@ -778,8 +779,9 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		} else if (columnName.equals(CallerTable.COLUMN_COMMENT)) { //$NON-NLS-1$
 			return call.getComment();
 		} else if (columnName.equals(CallerTable.COLUMN_PICTURE)) { //$NON-NLS-1$
-			if (call.getPerson() != null)
-				return call.getPerson().getScaledPicture();
+			Person p = JFritz.getPhonebook().findPerson(call);
+			if (p != null)
+				return p.getScaledPicture();
 			else
 				return new ImageIcon("");
 		}		
@@ -799,9 +801,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 	public void setValueAt(Object object, int rowIndex, int columnIndex) {
 
 		String columnName = getRealColumnName(columnIndex);
-		if (columnName.equals(CallerTable.COLUMN_PARTICIPANT)) { //$NON-NLS-1$
-			setPerson((Person) object, rowIndex);
-		} else if (columnName.equals(CallerTable.COLUMN_COMMENT)) { //$NON-NLS-1$
+		if (columnName.equals(CallerTable.COLUMN_COMMENT)) { //$NON-NLS-1$
 			setComment((String) object, rowIndex);
 		}
 
@@ -817,11 +817,6 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 		for(CallerListListener listener: callListListeners)
 			listener.callsUpdated(original, updated);
 		
-	}
-
-	private void setPerson(Person person, int rowIndex) {
-		Call call = filteredCallerData.get(rowIndex);
-		setPerson(person, call);
 	}
 
 	/**
@@ -937,13 +932,15 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 					o2 = null;
 				}
 			} else if (columnName.equals(CallerTable.COLUMN_PARTICIPANT)) { //$NON-NLS-1$
-				if (call1.getPerson() != null) {
-					o1 = call1.getPerson().getFullname().toUpperCase();
+				Person p1 = JFritz.getPhonebook().findPerson(call1);
+				Person p2 = JFritz.getPhonebook().findPerson(call2);
+				if (p1 != null) {
+					o1 = p1.getFullname().toUpperCase();
 				} else {
 					o1 = null;
 				}
-				if (call2.getPerson() != null) {
-					o2 = call2.getPerson().getFullname().toUpperCase();
+				if (p2 != null) {
+					o2 = p2.getFullname().toUpperCase();
 				} else {
 					o2 = null;
 				}
@@ -1127,7 +1124,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver {
 				unfilteredCallerData.remove(call);
 				hashMap.deleteCall(call.getPhoneNumber(), call);
 				//Debug.msg("removing " + call);
-				p = call.getPerson();
+				p = JFritz.getPhonebook().findPerson(call);
 				if (p != null) {
 					if (call.equals(p.getLastCall())) {
 						// this was the LastCall of the Person
@@ -2086,26 +2083,6 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 		return sipProviders;
 	}
 
-	public void findAllPersons() {
-		// TODO updaten wenn neue call oder personen oder rufnummern hinzukommen
-		// oder alte gelöscht werden
-		Debug.msg("searching all Persons for the CallerList...");
-		if (phonebook == null) {
-			Debug.err("set phonebook first!");
-		}
-		if (!phonebook.getAllLastCallsSearched()) {
-			Debug.err("searchAllLastCalls in the phonebook first");
-		}
-		Call call;
-		Person person;
-		for (int i = 0; i < unfilteredCallerData.size(); i++) {
-			call = unfilteredCallerData.get(i);
-			person = phonebook.findPerson(call);
-			call.setPerson(person);
-		}
-		Debug.msg("...done");
-	}
-
 	public void update() {
 		filteredCallerData = filterData(unfilteredCallerData);
 		sortAllFilteredRowsBy(sortColumn, sortDirection);
@@ -2206,7 +2183,7 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 	public void personsFound(Vector<Person> persons) {
 		if (persons != null) {
 			phonebook.addEntries(persons);
-			this.fireTableDataChanged();
+			update();
 		}
 		JFritz.getJframe().selectLookupButton(false);
 		JFritz.getJframe().setLookupBusy(false);
@@ -2227,64 +2204,13 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 	public void saveFoundEntries(Vector<Person> persons) {
 		if (persons != null) {
 			phonebook.addEntries(persons);
-			this.fireTableDataChanged();
+			update();
 		}
 	}
 
 	public void setPhoneBook(PhoneBook phonebook) {
 		this.phonebook = phonebook;
 
-	}
-
-	public void setPerson(Person person, Call call) {
-		if (call.getPhoneNumber() != null) { // no empty numbers
-			if (person == null) {
-				call.setPerson(null);
-			} else {
-				if (call.getPerson() == null) {
-					if (!person.isEmpty()) {
-						call.setPerson(person.clone());
-					}
-				} else if (!call.getPerson().equals(person)) {
-					call.setPerson(person.clone());
-				}
-			}
-			fireTableDataChanged();
-		}
-	}
-
-	/**
-	 * Aktualisiert diejenigen Anrufe mit den Nummern aus dem Vector
-	 * phoneNumbers
-	 * 
-	 * @param person,
-	 *            die neuen Personendaten
-	 * @param phoneNumbers,
-	 *            die zu aktualisierenden Rufnummern
-	 */
-	public void updatePersonInCalls(Person person,
-			Vector<PhoneNumber> phoneNumbers) {
-		for (PhoneNumber num: phoneNumbers)
-		{
-			List<Call> l = hashMap.getCall(num);
-			if (l != null)
-			{
-				for (Call c: l)
-				{
-					c.setPerson(person);
-				}
-			}
-		}
-		update();
-//		Enumeration<Call> en = unfilteredCallerData.elements();
-//		Call call;
-//		while (en.hasMoreElements()) {
-//			call = en.nextElement();
-//			if (phoneNumbers.contains(call.getPhoneNumber())) {
-//				call.setPerson(person);
-//			}
-//		}
-//		update();
 	}
 
 	public PhoneBook getPhoneBook() {
@@ -2350,5 +2276,17 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 	public void unregisterProgressListener(IProgressListener listener)
 	{
 		progressListeners.remove(listener);
+	}
+
+	public void contactUpdated(Person original, Person updated) {
+		update();
+	}
+
+	public void contactsAdded(Vector<Person> newContacts) {
+		update();
+	}
+
+	public void contactsRemoved(Vector<Person> removedContacts) {
+		update();
 	}
 }
