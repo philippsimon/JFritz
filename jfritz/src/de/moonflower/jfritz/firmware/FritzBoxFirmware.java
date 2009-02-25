@@ -204,7 +204,7 @@ public class FritzBoxFirmware {
                     }
                 }
                 
-        		Debug.msg(data);
+//        		Debug.msg(data);
 
     			int wait = 20; 
     			Pattern waitSeconds = Pattern.compile(PATTERN_WAIT_FOR_X_SECONDS);

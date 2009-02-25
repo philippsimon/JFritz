@@ -9,6 +9,7 @@ package de.moonflower.jfritz.callerlist;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Vector;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -27,6 +28,8 @@ import de.moonflower.jfritz.utils.Debug;
  */
 public class CallFileXMLHandler extends DefaultHandler {
 
+	Vector<Call> newCalls;
+	
 	String chars, caller, callbycall, port, route, comment;
 
 	CallerList callerlist;
@@ -40,12 +43,14 @@ public class CallFileXMLHandler extends DefaultHandler {
 	public CallFileXMLHandler(CallerList callerlist) {
 		super();
 		this.callerlist = callerlist;
+		newCalls = new Vector<Call>(1024);
 	}
 
 	public void startDocument() throws SAXException {
 	}
 
 	public void endDocument() throws SAXException {
+		callerlist.addEntries(newCalls);
 	}
 
 	public void startElement(String namespaceURI, String lName, String qName,
@@ -113,7 +118,7 @@ public class CallFileXMLHandler extends DefaultHandler {
 					if (callbycall.length() > 0)
 						number.setCallByCall(callbycall);
 				}
-				callerlist.addEntry(new Call(calltype, calldate, number, port, route, duration,
+				newCalls.add(new Call(calltype, calldate, number, port, route, duration,
 						comment));
 			}
 
