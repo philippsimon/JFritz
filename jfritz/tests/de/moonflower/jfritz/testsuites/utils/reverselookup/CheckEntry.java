@@ -14,8 +14,13 @@ public class CheckEntry implements LookupObserver {
 	private Person checkPerson;
 	private Person receivedPerson;
 	PhoneNumber checkedNumber;
-	
+
 	public CheckEntry(PhoneNumber num, String firstname, String lastname, String street, String zipcode, String city)
+	{
+		this(num, firstname, lastname, "", street, zipcode, city);
+	}
+	
+	public CheckEntry(PhoneNumber num, String firstname, String lastname, String company, String street, String zipcode, String city)
 	{
 		checkPerson = new Person(firstname, "", lastname,
 				street, zipcode, city, "", "");
