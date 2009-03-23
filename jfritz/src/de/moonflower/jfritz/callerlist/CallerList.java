@@ -235,7 +235,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver, Ph
 	 *            Save whole caller list or only selected entries
 	 */
 	public synchronized void saveToXMLFile(final String filename, final boolean wholeCallerList) {
-		Debug.msg("Saving to file " + filename); //$NON-NLS-1$
+		Debug.always("Saving to file " + filename); //$NON-NLS-1$
 		try {
 			BufferedWriter pw = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(filename), "UTF8")); //$NON-NLS-1$
@@ -282,11 +282,11 @@ public class CallerList extends AbstractTableModel implements LookupObserver, Ph
 
 			pw.close();
 		} catch (UnsupportedEncodingException e) {
-			Debug.err("UTF-8 not supported"); //$NON-NLS-1$
+			Debug.error("UTF-8 not supported"); //$NON-NLS-1$
 		} catch (FileNotFoundException e) {
-			Debug.err("Could not write " + filename + "!"); //$NON-NLS-1$,  //$NON-NLS-2$
+			Debug.error("Could not write " + filename + "!"); //$NON-NLS-1$,  //$NON-NLS-2$
 		} catch (IOException e) {
-			Debug.err("IOException " + filename); //$NON-NLS-1$
+			Debug.error("IOException " + filename); //$NON-NLS-1$
 		}
 	}
 
@@ -299,7 +299,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver, Ph
 	 *            Save whole caller list or only selected entries
 	 */
 	public synchronized void saveToCSVFile(String filename, boolean wholeCallerList) {
-		Debug.msg("Saving to csv file " + filename); //$NON-NLS-1$
+		Debug.always("Saving to csv file " + filename); //$NON-NLS-1$
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream(filename);
@@ -333,7 +333,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver, Ph
 			}
 			pw.close();
 		} catch (FileNotFoundException e) {
-			Debug.err("Could not write " + filename + "!"); //$NON-NLS-1$,  //$NON-NLS-2$
+			Debug.error("Could not write " + filename + "!"); //$NON-NLS-1$,  //$NON-NLS-2$
 		}
 	}
 
@@ -395,20 +395,20 @@ public class CallerList extends AbstractTableModel implements LookupObserver, Ph
 			initStage = false;
 			
 		} catch (ParserConfigurationException e) {
-			Debug.err("Error with ParserConfiguration!"); //$NON-NLS-1$
+			Debug.error("Error with ParserConfiguration!"); //$NON-NLS-1$
 		} catch (SAXException e) {
-			Debug.err("Error on parsing " + filename + "!"); //$NON-NLS-1$,  //$NON-NLS-2$
+			Debug.error("Error on parsing " + filename + "!"); //$NON-NLS-1$,  //$NON-NLS-2$
 			if (e.getLocalizedMessage().startsWith("Relative URI") //$NON-NLS-1$
 					|| e.getLocalizedMessage().startsWith(
 							"Invalid system identifier")) { //$NON-NLS-1$
-				Debug.err(e.getLocalizedMessage());
+				Debug.error(e.toString());
 				Debug
 						.errDlg("STRUKTURÄNDERUNG!\n\nBitte in der Datei jfritz.calls.xml\n " //$NON-NLS-1$
 								+ "die Zeichenkette \"calls.dtd\" durch\n \"" //$NON-NLS-1$
 								+ CALLS_DTD_URI + "\"\n ersetzen!"); //$NON-NLS-1$
 			}
 		} catch (IOException e) {
-			Debug.err("Could not read " + filename + "!"); //$NON-NLS-1$,  //$NON-NLS-2$
+			Debug.error("Could not read " + filename + "!"); //$NON-NLS-1$,  //$NON-NLS-2$
 		}
 		JFritz.getPhonebook().addListener(this);		
 	}
@@ -698,10 +698,10 @@ public class CallerList extends AbstractTableModel implements LookupObserver, Ph
 
 		if (JFritz.getFritzBox().checkValidFirmware()) {
 
-			Debug.msg("box.address: " + JFritz.getFritzBox().getAddress());
-			Debug.msg("box.port: " + JFritz.getFritzBox().getPort());
-			Debug.msg("box.password: " + JFritz.getFritzBox().getPassword());
-			Debug.msg("box.firmware: "
+			Debug.info("box.address: " + JFritz.getFritzBox().getAddress());
+			Debug.info("box.port: " + JFritz.getFritzBox().getPort());
+			Debug.debug("box.password: " + JFritz.getFritzBox().getPassword());
+			Debug.info("box.firmware: "
 					+ JFritz.getFritzBox().getFirmware().getFirmwareVersion()
 					+ " " + JFritz.getFritzBox().getFirmware().getLanguage());
 
@@ -855,7 +855,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver, Ph
 	}
 
 	public void sortAllUnfilteredRows() {
-		Debug.msg("Sorting unfiltered data"); //$NON-NLS-1$
+		Debug.debug("Sorting unfiltered data"); //$NON-NLS-1$
 		
 		int indexOfDate = -1;
 		String columnName = "";
@@ -1095,7 +1095,7 @@ public class CallerList extends AbstractTableModel implements LookupObserver, Ph
 	}
 
 	public void clearList() {
-		Debug.msg("Clearing caller Table"); //$NON-NLS-1$
+		Debug.info("Clearing caller Table"); //$NON-NLS-1$
 		unfilteredCallerData.clear();
 		if ((JFritz.getJframe() != null)
 				&& (JFritz.getJframe().getCallerTable() != null)) {
@@ -1214,9 +1214,9 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 		try {
 			String separator = PATTERN_CSV;
 			line = br.readLine();
-			Debug.msg("CSV-Header: " + line);
+			Debug.debug("CSV-Header: " + line);
 			if (line == null) {
-				Debug.err("File empty"); //$NON-NLS-1$
+				Debug.error("File empty"); //$NON-NLS-1$
 				return false;
 			} else 
 			{
@@ -1227,9 +1227,9 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 					if (matcher.groupCount() == 1)
 					{
 						separator = matcher.group(1);
-						Debug.msg("Separator: " + separator);
+						Debug.debug("Separator: " + separator);
 						line = br.readLine();
-						Debug.msg("CSV-Header: " + line);
+						Debug.debug("CSV-Header: " + line);
 					}
 				}
 			}
@@ -1287,7 +1287,7 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 
 					if (c == null) {
 						if (!line.equals("")) {
-							Debug.err("Broken entry: " + line);
+							Debug.error("Broken entry: " + line);
 						}
 					} else if (addEntry(c)) {
 						newEntries++;
@@ -1302,8 +1302,8 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 				{
 					listener.finished();
 				}
-				Debug.msg(linesRead + " Lines read from csv file ");
-				Debug.msg(newEntries + " New entries processed");
+				Debug.debug(linesRead + " Lines read from csv file ");
+				Debug.debug(newEntries + " New entries processed");
 
 				fireUpdateCallVector();
 
@@ -1336,17 +1336,17 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 
 			} else {
 				// Invalid file header
-				Debug.err("Wrong file type or corrupted file"); //$NON-NLS-1$
+				Debug.error("Wrong file type or corrupted file"); //$NON-NLS-1$
 			}
 
 			// NOTE: the caller must close the stream!
 		} catch (FileNotFoundException e) {
-			Debug.err("Could not read from File!");
+			Debug.error("Could not read from File!");
 		} catch (IOException e) {
-			Debug.err("IO Exception reading csv file"); //$NON-NLS-1$
+			Debug.error("IO Exception reading csv file"); //$NON-NLS-1$
 		}
 		t2 = System.currentTimeMillis();
-		Debug.msg("Time used to import CSV-File: " + (t2 - t1) + "ms");
+		Debug.always("Time used to import CSV-File: " + (t2 - t1) + "ms");
 
 		if (newEntries > 0) {
 			return true;
@@ -1377,7 +1377,7 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 		// check if line has correct amount of entries
 		if (field.length < 12) {
 			if (field.length != 1) {
-				Debug.err("Invalid CSV format, incorrect number of fields!"); //$NON-NLS-1$
+				Debug.error("Invalid CSV format, incorrect number of fields!"); //$NON-NLS-1$
 			}
 			return null;
 		}
@@ -1397,7 +1397,7 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 		} else if (field[0].equals("Outgoing")) { //$NON-NLS-1$
 			calltype = new CallType("call_out"); //$NON-NLS-1$
 		} else {
-			Debug.err("Invalid Call type in CSV entry!"); //$NON-NLS-1$
+			Debug.error("Invalid Call type in CSV entry!"); //$NON-NLS-1$
 			return null;
 		}
 
@@ -1407,11 +1407,11 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 			try {
 				calldate = new SimpleDateFormat("dd.MM.yy HH:mm").parse(field[1] + " " + field[2]); //$NON-NLS-1$,  //$NON-NLS-2$
 			} catch (ParseException e) {
-				Debug.err("Invalid date format in csv entry!"); //$NON-NLS-1$
+				Debug.error("Invalid date format in csv entry!"); //$NON-NLS-1$
 				return null;
 			}
 		} else {
-			Debug.err("Invalid date format in csv entry!"); //$NON-NLS-1$
+			Debug.error("Invalid date format in csv entry!"); //$NON-NLS-1$
 			return null;
 		}
 
@@ -1488,7 +1488,7 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 		// check if line has correct amount of entries
 		if (field.length != 6) {
 			if (field.length != 1) {
-				Debug.err("Invalid CSV format, incorrect number of fields!"); // if
+				Debug.error("Invalid CSV format, incorrect number of fields!"); // if
 			}
 			// you
 			// find
@@ -1513,7 +1513,7 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 				|| (field[0].equals("1") && isPushFile)) { //$NON-NLS-1$
 			calltype = new CallType("call_out"); //$NON-NLS-1$
 		} else {
-			Debug.err("Invalid Call type in CSV entry!"); //$NON-NLS-1$
+			Debug.error("Invalid Call type in CSV entry!"); //$NON-NLS-1$
 			return null;
 		}
 
@@ -1522,11 +1522,11 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 			try {
 				calldate = new SimpleDateFormat("dd.MM.yy HH:mm").parse(field[1]); //$NON-NLS-1$
 			} catch (ParseException e) {
-				Debug.err("Invalid date format in csv entry!"); //$NON-NLS-1$
+				Debug.error("Invalid date format in csv entry!"); //$NON-NLS-1$
 				return null;
 			}
 		} else {
-			Debug.err("Invalid date format in csv entry!"); //$NON-NLS-1$
+			Debug.error("Invalid date format in csv entry!"); //$NON-NLS-1$
 			return null;
 		}
 
@@ -1599,7 +1599,7 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 		// check if line has correct amount of entries
 		if (field.length != 7) {
 			if (field.length != 1) {
-				Debug.err("Invalid CSV format, incorrect number fields!");
+				Debug.error("Invalid CSV format, incorrect number fields!");
 			}
 			return null;
 		}
@@ -1612,7 +1612,7 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 		} else if ((field[0].equals("3"))) {
 			calltype = new CallType("call_out");
 		} else {
-			Debug.err("Invalid Call type in CSV entry!"); //$NON-NLS-1$
+			Debug.error("Invalid Call type in CSV entry!"); //$NON-NLS-1$
 			return null;
 		}
 
@@ -1621,11 +1621,11 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 			try {
 				calldate = new SimpleDateFormat("dd.MM.yy HH:mm").parse(field[1]); //$NON-NLS-1$
 			} catch (ParseException e) {
-				Debug.err("Invalid date format in csv entry!"); //$NON-NLS-1$
+				Debug.error("Invalid date format in csv entry!"); //$NON-NLS-1$
 				return null;
 			}
 		} else {
-			Debug.err("Invalid date format in csv entry!"); //$NON-NLS-1$
+			Debug.error("Invalid date format in csv entry!"); //$NON-NLS-1$
 			return null;
 		}
 
@@ -1708,7 +1708,7 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 		// check if line has correct amount of entries
 		if (field.length != 6) {
 			if (field.length != 1) {
-				Debug.err("Invalid CSV format, incorrect number of fields"); // if
+				Debug.error("Invalid CSV format, incorrect number of fields"); // if
 			}
 			return null; // jfritz is broken, the fritz box exports things
 		} // with an extra empty line for whatever reason
@@ -1725,7 +1725,7 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 				|| (field[0].equals("1") && isPushFile)) { //$NON-NLS-1$
 			calltype = new CallType("call_out"); //$NON-NLS-1$
 		} else {
-			Debug.err("Invalid Call type in CSV entry!"); //$NON-NLS-1$
+			Debug.error("Invalid Call type in CSV entry!"); //$NON-NLS-1$
 			return null;
 		}
 
@@ -1734,11 +1734,11 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 			try {
 				calldate = new SimpleDateFormat("dd.MM.yy HH:mm").parse(field[1]); //$NON-NLS-1$
 			} catch (ParseException e) {
-				Debug.err("Invalid date format in csv entry!"); //$NON-NLS-1$
+				Debug.error("Invalid date format in csv entry!"); //$NON-NLS-1$
 				return null;
 			}
 		} else {
-			Debug.err("Invalid date format in csv entry!"); //$NON-NLS-1$
+			Debug.error("Invalid date format in csv entry!"); //$NON-NLS-1$
 			return null;
 		}
 
@@ -1822,7 +1822,7 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 		// check if line has correct amount of entries
 		if (field.length != 7) {
 			if (field.length != 1) {
-				Debug.err("Invalid CSV format, incorrect number of fields"); // if
+				Debug.error("Invalid CSV format, incorrect number of fields"); // if
 			}
 			return null; // jfritz is broken, the fritz box exports things
 		} // with an extra empty line for whatever reason
@@ -1839,7 +1839,7 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 				|| (field[0].equals("1") && isPushFile)) { //$NON-NLS-1$
 			calltype = new CallType("call_out"); //$NON-NLS-1$
 		} else {
-			Debug.err("Invalid Call type in CSV entry!"); //$NON-NLS-1$
+			Debug.error("Invalid Call type in CSV entry!"); //$NON-NLS-1$
 			return null;
 		}
 
@@ -1848,11 +1848,11 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 			try {
 				calldate = new SimpleDateFormat("dd.MM.yy HH:mm").parse(field[1]); //$NON-NLS-1$
 			} catch (ParseException e) {
-				Debug.err("Invalid date format in csv entry!"); //$NON-NLS-1$
+				Debug.error("Invalid date format in csv entry!"); //$NON-NLS-1$
 				return null;
 			}
 		} else {
-			Debug.err("Invalid date format in csv entry!"); //$NON-NLS-1$
+			Debug.error("Invalid date format in csv entry!"); //$NON-NLS-1$
 			return null;
 		}
 
@@ -1871,11 +1871,9 @@ public synchronized boolean importFromCSVFile(BufferedReader br) {
 
 		// split the duration into two stings, hours:minutes
 		String[] time = field[6].split(":");
-		Debug.msg("time length: "+time.length);
 		//Apparently with the new 14.04.26 the duration is stored as hours.minutes
 		if(time.length != 2){
 			time = field[6].split("\\.");
-			Debug.msg("adjusted length: "+time.length);
 		}
 
 		// change the port to fit the jfritz naming convention

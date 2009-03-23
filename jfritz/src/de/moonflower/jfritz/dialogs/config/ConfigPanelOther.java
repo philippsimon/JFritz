@@ -177,9 +177,7 @@ public class ConfigPanelOther extends JPanel implements ConfigPanel {
 				
 			Debug.netMsg("JFritz is running as a client and using call list from server, disabeling some options");
 			searchWithSSDP.setSelected(false);
-			searchWithSSDP.setEnabled(false);
-			
-			
+			searchWithSSDP.setEnabled(false);			
 		}
 		
 	}
